@@ -142,7 +142,7 @@ class NumericTextPipelineTests(unittest.TestCase):
         self.assertEqual(diagnosis["file"]["mime_type"], "application/custom-xlsx")
         self.assertEqual(diagnosis["file"]["retention"]["status"], "retention-policy-a")
         self.assertEqual(diagnosis["sheets"][0]["visibility"], "hidden")
-        self.assertEqual(diagnosis["summary"]["completeness_ratio"], round(2 / metadata.execution_profile.catalog_target_rule_count, 8))
+        self.assertEqual(diagnosis["summary"]["completeness_ratio"], round(3 / metadata.execution_profile.catalog_target_rule_count, 8))
         self.assertEqual(diagnosis["execution"]["engine_version"], "0.1.0-test")
         self.assertEqual(diagnosis["execution"]["ruleset_version"], "0.7.0-test")
 

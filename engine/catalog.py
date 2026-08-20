@@ -16,6 +16,7 @@ CURRENT_QUALITY_BASELINE = {"QLT-NULL-001", "QLT-DUP-002", "QLT-EMPTYCOL-003", "
 DRAFT_RULE_AUTHORIZATIONS = {
     "QLT-NUMTEXT-007": "G7.4-R1",
     "QLT-NULL-001": "QLT-NULL-RECONSTRUCTION-001",
+    "QLT-CATVAR-008": "QLT-CATVAR-008-DRAFT-CALIBRATION-001",
 }
 RuleExecutionStatus = Literal["executable_draft", "baseline_reference", "reference_catalog_draft", "reserved_definition", "unknown"]
 
@@ -74,4 +75,4 @@ def execute_registered_rule(rule_id: str, payload: object) -> object:
 
 
 def executable_rule_count() -> int:
-    return len(QUALITY_RULE_IMPLEMENTATIONS)
+    return len(set(QUALITY_RULE_IMPLEMENTATIONS) & set(DRAFT_RULE_AUTHORIZATIONS))

@@ -23,7 +23,7 @@ class RuleIntakeTests(unittest.TestCase):
             "intake_required": 82,
         })
 
-    def test_catvar_intake_preserves_policy_gaps_and_blocks_execution(self):
+    def test_catvar_intake_preserves_policy_gaps_after_provisional_draft_activation(self):
         intake = json.loads(
             (PROJECT_ROOT / "artifacts/intake/QLT-CATVAR-008.json").read_text(encoding="utf-8")
         )
@@ -34,4 +34,4 @@ class RuleIntakeTests(unittest.TestCase):
         self.assertFalse(intake["authorization"]["implementation_authorized"])
         self.assertEqual(intake["authorization"]["required_gate"], "QLT-CATVAR-008-AUTHORIZATION")
         self.assertIn("condition", intake["required_policy_elements"])
-        self.assertEqual(get_rule_execution_record("QLT-CATVAR-008").status, "reserved_definition")
+        self.assertEqual(get_rule_execution_record("QLT-CATVAR-008").status, "executable_draft")

@@ -11,6 +11,8 @@ from engine.catalog import (
 )
 from engine.quality.numtext import CANONICAL_NUMERIC_TEXT_BASIS, NumericTextColumnProfile
 from engine.profiling.missingness import MissingnessProfile
+from engine.profiling.categorical_variations import profile_categorical_variations
+from engine.quality.catvar import CategoricalVariationColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.registry import QUALITY_RULE_IMPLEMENTATIONS
 
@@ -30,13 +32,20 @@ class RuleCatalogTests(unittest.TestCase):
             "QLT-NULL-001",
             NullColumnProfile("Observação", "text", MissingnessProfile(20, 16, 4, 0, 0)),
         )
+        catvar_result = execute_registered_rule(
+            "QLT-CATVAR-008",
+            CategoricalVariationColumnProfile("Região", "text", profile_categorical_variations(["Norte", "norte", "Sul"])),
+        )
         record = get_rule_execution_record("QLT-NUMTEXT-007")
         null_record = get_rule_execution_record("QLT-NULL-001")
-        self.assertEqual(executable_rule_count(), 2)
+        catvar_record = get_rule_execution_record("QLT-CATVAR-008")
+        self.assertEqual(executable_rule_count(), 3)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
+        self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
         self.assertEqual(record.status, "executable_draft")
         self.assertEqual(null_record.status, "executable_draft")
+        self.assertEqual(catvar_record.status, "executable_draft")
         self.assertEqual(record.title, "Números armazenados como texto")
 
     def test_baseline_reference_and_reserved_official_slots_cannot_execute(self):
@@ -48,7 +57,6 @@ class RuleCatalogTests(unittest.TestCase):
             "REL-ONEMANY-001": "reference_catalog_draft",
             "MET-COMPL-001": "reference_catalog_draft",
             "ALT-SENS-001": "reference_catalog_draft",
-            "QLT-CATVAR-008": "reserved_definition",
             "MDL-UNDEFINED-020": "reserved_definition",
             "MET-DAX-015": "reserved_definition",
         }

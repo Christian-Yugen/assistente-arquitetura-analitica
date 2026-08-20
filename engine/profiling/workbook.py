@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import math
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date, datetime
 from pathlib import Path
 from typing import Literal
@@ -16,6 +16,7 @@ from openpyxl import load_workbook
 from engine.pipeline.quality_diagnosis import ColumnAnalysisContext
 from engine.profiling.missingness import MissingnessProfile, missing_class, row_has_meaningful_value
 from engine.profiling.numeric_text import LOCALE_AMBIGUOUS_NUMBER, STRICT_CANONICAL_NUMBER, NumericTextProfile
+from engine.profiling.categorical_variations import CategoricalVariationProfile, profile_categorical_variations
 
 
 MAX_SHEETS = 10
@@ -39,6 +40,7 @@ class StreamingColumnProfiler:
     other_count: int = 0
     numeric_text_candidates: int = 0
     numeric_text_ambiguities: int = 0
+    categorical_text_values: list[str] = field(default_factory=list, repr=False)
 
     def consume(self, value: object) -> None:
         self.observed += 1
@@ -62,6 +64,7 @@ class StreamingColumnProfiler:
         if isinstance(value, str):
             self.text_count += 1
             normalized = value.strip()
+            self.categorical_text_values.append(normalized)
             if STRICT_CANONICAL_NUMBER.fullmatch(normalized):
                 self.numeric_text_candidates += 1
             elif LOCALE_AMBIGUOUS_NUMBER.fullmatch(normalized):
@@ -103,6 +106,9 @@ class StreamingColumnProfiler:
             blank_text_count=self.blank_text_count,
             numeric_nan_count=self.numeric_nan_count,
         )
+
+    def categorical_variation_profile(self) -> CategoricalVariationProfile:
+        return profile_categorical_variations(self.categorical_text_values)
 
 
 def safe_column_name(value: object, position: int) -> str:
@@ -153,6 +159,8 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
                 profilers[position].consume(bounded_row[position])
         sheet_id = str(uuid4())
         for column_position, profiler in enumerate(profilers):
+            categorical_variations = profiler.categorical_variation_profile()
+            profiler.categorical_text_values.clear()
             contexts.append(
                 ColumnAnalysisContext(
                     sheet_id=sheet_id,
@@ -165,6 +173,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
                     physical_type=profiler.physical_type(),
                     numeric_text=profiler.numeric_text_profile(),
                     missingness=profiler.missingness_profile(),
+                    categorical_variations=categorical_variations,
                 )
             )
     if not contexts:

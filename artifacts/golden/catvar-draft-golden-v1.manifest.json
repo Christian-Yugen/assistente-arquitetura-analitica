@@ -1,0 +1,9 @@
+{
+  "dataset_id": "GD-QLT-CATVAR-008-001",
+  "version": "1.0.0-provisional.1",
+  "status": "approved_for_provisional_draft_calibration",
+  "sha256": "19059dfddfe9f57df2f9c3f6ba944be1fd02a6418b38a897ca36fe2d21ed65b7",
+  "scenario_count": 6,
+  "privacy_review": "aggregate_only_no_raw_categories",
+  "approved_scope": "QLT-CATVAR-008 provisional policy; production blocked"
+}

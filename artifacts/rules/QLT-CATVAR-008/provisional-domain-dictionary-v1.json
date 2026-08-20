@@ -1,0 +1,12 @@
+{
+  "artifact_id": "QLT-CATVAR-008-DOMAIN-DICTIONARY-001",
+  "version": "1.0.0-provisional",
+  "status": "empty_pending_domain_approval",
+  "normalization_profile": "technical-expanded-v1",
+  "mappings": {},
+  "governance": {
+    "automatic_category_merge": false,
+    "requires_new_policy_version_for_entries": true,
+    "requires_gate_for_entries": true
+  }
+}

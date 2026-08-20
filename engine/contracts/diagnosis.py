@@ -10,6 +10,7 @@ SCHEMA_VERSION = "1.0.0"
 RULE_VERSIONS = {
     "QLT-NUMTEXT-007": "1.0.0-draft",
     "QLT-NULL-001": "0.1.0-reconstructed.1",
+    "QLT-CATVAR-008": "0.1.0-provisional.1",
 }
 
 

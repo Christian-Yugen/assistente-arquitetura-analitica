@@ -1,0 +1,111 @@
+{
+  "report_id": "CAL-QLT-CATVAR-008-001",
+  "dataset_id": "GD-QLT-CATVAR-008-001",
+  "dataset_version": "1.0.0-provisional.1",
+  "rules": {
+    "QLT-CATVAR-008": {
+      "true_positive": 4,
+      "false_positive": 0,
+      "false_negative": 0
+    }
+  },
+  "scenario_count": 6,
+  "mismatch_count": 0,
+  "scenarios": [
+    {
+      "case_id": "catvar-low-ratio",
+      "expected_signatures": [
+        [
+          "QLT-CATVAR-008",
+          "low",
+          0.88,
+          false
+        ]
+      ],
+      "actual_signatures": [
+        [
+          "QLT-CATVAR-008",
+          "low",
+          0.88,
+          false
+        ]
+      ],
+      "status": "pass"
+    },
+    {
+      "case_id": "catvar-medium-boundary",
+      "expected_signatures": [
+        [
+          "QLT-CATVAR-008",
+          "medium",
+          0.88,
+          false
+        ]
+      ],
+      "actual_signatures": [
+        [
+          "QLT-CATVAR-008",
+          "medium",
+          0.88,
+          false
+        ]
+      ],
+      "status": "pass"
+    },
+    {
+      "case_id": "catvar-high-boundary",
+      "expected_signatures": [
+        [
+          "QLT-CATVAR-008",
+          "high",
+          0.88,
+          true
+        ]
+      ],
+      "actual_signatures": [
+        [
+          "QLT-CATVAR-008",
+          "high",
+          0.88,
+          true
+        ]
+      ],
+      "status": "pass"
+    },
+    {
+      "case_id": "catvar-confidence-penalty-many-variants",
+      "expected_signatures": [
+        [
+          "QLT-CATVAR-008",
+          "high",
+          0.7,
+          true
+        ]
+      ],
+      "actual_signatures": [
+        [
+          "QLT-CATVAR-008",
+          "high",
+          0.7,
+          true
+        ]
+      ],
+      "status": "pass"
+    },
+    {
+      "case_id": "catvar-excluded-high-cardinality",
+      "expected_signatures": [],
+      "actual_signatures": [],
+      "status": "pass"
+    },
+    {
+      "case_id": "catvar-excluded-no-collision",
+      "expected_signatures": [],
+      "actual_signatures": [],
+      "status": "pass"
+    }
+  ],
+  "decision": "calibrated_for_provisional_draft",
+  "production_status": "blocked",
+  "catalog_activation_status": "pending_calibration_gate"
+}

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from time import perf_counter
 from typing import Iterable, Literal
 
@@ -12,8 +12,10 @@ from engine.contracts.execution_profile import DraftExecutionProfile, validate_g
 from engine.contracts.validation import validate_diagnosis_root
 from engine.profiling.numeric_text import NumericTextProfile, infer_physical_type, profile_numeric_text
 from engine.profiling.missingness import MissingnessProfile, profile_missingness
+from engine.profiling.categorical_variations import CategoricalVariationProfile, profile_categorical_variations
 from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
+from engine.quality.catvar import CategoricalVariationColumnProfile
 
 
 @dataclass(frozen=True)
@@ -55,6 +57,7 @@ class ColumnAnalysisContext:
     physical_type: str
     numeric_text: NumericTextProfile
     missingness: MissingnessProfile = MissingnessProfile()
+    categorical_variations: CategoricalVariationProfile = field(default_factory=CategoricalVariationProfile)
 
 
 def build_column_analysis_context(
@@ -74,6 +77,7 @@ def build_column_analysis_context(
         physical_type=infer_physical_type(materialized_values),
         numeric_text=profile_numeric_text(materialized_values),
         missingness=profile_missingness(materialized_values),
+        categorical_variations=profile_categorical_variations(materialized_values),
     )
 
 
@@ -100,6 +104,13 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
             quality_findings.append((column, finding))
         null_profile = NullColumnProfile(name=column.column_name, physical_type=column.physical_type, missingness=column.missingness)
         for finding in execute_registered_rule("QLT-NULL-001", null_profile):
+            quality_findings.append((column, finding))
+        categorical_variation_profile = CategoricalVariationColumnProfile(
+            name=column.column_name,
+            physical_type=column.physical_type,
+            variations=column.categorical_variations,
+        )
+        for finding in execute_registered_rule("QLT-CATVAR-008", categorical_variation_profile):
             quality_findings.append((column, finding))
 
     findings: list[dict[str, object]] = []

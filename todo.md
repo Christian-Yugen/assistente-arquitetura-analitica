@@ -68,9 +68,10 @@
 - [x] Gerar o índice de prontidão das 95 regras a partir da fonte oficial, distinguindo baseline, regra executável draft, referência e regras que exigem intake formal.
 - [x] Registrar o intake da próxima regra QLT-CATVAR-008, expondo metadados de origem, lacunas de política e pré-condições de autorização sem criar uma regra executável.
 - [x] Validar em teste o índice de prontidão e o intake da QLT-CATVAR-008, confirmando que a regra permanece não executável.
-- [ ] Formalizar a política provisória autorizada da QLT-CATVAR-008, com normalização técnica ampliada e dicionário de domínio versionável vazio por padrão.
-- [ ] Implementar a QLT-CATVAR-008 após o gate provisório, com perfil agregado, finding, pergunta de validação e sem fusão automática de categorias.
-- [ ] Criar golden dataset, calibração limitada e regressão da QLT-CATVAR-008 antes de incluí-la na allowlist draft.
+- [x] Formalizar a política provisória autorizada da QLT-CATVAR-008, com normalização técnica ampliada e dicionário de domínio versionável vazio por padrão.
+- [x] Implementar a QLT-CATVAR-008 após o gate provisório, com perfil agregado, finding, pergunta de validação e sem fusão automática de categorias.
+- [x] Criar golden dataset, calibração limitada e regressão da QLT-CATVAR-008 antes de incluí-la na allowlist draft.
+- [x] Adicionar teste documental que vincule o gate de calibração da QLT-CATVAR-008 à autorização de Chris, ao golden dataset e ao bloqueio produtivo.
 - [x] Implementar um registro de catálogo que diferencie regras executáveis, autorizadas para especificação e reservadas, bloqueando execução de políticas não definidas.
 - [x] Validar que o motor rejeita explicitamente qualquer tentativa de executar uma regra reservada ou sem gate de autorização.
 - [x] Confirmar o registro de catálogo, o teste de rejeição e a integração do pipeline com a suíte completa de validação.
