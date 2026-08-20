@@ -10,7 +10,7 @@ import { getAnalysisUiState } from "@/lib/analysisUiState";
 import { downloadDiagnosticJson } from "@/lib/diagnosticExport";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { startLogin } from "@/const";
-import { AnalysisAuthNotice, AnalysisSubmitButton, AnalysisSuccessNotice } from "@/components/AnalysisFlowState";
+import { AnalysisAuthNotice, AnalysisProcessingPanel, AnalysisSubmitButton, AnalysisSuccessNotice } from "@/components/AnalysisFlowState";
 import { AlertTriangle, ArrowUpRight, CheckCircle2, Clock3, Download, FileSpreadsheet, FileUp, Loader2, ShieldCheck, Sparkles } from "lucide-react";
 import React, { ChangeEvent, FormEvent, useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -132,13 +132,14 @@ export default function Home() {
             <CardContent className="p-6 sm:p-8">
               <div className="mb-7 flex items-start justify-between gap-4"><div><p className="text-xs font-semibold tracking-[0.13em] text-[#5a8068] uppercase">Nova análise</p><h2 className="mt-2 font-serif text-2xl text-[#18332c]">Enviar workbook</h2></div><Badge variant="secondary" className="rounded-full bg-[#edf4e9] px-3 py-1 text-[#47795b]">XLSX · até 25 MB</Badge></div>
               <AnalysisAuthNotice state={uiState} onLogin={startLogin} />
+              {uiState === "analyzing" ? <AnalysisProcessingPanel fileName={selectedFile?.name} /> : null}
               {uiState === "ready" || uiState === "analyzing" || uiState === "success" ? <form onSubmit={submit} className="space-y-5">
-                <div className="space-y-2"><Label htmlFor="projectName">Nome do projeto</Label><Input id="projectName" value={projectName} onChange={event => setProjectName(event.target.value)} placeholder="Ex.: Operação comercial" className="h-11 rounded-xl border-[#d8e1d7] bg-[#fbfcfa]" required /></div>
-                <div className="space-y-2"><Label htmlFor="objective">Objetivo da análise</Label><Textarea id="objective" value={objective} onChange={event => setObjective(event.target.value)} className="min-h-24 rounded-xl border-[#d8e1d7] bg-[#fbfcfa]" required /></div>
-                <label className="group flex cursor-pointer items-center gap-4 rounded-2xl border border-dashed border-[#a8c4aa] bg-[#f5f9f3] p-5 transition-colors hover:bg-[#edf5ea]">
+                <div className="space-y-2"><Label htmlFor="projectName">Nome do projeto</Label><Input id="projectName" value={projectName} onChange={event => setProjectName(event.target.value)} placeholder="Ex.: Operação comercial" className="h-11 rounded-xl border-[#d8e1d7] bg-[#fbfcfa]" disabled={analyze.isPending} required /></div>
+                <div className="space-y-2"><Label htmlFor="objective">Objetivo da análise</Label><Textarea id="objective" value={objective} onChange={event => setObjective(event.target.value)} className="min-h-24 rounded-xl border-[#d8e1d7] bg-[#fbfcfa]" disabled={analyze.isPending} required /></div>
+                <label className={`group flex items-center gap-4 rounded-2xl border border-dashed border-[#a8c4aa] bg-[#f5f9f3] p-5 transition-colors ${analyze.isPending ? "cursor-not-allowed opacity-70" : "cursor-pointer hover:bg-[#edf5ea]"}`}>
                   <span className="grid h-11 w-11 place-items-center rounded-xl bg-white text-[#4b815d] shadow-sm"><FileUp className="h-5 w-5" /></span>
                   <span className="min-w-0 flex-1"><span className="block truncate text-sm font-semibold text-[#24453a]">{selectedFile ? selectedFile.name : "Escolha a planilha XLSX"}</span><span className="mt-1 block text-xs text-[#718177]">Limite de 10 abas · dados lidos somente no servidor</span></span>
-                  <input className="sr-only" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={onFileChange} />
+                  <input className="sr-only" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={onFileChange} disabled={analyze.isPending} />
                 </label>
                 <AnalysisSubmitButton isPending={analyze.isPending} />
               </form> : null}
@@ -147,10 +148,10 @@ export default function Home() {
           </Card>
 
           <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
-            {[
-              { label: "Regra executável", value: "QLT-007", detail: "Números como texto", icon: CheckCircle2, color: "text-[#39825a] bg-[#ebf5eb]" },
+              {[
+              { label: "Regras executáveis", value: "2", detail: "QLT-007 e QLT-001", icon: CheckCircle2, color: "text-[#39825a] bg-[#ebf5eb]" },
               { label: "Catálogo governado", value: "95", detail: "slots versionados", icon: Sparkles, color: "text-[#5774a8] bg-[#eef2fb]" },
-              { label: "Próxima validação", value: "G7.5", detail: "calibração pendente", icon: AlertTriangle, color: "text-[#ad7040] bg-[#fcf2e5]" },
+              { label: "Gate histórico", value: "G7.5", detail: "linhagem canônica pendente", icon: AlertTriangle, color: "text-[#ad7040] bg-[#fcf2e5]" },
             ].map(item => <Card key={item.label} className="rounded-2xl border-[#e0e6df] bg-white"><CardContent className="flex items-center gap-4 p-5"><span className={`grid h-10 w-10 place-items-center rounded-xl ${item.color}`}><item.icon className="h-5 w-5" /></span><div><p className="text-xs text-[#7b8981]">{item.label}</p><p className="mt-0.5 font-serif text-xl text-[#223f35]">{item.value}</p><p className="text-xs text-[#68786f]">{item.detail}</p></div></CardContent></Card>)}
           </div>
         </section>

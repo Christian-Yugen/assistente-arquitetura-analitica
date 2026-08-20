@@ -40,6 +40,11 @@ function renderHome() {
   return renderToStaticMarkup(<Home />);
 }
 
+function tagWith(markup: string, marker: string) {
+  const markerIndex = markup.indexOf(marker);
+  return markup.slice(markup.lastIndexOf("<", markerIndex), markup.indexOf(">", markerIndex) + 1);
+}
+
 describe("Home workspace flow", () => {
   beforeEach(() => {
     state.auth = { loading: false, isAuthenticated: true, error: null };
@@ -61,12 +66,16 @@ describe("Home workspace flow", () => {
     expect(renderHome()).toContain("Tentar login novamente");
   });
 
-  it("renders the form only when allowed and disables submission during the real mutation state", () => {
+  it("renders the pending processing panel and blocks all workbook edits during the real mutation state", () => {
     expect(renderHome()).toContain("Nome do projeto");
     state.mutation = { isPending: true, isSuccess: false, data: undefined };
     const pending = renderHome();
     expect(pending).toContain("Analisando estrutura");
-    expect(pending).toContain("disabled");
+    expect(pending).toContain("Análise em andamento no servidor");
+    expect(pending).toContain("Nenhum percentual é estimado");
+    expect(tagWith(pending, 'id="projectName"')).toContain('disabled=""');
+    expect(tagWith(pending, 'id="objective"')).toContain('disabled=""');
+    expect(tagWith(pending, 'accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"')).toContain('disabled=""');
   });
 
   it("renders the created version confirmation when the mutation succeeds", () => {

@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, FileSpreadsheet, Loader2 } from "lucide-react";
+import { CheckCircle2, FileSearch2, FileSpreadsheet, Loader2, ShieldCheck } from "lucide-react";
 import type { AnalysisUiState } from "@/lib/analysisUiState";
 
 export function AnalysisAuthNotice({ state, onLogin }: { state: AnalysisUiState; onLogin: () => void }) {
@@ -14,6 +14,24 @@ export function AnalysisSubmitButton({ isPending }: { isPending: boolean }) {
   return <Button type="submit" disabled={isPending} className="h-11 w-full rounded-xl bg-[#173f35] text-white hover:bg-[#285b4a]">
     {isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Analisando estrutura…</> : <><FileSpreadsheet className="mr-2 h-4 w-4" />Iniciar diagnóstico</>}
   </Button>;
+}
+
+export function AnalysisProcessingPanel({ fileName }: { fileName?: string }) {
+  return <section role="status" aria-live="polite" className="mb-5 rounded-2xl border border-[#c9dfc4] bg-[#f3f8ef] p-4 text-[#27493b]">
+    <div className="flex items-start gap-3">
+      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white text-[#4a865e] shadow-sm"><Loader2 className="h-5 w-5 animate-spin" /></span>
+      <div>
+        <p className="font-semibold">Análise em andamento no servidor</p>
+        <p className="mt-1 text-xs leading-5 text-[#5e7568]">O tempo varia conforme o tamanho e a estrutura do workbook. Nenhum percentual é estimado enquanto o diagnóstico é processado.</p>
+      </div>
+    </div>
+    <div className="mt-4 grid gap-2 text-xs sm:grid-cols-3">
+      <div className="flex items-center gap-2 rounded-xl bg-white/80 p-3"><FileSpreadsheet className="h-4 w-4 text-[#5a8b68]" /><span className="min-w-0 truncate">Arquivo: {fileName ?? "workbook selecionado"}</span></div>
+      <div className="flex items-center gap-2 rounded-xl bg-white/80 p-3"><ShieldCheck className="h-4 w-4 text-[#5a8b68]" /><span>Validação e isolamento</span></div>
+      <div className="flex items-center gap-2 rounded-xl bg-white/80 p-3"><FileSearch2 className="h-4 w-4 text-[#5a8b68]" /><span>Profiling e diagnóstico</span></div>
+    </div>
+    <p className="mt-3 text-xs leading-5 text-[#60786a]">A edição do formulário permanece temporariamente bloqueada para preservar a consistência da solicitação enviada.</p>
+  </section>;
 }
 
 export function AnalysisSuccessNotice({ version, onView }: { version: number; onView: () => void }) {

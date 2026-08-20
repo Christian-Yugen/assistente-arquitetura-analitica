@@ -102,6 +102,13 @@
 - [x] Cobrir todas as leituras owner-scoped do módulo de análise, comprovando que outro usuário não acessa projetos ou diagnósticos alheios.
 - [x] Criar teste de integração estruturado para os helpers de listagem e consulta que comprove isolamento entre dois proprietários.
 - [ ] Construir telas de upload, processamento, diagnóstico segmentado, perguntas de validação, versões e exportação.
+- [x] Exibir um painel de processamento acessível durante a mutation, com etapas qualitativas e sem estimativa ou percentual simulado.
+- [x] Cobrir em teste a visibilidade do painel pendente e o bloqueio de edição durante a análise do workbook.
+- [x] Adicionar teste de `Home.tsx` que force `analyze.isPending=true` e confirme a renderização do painel de processamento no workspace real.
+- [x] Confirmar no teste de `Home.tsx` o atributo `disabled` em nome do projeto, objetivo e input de arquivo durante a mutation pendente.
+- [x] Atualizar os indicadores do workspace para refletir as duas regras draft autorizadas e o bloqueio histórico do gate G7.5.
+- [x] Documentar o indicador de processamento síncrono e a proibição de percentuais não observáveis no MVP draft.
+- [x] Validar por teste documental o estado pendente, a ausência de percentual ou ETA e os controles bloqueados do processamento síncrono.
 - [x] Adicionar exportação JSON do diagnóstico selecionado, derivada exclusivamente da consulta owner-scoped já autorizada.
 - [x] Exibir uma ação de exportação JSON no painel de diagnóstico e testar a composição segura do arquivo baixado.
 - [x] Documentar a indisponibilidade temporária da exportação PDF no MVP draft sem simular esse formato.
