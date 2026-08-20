@@ -1,0 +1,38 @@
+{
+  "gate_id": "G7.4-QLT-NUMTEXT-007-ruleset-integration",
+  "rule_id": "QLT-NUMTEXT-007",
+  "decision": "approved_in_draft_ruleset_only",
+  "scope": "ruleset_registry_and_canonical_output_fragment",
+  "evidence": {
+    "ruleset": "artifacts/rulesets/quality-ruleset-v0.7.0.json",
+    "registry": "engine/quality/registry.py",
+    "context_builder": "engine/profiling/numeric_text.py and engine/pipeline/quality_diagnosis.py",
+    "contract_adapter": "engine/contracts/diagnosis.py",
+    "engine_test_command": "pnpm test:engine",
+    "vitest_command": "pnpm test",
+    "typecheck_command": "pnpm check",
+    "observed_results": {
+      "engine_tests": "13 passed",
+      "vitest_tests": "7 passed",
+      "typescript": "passed"
+    }
+  },
+  "controls_verified": [
+    "Quality ruleset remains draft at version 0.7.0-draft",
+    "The registry exposes QLT-NUMTEXT-007 by canonical identifier",
+    "The numeric_text profiling fields flow from aggregate context into the QLT-NUMTEXT-007 evaluator",
+    "Output adapter produces contract_id PM-MVP-PBI-CON-001 and schema 1.0.0 fragments",
+    "The draft executor mounts findings and questions in a single diagnosis-root object",
+    "The diagnosis-root object is validated with Draft202012Validator against the strict PM-MVP-PBI-CON-001 draft schema",
+    "The schema rejects unknown root properties and validates UUID, timestamp, file, sheet, column, finding, question and execution structures",
+    "High-severity finding produces a pending, blocking validation question",
+    "Production activation remains explicitly false"
+  ],
+  "blocked_actions": [
+    "Production promotion",
+    "Automatic data coercion",
+    "Modification of QLT-001 through QLT-006 baseline artifacts"
+  ],
+  "required_next_gate": "G7.5-QLT-NUMTEXT-007-documentary-closure",
+  "status": "approved_with_production_block"
+}

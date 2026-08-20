@@ -1,0 +1,919 @@
+{
+  "$id": "https://assistente-arquitetura-analitica.local/contracts/PM-MVP-PBI-CON-001/1.0.0-reconstructed.1/diagnosis.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Representação canônica operacional reconstruída a partir do Contrato JSON Oficial do Diagnóstico — Fase 2 v1.0.",
+  "properties": {
+    "analysis": {
+      "additionalProperties": false,
+      "properties": {
+        "analysis_id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "assumptions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "business_questions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "completed_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "consented_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "domain": {
+          "enum": [
+            "generic",
+            "sso",
+            "hr"
+          ]
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "locale": {
+          "const": "pt-BR"
+        },
+        "objective": {
+          "type": "string"
+        },
+        "overall_confidence": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "owner_user_id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "project_id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "project_name": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "created",
+            "uploaded",
+            "validating",
+            "profiling",
+            "inferring",
+            "awaiting_user",
+            "reanalyzing",
+            "completed",
+            "completed_with_warnings",
+            "failed",
+            "deleted"
+          ]
+        },
+        "supersedes_analysis_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "terms_version": {
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "version": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "analysis_id",
+        "project_id",
+        "owner_user_id",
+        "version",
+        "supersedes_analysis_id",
+        "project_name",
+        "domain",
+        "objective",
+        "business_questions",
+        "status",
+        "locale",
+        "terms_version",
+        "consented_at",
+        "created_at",
+        "updated_at",
+        "completed_at",
+        "overall_confidence",
+        "assumptions",
+        "limitations"
+      ],
+      "type": "object"
+    },
+    "contract_id": {
+      "const": "PM-MVP-PBI-CON-001"
+    },
+    "execution": {
+      "additionalProperties": false,
+      "properties": {
+        "ai_usage": {
+          "additionalProperties": false,
+          "properties": {
+            "fallback": {
+              "type": "string"
+            },
+            "providers": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "used": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "used",
+            "providers",
+            "fallback"
+          ],
+          "type": "object"
+        },
+        "completed_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "confidence_methodology_version": {
+          "type": "string"
+        },
+        "correlation_id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "duration_ms": {
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "engine_version": {
+          "type": "string"
+        },
+        "errors": {
+          "type": "array"
+        },
+        "modules": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "duration_ms": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "module": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "module",
+              "status",
+              "duration_ms"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "partial_results": {
+          "type": "boolean"
+        },
+        "ruleset_version": {
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "started_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "correlation_id",
+        "status",
+        "started_at",
+        "completed_at",
+        "duration_ms",
+        "engine_version",
+        "ruleset_version",
+        "schema_version",
+        "confidence_methodology_version",
+        "partial_results",
+        "modules",
+        "errors",
+        "ai_usage"
+      ],
+      "type": "object"
+    },
+    "file": {
+      "additionalProperties": false,
+      "properties": {
+        "analyzable_sheet_count": {
+          "maximum": 10,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "extension": {
+          "const": ".xlsx"
+        },
+        "file_id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "finding_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "mime_type": {
+          "type": "string"
+        },
+        "original_name": {
+          "type": "string"
+        },
+        "retention": {
+          "additionalProperties": false,
+          "properties": {
+            "delete_at": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "deleted_at": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "status": {
+              "type": "string"
+            },
+            "uploaded_at": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "uploaded_at",
+            "delete_at",
+            "deleted_at"
+          ],
+          "type": "object"
+        },
+        "sha256": {
+          "pattern": "^[A-Fa-f0-9]{64}$",
+          "type": "string"
+        },
+        "sheet_count": {
+          "maximum": 10,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "size_bytes": {
+          "maximum": 26214400,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "total_columns": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "total_rows": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "workbook_readable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "file_id",
+        "original_name",
+        "extension",
+        "mime_type",
+        "size_bytes",
+        "sha256",
+        "workbook_readable",
+        "sheet_count",
+        "analyzable_sheet_count",
+        "total_rows",
+        "total_columns",
+        "retention",
+        "finding_ids"
+      ],
+      "type": "object"
+    },
+    "findings": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "affected_entities": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "entity_id": {
+                  "type": "string"
+                },
+                "entity_type": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "entity_type",
+                "entity_id"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "category": {
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "evidence": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "effect": {
+                  "type": "string"
+                },
+                "expected_condition": {
+                  "type": "string"
+                },
+                "observed": {
+                  "additionalProperties": true,
+                  "type": "object"
+                }
+              },
+              "required": [
+                "code",
+                "effect",
+                "observed",
+                "expected_condition"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "finding_id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "impact": {
+            "type": "string"
+          },
+          "recommendation": {
+            "type": "string"
+          },
+          "rule_id": {
+            "type": "string"
+          },
+          "rule_version": {
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "critical",
+              "high",
+              "medium",
+              "low",
+              "informational"
+            ]
+          },
+          "status": {
+            "enum": [
+              "open",
+              "acknowledged",
+              "resolved",
+              "accepted_risk"
+            ]
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "finding_id",
+          "category",
+          "severity",
+          "status",
+          "title",
+          "description",
+          "evidence",
+          "impact",
+          "recommendation",
+          "rule_id",
+          "rule_version",
+          "affected_entities",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "metrics": {
+      "type": "array"
+    },
+    "proposed_model": {
+      "additionalProperties": false,
+      "properties": {
+        "assumptions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "confidence": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "implementation_steps": {
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "recommended",
+            "probable",
+            "hypothesis",
+            "rejected",
+            "insufficient"
+          ]
+        },
+        "tables": {
+          "type": "array"
+        }
+      },
+      "required": [
+        "status",
+        "tables",
+        "implementation_steps",
+        "assumptions",
+        "limitations",
+        "confidence"
+      ],
+      "type": "object"
+    },
+    "questions": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "answer": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "blocking": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "impact": {
+            "additionalProperties": false,
+            "properties": {
+              "affected_modules": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "affected_recommendation_ids": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "affected_rule_ids": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "affected_modules",
+              "affected_rule_ids",
+              "affected_recommendation_ids"
+            ],
+            "type": "object"
+          },
+          "options": {
+            "type": "array"
+          },
+          "priority": {
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ]
+          },
+          "question_id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "question_type": {
+            "enum": [
+              "single_choice",
+              "multiple_choice",
+              "number",
+              "short_text",
+              "confirmation"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "answered",
+              "skipped",
+              "obsolete"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "question_id",
+          "text",
+          "reason",
+          "question_type",
+          "priority",
+          "blocking",
+          "status",
+          "options",
+          "impact",
+          "answer",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "relationships": {
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "sheets": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "analysis_status": {
+            "enum": [
+              "analyzed",
+              "warnings",
+              "ignored",
+              "not_analyzable",
+              "failed"
+            ]
+          },
+          "classification": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "column_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "columns": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "column_id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "physical_type": {
+                  "type": "string"
+                },
+                "position": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "profile": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "non_empty_value_count": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "numeric_text_ambiguity_count": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "numeric_text_basis": {
+                      "type": "string"
+                    },
+                    "numeric_text_candidate_count": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "numeric_text_candidate_ratio": {
+                      "maximum": 1,
+                      "minimum": 0,
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "non_empty_value_count",
+                    "numeric_text_candidate_count",
+                    "numeric_text_candidate_ratio",
+                    "numeric_text_basis",
+                    "numeric_text_ambiguity_count"
+                  ],
+                  "type": "object"
+                }
+              },
+              "required": [
+                "column_id",
+                "name",
+                "position",
+                "physical_type",
+                "profile"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "finding_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "grain": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "included_in_analysis": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "position": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "quality_score": {
+            "maximum": 100,
+            "minimum": 0,
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "question_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "region": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "row_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "sheet_id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "visibility": {
+            "enum": [
+              "visible",
+              "hidden",
+              "very_hidden"
+            ]
+          }
+        },
+        "required": [
+          "sheet_id",
+          "name",
+          "position",
+          "visibility",
+          "included_in_analysis",
+          "analysis_status",
+          "region",
+          "row_count",
+          "column_count",
+          "quality_score",
+          "grain",
+          "classification",
+          "columns",
+          "finding_ids",
+          "question_ids"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "summary": {
+      "additionalProperties": false,
+      "properties": {
+        "completeness_ratio": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "counts": {
+          "additionalProperties": false,
+          "properties": {
+            "columns": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "dimensions": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "facts": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "metrics": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "relationships": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "risks": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "sheets": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "sheets",
+            "columns",
+            "facts",
+            "dimensions",
+            "relationships",
+            "metrics",
+            "risks"
+          ],
+          "type": "object"
+        },
+        "executive_summary": {
+          "type": "string"
+        },
+        "next_recommended_action": {
+          "type": "string"
+        },
+        "quality_score": {
+          "maximum": 100,
+          "minimum": 0,
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "top_risk_finding_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "maxItems": 10,
+          "type": "array"
+        }
+      },
+      "required": [
+        "quality_score",
+        "completeness_ratio",
+        "counts",
+        "top_risk_finding_ids",
+        "executive_summary",
+        "next_recommended_action"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "contract_id",
+    "analysis",
+    "file",
+    "summary",
+    "sheets",
+    "proposed_model",
+    "relationships",
+    "metrics",
+    "questions",
+    "findings",
+    "execution"
+  ],
+  "title": "PM-MVP-PBI-CON-001 — Diagnóstico Reconstruído",
+  "type": "object",
+  "x_reconstruction": {
+    "contract_id": "PM-MVP-PBI-CON-001",
+    "known_gaps": [
+      "O JSON Schema original e os modelos Pydantic originais não foram disponibilizados.",
+      "Estruturas aninhadas sem propriedades detalhadas no DOCX permanecem como objetos ou arrays tipados, sem taxonomia de negócio inventada."
+    ],
+    "promotion_policy": "Approved for MVP draft validation only; production promotion remains blocked pending original-artifact recovery or independent contract review.",
+    "source_document": "Contrato_JSON_Oficial_Diagnostico_Fase2_v1.0.docx",
+    "source_sections": {
+      "cross_validation": "9.2",
+      "enumerations": "8",
+      "execution": "7.10",
+      "file": "7.2",
+      "findings": "7.9",
+      "metrics": "7.7",
+      "proposed_model": "7.5",
+      "questions": "7.8",
+      "relationships": "7.6",
+      "root_and_analysis": "7.1",
+      "sheets_and_columns": "7.4",
+      "structural_validation": "9.1",
+      "summary": "7.3"
+    },
+    "status": "approved_reconstructed_for_mvp_draft",
+    "version": "1.0.0-reconstructed.1"
+  }
+}

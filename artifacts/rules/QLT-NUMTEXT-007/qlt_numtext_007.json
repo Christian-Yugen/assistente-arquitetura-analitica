@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.1.0",
+  "diagnosis_contract_version": "1.0.0",
+  "rule_id": "QLT-NUMTEXT-007",
+  "name": "Valores numéricos armazenados como texto",
+  "category": "quality",
+  "version": "1.0.0-draft",
+  "status": "draft",
+  "priority": "P0",
+  "description": "Detecta colunas textuais ou mistas que possuem valores não vazios interpretáveis como números por base canônica estrita, sem converter dados automaticamente.",
+  "execution": {
+    "stage": "quality",
+    "scope": "column",
+    "order": 160,
+    "deterministic": true,
+    "short_circuit": false,
+    "max_firings": 1,
+    "timeout_ms": 500,
+    "reanalysis_triggers": ["file_replaced", "upstream_rule_changed", "user_answer_changed"]
+  },
+  "applicability": {
+    "scopes": ["column"],
+    "physical_types": ["text", "mixed"],
+    "min_diagnosis_contract_version": "1.0.0",
+    "sensitivity_classes": ["technical"],
+    "notes": ["Limites de severidade e confiança são provisórios até calibração em golden datasets."]
+  },
+  "inputs": [
+    {"input_id": "column_name", "path": "column.name", "value_type": "string", "required": true, "on_missing": "skip_rule"},
+    {"input_id": "physical_type", "path": "column.physical_type", "value_type": "string", "required": true, "on_missing": "skip_rule"},
+    {"input_id": "non_empty_value_count", "path": "column.profile.non_empty_value_count", "value_type": "integer", "required": true, "on_missing": "skip_rule"},
+    {"input_id": "numeric_text_candidate_count", "path": "column.profile.numeric_text_candidate_count", "value_type": "integer", "required": true, "on_missing": "skip_rule"},
+    {"input_id": "numeric_text_candidate_ratio", "path": "column.profile.numeric_text_candidate_ratio", "value_type": "number", "required": true, "on_missing": "skip_rule"},
+    {"input_id": "numeric_text_basis", "path": "column.profile.numeric_text_basis", "value_type": "string", "required": true, "on_missing": "skip_rule"},
+    {"input_id": "numeric_text_ambiguity_count", "path": "column.profile.numeric_text_ambiguity_count", "value_type": "integer", "required": false, "on_missing": "use_default_zero"}
+  ],
+  "condition": {
+    "kind": "all",
+    "conditions": [
+      {"path": "column.physical_type", "operator": "in", "values": ["text", "mixed"]},
+      {"path": "column.profile.numeric_text_basis", "operator": "eq", "value": "strict_canonical_numeric_string"},
+      {"path": "column.profile.numeric_text_candidate_count", "operator": "gt", "value": 0},
+      {"path": "column.profile.numeric_text_candidate_ratio", "operator": "gt", "value": 0}
+    ]
+  },
+  "exclusions": [
+    {"exclusion_id": "EXC-NUMTEXT-NUMERIC", "condition": {"path": "column.physical_type", "operator": "eq", "value": "numeric"}, "effect": "skip_rule", "reason": "A coluna já possui tipo físico numérico."},
+    {"exclusion_id": "EXC-NUMTEXT-NO-DATA", "condition": {"path": "column.profile.non_empty_value_count", "operator": "lte", "value": 0}, "effect": "skip_rule", "reason": "Não há valores não vazios para analisar."}
+  ],
+  "evidence_templates": [
+    {"evidence_code": "EVD-NUMTEXT-COUNT", "effect": "negative", "weight": -20, "observed_value_path": "column.profile.numeric_text_candidate_count", "expected_condition": "numeric_text_candidate_count = 0"},
+    {"evidence_code": "EVD-NUMTEXT-RATIO", "effect": "negative", "weight": -25, "observed_value_path": "column.profile.numeric_text_candidate_ratio", "expected_condition": "numeric_text_candidate_ratio = 0"},
+    {"evidence_code": "EVD-NUMTEXT-AMBIGUITY", "effect": "confidence_penalty", "weight": -25, "observed_value_path": "column.profile.numeric_text_ambiguity_count", "expected_condition": "numeric_text_ambiguity_count = 0"}
+  ],
+  "outcomes": [
+    {"outcome_id": "OUT-NUMTEXT-LOW", "range": "> 0 and < 0.05", "severity": "low", "action_kinds": ["emit_finding"]},
+    {"outcome_id": "OUT-NUMTEXT-MEDIUM", "range": ">= 0.05 and < 0.5", "severity": "medium", "action_kinds": ["emit_finding"]},
+    {"outcome_id": "OUT-NUMTEXT-HIGH", "range": ">= 0.5", "severity": "high", "action_kinds": ["emit_finding", "emit_question"]}
+  ],
+  "confidence_policy": {"base": 0.9, "penalty_if_ambiguity_ratio_gt_zero": 0.1, "penalty_if_ambiguity_ratio_gte_0_1": 0.25, "floor": 0.5},
+  "suppression_policy": {"behavior": "supplemental_to_mixtype", "note": "Quando QLT-MIXTYPE-005 for alta, esta regra complementa a interpretação sem substituir o finding de integridade de tipos."},
+  "dependencies": {
+    "requires_rule_loaded_ids": ["QLT-NULL-001", "QLT-EMPTYCOL-003", "QLT-MIXTYPE-005"],
+    "requires_rule_fired_ids": [],
+    "requires_stage_completed": ["profiling"],
+    "requires_context_paths": ["column.name", "column.physical_type", "column.profile.non_empty_value_count", "column.profile.numeric_text_candidate_count", "column.profile.numeric_text_candidate_ratio", "column.profile.numeric_text_basis"],
+    "executes_after_rule_ids": ["QLT-NULL-001", "QLT-EMPTYCOL-003", "QLT-MIXTYPE-005"],
+    "conflicts_with_rule_ids": [],
+    "supersedes_rule_ids": []
+  },
+  "privacy": {"raw_values_in_findings": false, "allowed_evidence": ["counts", "ratios", "basis", "column_name"]},
+  "tests": {"positive": ["high-majority", "medium-with-ambiguity"], "negative": ["already-numeric", "unsupported-basis"], "interaction": ["mixed-type-supplemental"], "regression": ["quality-ruleset-001-006"]},
+  "golden_dataset_expectation": {"dataset_id": "GD-QLT-NUMTEXT-007", "status": "pending_creation", "expected_outputs": ["findings", "questions"]}
+}

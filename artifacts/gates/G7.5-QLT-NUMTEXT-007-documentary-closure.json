@@ -1,0 +1,13 @@
+{
+  "gate_id": "G7.5-QLT-NUMTEXT-007-documentary-closure",
+  "rule_id": "QLT-NUMTEXT-007",
+  "decision": "blocked_pending_calibration",
+  "blocking_preconditions": [
+    "Create golden dataset GD-QLT-NUMTEXT-007 with expected diagnosis",
+    "Execute calibration against golden datasets and document false-positive and false-negative review",
+    "Run cumulative regression with the canonical QLT-NULL-001 artifact recovered",
+    "Approve final severity and confidence thresholds",
+    "Maintain G7.4-R1 revalidation evidence against PM-MVP-PBI-CON-001@1.0.0-reconstructed.1 or revalidate against an original artifact if later recovered"
+  ],
+  "status": "blocked"
+}

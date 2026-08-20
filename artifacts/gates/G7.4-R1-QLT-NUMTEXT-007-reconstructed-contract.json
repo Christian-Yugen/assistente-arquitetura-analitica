@@ -1,0 +1,38 @@
+{
+  "gate_id": "G7.4-R1-QLT-NUMTEXT-007-reconstructed-contract",
+  "rule_id": "QLT-NUMTEXT-007",
+  "decision": "approved_for_mvp_draft_against_reconstructed_contract",
+  "contract": {
+    "contract_id": "PM-MVP-PBI-CON-001",
+    "contract_version": "1.0.0-reconstructed.1",
+    "contract_gate": "CONTRACT-RECONSTRUCTION-001",
+    "contract_status": "approved_reconstructed_for_mvp_draft"
+  },
+  "evidence": {
+    "rule_artifact": "artifacts/rules/QLT-NUMTEXT-007/qlt_numtext_007.json",
+    "ruleset": "artifacts/rulesets/quality-ruleset-v0.7.0.json",
+    "executor": "engine/pipeline/quality_diagnosis.py",
+    "contract_validation": "engine/contracts/validation.py",
+    "draft_profile": "artifacts/contracts/PM-MVP-PBI-CON-001/draft-execution-profile-v1.json",
+    "tests": {
+      "python_engine": "21 passed",
+      "vitest": "7 passed",
+      "typescript": "passed"
+    }
+  },
+  "controls_verified": [
+    "Profile numeric_text flows into the deterministic evaluator without retaining raw cell values.",
+    "Findings and blocking questions are emitted into the reconstructed diagnosis root with UUID lineage to sheet and column entities.",
+    "The diagnosis root is validated by JSON Schema Draft 2020-12 and Pydantic before return.",
+    "All governed partial-result markers are read from the authorized draft execution profile and are validated against a closed allowlist.",
+    "The QLT-NUMTEXT-007 rule remains registered after QLT-NULL-001, QLT-EMPTYCOL-003 and QLT-MIXTYPE-005 in the draft ruleset."
+  ],
+  "limitations": [
+    "The operational canonical contract is reconstructed from the approved DOCX; it is not a recovered original JSON Schema.",
+    "QLT-NUMTEXT-007 thresholds and confidence penalties remain uncalibrated against golden datasets.",
+    "Only the numeric-text quality rule is executable in this pipeline cycle; no model, relationship or metric recommendation is inferred.",
+    "Canonical QLT-NULL-001 source recovery remains a prerequisite for any production-promotion gate."
+  ],
+  "status": "approved_with_production_block",
+  "next_gate": "G7.5-QLT-NUMTEXT-007-documentary-closure"
+}

@@ -1,0 +1,13 @@
+{
+  "gate_id": "QLT-NUMTEXT-007-AUTHORIZATION",
+  "rule_id": "QLT-NUMTEXT-007",
+  "decision": "authorized_for_controlled_specification_and_isolated_implementation",
+  "preconditions": [
+    "GLOBAL-QLT-001-006 approved_with_governance_constraints",
+    "PM-MVP-PBI-CATALOG-95 v1.0.0 frozen_structure",
+    "No silent modification of QLT-001 through QLT-006"
+  ],
+  "blocked_actions": ["production_activation", "automatic_data_conversion", "baseline_rule_modification"],
+  "required_next_gates": ["G7.3-isolated-implementation", "G7.4-ruleset-integration", "G7.5-documentary-closure"],
+  "status": "approved"
+}

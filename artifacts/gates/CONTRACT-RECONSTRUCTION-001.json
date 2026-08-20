@@ -1,0 +1,49 @@
+{
+  "gate_id": "CONTRACT-RECONSTRUCTION-001",
+  "decision": "approved_reconstructed_for_mvp_draft",
+  "contract_id": "PM-MVP-PBI-CON-001",
+  "contract_version": "1.0.0-reconstructed.1",
+  "scope": "MVP draft development and internal validation only",
+  "source": {
+    "primary_document": "Contrato_JSON_Oficial_Diagnostico_Fase2_v1.0.docx",
+    "original_json_schema_available": false,
+    "original_pydantic_models_available": false
+  },
+  "evidence": {
+    "canonical_schema": "artifacts/contracts/PM-MVP-PBI-CON-001/diagnosis.schema.json",
+    "schema_source": "engine/contracts/reconstructed_schema.py",
+    "pydantic_models": "engine/contracts/models.py",
+    "examples": [
+      "artifacts/contracts/PM-MVP-PBI-CON-001/examples/minimal.valid.json",
+      "artifacts/contracts/PM-MVP-PBI-CON-001/examples/complete.valid.json",
+      "artifacts/contracts/PM-MVP-PBI-CON-001/examples/invalid.unknown-root.json"
+    ],
+    "validation_results": {
+      "python_engine_tests": "17 passed",
+      "vitest_tests": "7 passed",
+      "typescript_check": "passed"
+    }
+  },
+  "controls_verified": [
+    "JSON Schema Draft 2020-12 validates root structure, formats, enums, limits and unknown root properties.",
+    "Pydantic models validate object shape and documented cross-references for files, sheets, findings, questions and lineage.",
+    "The executor receives operational metadata as input and computes partial completeness from implemented rules instead of fabricating generic values.",
+    "The schema preserves explicit source sections, known gaps and reconstructed lineage metadata."
+  ],
+  "limitations": [
+    "This is a reconstructed operational canonical artifact, not a recovered copy of the original schema JSON.",
+    "Nested business blocks not exhaustively specified in the DOCX retain generic object or array typing until a future approved specification exists.",
+    "Production promotion remains blocked pending original-artifact recovery or independent contract review and full MVP security gates."
+  ],
+  "allowed_next_actions": [
+    "Validate QLT-NUMTEXT-007 against the reconstructed canonical contract.",
+    "Develop future rules and pipeline modules against this versioned contract.",
+    "Add stricter nested schemas only with traceable requirement evidence."
+  ],
+  "blocked_actions": [
+    "Claiming the reconstructed schema is the unavailable original JSON Schema.",
+    "Production promotion based solely on this reconstruction gate.",
+    "Changing contract fields without versioning and a new contract gate."
+  ],
+  "status": "approved_with_production_block"
+}

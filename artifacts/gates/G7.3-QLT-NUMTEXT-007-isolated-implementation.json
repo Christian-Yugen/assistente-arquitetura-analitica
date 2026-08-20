@@ -1,0 +1,28 @@
+{
+  "gate_id": "G7.3-QLT-NUMTEXT-007-isolated-implementation",
+  "rule_id": "QLT-NUMTEXT-007",
+  "decision": "approved_for_draft_ruleset_integration",
+  "scope": "isolated_deterministic_implementation",
+  "evidence": {
+    "rule_specification": "artifacts/rules/QLT-NUMTEXT-007/qlt_numtext_007.json",
+    "engine_implementation": "engine/quality/numtext.py",
+    "unit_tests": "engine/tests/test_numtext.py",
+    "boundary_tests": "engine/tests/test_numtext_boundaries.py",
+    "integration_tests": "engine/tests/test_numtext_integration.py",
+    "test_command": "pnpm test:engine",
+    "observed_result": "10 tests passed"
+  },
+  "controls_verified": [
+    "Deterministic execution in server-side Python module",
+    "No automatic conversion of source values",
+    "Aggregate-only evidence without raw cell values",
+    "Blocking validation question only for high-severity outcome",
+    "Explicit precedence after QLT-NULL-001, QLT-EMPTYCOL-003 and QLT-MIXTYPE-005"
+  ],
+  "limitations": [
+    "Thresholds and confidence penalties are provisional pending golden-dataset calibration.",
+    "The rule is not production ready and must not be enabled for user uploads yet."
+  ],
+  "next_gate": "G7.4-QLT-NUMTEXT-007-ruleset-integration",
+  "status": "approved"
+}

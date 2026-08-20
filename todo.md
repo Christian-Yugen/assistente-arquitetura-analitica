@@ -1,0 +1,54 @@
+# Project TODO
+
+- [x] Registrar no repositório o escopo, os limites e os artefatos de entrada da continuidade QLT-001 a QLT-007.
+- [ ] Inventariar as seis regras de qualidade existentes e validar IDs, versões, dependências, regras de saída e compatibilidade com o contrato de diagnóstico.
+- [ ] Recuperar o artefato canônico da QLT-NULL-001 e confirmar seu hash de baseline antes de qualquer gate de promoção de ambiente.
+- [ ] Recuperar o artefato canônico da QLT-NULL-001 e confirmar seu hash de baseline antes de qualquer gate de promoção de ambiente.
+- [x] Executar o Checkpoint Global QLT-001 a QLT-006 com relatório de interações, regressão, dívida técnica e decisão de gate rastreável.
+- [x] Registrar, para QLT-DUP-002, QLT-EMPTYCOL-003, QLT-EMPTYROW-004 e QLT-MIXTYPE-005, as dependências, outcomes e compatibilidade com o contrato de diagnóstico.
+- [x] Consolidar a matriz de inventário das seis regras com ID, versão, status, dependências, outcomes e confirmação de contrato.
+- [ ] Corrigir somente não conformidades autorizadas pelo checkpoint, preservando a linhagem dos artefatos aprovados.
+- [x] Formalizar a autorização da QLT-NUMTEXT-007 após a aprovação do checkpoint global.
+- [x] Especificar QLT-NUMTEXT-007 com condição, exceções, evidências, outcomes, confiança, perguntas e referências ao contrato JSON.
+- [x] Implementar a regra QLT-NUMTEXT-007 no motor de diagnóstico com execução exclusivamente no servidor.
+- [x] Criar testes unitários positivos, negativos, limítrofes, de regressão e de interação para QLT-NUMTEXT-007.
+- [x] Integrar a regra ao ruleset de qualidade, ao contexto de análise e ao JSON canônico do diagnóstico.
+- [x] Implementar e executar testes limítrofes, de regressão e de interação reais para a QLT-NUMTEXT-007, com evidência verificável em arquivos e execução bem-sucedida.
+- [x] Validar o ruleset draft, o registro do executor e o fragmento de diagnóstico canônico da QLT-NUMTEXT-007 com testes automatizados.
+- [x] Integrar os campos numeric_text_candidate_count, numeric_text_candidate_ratio, numeric_text_basis e numeric_text_ambiguity_count ao contexto de análise executável do motor, com teste automatizado do fluxo de contexto até a regra.
+- [x] Conectar a QLT-NUMTEXT-007 ao executor e ao diagnóstico canônico completo, validando findings e perguntas no objeto raiz do contrato com teste de integração.
+- [x] Completar o executor para produzir um objeto raiz plenamente compatível com o contrato PM-MVP-PBI-CON-001, preenchendo os blocos e campos obrigatórios para o modo draft sem inventar dados.
+- [x] Adicionar teste automatizado que valide a saída do executor contra o contrato ou schema canônico completo, além de confirmar findings e perguntas da QLT-NUMTEXT-007.
+- [x] Gerar e validar o diagnóstico contra o schema canônico reconstruído do PM-MVP-PBI-CON-001, com fonte e versão rastreáveis no repositório.
+- [x] Remover ou justificar formalmente valores genéricos do executor draft, preenchendo apenas metadados derivados de entrada real ou os marcadores autorizados para resultado parcial.
+- [x] Adicionar teste automatizado contra o schema canônico reconstruído, incluindo validações cruzadas obrigatórias do contrato.
+- [x] Externalizar ou autorizar formalmente os marcadores fixos remanescentes do executor draft, incluindo versões do motor, ruleset e metodologia de confiança.
+- [x] Adicionar teste que rejeite marcadores hardcoded fora da lista autorizada para resultados parciais do diagnóstico.
+- [x] Forçar valores divergentes em todos os marcadores governados do perfil draft e provar que o executor os propaga sem recorrer a valores internos.
+- [x] Cobrir em teste confiança, uso de IA, textos de limitação, sumário, próxima ação e proposta de modelo para impedir regressão de marcadores hardcoded.
+- [x] Documentar e validar uma allowlist completa dos campos do diagnóstico parcial governados pelo draft-execution-profile-v1.json.
+- [x] Adicionar teste negativo que falhe se o executor emitir, em qualquer campo governado, um valor divergente da allowlist autorizada do perfil draft.
+- [x] Parametrizar a validação negativa para exercer todos os caminhos de `governed_output_paths` e comprovar rejeição para cada divergência.
+- [x] Assegurar em teste que a allowlist cobre integralmente os campos governados que o executor emite no diagnóstico parcial.
+- [x] Registrar a decisão, a fonte DOCX, a linhagem e os limites da reconstrução do contrato PM-MVP-PBI-CON-001.
+- [x] Extrair e reconstruir o diagnosis.schema.json canônico v1.0.0 a partir do documento aprovado, com campos, enums, formatos e limites rastreáveis.
+- [x] Criar os modelos Pydantic equivalentes e as validações cruzadas documentadas para o contrato reconstruído.
+- [x] Criar exemplos mínimo, completo e de erro para o contrato reconstruído e validá-los com Draft202012Validator e os modelos Pydantic.
+- [x] Aprovar ou bloquear o gate CONTRACT-RECONSTRUCTION-001 com evidências de validação, lacunas e critérios de promoção.
+- [x] Revalidar a QLT-NUMTEXT-007 exclusivamente contra o contrato reconstruído aprovado e atualizar seus gates de integração.
+- [x] Confirmar o artefato G7.4-R1 da QLT-NUMTEXT-007, atualizar G7.5 e o resumo de gates, e vincular a validação executada a essa evidência.
+- [ ] Preparar os componentes de segurança para isolamento por usuário, armazenamento privado, mascaramento e retenção de artefatos.
+- [ ] Validar o fluxo de análise e registrar gates, evidências, pendências e próximos passos no repositório.
+- [ ] Atualizar testes Vitest do projeto e verificar compilação antes do checkpoint de entrega.
+- [x] Documentar a separação entre conclusão do catálogo de 95 regras e conclusão integral do MVP da plataforma.
+- [x] Congelar um blueprint versionado das 95 regras com ID, categoria, entradas, condição, exclusões, evidências, precedência, dependências, testes e golden dataset esperado.
+- [ ] Completar as nove regras restantes da categoria Qualidade após o checkpoint global e a autorização formal de cada ciclo.
+- [ ] Completar as categorias de Tipagem Semântica, Fato e Dimensão, Relacionamentos, Métricas, Alertas e Granularidade em ciclos com gates, regressão e fechamento documental.
+- [ ] Construir o motor completo com profiling, contexto normalizado, executor, precedência, confiança, agregação e contrato canônico de diagnóstico.
+- [ ] Criar golden datasets de referência e definir expectativas de contexto, findings, severidade, dimensões, fatos, relacionamentos e métricas.
+- [ ] Calibrar o motor por falsos positivos e falsos negativos antes de qualquer ativação produtiva.
+- [ ] Implementar pipeline real de upload, parser Excel, profiler, context builder, executor e recomendação, com análise no servidor.
+- [ ] Construir telas de upload, processamento, diagnóstico segmentado, perguntas de validação, versões e exportação.
+- [ ] Implementar validações de segurança, LGPD, limites de arquivo, proteção contra arquivos malformados, logs sem dados pessoais e política de retenção.
+- [ ] Produzir documentação de arquitetura, contrato, executor, desenvolvimento de regras, testes, API, segurança e manual do usuário.
+- [ ] Executar testes ponta a ponta automatizados e aprovar o Gate formal de MVP 1.0 somente quando todos os critérios de conclusão estiverem atendidos.

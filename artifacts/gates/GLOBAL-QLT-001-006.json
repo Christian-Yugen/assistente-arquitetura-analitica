@@ -1,0 +1,42 @@
+{
+  "gate_id": "GLOBAL-QLT-001-006",
+  "title": "Checkpoint cumulativo de qualidade QLT-001 a QLT-006",
+  "ruleset_id": "PM-MVP-PBI-RULESET-QUALITY-006",
+  "ruleset_version": "0.6.0",
+  "decision": "approved_with_governance_constraints",
+  "scope": "coherence_precedence_findings_confidence_context_regression_technical_debt",
+  "evidence": {
+    "diagnosis_contract_version": "1.0.0",
+    "analysis_context_version": "1.6.0",
+    "individual_tests": { "passed": 61, "total": 61 },
+    "interaction_tests": { "passed": 16, "total": 16 },
+    "dependency_cycles": 0,
+    "ruleset_status": "draft",
+    "historical_gates": ["G6.4", "G6.5"],
+    "materialized_canonical_rule_definitions": 5,
+    "materialized_legacy_rule_examples": 1
+  },
+  "constraints": [
+    "Production activation remains blocked until golden-dataset calibration.",
+    "No baseline rule may be changed without a versioned hardening decision.",
+    "Namespace debt must remain explicitly tracked until a versioned correction is approved.",
+    "The canonical QLT-NULL-001 artifact and its G6.4 baseline hash must be recovered before any production-promotion gate.",
+    "QLT-NUMTEXT-007 must conform to the frozen 95-rule blueprint and pass its own gates."
+  ],
+  "technical_debt": [
+    {
+      "id": "TD-QLT-NS-001",
+      "rule_id": "QLT-DUP-002",
+      "path": "sheet.name",
+      "decision": "defer_versioned_hardening"
+    },
+    {
+      "id": "TD-QLT-NS-002",
+      "rule_id": "QLT-NULL-001",
+      "path": "column.name",
+      "decision": "defer_versioned_hardening"
+    }
+  ],
+  "authorized_next_activity": "Freeze the 95-rule blueprint; then implement QLT-NUMTEXT-007 in a governed cycle.",
+  "production_ready": false
+}

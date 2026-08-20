@@ -1,0 +1,51 @@
+{
+  "profile_id": "PM-MVP-PBI-DRAFT-EXECUTION-001",
+  "profile_version": "1.0.0",
+  "status": "authorized_for_mvp_draft",
+  "applies_to_contract": "PM-MVP-PBI-CON-001@1.0.0-reconstructed.1",
+  "engine_version": "0.1.0",
+  "ruleset_version": "0.7.0-draft",
+  "confidence_methodology_version": "0.1.0",
+  "catalog_target_rule_count": 95,
+  "execution_status": "completed",
+  "module": {
+    "name": "quality",
+    "status": "completed"
+  },
+  "ai_usage": {
+    "used": false,
+    "providers": [],
+    "fallback": "not_invoked"
+  },
+  "partial_result_markers": {
+    "assumption": "Apenas regras explicitamente registradas no ruleset draft foram executadas.",
+    "limitation": "Módulos não executados permanecem ausentes do diagnóstico e não geram recomendações inferidas.",
+    "proposed_model_status": "insufficient",
+    "proposed_model_limitation": "O módulo de modelagem ainda não foi executado neste diagnóstico parcial.",
+    "summary_template": "O executor parcial avaliou {sheet_count} aba(s), {column_count} coluna(s) e emitiu {finding_count} achado(s) de qualidade.",
+    "next_action_with_questions": "Responder às perguntas de validação pendentes.",
+    "next_action_without_questions": "Executar o próximo ciclo autorizado do catálogo de regras."
+  },
+  "governed_output_paths": [
+    "analysis.assumptions[0]",
+    "analysis.limitations[0]",
+    "summary.completeness_ratio",
+    "summary.executive_summary",
+    "summary.next_recommended_action",
+    "proposed_model.status",
+    "proposed_model.limitations[0]",
+    "execution.status",
+    "execution.engine_version",
+    "execution.ruleset_version",
+    "execution.confidence_methodology_version",
+    "execution.modules[0].module",
+    "execution.modules[0].status",
+    "execution.ai_usage"
+  ],
+  "governance": {
+    "approved_by_gate": "CONTRACT-RECONSTRUCTION-001",
+    "allowed_scope": "MVP draft internal validation only",
+    "production_ready": false,
+    "change_policy": "Any field change requires a new version of this profile and a governance review."
+  }
+}

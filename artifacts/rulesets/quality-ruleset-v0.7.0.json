@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.1.0",
+  "ruleset_id": "PM-MVP-PBI-RULESET-QUALITY-007",
+  "ruleset_version": "0.7.0-draft",
+  "status": "draft",
+  "diagnosis_contract_version": "1.0.0",
+  "context_contract_version": "1.6.0",
+  "confidence_methodology_version": "0.1.0",
+  "based_on_ruleset": "PM-MVP-PBI-RULESET-QUALITY-006@0.6.0",
+  "rule_files": [
+    "legacy-source/quality/qlt_null_001.json",
+    "legacy-source/quality/qlt_dup_002.json",
+    "legacy-source/quality/qlt_emptycol_003.json",
+    "legacy-source/quality/qlt_emptyrow_004.json",
+    "legacy-source/quality/qlt_mixtype_005.json",
+    "legacy-source/quality/qlt_baddate_006.json",
+    "artifacts/rules/QLT-NUMTEXT-007/qlt_numtext_007.json"
+  ],
+  "category_counts": {
+    "quality": 7
+  },
+  "target_catalog_size": 95,
+  "execution_order": [
+    "QLT-NULL-001",
+    "QLT-DUP-002",
+    "QLT-EMPTYCOL-003",
+    "QLT-EMPTYROW-004",
+    "QLT-MIXTYPE-005",
+    "QLT-BADDATE-006",
+    "QLT-NUMTEXT-007"
+  ],
+  "integration_controls": {
+    "global_checkpoint": "GLOBAL-QLT-001-006",
+    "rule_authorization_gate": "QLT-NUMTEXT-007-AUTHORIZATION",
+    "required_next_gates": ["G7.3-isolated-implementation", "G7.4-ruleset-integration", "G7.5-documentary-closure"],
+    "production_ready": false,
+    "baseline_artifact_limitation": "The canonical QLT-NULL-001 JSON must be recovered before production-promotion gates."
+  },
+  "notes": [
+    "Working ruleset; it does not supersede the approved QLT-001 to QLT-006 baseline.",
+    "QLT-NUMTEXT-007 is implemented in isolation and remains draft until its own integration, regression and closure gates pass.",
+    "All rules remain blocked from production pending golden-dataset calibration."
+  ]
+}
