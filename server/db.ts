@@ -107,7 +107,15 @@ export async function getAnalysisProjectForOwner(projectId: string, ownerId: num
 export async function listAnalysisProjectsForOwner(ownerId: number) {
   const db = await getDb();
   if (!db) throw new Error("Banco de dados indisponível.");
-  return db.select().from(analysisProjects).where(eq(analysisProjects.ownerId, ownerId)).orderBy(desc(analysisProjects.createdAt));
+  const projects = await db.select().from(analysisProjects).where(eq(analysisProjects.ownerId, ownerId)).orderBy(desc(analysisProjects.createdAt));
+  return Promise.all(projects.map(async project => {
+    const [latest] = await db.select({ id: analysisDiagnostics.id, version: analysisDiagnostics.version })
+      .from(analysisDiagnostics)
+      .where(and(eq(analysisDiagnostics.projectId, project.id), eq(analysisDiagnostics.ownerId, ownerId)))
+      .orderBy(desc(analysisDiagnostics.version))
+      .limit(1);
+    return { ...project, lastDiagnosticId: latest?.id ?? null, lastDiagnosticVersion: latest?.version ?? null };
+  }));
 }
 
 export async function updateAnalysisProjectStatus(projectId: string, ownerId: number, status: "draft" | "uploading" | "analyzing" | "completed" | "failed") {

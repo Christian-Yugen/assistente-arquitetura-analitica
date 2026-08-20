@@ -75,8 +75,23 @@
 - [x] Validar no servidor o limite de até 10 abas antes de `storagePut` ou qualquer persistência de projeto e arquivo.
 - [ ] Criar teste integrado do fluxo pós-análise que comprove a atualização owner-scoped de `storageKey`, `retentionStatus` e metadados de auditoria.
 - [ ] Adicionar prova de integração com persistência real ou helper de banco real para criação de projeto, arquivo e diagnóstico no escopo do owner.
-- [ ] Cobrir todas as leituras owner-scoped do módulo de análise, comprovando que outro usuário não acessa projetos ou diagnósticos alheios.
+- [x] Cobrir todas as leituras owner-scoped do módulo de análise, comprovando que outro usuário não acessa projetos ou diagnósticos alheios.
+- [x] Criar teste de integração estruturado para os helpers de listagem e consulta que comprove isolamento entre dois proprietários.
 - [ ] Construir telas de upload, processamento, diagnóstico segmentado, perguntas de validação, versões e exportação.
+- [x] Substituir a página inicial de exemplo por um workspace responsivo de análise, com entrada de projeto, seleção XLSX e limites visíveis.
+- [x] Exibir estados de autenticação, carregamento, erro e resultado para o procedimento `analysis.analyzeWorkbook`.
+- [x] Criar a visualização inicial de projetos e diagnóstico, incluindo achados, perguntas pendentes, versão e aviso de retenção.
+- [x] Tornar a lista de projetos navegável por meio de versões de diagnóstico vinculadas ao proprietário.
+- [x] Exibir prévias de achados e perguntas pendentes do diagnóstico, com aviso de retenção no contexto da versão.
+- [x] Cobrir estados de erro ao listar projetos ou consultar diagnósticos existentes.
+- [x] Documentar e validar no código os estados não autenticado, carregando, erro e sucesso da mutation `analysis.analyzeWorkbook`.
+- [x] Adicionar cobertura verificável de UI para o fluxo de autenticação e estado da mutation de análise.
+- [x] Renderizar e testar o componente do workspace nos estados `auth_loading`, `sign_in_required`, `auth_error`, `analyzing` e `success`.
+- [x] Verificar no teste de componente a presença do botão de login, o bloqueio visual durante análise pendente e a confirmação de sucesso da mutation.
+- [x] Adicionar teste integrado de `Home.tsx` com mocks de autenticação e hooks tRPC para os estados do workspace.
+- [x] Verificar em `Home.tsx` o login quando não autenticado, o formulário apenas nos estados permitidos e o bloqueio durante a mutation pendente.
+- [x] Verificar em `Home.tsx` a confirmação da versão após sucesso da mutation e a ação de navegação ao diagnóstico.
+- [x] Adicionar teste interativo da ação “Ver diagnóstico” no estado de sucesso para comprovar o deslocamento à seção `#versoes`.
 - [ ] Implementar validações de segurança, LGPD, limites de arquivo, proteção contra arquivos malformados, logs sem dados pessoais e política de retenção.
 - [ ] Produzir documentação de arquitetura, contrato, executor, desenvolvimento de regras, testes, API, segurança e manual do usuário.
 - [ ] Executar testes ponta a ponta automatizados e aprovar o Gate formal de MVP 1.0 somente quando todos os critérios de conclusão estiverem atendidos.

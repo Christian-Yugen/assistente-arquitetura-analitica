@@ -1,0 +1,70 @@
+import React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+const state = vi.hoisted(() => ({
+  auth: { loading: false, isAuthenticated: true, error: null as Error | null },
+  mutation: { isPending: false, isSuccess: false, data: undefined as { diagnosticId: string; version: number } | undefined },
+  projects: { data: [], isLoading: false, isError: false },
+  diagnostic: { data: undefined, isFetching: false, isError: false },
+}));
+
+vi.mock("@/_core/hooks/useAuth", () => ({ useAuth: () => state.auth }));
+vi.mock("@/const", () => ({ startLogin: vi.fn() }));
+vi.mock("@/components/DashboardLayout", async () => {
+  const ReactModule = await import("react");
+  return { default: ({ children }: { children: React.ReactNode }) => ReactModule.createElement("div", { "data-layout": "workspace" }, children) };
+});
+vi.mock("@/lib/trpc", () => ({
+  trpc: {
+    useUtils: () => ({ analysis: { listProjects: { invalidate: vi.fn() } } }),
+    analysis: {
+      listProjects: { useQuery: () => state.projects },
+      getDiagnostic: { useQuery: () => state.diagnostic },
+      analyzeWorkbook: { useMutation: () => ({ ...state.mutation, mutate: vi.fn() }) },
+    },
+  },
+}));
+
+import Home from "./Home";
+
+function renderHome() {
+  return renderToStaticMarkup(<Home />);
+}
+
+describe("Home workspace flow", () => {
+  beforeEach(() => {
+    state.auth = { loading: false, isAuthenticated: true, error: null };
+    state.mutation = { isPending: false, isSuccess: false, data: undefined };
+    state.projects = { data: [], isLoading: false, isError: false };
+    state.diagnostic = { data: undefined, isFetching: false, isError: false };
+  });
+
+  it("renders loading, sign-in and session-error workspace states", () => {
+    state.auth = { loading: true, isAuthenticated: false, error: null };
+    expect(renderHome()).toContain("Verificando sua sessão segura");
+
+    state.auth = { loading: false, isAuthenticated: false, error: null };
+    const signIn = renderHome();
+    expect(signIn).toContain("Entrar no workspace");
+    expect(signIn).not.toContain("Nome do projeto");
+
+    state.auth = { loading: false, isAuthenticated: true, error: new Error("session") };
+    expect(renderHome()).toContain("Tentar login novamente");
+  });
+
+  it("renders the form only when allowed and disables submission during the real mutation state", () => {
+    expect(renderHome()).toContain("Nome do projeto");
+    state.mutation = { isPending: true, isSuccess: false, data: undefined };
+    const pending = renderHome();
+    expect(pending).toContain("Analisando estrutura");
+    expect(pending).toContain("disabled");
+  });
+
+  it("renders the created version confirmation when the mutation succeeds", () => {
+    state.mutation = { isPending: false, isSuccess: true, data: { diagnosticId: "diag-5", version: 5 } };
+    const success = renderHome();
+    expect(success).toContain("Versão 5 criada com sucesso");
+    expect(success).toContain("Ver diagnóstico");
+  });
+});
