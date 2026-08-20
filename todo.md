@@ -38,8 +38,10 @@
 - [x] Revalidar a QLT-NUMTEXT-007 exclusivamente contra o contrato reconstruído aprovado e atualizar seus gates de integração.
 - [x] Confirmar o artefato G7.4-R1 da QLT-NUMTEXT-007, atualizar G7.5 e o resumo de gates, e vincular a validação executada a essa evidência.
 - [ ] Preparar os componentes de segurança para isolamento por usuário, armazenamento privado, mascaramento e retenção de artefatos.
-- [ ] Validar o fluxo de análise e registrar gates, evidências, pendências e próximos passos no repositório.
-- [ ] Atualizar testes Vitest do projeto e verificar compilação antes do checkpoint de entrega.
+- [x] Validar o fluxo de análise e registrar gates, evidências, pendências e próximos passos no repositório.
+- [x] Validar por teste de documentação a presença da decisão, evidências, pendências, próximos passos e bloqueios no gate de consolidação do MVP draft.
+- [x] Adicionar ao gate de consolidação seções explícitas de pendências e próximos passos, com validação automatizada da documentação.
+- [x] Atualizar testes Vitest do projeto e verificar compilação antes do checkpoint de entrega.
 - [x] Documentar a separação entre conclusão do catálogo de 95 regras e conclusão integral do MVP da plataforma.
 - [x] Congelar um blueprint versionado das 95 regras com ID, categoria, entradas, condição, exclusões, evidências, precedência, dependências, testes e golden dataset esperado.
 - [x] Corrigir o blueprint local para usar os namespaces, IDs, títulos e estados do catálogo oficial de 95 regras, incluindo `MDL` em vez de namespace divergente.
@@ -66,16 +68,19 @@
 - [x] Implementar leitor Python de workbook que produz contexto agregado e descarta valores brutos após o profiling.
 - [x] Integrar a validação de upload a procedimento autenticado, cobrindo formato inválido, base64 inválido, arquivo acima do limite e conteúdo sem assinatura XLSX.
 - [x] Executar e registrar testes do pipeline servidor/Python para comprovar a leitura do workbook e a geração de contexto agregado antes de persistir diagnóstico.
-- [ ] Implementar orquestrador servidor que envia apenas um arquivo validado ao Python, persiste o diagnóstico canônico e não expõe recursos de outro usuário.
-- [ ] Definir política de retenção pós-análise que remova a referência privada do arquivo ao concluir o diagnóstico, mantendo metadados mínimos de auditoria.
-- [ ] Confirmar a persistência do orquestrador autenticado, executar a suíte integrada e provar o filtro obrigatório por ownerId em todas as consultas de recurso.
-- [ ] Validar em teste a retenção pós-análise, confirmando remoção da referência privada e preservação apenas de metadados de auditoria do proprietário.
+- [x] Implementar orquestrador servidor que envia apenas um arquivo validado ao Python, persiste o diagnóstico canônico e não expõe recursos de outro usuário.
+- [x] Definir política de retenção pós-análise que remova a referência privada do arquivo ao concluir o diagnóstico, mantendo metadados mínimos de auditoria.
+- [x] Confirmar a persistência do orquestrador autenticado, executar a suíte integrada e provar o filtro obrigatório por ownerId em todas as consultas de recurso.
+- [x] Alinhar o status final do projeto ao status do diagnóstico quando o motor retornar resultado falho e cobrir essa transição no orquestrador.
+- [x] Validar em teste a retenção pós-análise, confirmando remoção da referência privada e preservação apenas de metadados de auditoria do proprietário.
 - [x] Testar o runner Python completo com um XLSX temporário e metadados válidos, validando a geração do diagnóstico canônico sem valores brutos.
 - [ ] Implementar exclusão física do objeto privado no armazenamento assim que uma operação de deleção suportada estiver disponível, além da remoção de referência já controlada no banco.
 - [x] Validar no servidor o limite de até 10 abas antes de `storagePut` ou qualquer persistência de projeto e arquivo.
-- [ ] Criar teste integrado do fluxo pós-análise que comprove a atualização owner-scoped de `storageKey`, `retentionStatus` e metadados de auditoria.
+- [x] Criar teste integrado do fluxo pós-análise que comprove a atualização owner-scoped de `storageKey`, `retentionStatus` e metadados de auditoria.
+- [x] Adicionar teste integrado do orquestrador que inspecione a atualização persistida com `storageKey: null`, `retentionStatus: "reference_removed"` e `referenceRemovedAt` no owner autenticado.
+- [x] Criar teste estruturado dos helpers de escrita para projeto, arquivo, diagnóstico, status terminal e remoção da referência privada no mesmo owner.
 - [x] Limpar e revalidar o cache do servidor de desenvolvimento para remover o erro de exportação obsoleta de `inspectWorkbookBeforePersistence`.
-- [ ] Adicionar prova de integração com persistência real ou helper de banco real para criação de projeto, arquivo e diagnóstico no escopo do owner.
+- [x] Adicionar prova de integração com persistência real ou helper de banco real para criação de projeto, arquivo e diagnóstico no escopo do owner.
 - [x] Cobrir todas as leituras owner-scoped do módulo de análise, comprovando que outro usuário não acessa projetos ou diagnósticos alheios.
 - [x] Criar teste de integração estruturado para os helpers de listagem e consulta que comprove isolamento entre dois proprietários.
 - [ ] Construir telas de upload, processamento, diagnóstico segmentado, perguntas de validação, versões e exportação.
@@ -98,6 +103,10 @@
 - [x] Verificar em `Home.tsx` a confirmação da versão após sucesso da mutation e a ação de navegação ao diagnóstico.
 - [x] Adicionar teste interativo da ação “Ver diagnóstico” no estado de sucesso para comprovar o deslocamento à seção `#versoes`.
 - [ ] Implementar validações de segurança, LGPD, limites de arquivo, proteção contra arquivos malformados, logs sem dados pessoais e política de retenção.
+- [x] Confirmar por teste ou código auditável que os logs operacionais do fluxo não incluem valores de workbook, dados pessoais ou detalhes de exceções.
+- [x] Consolidar a documentação dos controles implementados e distinguir a retenção operacional atual da exclusão física ainda bloqueada.
+- [x] Concluir os controles verificáveis de segurança do escopo draft: validação de upload, sanitização, bloqueio de payload sensível, logs seguros e retenção operacional com referência removida.
+- [ ] Formalizar a exceção de retenção física indisponível, com limite, controles compensatórios, responsável pelo aceite e gatilho de reavaliação.
 - [x] Mascarar CPF, e-mail e valores explicitamente identificados como nome nos metadados e rótulos persistidos.
 - [x] Reduzir mensagens de falha do motor para impedir propagação de detalhes de arquivos ou conteúdo ao cliente.
 - [x] Validar em testes que o orquestrador persiste somente textos sanitizados e remove a referência privada após a análise.

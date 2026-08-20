@@ -1,9 +1,22 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const calls = vi.hoisted(() => ({
-  createProject: vi.fn(), updateProject: vi.fn().mockResolvedValue(undefined), createFile: vi.fn(), nextVersion: vi.fn(), createDiagnostic: vi.fn(), removeReference: vi.fn(),
-  executeEngine: vi.fn(),
-}));
+const calls = vi.hoisted(() => {
+  const files = new Map<string, Record<string, unknown>>();
+  return {
+    files,
+    createProject: vi.fn(),
+    updateProject: vi.fn().mockResolvedValue(undefined),
+    createFile: vi.fn(async (input: Record<string, unknown>) => { files.set(String(input.id), { ...input }); }),
+    nextVersion: vi.fn(),
+    createDiagnostic: vi.fn(),
+    removeReference: vi.fn(async (fileId: string, ownerId: number) => {
+      const file = files.get(fileId);
+      if (!file || file.ownerId !== ownerId) return;
+      files.set(fileId, { ...file, storageKey: null, retentionStatus: "reference_removed", referenceRemovedAt: new Date() });
+    }),
+    executeEngine: vi.fn(),
+  };
+});
 
 const safeDiagnosis = {
   analysis: { status: "completed_with_warnings" },
@@ -37,6 +50,7 @@ import type { TrpcContext } from "./_core/context";
 describe("analysis router flow", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    calls.files.clear();
     calls.executeEngine.mockResolvedValue(safeDiagnosis);
   });
 
@@ -64,6 +78,9 @@ describe("analysis router flow", () => {
     }
     expect(calls.removeReference).toHaveBeenCalledWith(expect.any(String), 77);
     expect(calls.updateProject).toHaveBeenLastCalledWith(expect.any(String), 77, "completed");
+    const retainedFile = calls.files.get(String(persistedFile.id));
+    expect(retainedFile).toMatchObject({ ownerId: 77, storageKey: null, retentionStatus: "reference_removed" });
+    expect(retainedFile?.referenceRemovedAt).toBeInstanceOf(Date);
   });
 
   it("returns a generic error when the engine fails with internal details", async () => {
@@ -76,6 +93,20 @@ describe("analysis router flow", () => {
 
     expect(error).toMatchObject({ code: "INTERNAL_SERVER_ERROR" });
     expect(error.message).toBe("Não foi possível concluir a análise.");
+  });
+
+  it("persists a failed diagnostic with reference removal and marks the project as failed", async () => {
+    calls.nextVersion.mockResolvedValue(1);
+    calls.executeEngine.mockResolvedValueOnce({ ...safeDiagnosis, analysis: { status: "failed" } });
+    const user = { id: 77, openId: "owner-77", email: null, name: null, loginMethod: "manus", role: "user" as const, createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date() };
+    const caller = appRouter.createCaller({ user, req: {} as TrpcContext["req"], res: {} as TrpcContext["res"] });
+
+    const result = await caller.analysis.analyzeWorkbook({ projectName: "Projeto", objective: "Objetivo", fileName: "arquivo.xlsx", mimeType: "application/octet-stream", dataBase64: "UEsDBA==" });
+
+    expect(result.version).toBe(1);
+    expect(calls.createDiagnostic.mock.calls[0][0]).toMatchObject({ ownerId: 77, status: "failed" });
+    expect(calls.removeReference).toHaveBeenCalledWith(expect.any(String), 77);
+    expect(calls.updateProject).toHaveBeenLastCalledWith(expect.any(String), 77, "failed");
   });
 
   it.each([

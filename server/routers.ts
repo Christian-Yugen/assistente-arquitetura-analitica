@@ -72,7 +72,7 @@ export const appRouter = router({
           contractVersion: "1.0.0-reconstructed.1", engineVersion: execution.engine_version, rulesetVersion: execution.ruleset_version, payload: diagnosis,
         });
         await db.markFileReferenceRemoved(fileId, ctx.user.id);
-        await db.updateAnalysisProjectStatus(projectId, ctx.user.id, "completed");
+        await db.updateAnalysisProjectStatus(projectId, ctx.user.id, analysis.status === "failed" ? "failed" : "completed");
         return { projectId, diagnosticId, version };
       } catch (error) {
         await db.updateAnalysisProjectStatus(projectId, ctx.user.id, "failed").catch(() => undefined);

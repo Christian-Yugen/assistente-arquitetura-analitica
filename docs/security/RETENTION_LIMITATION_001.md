@@ -14,3 +14,19 @@ O helper de armazenamento disponível neste projeto fornece operações de escri
 | Mascaramento de textos de entrada e identificadores de abas | Implementado e testado |
 | Mensagens de erro sem detalhes internos | Implementado e testado |
 | Exclusão física do objeto | Bloqueada pela ausência de operação oficial disponível |
+
+## Exceção de retenção física — proposta de aceite
+
+**Identificador:** `RETENTION-EXCEPTION-001`  
+**Status:** pendente de aceite formal; não aprovada para produção.  
+**Responsável proposto pelo aceite:** proprietário do produto, Chris.
+
+| Aspecto | Definição controlada |
+|---|---|
+| Limitação | O projeto não dispõe de operação oficial para excluir fisicamente o objeto privado após a análise. |
+| Controle compensatório | O objeto é armazenado sob chave privada owner-scoped e, após a análise, sua referência é removida do banco com `storageKey: null`, `retentionStatus: "reference_removed"` e `referenceRemovedAt`. |
+| Evidência | `server/analysisRouter.flow.test.ts`, `server/db.writeScope.test.ts` e `server/analysisRetention.test.ts`. |
+| Restrição | Nenhuma promoção a produção é permitida enquanto a exclusão física não tiver implementação oficial, teste de integração e gate de governança aprovado. |
+| Gatilho de reavaliação | Disponibilização de operação oficial de exclusão no armazenamento, seguida de teste de deleção por proprietário e atualização desta exceção. |
+
+Esta proposta não reduz os requisitos de proteção de dados. Ela apenas documenta o controle compensatório temporário e o bloqueio de produção que permanece ativo até a resolução técnica da exclusão física.

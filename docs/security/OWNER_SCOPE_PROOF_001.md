@@ -12,4 +12,6 @@ As leituras analíticas em `server/db.ts` recebem `ownerId` obrigatório e aplic
 | `getAnalysisProjectForOwner` | O identificador de projeto pertence a outro proprietário. | A consulta retorna ausência de recurso. |
 | `getNextDiagnosticVersion` | Há diagnóstico externo com versão numericamente superior no mesmo projeto. | A próxima versão é calculada apenas a partir dos diagnósticos do proprietário correto. |
 
+As escritas essenciais também são exercidas em `server/db.writeScope.test.ts`. Esse teste executa os helpers reais em um banco estruturado simulado e confirma que projeto, arquivo e diagnóstico são inseridos com o mesmo `ownerId`. Ao concluir, confirma que a atualização do projeto preserva o escopo e que a remoção da referência registra `storageKey: null`, `retentionStatus: "reference_removed"` e o carimbo de auditoria `referenceRemovedAt` sob o mesmo proprietário.
+
 O teste também afirma que cada predicado executado contém o vínculo com `ownerId`. Essa prova complementa, mas não substitui, a validação integrada com banco provisionado prevista no item de backlog de persistência real.
