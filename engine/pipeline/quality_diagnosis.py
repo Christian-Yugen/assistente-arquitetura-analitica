@@ -14,11 +14,13 @@ from engine.profiling.numeric_text import NumericTextProfile, infer_physical_typ
 from engine.profiling.missingness import MissingnessProfile, profile_missingness
 from engine.profiling.categorical_variations import CategoricalVariationProfile, profile_categorical_variations
 from engine.profiling.duplicate_rows import DuplicateRowsProfile
+from engine.profiling.empty_rows import EmptyRowsProfile
 from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.catvar import CategoricalVariationColumnProfile
 from engine.quality.duplicates import DuplicateRowsSheetProfile
 from engine.quality.empty_columns import EmptyColumnProfile
+from engine.quality.empty_rows import EmptyRowsSheetProfile
 
 
 @dataclass(frozen=True)
@@ -62,6 +64,7 @@ class ColumnAnalysisContext:
     missingness: MissingnessProfile = MissingnessProfile()
     categorical_variations: CategoricalVariationProfile = field(default_factory=CategoricalVariationProfile)
     duplicate_rows: DuplicateRowsProfile = field(default_factory=DuplicateRowsProfile)
+    empty_rows: EmptyRowsProfile = field(default_factory=EmptyRowsProfile)
 
 
 def build_column_analysis_context(
@@ -126,6 +129,10 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         duplicate_profile = DuplicateRowsSheetProfile(name=representative.sheet_name, duplicates=representative.duplicate_rows)
         for finding in execute_registered_rule("QLT-DUP-002", duplicate_profile):
             quality_findings.append((sheet_id, None, finding))
+        empty_rows_profile = EmptyRowsSheetProfile(name=representative.sheet_name, empty_rows=representative.empty_rows)
+        if get_rule_execution_record("QLT-EMPTYROW-004").status == "executable_draft":
+            for finding in execute_registered_rule("QLT-EMPTYROW-004", empty_rows_profile):
+                quality_findings.append((sheet_id, None, finding))
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []

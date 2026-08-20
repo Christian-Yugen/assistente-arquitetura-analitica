@@ -1,0 +1,13 @@
+{
+  "dataset_id": "GD-QLT-EMPTYROW-004-001",
+  "rule_id": "QLT-EMPTYROW-004",
+  "rule_version": "0.1.0-reconstructed.1",
+  "artifact": "emptyrow-draft-golden-v1.json",
+  "sha256": "4884794020cc5a98e2c0e94ac62956a3baeb239a209fc91f39aa06945bed86e9",
+  "scope": "draft_only",
+  "privacy": {
+    "contains_raw_workbook_values": false,
+    "contains_cell_positions": false,
+    "contains_sheet_titles": false
+  }
+}

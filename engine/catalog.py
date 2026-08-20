@@ -19,6 +19,7 @@ DRAFT_RULE_AUTHORIZATIONS = {
     "QLT-CATVAR-008": "QLT-CATVAR-008-DRAFT-CALIBRATION-001",
     "QLT-DUP-002": "QLT-DUP-002-DRAFT-CALIBRATION-001",
     "QLT-EMPTYCOL-003": "QLT-EMPTYCOL-003-DRAFT-CALIBRATION-001",
+    "QLT-EMPTYROW-004": "QLT-EMPTYROW-004-DRAFT-CALIBRATION-001",
 }
 RuleExecutionStatus = Literal["executable_draft", "baseline_reference", "reference_catalog_draft", "reserved_definition", "unknown"]
 

@@ -5,6 +5,7 @@ from .nulls import NullColumnProfile, evaluate_nulls
 from .catvar import CategoricalVariationColumnProfile, evaluate_categorical_variations
 from .duplicates import DuplicateRowsSheetProfile, evaluate_duplicate_rows
 from .empty_columns import EmptyColumnProfile, evaluate_empty_column
+from .empty_rows import EmptyRowsSheetProfile, evaluate_empty_rows
 
 
 QUALITY_RULE_IMPLEMENTATIONS = {
@@ -13,6 +14,7 @@ QUALITY_RULE_IMPLEMENTATIONS = {
     "QLT-CATVAR-008": evaluate_categorical_variations,
     "QLT-DUP-002": evaluate_duplicate_rows,
     "QLT-EMPTYCOL-003": evaluate_empty_column,
+    "QLT-EMPTYROW-004": evaluate_empty_rows,
 }
 
-__all__ = ["NumericTextColumnProfile", "NullColumnProfile", "CategoricalVariationColumnProfile", "DuplicateRowsSheetProfile", "EmptyColumnProfile", "QUALITY_RULE_IMPLEMENTATIONS"]
+__all__ = ["NumericTextColumnProfile", "NullColumnProfile", "CategoricalVariationColumnProfile", "DuplicateRowsSheetProfile", "EmptyColumnProfile", "EmptyRowsSheetProfile", "QUALITY_RULE_IMPLEMENTATIONS"]
