@@ -1,0 +1,13 @@
+{
+  "manifest_id": "GD-QUALITY-DRAFT-001-MANIFEST",
+  "dataset_id": "GD-QUALITY-DRAFT-001",
+  "dataset_version": "1.0.0-draft",
+  "file": "quality-draft-golden-v1.json",
+  "sha256": "e8609d75a6d51bb838c2b48fff2a84cead9e582f8cfd1d87909a92b5eff2ad92",
+  "status": "approved_for_draft_calibration",
+  "scope": ["QLT-NUMTEXT-007", "QLT-NULL-001@0.1.0-reconstructed.1"],
+  "limitations": [
+    "Deterministic regression fixture only; not a production-representative sample.",
+    "Does not authorize production promotion or threshold changes outside a new gate."
+  ]
+}

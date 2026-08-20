@@ -74,6 +74,11 @@
 - [ ] Completar as categorias de Tipagem Semântica, Fato e Dimensão, Relacionamentos, Métricas, Alertas e Granularidade em ciclos com gates, regressão e fechamento documental.
 - [ ] Construir o motor completo com profiling, contexto normalizado, executor, precedência, confiança, agregação e contrato canônico de diagnóstico.
 - [ ] Criar golden datasets de referência e definir expectativas de contexto, findings, severidade, dimensões, fatos, relacionamentos e métricas.
+- [x] Definir o escopo de calibração e as expectativas determinísticas dos golden datasets para QLT-NUMTEXT-007 e QLT-NULL-001.
+- [x] Criar fixtures de calibração, manifestos verificáveis e testes de regressão para as regras executáveis do perfil draft.
+- [x] Medir falsos positivos e falsos negativos conhecidos dos golden datasets e registrar a decisão de calibração limitada ao draft.
+- [x] Gerar relatório reprodutível de calibração para a fixture golden, com contagem de verdadeiros e falsos resultados por regra e cenário.
+- [x] Adicionar teste de regressão para o relatório de calibração, incluindo métricas por regra, cenários sem finding e bloqueio de produção.
 - [ ] Calibrar o motor por falsos positivos e falsos negativos antes de qualquer ativação produtiva.
 - [ ] Implementar pipeline real de upload, parser Excel, profiler, context builder, executor e recomendação, com análise no servidor.
 - [x] Criar tabelas isoladas por proprietário para projetos analíticos, arquivos, diagnósticos e versões, com chaves e índices de acesso por usuário.

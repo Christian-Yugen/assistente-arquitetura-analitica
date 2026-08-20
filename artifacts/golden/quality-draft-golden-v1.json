@@ -1,0 +1,101 @@
+{
+  "dataset_id": "GD-QUALITY-DRAFT-001",
+  "version": "1.0.0-draft",
+  "purpose": "Deterministic calibration of QLT-NUMTEXT-007 and QLT-NULL-001 using aggregate profiles only.",
+  "privacy": {
+    "contains_raw_workbook_values": false,
+    "contains_original_sheet_titles": false,
+    "contains_personal_data": false,
+    "column_names_are_synthetic": true
+  },
+  "rules": [
+    {"rule_id": "QLT-NUMTEXT-007", "version": "1.0.0-draft"},
+    {"rule_id": "QLT-NULL-001", "version": "0.1.0-reconstructed.1"}
+  ],
+  "scenarios": [
+    {
+      "case_id": "null-low-structural",
+      "column": {
+        "physical_type": "text",
+        "numeric_text": {"non_empty_value_count": 99, "numeric_text_candidate_count": 0, "numeric_text_candidate_ratio": 0.0, "numeric_text_basis": "strict_canonical_numeric_string", "numeric_text_ambiguity_count": 0},
+        "missingness": {"observed_cell_count": 100, "non_missing_cell_count": 99, "structural_null_count": 1, "blank_text_count": 0, "numeric_nan_count": 0}
+      },
+      "expected_findings": [{"rule_id": "QLT-NULL-001", "severity": "low", "confidence": 0.9, "question": false}]
+    },
+    {
+      "case_id": "null-medium-blank-boundary",
+      "column": {
+        "physical_type": "text",
+        "numeric_text": {"non_empty_value_count": 19, "numeric_text_candidate_count": 0, "numeric_text_candidate_ratio": 0.0, "numeric_text_basis": "strict_canonical_numeric_string", "numeric_text_ambiguity_count": 0},
+        "missingness": {"observed_cell_count": 20, "non_missing_cell_count": 19, "structural_null_count": 0, "blank_text_count": 1, "numeric_nan_count": 0}
+      },
+      "expected_findings": [{"rule_id": "QLT-NULL-001", "severity": "medium", "confidence": 0.9, "question": false}]
+    },
+    {
+      "case_id": "null-high-nan-boundary",
+      "column": {
+        "physical_type": "mixed",
+        "numeric_text": {"non_empty_value_count": 16, "numeric_text_candidate_count": 0, "numeric_text_candidate_ratio": 0.0, "numeric_text_basis": "strict_canonical_numeric_string", "numeric_text_ambiguity_count": 0},
+        "missingness": {"observed_cell_count": 20, "non_missing_cell_count": 16, "structural_null_count": 0, "blank_text_count": 0, "numeric_nan_count": 4}
+      },
+      "expected_findings": [{"rule_id": "QLT-NULL-001", "severity": "high", "confidence": 0.9, "question": true}]
+    },
+    {
+      "case_id": "null-excluded-empty-column",
+      "column": {
+        "physical_type": "unknown",
+        "numeric_text": {"non_empty_value_count": 0, "numeric_text_candidate_count": 0, "numeric_text_candidate_ratio": 0.0, "numeric_text_basis": "strict_canonical_numeric_string", "numeric_text_ambiguity_count": 0},
+        "missingness": {"observed_cell_count": 20, "non_missing_cell_count": 0, "structural_null_count": 20, "blank_text_count": 0, "numeric_nan_count": 0}
+      },
+      "expected_findings": []
+    },
+    {
+      "case_id": "numtext-low-ratio",
+      "column": {
+        "physical_type": "text",
+        "numeric_text": {"non_empty_value_count": 100, "numeric_text_candidate_count": 4, "numeric_text_candidate_ratio": 0.04, "numeric_text_basis": "strict_canonical_numeric_string", "numeric_text_ambiguity_count": 0},
+        "missingness": {"observed_cell_count": 100, "non_missing_cell_count": 100, "structural_null_count": 0, "blank_text_count": 0, "numeric_nan_count": 0}
+      },
+      "expected_findings": [{"rule_id": "QLT-NUMTEXT-007", "severity": "low", "confidence": 0.9, "question": false}]
+    },
+    {
+      "case_id": "numtext-medium-with-ambiguity",
+      "column": {
+        "physical_type": "mixed",
+        "numeric_text": {"non_empty_value_count": 20, "numeric_text_candidate_count": 1, "numeric_text_candidate_ratio": 0.05, "numeric_text_basis": "strict_canonical_numeric_string", "numeric_text_ambiguity_count": 1},
+        "missingness": {"observed_cell_count": 20, "non_missing_cell_count": 20, "structural_null_count": 0, "blank_text_count": 0, "numeric_nan_count": 0}
+      },
+      "expected_findings": [{"rule_id": "QLT-NUMTEXT-007", "severity": "medium", "confidence": 0.8, "question": false}]
+    },
+    {
+      "case_id": "numtext-high-boundary",
+      "column": {
+        "physical_type": "text",
+        "numeric_text": {"non_empty_value_count": 20, "numeric_text_candidate_count": 10, "numeric_text_candidate_ratio": 0.5, "numeric_text_basis": "strict_canonical_numeric_string", "numeric_text_ambiguity_count": 0},
+        "missingness": {"observed_cell_count": 20, "non_missing_cell_count": 20, "structural_null_count": 0, "blank_text_count": 0, "numeric_nan_count": 0}
+      },
+      "expected_findings": [{"rule_id": "QLT-NUMTEXT-007", "severity": "high", "confidence": 0.9, "question": true}]
+    },
+    {
+      "case_id": "numtext-excluded-numeric-column",
+      "column": {
+        "physical_type": "numeric",
+        "numeric_text": {"non_empty_value_count": 20, "numeric_text_candidate_count": 20, "numeric_text_candidate_ratio": 1.0, "numeric_text_basis": "strict_canonical_numeric_string", "numeric_text_ambiguity_count": 0},
+        "missingness": {"observed_cell_count": 20, "non_missing_cell_count": 20, "structural_null_count": 0, "blank_text_count": 0, "numeric_nan_count": 0}
+      },
+      "expected_findings": []
+    },
+    {
+      "case_id": "joint-null-and-numtext",
+      "column": {
+        "physical_type": "text",
+        "numeric_text": {"non_empty_value_count": 16, "numeric_text_candidate_count": 8, "numeric_text_candidate_ratio": 0.5, "numeric_text_basis": "strict_canonical_numeric_string", "numeric_text_ambiguity_count": 0},
+        "missingness": {"observed_cell_count": 20, "non_missing_cell_count": 16, "structural_null_count": 4, "blank_text_count": 0, "numeric_nan_count": 0}
+      },
+      "expected_findings": [
+        {"rule_id": "QLT-NUMTEXT-007", "severity": "high", "confidence": 0.9, "question": true},
+        {"rule_id": "QLT-NULL-001", "severity": "high", "confidence": 0.9, "question": true}
+      ]
+    }
+  ]
+}
