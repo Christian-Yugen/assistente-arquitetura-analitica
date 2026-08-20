@@ -15,12 +15,14 @@ from engine.profiling.missingness import MissingnessProfile, profile_missingness
 from engine.profiling.categorical_variations import CategoricalVariationProfile, profile_categorical_variations
 from engine.profiling.duplicate_rows import DuplicateRowsProfile
 from engine.profiling.empty_rows import EmptyRowsProfile
+from engine.profiling.mixed_types import MixedTypesProfile, profile_mixed_types
 from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.catvar import CategoricalVariationColumnProfile
 from engine.quality.duplicates import DuplicateRowsSheetProfile
 from engine.quality.empty_columns import EmptyColumnProfile
 from engine.quality.empty_rows import EmptyRowsSheetProfile
+from engine.quality.mixed_types import MixedTypesColumnProfile
 
 
 @dataclass(frozen=True)
@@ -65,6 +67,7 @@ class ColumnAnalysisContext:
     categorical_variations: CategoricalVariationProfile = field(default_factory=CategoricalVariationProfile)
     duplicate_rows: DuplicateRowsProfile = field(default_factory=DuplicateRowsProfile)
     empty_rows: EmptyRowsProfile = field(default_factory=EmptyRowsProfile)
+    mixed_types: MixedTypesProfile = field(default_factory=MixedTypesProfile)
 
 
 def build_column_analysis_context(
@@ -85,6 +88,7 @@ def build_column_analysis_context(
         numeric_text=profile_numeric_text(materialized_values),
         missingness=profile_missingness(materialized_values),
         categorical_variations=profile_categorical_variations(materialized_values),
+        mixed_types=profile_mixed_types(materialized_values),
     )
 
 
@@ -122,6 +126,10 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         empty_column_profile = EmptyColumnProfile(name=column.column_name, missingness=column.missingness)
         if get_rule_execution_record("QLT-EMPTYCOL-003").status == "executable_draft":
             for finding in execute_registered_rule("QLT-EMPTYCOL-003", empty_column_profile):
+                quality_findings.append((column.sheet_id, column.column_id, finding))
+        mixed_types_profile = MixedTypesColumnProfile(name=column.column_name, mixed_types=column.mixed_types)
+        if get_rule_execution_record("QLT-MIXTYPE-005").status == "executable_draft":
+            for finding in execute_registered_rule("QLT-MIXTYPE-005", mixed_types_profile):
                 quality_findings.append((column.sheet_id, column.column_id, finding))
 
     for sheet_id, sheet_columns in grouped_columns.items():

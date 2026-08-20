@@ -19,6 +19,7 @@ from engine.profiling.numeric_text import LOCALE_AMBIGUOUS_NUMBER, STRICT_CANONI
 from engine.profiling.categorical_variations import CategoricalVariationProfile, profile_categorical_variations
 from engine.profiling.duplicate_rows import DuplicateRowsAccumulator
 from engine.profiling.empty_rows import EmptyRowsAccumulator
+from engine.profiling.mixed_types import MixedTypesAccumulator
 
 
 MAX_SHEETS = 10
@@ -42,10 +43,12 @@ class StreamingColumnProfiler:
     other_count: int = 0
     numeric_text_candidates: int = 0
     numeric_text_ambiguities: int = 0
+    mixed_types_accumulator: MixedTypesAccumulator = field(default_factory=MixedTypesAccumulator, repr=False)
     categorical_text_values: list[str] = field(default_factory=list, repr=False)
 
     def consume(self, value: object) -> None:
         self.observed += 1
+        self.mixed_types_accumulator.consume(value)
         kind = missing_class(value)
         if kind == "structural_null":
             self.structural_null_count += 1
@@ -111,6 +114,9 @@ class StreamingColumnProfiler:
 
     def categorical_variation_profile(self) -> CategoricalVariationProfile:
         return profile_categorical_variations(self.categorical_text_values)
+
+    def mixed_types_profile(self):
+        return self.mixed_types_accumulator.finalize()
 
 
 def safe_column_name(value: object, position: int) -> str:
@@ -182,6 +188,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
                     numeric_text=profiler.numeric_text_profile(),
                     missingness=profiler.missingness_profile(),
                     categorical_variations=categorical_variations,
+                    mixed_types=profiler.mixed_types_profile(),
                     duplicate_rows=duplicate_rows,
                     empty_rows=empty_rows,
                 )

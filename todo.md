@@ -167,3 +167,11 @@
 - [x] Adicionar teste documental ao inventário QLT-001 a QLT-006, preservando a distinção entre as cinco regras materializadas e a QLT-NULL-001 sem fonte canônica original.
 - [x] Exibir todos os achados e perguntas do diagnóstico selecionado em seções acessíveis, sem truncar a evidência do perfil draft.
 - [ ] Executar testes ponta a ponta automatizados e aprovar o Gate formal de MVP 1.0 somente quando todos os critérios de conclusão estiverem atendidos.
+- [x] Recuperar os metadados oficiais e dependências da QLT-MIXTYPE-005 sob a autorização de início de Chris.
+- [x] Propor política conservadora, especificação lógica e gate de reconstrução da QLT-MIXTYPE-005 antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a QLT-MIXTYPE-005 somente após nova aprovação explícita de Chris para a política proposta.
+- [x] Formalizar o gate de reconstrução da QLT-MIXTYPE-005 com o aceite de Chris para a Opção A.
+- [x] Implementar o perfil agregado e o avaliador da QLT-MIXTYPE-005 sem valores, posições ou identificadores brutos.
+- [x] Criar testes, golden dataset, manifesto SHA-256 e calibração reprodutível da QLT-MIXTYPE-005.
+- [x] Formalizar o gate individual de calibração da QLT-MIXTYPE-005 antes de sua ativação draft.
+- [x] Ativar a QLT-MIXTYPE-005 somente no perfil draft e sincronizar catálogo, índice, workspace e Gate MVP 1.0.

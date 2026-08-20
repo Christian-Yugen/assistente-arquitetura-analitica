@@ -1,0 +1,13 @@
+{
+  "manifest_id": "GD-QLT-MIXTYPE-005-001-MANIFEST",
+  "dataset_id": "GD-QLT-MIXTYPE-005-001",
+  "artifact": "mixtype-draft-golden-v1.json",
+  "sha256": "385134ca760f35d4239cb0c1e9910b16abe1eaa1851d7e736f7ccb21be2525c1",
+  "rule_id": "QLT-MIXTYPE-005",
+  "rule_version": "0.1.0-provisional.1",
+  "scope": "draft_only",
+  "contains_raw_workbook_values": false,
+  "contains_cell_positions": false,
+  "contains_sheet_titles": false,
+  "contains_column_names": false
+}

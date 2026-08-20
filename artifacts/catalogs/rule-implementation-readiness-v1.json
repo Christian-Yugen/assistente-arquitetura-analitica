@@ -8,8 +8,8 @@
   },
   "policy": "A regra só pode ser executada quando local_readiness for executable_draft e houver gate de implementação registrado.",
   "counts": {
-    "baseline_reference": 2,
-    "executable_draft": 6,
+    "baseline_reference": 1,
+    "executable_draft": 7,
     "reference_catalog_draft": 6,
     "intake_required": 81
   },
@@ -90,8 +90,8 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "planned",
-      "local_readiness": "baseline_reference",
-      "executable": false,
+      "local_readiness": "executable_draft",
+      "executable": true,
       "missing_before_execution": []
     },
     {

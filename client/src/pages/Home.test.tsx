@@ -66,10 +66,10 @@ describe("Home workspace flow", () => {
     expect(renderHome()).toContain("Tentar login novamente");
   });
 
-  it("shows the six rules authorized for the current draft profile", () => {
+  it("shows the seven rules authorized for the current draft profile", () => {
     const workspace = renderHome();
     expect(workspace).toContain("Regras executáveis");
-    expect(workspace).toContain("QLT-001, QLT-002, QLT-003, QLT-004, QLT-007 e QLT-008");
+    expect(workspace).toContain("QLT-001 a QLT-005, QLT-007 e QLT-008");
   });
 
   it("renders the pending processing panel and blocks all workbook edits during the real mutation state", () => {

@@ -19,6 +19,8 @@ from engine.profiling.duplicate_rows import DuplicateRowsProfile
 from engine.quality.duplicates import DuplicateRowsSheetProfile
 from engine.profiling.empty_rows import EmptyRowsProfile
 from engine.quality.empty_rows import EmptyRowsSheetProfile
+from engine.profiling.mixed_types import MixedTypesProfile
+from engine.quality.mixed_types import MixedTypesColumnProfile
 from engine.quality.registry import QUALITY_RULE_IMPLEMENTATIONS
 
 
@@ -49,22 +51,29 @@ class RuleCatalogTests(unittest.TestCase):
             "QLT-EMPTYROW-004",
             EmptyRowsSheetProfile("Aba 1", EmptyRowsProfile(3, 1, 0.25, 1)),
         )
+        mixtype_result = execute_registered_rule(
+            "QLT-MIXTYPE-005",
+            MixedTypesColumnProfile("Campo", MixedTypesProfile(10, 0, 8, 2, 0, 0, 0)),
+        )
         record = get_rule_execution_record("QLT-NUMTEXT-007")
         null_record = get_rule_execution_record("QLT-NULL-001")
         catvar_record = get_rule_execution_record("QLT-CATVAR-008")
         duplicate_record = get_rule_execution_record("QLT-DUP-002")
         emptyrow_record = get_rule_execution_record("QLT-EMPTYROW-004")
-        self.assertEqual(executable_rule_count(), 6)
+        mixtype_record = get_rule_execution_record("QLT-MIXTYPE-005")
+        self.assertEqual(executable_rule_count(), 7)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
         self.assertEqual(duplicate_result[0]["rule_id"], "QLT-DUP-002")
         self.assertEqual(emptyrow_result[0]["rule_id"], "QLT-EMPTYROW-004")
+        self.assertEqual(mixtype_result[0]["rule_id"], "QLT-MIXTYPE-005")
         self.assertEqual(record.status, "executable_draft")
         self.assertEqual(null_record.status, "executable_draft")
         self.assertEqual(catvar_record.status, "executable_draft")
         self.assertEqual(duplicate_record.status, "executable_draft")
         self.assertEqual(emptyrow_record.status, "executable_draft")
+        self.assertEqual(mixtype_record.status, "executable_draft")
         self.assertEqual(record.title, "Números armazenados como texto")
 
     def test_baseline_reference_and_reserved_official_slots_cannot_execute(self):
