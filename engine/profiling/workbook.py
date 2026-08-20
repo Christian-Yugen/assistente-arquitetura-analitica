@@ -17,6 +17,7 @@ from engine.pipeline.quality_diagnosis import ColumnAnalysisContext
 from engine.profiling.missingness import MissingnessProfile, missing_class, row_has_meaningful_value
 from engine.profiling.numeric_text import LOCALE_AMBIGUOUS_NUMBER, STRICT_CANONICAL_NUMBER, NumericTextProfile
 from engine.profiling.categorical_variations import CategoricalVariationProfile, profile_categorical_variations
+from engine.profiling.duplicate_rows import DuplicateRowsAccumulator
 
 
 MAX_SHEETS = 10
@@ -151,12 +152,15 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
             continue
         column_count = len(header)
         profilers = [StreamingColumnProfiler() for _ in range(column_count)]
+        duplicate_rows_accumulator = DuplicateRowsAccumulator()
         for row in rows:
             bounded_row = tuple(row[position] if position < len(row) else None for position in range(column_count))
             if not row_has_meaningful_value(bounded_row):
                 continue
+            duplicate_rows_accumulator.consume(bounded_row)
             for position in range(column_count):
                 profilers[position].consume(bounded_row[position])
+        duplicate_rows = duplicate_rows_accumulator.finalize()
         sheet_id = str(uuid4())
         for column_position, profiler in enumerate(profilers):
             categorical_variations = profiler.categorical_variation_profile()
@@ -174,6 +178,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
                     numeric_text=profiler.numeric_text_profile(),
                     missingness=profiler.missingness_profile(),
                     categorical_variations=categorical_variations,
+                    duplicate_rows=duplicate_rows,
                 )
             )
     if not contexts:

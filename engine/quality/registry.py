@@ -3,12 +3,14 @@
 from .numtext import NumericTextColumnProfile, evaluate_numeric_text
 from .nulls import NullColumnProfile, evaluate_nulls
 from .catvar import CategoricalVariationColumnProfile, evaluate_categorical_variations
+from .duplicates import DuplicateRowsSheetProfile, evaluate_duplicate_rows
 
 
 QUALITY_RULE_IMPLEMENTATIONS = {
     "QLT-NUMTEXT-007": evaluate_numeric_text,
     "QLT-NULL-001": evaluate_nulls,
     "QLT-CATVAR-008": evaluate_categorical_variations,
+    "QLT-DUP-002": evaluate_duplicate_rows,
 }
 
-__all__ = ["NumericTextColumnProfile", "NullColumnProfile", "CategoricalVariationColumnProfile", "QUALITY_RULE_IMPLEMENTATIONS"]
+__all__ = ["NumericTextColumnProfile", "NullColumnProfile", "CategoricalVariationColumnProfile", "DuplicateRowsSheetProfile", "QUALITY_RULE_IMPLEMENTATIONS"]

@@ -8,10 +8,10 @@
   },
   "policy": "A regra só pode ser executada quando local_readiness for executable_draft e houver gate de implementação registrado.",
   "counts": {
-    "baseline_reference": 6,
-    "executable_draft": 1,
+    "baseline_reference": 4,
+    "executable_draft": 4,
     "reference_catalog_draft": 6,
-    "intake_required": 82
+    "intake_required": 81
   },
   "rules": [
     {
@@ -26,8 +26,8 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "reference_implemented_draft",
-      "local_readiness": "baseline_reference",
-      "executable": false,
+      "local_readiness": "executable_draft",
+      "executable": true,
       "missing_before_execution": []
     },
     {
@@ -42,8 +42,8 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "planned",
-      "local_readiness": "baseline_reference",
-      "executable": false,
+      "local_readiness": "executable_draft",
+      "executable": true,
       "missing_before_execution": []
     },
     {
@@ -138,19 +138,9 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "QLT-WHITESPACE-009",

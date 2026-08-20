@@ -1,0 +1,8 @@
+{
+  "dataset_id": "GD-QLT-DUP-002-001",
+  "version": "1.0.0-reconstructed.1",
+  "sha256": "bdc454e5cec0de26bffc440e0a9922bbc2646c7baa1568a0f5fce4f8a7db92ab",
+  "contains_raw_workbook_values": false,
+  "contains_row_signatures": false,
+  "contains_row_indices": false
+}

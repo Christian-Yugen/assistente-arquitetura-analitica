@@ -55,7 +55,7 @@ class NullPipelineTests(unittest.TestCase):
         self.assertEqual(diagnosis["findings"][0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(diagnosis["findings"][0]["rule_version"], "0.1.0-reconstructed.1")
         self.assertEqual(diagnosis["questions"][0]["impact"]["affected_rule_ids"], ["QLT-NULL-001"])
-        self.assertEqual(diagnosis["summary"]["completeness_ratio"], round(3 / METADATA.execution_profile.catalog_target_rule_count, 8))
+        self.assertEqual(diagnosis["summary"]["completeness_ratio"], round(4 / METADATA.execution_profile.catalog_target_rule_count, 8))
         self.assertNotIn("texto seguro", serialized)
         validate_diagnosis_root(diagnosis)
 

@@ -13,9 +13,11 @@ from engine.contracts.validation import validate_diagnosis_root
 from engine.profiling.numeric_text import NumericTextProfile, infer_physical_type, profile_numeric_text
 from engine.profiling.missingness import MissingnessProfile, profile_missingness
 from engine.profiling.categorical_variations import CategoricalVariationProfile, profile_categorical_variations
+from engine.profiling.duplicate_rows import DuplicateRowsProfile
 from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.catvar import CategoricalVariationColumnProfile
+from engine.quality.duplicates import DuplicateRowsSheetProfile
 
 
 @dataclass(frozen=True)
@@ -58,6 +60,7 @@ class ColumnAnalysisContext:
     numeric_text: NumericTextProfile
     missingness: MissingnessProfile = MissingnessProfile()
     categorical_variations: CategoricalVariationProfile = field(default_factory=CategoricalVariationProfile)
+    duplicate_rows: DuplicateRowsProfile = field(default_factory=DuplicateRowsProfile)
 
 
 def build_column_analysis_context(
@@ -87,7 +90,7 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
     profile = metadata.execution_profile
     started_at = _timestamp()
     started_clock = perf_counter()
-    quality_findings = []
+    quality_findings: list[tuple[str, str | None, dict[str, object]]] = []
     grouped_columns: dict[str, list[ColumnAnalysisContext]] = {}
     for column in columns:
         grouped_columns.setdefault(column.sheet_id, []).append(column)
@@ -101,27 +104,33 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
             numeric_text_ambiguity_count=column.numeric_text.numeric_text_ambiguity_count,
         )
         for finding in execute_registered_rule("QLT-NUMTEXT-007", column_profile):
-            quality_findings.append((column, finding))
+            quality_findings.append((column.sheet_id, column.column_id, finding))
         null_profile = NullColumnProfile(name=column.column_name, physical_type=column.physical_type, missingness=column.missingness)
         for finding in execute_registered_rule("QLT-NULL-001", null_profile):
-            quality_findings.append((column, finding))
+            quality_findings.append((column.sheet_id, column.column_id, finding))
         categorical_variation_profile = CategoricalVariationColumnProfile(
             name=column.column_name,
             physical_type=column.physical_type,
             variations=column.categorical_variations,
         )
         for finding in execute_registered_rule("QLT-CATVAR-008", categorical_variation_profile):
-            quality_findings.append((column, finding))
+            quality_findings.append((column.sheet_id, column.column_id, finding))
+
+    for sheet_id, sheet_columns in grouped_columns.items():
+        representative = sheet_columns[0]
+        duplicate_profile = DuplicateRowsSheetProfile(name=representative.sheet_name, duplicates=representative.duplicate_rows)
+        for finding in execute_registered_rule("QLT-DUP-002", duplicate_profile):
+            quality_findings.append((sheet_id, None, finding))
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []
     question_ids_by_sheet: dict[str, list[str]] = {sheet_id: [] for sheet_id in grouped_columns}
-    for column, finding in quality_findings:
-        fragment = to_diagnosis_fragment([finding], sheet_id=column.sheet_id, column_id=column.column_id)
+    for sheet_id, column_id, finding in quality_findings:
+        fragment = to_diagnosis_fragment([finding], sheet_id=sheet_id, column_id=column_id)
         findings.extend(fragment["findings"])  # type: ignore[arg-type]
         fragment_questions = fragment["questions"]  # type: ignore[assignment]
         questions.extend(fragment_questions)  # type: ignore[arg-type]
-        question_ids_by_sheet[column.sheet_id].extend(question["question_id"] for question in fragment_questions)  # type: ignore[index, union-attr]
+        question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in fragment_questions)  # type: ignore[index, union-attr]
 
     finding_ids_by_sheet: dict[str, list[str]] = {sheet_id: [] for sheet_id in grouped_columns}
     for finding in findings:

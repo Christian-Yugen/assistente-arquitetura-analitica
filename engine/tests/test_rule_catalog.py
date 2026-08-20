@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch
 
 from engine.catalog import (
+    DRAFT_RULE_AUTHORIZATIONS,
     RuleExecutionUnavailableError,
     category_caps,
     execute_registered_rule,
@@ -14,6 +15,8 @@ from engine.profiling.missingness import MissingnessProfile
 from engine.profiling.categorical_variations import profile_categorical_variations
 from engine.quality.catvar import CategoricalVariationColumnProfile
 from engine.quality.nulls import NullColumnProfile
+from engine.profiling.duplicate_rows import DuplicateRowsProfile
+from engine.quality.duplicates import DuplicateRowsSheetProfile
 from engine.quality.registry import QUALITY_RULE_IMPLEMENTATIONS
 
 
@@ -36,16 +39,23 @@ class RuleCatalogTests(unittest.TestCase):
             "QLT-CATVAR-008",
             CategoricalVariationColumnProfile("Região", "text", profile_categorical_variations(["Norte", "norte", "Sul"])),
         )
+        duplicate_result = execute_registered_rule(
+            "QLT-DUP-002",
+            DuplicateRowsSheetProfile("Aba 1", DuplicateRowsProfile(20, 1, 4, 0.2, 4, "type_tagged_nfkc_trim_newlines")),
+        )
         record = get_rule_execution_record("QLT-NUMTEXT-007")
         null_record = get_rule_execution_record("QLT-NULL-001")
         catvar_record = get_rule_execution_record("QLT-CATVAR-008")
-        self.assertEqual(executable_rule_count(), 3)
+        duplicate_record = get_rule_execution_record("QLT-DUP-002")
+        self.assertEqual(executable_rule_count(), 4)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
+        self.assertEqual(duplicate_result[0]["rule_id"], "QLT-DUP-002")
         self.assertEqual(record.status, "executable_draft")
         self.assertEqual(null_record.status, "executable_draft")
         self.assertEqual(catvar_record.status, "executable_draft")
+        self.assertEqual(duplicate_record.status, "executable_draft")
         self.assertEqual(record.title, "Números armazenados como texto")
 
     def test_baseline_reference_and_reserved_official_slots_cannot_execute(self):
@@ -67,7 +77,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(get_rule_execution_record("MDL-021").status, "unknown")
 
     def test_registry_entry_without_explicit_draft_gate_remains_blocked(self):
-        with patch.dict(QUALITY_RULE_IMPLEMENTATIONS, {"QLT-DUP-002": lambda _: []}):
+        with patch.dict(DRAFT_RULE_AUTHORIZATIONS, {}, clear=True):
             record = get_rule_execution_record("QLT-DUP-002")
             self.assertEqual(record.status, "baseline_reference")
             with self.assertRaises(RuleExecutionUnavailableError):

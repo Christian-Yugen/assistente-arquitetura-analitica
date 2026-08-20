@@ -11,6 +11,7 @@ RULE_VERSIONS = {
     "QLT-NUMTEXT-007": "1.0.0-draft",
     "QLT-NULL-001": "0.1.0-reconstructed.1",
     "QLT-CATVAR-008": "0.1.0-provisional.1",
+    "QLT-DUP-002": "0.1.0-reconstructed.1",
 }
 
 
@@ -22,7 +23,7 @@ def to_diagnosis_fragment(
     findings: list[dict[str, object]],
     *,
     sheet_id: str,
-    column_id: str,
+    column_id: str | None,
 ) -> dict[str, object]:
     """Converte findings internos em `findings` e `questions` rastreáveis do contrato raiz.
 
@@ -52,6 +53,9 @@ def to_diagnosis_fragment(
             }
             for item in finding["evidence"]
         ]
+        affected_entities = [{"entity_type": "sheet", "entity_id": sheet_id}]
+        if column_id is not None:
+            affected_entities.append({"entity_type": "column", "entity_id": column_id})
         contract_findings.append(
             {
                 "finding_id": str(uuid4()),
@@ -65,10 +69,7 @@ def to_diagnosis_fragment(
                 "recommendation": finding["recommendation"],
                 "rule_id": rule_id,
                 "rule_version": rule_version,
-                "affected_entities": [
-                    {"entity_type": "sheet", "entity_id": sheet_id},
-                    {"entity_type": "column", "entity_id": column_id},
-                ],
+                "affected_entities": affected_entities,
                 "created_at": created_at,
             }
         )

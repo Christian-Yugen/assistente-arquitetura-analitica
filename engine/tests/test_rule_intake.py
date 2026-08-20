@@ -17,11 +17,16 @@ class RuleIntakeTests(unittest.TestCase):
         self.assertEqual(readiness["source_blueprint"]["blueprint_id"], "PM-MVP-PBI-RULE-BP-001")
         self.assertEqual(len(readiness["rules"]), 95)
         self.assertEqual(readiness["counts"], {
-            "baseline_reference": 6,
-            "executable_draft": 1,
+            "baseline_reference": 4,
+            "executable_draft": 4,
             "reference_catalog_draft": 6,
-            "intake_required": 82,
+            "intake_required": 81,
         })
+
+        by_id = {rule["rule_id"]: rule for rule in readiness["rules"]}
+        for rule_id in ("QLT-NULL-001", "QLT-DUP-002", "QLT-NUMTEXT-007", "QLT-CATVAR-008"):
+            self.assertEqual(by_id[rule_id]["local_readiness"], "executable_draft")
+            self.assertTrue(by_id[rule_id]["executable"])
 
     def test_catvar_intake_preserves_policy_gaps_after_provisional_draft_activation(self):
         intake = json.loads(

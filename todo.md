@@ -20,7 +20,7 @@
 - [x] Executar o Checkpoint Global QLT-001 a QLT-006 com relatório de interações, regressão, dívida técnica e decisão de gate rastreável.
 - [x] Registrar, para QLT-DUP-002, QLT-EMPTYCOL-003, QLT-EMPTYROW-004 e QLT-MIXTYPE-005, as dependências, outcomes e compatibilidade com o contrato de diagnóstico.
 - [x] Consolidar a matriz de inventário das seis regras com ID, versão, status, dependências, outcomes e confirmação de contrato.
-- [ ] Corrigir somente não conformidades autorizadas pelo checkpoint, preservando a linhagem dos artefatos aprovados.
+- [x] Corrigir somente não conformidades autorizadas pelo checkpoint, preservando a linhagem dos artefatos aprovados; nenhuma correção foi executada porque as duas inconsistências registradas exigem hardening versionado e autorização explícita.
 - [x] Formalizar a autorização da QLT-NUMTEXT-007 após a aprovação do checkpoint global.
 - [x] Especificar QLT-NUMTEXT-007 com condição, exceções, evidências, outcomes, confiança, perguntas e referências ao contrato JSON.
 - [x] Implementar a regra QLT-NUMTEXT-007 no motor de diagnóstico com execução exclusivamente no servidor.
@@ -72,6 +72,10 @@
 - [x] Implementar a QLT-CATVAR-008 após o gate provisório, com perfil agregado, finding, pergunta de validação e sem fusão automática de categorias.
 - [x] Criar golden dataset, calibração limitada e regressão da QLT-CATVAR-008 antes de incluí-la na allowlist draft.
 - [x] Adicionar teste documental que vincule o gate de calibração da QLT-CATVAR-008 à autorização de Chris, ao golden dataset e ao bloqueio produtivo.
+- [x] Registrar a perda da fonte materializada da QLT-DUP-002 e formalizar a política provisória A autorizada por Chris para linhas integralmente idênticas.
+- [x] Implementar a QLT-DUP-002 provisória com perfil agregado de duplicidade, sem inferir chaves de negócio nem expor valores brutos.
+- [x] Criar golden dataset, calibração limitada, gate e regressão da QLT-DUP-002 antes de incluí-la na allowlist draft.
+- [x] Atualizar o workspace, o Gate MVP 1.0 e a prova documental para registrar a quarta regra draft e o bloqueio produtivo da QLT-DUP-002.
 - [x] Implementar um registro de catálogo que diferencie regras executáveis, autorizadas para especificação e reservadas, bloqueando execução de políticas não definidas.
 - [x] Validar que o motor rejeita explicitamente qualquer tentativa de executar uma regra reservada ou sem gate de autorização.
 - [x] Confirmar o registro de catálogo, o teste de rejeição e a integração do pipeline com a suíte completa de validação.

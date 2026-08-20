@@ -74,8 +74,8 @@ class DraftExecutionProfileTests(unittest.TestCase):
             column_position=0,
         )
         diagnosis = execute_quality_diagnosis([context], metadata=METADATA)
-        validate_governed_output(diagnosis, profile=profile, executed_rule_count=3)
-        expected = expected_governed_output_values(diagnosis, profile=profile, executed_rule_count=3)
+        validate_governed_output(diagnosis, profile=profile, executed_rule_count=4)
+        expected = expected_governed_output_values(diagnosis, profile=profile, executed_rule_count=4)
 
         self.assertEqual(set(expected), REQUIRED_GOVERNED_OUTPUT_PATHS)
         self.assertEqual(set(expected), set(profile.governed_output_paths))
@@ -88,4 +88,4 @@ class DraftExecutionProfileTests(unittest.TestCase):
             invalid = deepcopy(diagnosis)
             self._set_path(invalid, path, self._divergent_value(_read_path(diagnosis, path)))
             with self.assertRaises(ValueError, msg=path):
-                validate_governed_output(invalid, profile=profile, executed_rule_count=3)
+                validate_governed_output(invalid, profile=profile, executed_rule_count=4)
