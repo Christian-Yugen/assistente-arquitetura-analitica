@@ -61,6 +61,21 @@
 - [ ] Criar golden datasets de referência e definir expectativas de contexto, findings, severidade, dimensões, fatos, relacionamentos e métricas.
 - [ ] Calibrar o motor por falsos positivos e falsos negativos antes de qualquer ativação produtiva.
 - [ ] Implementar pipeline real de upload, parser Excel, profiler, context builder, executor e recomendação, com análise no servidor.
+- [x] Criar tabelas isoladas por proprietário para projetos analíticos, arquivos, diagnósticos e versões, com chaves e índices de acesso por usuário.
+- [x] Implementar validação de upload `.xlsx`, limite de 25 MB, limite de 10 abas, nome seguro e checksum antes de qualquer persistência.
+- [x] Implementar leitor Python de workbook que produz contexto agregado e descarta valores brutos após o profiling.
+- [x] Integrar a validação de upload a procedimento autenticado, cobrindo formato inválido, base64 inválido, arquivo acima do limite e conteúdo sem assinatura XLSX.
+- [x] Executar e registrar testes do pipeline servidor/Python para comprovar a leitura do workbook e a geração de contexto agregado antes de persistir diagnóstico.
+- [ ] Implementar orquestrador servidor que envia apenas um arquivo validado ao Python, persiste o diagnóstico canônico e não expõe recursos de outro usuário.
+- [ ] Definir política de retenção pós-análise que remova a referência privada do arquivo ao concluir o diagnóstico, mantendo metadados mínimos de auditoria.
+- [ ] Confirmar a persistência do orquestrador autenticado, executar a suíte integrada e provar o filtro obrigatório por ownerId em todas as consultas de recurso.
+- [ ] Validar em teste a retenção pós-análise, confirmando remoção da referência privada e preservação apenas de metadados de auditoria do proprietário.
+- [x] Testar o runner Python completo com um XLSX temporário e metadados válidos, validando a geração do diagnóstico canônico sem valores brutos.
+- [ ] Implementar exclusão física do objeto privado no armazenamento assim que uma operação de deleção suportada estiver disponível, além da remoção de referência já controlada no banco.
+- [x] Validar no servidor o limite de até 10 abas antes de `storagePut` ou qualquer persistência de projeto e arquivo.
+- [ ] Criar teste integrado do fluxo pós-análise que comprove a atualização owner-scoped de `storageKey`, `retentionStatus` e metadados de auditoria.
+- [ ] Adicionar prova de integração com persistência real ou helper de banco real para criação de projeto, arquivo e diagnóstico no escopo do owner.
+- [ ] Cobrir todas as leituras owner-scoped do módulo de análise, comprovando que outro usuário não acessa projetos ou diagnósticos alheios.
 - [ ] Construir telas de upload, processamento, diagnóstico segmentado, perguntas de validação, versões e exportação.
 - [ ] Implementar validações de segurança, LGPD, limites de arquivo, proteção contra arquivos malformados, logs sem dados pessoais e política de retenção.
 - [ ] Produzir documentação de arquitetura, contrato, executor, desenvolvimento de regras, testes, API, segurança e manual do usuário.

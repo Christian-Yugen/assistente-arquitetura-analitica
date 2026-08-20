@@ -1,7 +1,8 @@
-import { eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { analysisDiagnostics, analysisFiles, analysisProjects, InsertUser, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
+import { buildReferenceRemovalAudit } from "./analysisRetention";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -89,4 +90,60 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+export async function createAnalysisProject(input: { id: string; ownerId: number; name: string; domain: "generic" | "sso" | "hr" }) {
+  const db = await getDb();
+  if (!db) throw new Error("Banco de dados indisponível.");
+  await db.insert(analysisProjects).values(input);
+  return getAnalysisProjectForOwner(input.id, input.ownerId);
+}
+
+export async function getAnalysisProjectForOwner(projectId: string, ownerId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Banco de dados indisponível.");
+  const [project] = await db.select().from(analysisProjects).where(and(eq(analysisProjects.id, projectId), eq(analysisProjects.ownerId, ownerId))).limit(1);
+  return project;
+}
+
+export async function listAnalysisProjectsForOwner(ownerId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Banco de dados indisponível.");
+  return db.select().from(analysisProjects).where(eq(analysisProjects.ownerId, ownerId)).orderBy(desc(analysisProjects.createdAt));
+}
+
+export async function updateAnalysisProjectStatus(projectId: string, ownerId: number, status: "draft" | "uploading" | "analyzing" | "completed" | "failed") {
+  const db = await getDb();
+  if (!db) throw new Error("Banco de dados indisponível.");
+  await db.update(analysisProjects).set({ status, completedAt: status === "completed" || status === "failed" ? new Date() : null }).where(and(eq(analysisProjects.id, projectId), eq(analysisProjects.ownerId, ownerId)));
+}
+
+export async function createAnalysisFile(input: typeof analysisFiles.$inferInsert) {
+  const db = await getDb();
+  if (!db) throw new Error("Banco de dados indisponível.");
+  await db.insert(analysisFiles).values(input);
+}
+
+export async function markFileReferenceRemoved(fileId: string, ownerId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Banco de dados indisponível.");
+  await db.update(analysisFiles).set(buildReferenceRemovalAudit()).where(and(eq(analysisFiles.id, fileId), eq(analysisFiles.ownerId, ownerId)));
+}
+
+export async function getNextDiagnosticVersion(projectId: string, ownerId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Banco de dados indisponível.");
+  const existing = await db.select({ version: analysisDiagnostics.version }).from(analysisDiagnostics).where(and(eq(analysisDiagnostics.projectId, projectId), eq(analysisDiagnostics.ownerId, ownerId))).orderBy(desc(analysisDiagnostics.version)).limit(1);
+  return (existing[0]?.version ?? 0) + 1;
+}
+
+export async function createAnalysisDiagnostic(input: typeof analysisDiagnostics.$inferInsert) {
+  const db = await getDb();
+  if (!db) throw new Error("Banco de dados indisponível.");
+  await db.insert(analysisDiagnostics).values(input);
+}
+
+export async function getAnalysisDiagnosticForOwner(diagnosticId: string, ownerId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Banco de dados indisponível.");
+  const [diagnostic] = await db.select().from(analysisDiagnostics).where(and(eq(analysisDiagnostics.id, diagnosticId), eq(analysisDiagnostics.ownerId, ownerId))).limit(1);
+  return diagnostic;
+}
