@@ -50,7 +50,7 @@
 - [x] Aprovar ou bloquear o gate CONTRACT-RECONSTRUCTION-001 com evidências de validação, lacunas e critérios de promoção.
 - [x] Revalidar a QLT-NUMTEXT-007 exclusivamente contra o contrato reconstruído aprovado e atualizar seus gates de integração.
 - [x] Confirmar o artefato G7.4-R1 da QLT-NUMTEXT-007, atualizar G7.5 e o resumo de gates, e vincular a validação executada a essa evidência.
-- [ ] Preparar os componentes de segurança para isolamento por usuário, armazenamento privado, mascaramento e retenção de artefatos.
+- [x] Preparar os componentes de segurança para isolamento por usuário, armazenamento privado, mascaramento e retenção de artefatos no escopo draft; exclusão física continua bloqueada em tarefa própria.
 - [x] Validar o fluxo de análise e registrar gates, evidências, pendências e próximos passos no repositório.
 - [x] Validar por teste de documentação a presença da decisão, evidências, pendências, próximos passos e bloqueios no gate de consolidação do MVP draft.
 - [x] Adicionar ao gate de consolidação seções explícitas de pendências e próximos passos, com validação automatizada da documentação.
@@ -68,6 +68,9 @@
 - [x] Gerar o índice de prontidão das 95 regras a partir da fonte oficial, distinguindo baseline, regra executável draft, referência e regras que exigem intake formal.
 - [x] Registrar o intake da próxima regra QLT-CATVAR-008, expondo metadados de origem, lacunas de política e pré-condições de autorização sem criar uma regra executável.
 - [x] Validar em teste o índice de prontidão e o intake da QLT-CATVAR-008, confirmando que a regra permanece não executável.
+- [ ] Formalizar a política provisória autorizada da QLT-CATVAR-008, com normalização técnica ampliada e dicionário de domínio versionável vazio por padrão.
+- [ ] Implementar a QLT-CATVAR-008 após o gate provisório, com perfil agregado, finding, pergunta de validação e sem fusão automática de categorias.
+- [ ] Criar golden dataset, calibração limitada e regressão da QLT-CATVAR-008 antes de incluí-la na allowlist draft.
 - [x] Implementar um registro de catálogo que diferencie regras executáveis, autorizadas para especificação e reservadas, bloqueando execução de políticas não definidas.
 - [x] Validar que o motor rejeita explicitamente qualquer tentativa de executar uma regra reservada ou sem gate de autorização.
 - [x] Confirmar o registro de catálogo, o teste de rejeição e a integração do pipeline com a suíte completa de validação.
