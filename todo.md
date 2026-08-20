@@ -81,6 +81,7 @@
 - [x] Adicionar teste de regressão para o relatório de calibração, incluindo métricas por regra, cenários sem finding e bloqueio de produção.
 - [ ] Calibrar o motor por falsos positivos e falsos negativos antes de qualquer ativação produtiva.
 - [ ] Implementar pipeline real de upload, parser Excel, profiler, context builder, executor e recomendação, com análise no servidor.
+- [x] Evidenciar em código, teste e documentação a geração de recomendações reais do diagnóstico draft no pipeline servidor, distinguindo recomendações de marcadores parciais autorizados.
 - [x] Criar tabelas isoladas por proprietário para projetos analíticos, arquivos, diagnósticos e versões, com chaves e índices de acesso por usuário.
 - [x] Implementar validação de upload `.xlsx`, limite de 25 MB, limite de 10 abas, nome seguro e checksum antes de qualquer persistência.
 - [x] Implementar leitor Python de workbook que produz contexto agregado e descarta valores brutos após o profiling.
@@ -128,6 +129,7 @@
 - [x] Verificar em `Home.tsx` a confirmação da versão após sucesso da mutation e a ação de navegação ao diagnóstico.
 - [x] Adicionar teste interativo da ação “Ver diagnóstico” no estado de sucesso para comprovar o deslocamento à seção `#versoes`.
 - [ ] Implementar validações de segurança, LGPD, limites de arquivo, proteção contra arquivos malformados, logs sem dados pessoais e política de retenção.
+- [x] Completar a prova auditável de validação de tipo XLSX real e delimitar formalmente os controles LGPD restantes, incluindo a exclusão física ainda indisponível.
 - [x] Confirmar por teste ou código auditável que os logs operacionais do fluxo não incluem valores de workbook, dados pessoais ou detalhes de exceções.
 - [x] Consolidar a documentação dos controles implementados e distinguir a retenção operacional atual da exclusão física ainda bloqueada.
 - [x] Concluir os controles verificáveis de segurança do escopo draft: validação de upload, sanitização, bloqueio de payload sensível, logs seguros e retenção operacional com referência removida.
@@ -141,5 +143,8 @@
 - [x] Verificar no fluxo integrado que o diagnóstico persistido não contém CPF, e-mail, nome explicitamente rotulado ou título bruto de aba.
 - [x] Persistir no teste uma fixture representativa de diagnóstico seguro e verificar explicitamente a ausência de CPF, e-mail, nome rotulado e título bruto de aba no payload.
 - [x] Verificar no fluxo de rejeição que payloads com CPF, e-mail, nome rotulado ou título de aba bruto não alcançam `createAnalysisDiagnostic`.
-- [ ] Produzir documentação de arquitetura, contrato, executor, desenvolvimento de regras, testes, API, segurança e manual do usuário.
+- [x] Documentar de forma auditável a validação de XLSX real via inspeção pré-persistência com `openpyxl`, os controles LGPD implementados e os controles remanescentes.
+- [x] Adicionar teste documental que comprove a documentação da validação XLSX real, a indisponibilidade de exclusão física e a exceção de retenção aprovada.
+- [x] Produzir documentação de arquitetura, contrato, executor, desenvolvimento de regras, testes, API, segurança e manual do usuário.
+- [x] Elaborar o Gate `MVP-1.0-READINESS-001`, registrando a aprovação limitada ao draft e os bloqueios objetivos à promoção produtiva.
 - [ ] Executar testes ponta a ponta automatizados e aprovar o Gate formal de MVP 1.0 somente quando todos os critérios de conclusão estiverem atendidos.
