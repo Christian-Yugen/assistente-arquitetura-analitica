@@ -104,4 +104,36 @@ describe("Home workspace flow", () => {
     expect(loadedDiagnostic).toContain("Exportar JSON");
     expect(loadedDiagnostic).not.toContain("Exportar PDF");
   });
+
+  it("renders every finding and validation question from the selected diagnostic", () => {
+    state.diagnostic = {
+      data: {
+        id: "11111111-1111-4111-8111-111111111111",
+        projectId: "22222222-2222-4222-8222-222222222222",
+        version: 3,
+        contractVersion: "1.0.0-reconstructed.1",
+        payload: {
+          summary: { counts: { sheets: 1, risks: 3 } },
+          findings: [
+            { finding_id: "f-1", title: "Achado um", description: "Evidência um" },
+            { finding_id: "f-2", title: "Achado dois", description: "Evidência dois" },
+            { finding_id: "f-3", title: "Achado três", description: "Evidência três", recommendation: "Recomendação três" },
+          ],
+          questions: [
+            { question_id: "q-1", text: "Pergunta um", reason: "Motivo um" },
+            { question_id: "q-2", text: "Pergunta dois", reason: "Motivo dois" },
+            { question_id: "q-3", text: "Pergunta três", reason: "Motivo três" },
+          ],
+          file: { retention: { status: "reference_removed" } },
+        },
+      },
+      isFetching: false,
+      isError: false,
+    };
+
+    const diagnostic = renderHome();
+    expect(diagnostic).toContain("Achado três");
+    expect(diagnostic).toContain("Recomendação três");
+    expect(diagnostic).toContain("Pergunta três");
+  });
 });

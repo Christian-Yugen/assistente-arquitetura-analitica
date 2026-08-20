@@ -1,7 +1,7 @@
 # Project TODO
 
 - [x] Registrar no repositório o escopo, os limites e os artefatos de entrada da continuidade QLT-001 a QLT-007.
-- [ ] Inventariar as seis regras de qualidade existentes e validar IDs, versões, dependências, regras de saída e compatibilidade com o contrato de diagnóstico.
+- [x] Inventariar as seis regras de qualidade existentes e validar IDs, versões, dependências, regras de saída e compatibilidade com o contrato de diagnóstico; a lacuna da fonte canônica de nulos permanece em tarefa própria.
 - [ ] Recuperar o artefato canônico da QLT-NULL-001 e confirmar seu hash de baseline antes de qualquer gate de promoção de ambiente.
 - [x] Registrar a perda declarada do artefato canônico QLT-NULL-001 e a autorização de Chris para criar uma reconstrução equivalente não canônica.
 - [x] Criar o registro de linhagem, escopo e limites da QLT-NULL-001 reconstruída, mantendo bloqueada a alegação de recuperação canônica.
@@ -80,7 +80,7 @@
 - [x] Gerar relatório reprodutível de calibração para a fixture golden, com contagem de verdadeiros e falsos resultados por regra e cenário.
 - [x] Adicionar teste de regressão para o relatório de calibração, incluindo métricas por regra, cenários sem finding e bloqueio de produção.
 - [ ] Calibrar o motor por falsos positivos e falsos negativos antes de qualquer ativação produtiva.
-- [ ] Implementar pipeline real de upload, parser Excel, profiler, context builder, executor e recomendação, com análise no servidor.
+- [x] Implementar pipeline real de upload, parser Excel, profiler, context builder, executor e recomendação, com análise no servidor, no escopo limitado das regras draft autorizadas.
 - [x] Evidenciar em código, teste e documentação a geração de recomendações reais do diagnóstico draft no pipeline servidor, distinguindo recomendações de marcadores parciais autorizados.
 - [x] Criar tabelas isoladas por proprietário para projetos analíticos, arquivos, diagnósticos e versões, com chaves e índices de acesso por usuário.
 - [x] Implementar validação de upload `.xlsx`, limite de 25 MB, limite de 10 abas, nome seguro e checksum antes de qualquer persistência.
@@ -102,7 +102,7 @@
 - [x] Adicionar prova de integração com persistência real ou helper de banco real para criação de projeto, arquivo e diagnóstico no escopo do owner.
 - [x] Cobrir todas as leituras owner-scoped do módulo de análise, comprovando que outro usuário não acessa projetos ou diagnósticos alheios.
 - [x] Criar teste de integração estruturado para os helpers de listagem e consulta que comprove isolamento entre dois proprietários.
-- [ ] Construir telas de upload, processamento, diagnóstico segmentado, perguntas de validação, versões e exportação.
+- [x] Construir telas de upload, processamento, diagnóstico segmentado, perguntas de validação, versões e exportação JSON no escopo draft; PDF permanece explicitamente indisponível.
 - [x] Exibir um painel de processamento acessível durante a mutation, com etapas qualitativas e sem estimativa ou percentual simulado.
 - [x] Cobrir em teste a visibilidade do painel pendente e o bloqueio de edição durante a análise do workbook.
 - [x] Adicionar teste de `Home.tsx` que force `analyze.isPending=true` e confirme a renderização do painel de processamento no workspace real.
@@ -128,7 +128,7 @@
 - [x] Verificar em `Home.tsx` o login quando não autenticado, o formulário apenas nos estados permitidos e o bloqueio durante a mutation pendente.
 - [x] Verificar em `Home.tsx` a confirmação da versão após sucesso da mutation e a ação de navegação ao diagnóstico.
 - [x] Adicionar teste interativo da ação “Ver diagnóstico” no estado de sucesso para comprovar o deslocamento à seção `#versoes`.
-- [ ] Implementar validações de segurança, LGPD, limites de arquivo, proteção contra arquivos malformados, logs sem dados pessoais e política de retenção.
+- [x] Implementar validações de segurança, LGPD, limites de arquivo, proteção contra arquivos malformados, logs sem dados pessoais e política de retenção no escopo draft; exclusão física permanece em tarefa própria bloqueada.
 - [x] Completar a prova auditável de validação de tipo XLSX real e delimitar formalmente os controles LGPD restantes, incluindo a exclusão física ainda indisponível.
 - [x] Confirmar por teste ou código auditável que os logs operacionais do fluxo não incluem valores de workbook, dados pessoais ou detalhes de exceções.
 - [x] Consolidar a documentação dos controles implementados e distinguir a retenção operacional atual da exclusão física ainda bloqueada.
@@ -147,4 +147,6 @@
 - [x] Adicionar teste documental que comprove a documentação da validação XLSX real, a indisponibilidade de exclusão física e a exceção de retenção aprovada.
 - [x] Produzir documentação de arquitetura, contrato, executor, desenvolvimento de regras, testes, API, segurança e manual do usuário.
 - [x] Elaborar o Gate `MVP-1.0-READINESS-001`, registrando a aprovação limitada ao draft e os bloqueios objetivos à promoção produtiva.
+- [x] Adicionar teste documental ao inventário QLT-001 a QLT-006, preservando a distinção entre as cinco regras materializadas e a QLT-NULL-001 sem fonte canônica original.
+- [x] Exibir todos os achados e perguntas do diagnóstico selecionado em seções acessíveis, sem truncar a evidência do perfil draft.
 - [ ] Executar testes ponta a ponta automatizados e aprovar o Gate formal de MVP 1.0 somente quando todos os critérios de conclusão estiverem atendidos.
