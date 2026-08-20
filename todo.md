@@ -175,3 +175,13 @@
 - [x] Criar testes, golden dataset, manifesto SHA-256 e calibração reprodutível da QLT-MIXTYPE-005.
 - [x] Formalizar o gate individual de calibração da QLT-MIXTYPE-005 antes de sua ativação draft.
 - [x] Ativar a QLT-MIXTYPE-005 somente no perfil draft e sincronizar catálogo, índice, workspace e Gate MVP 1.0.
+- [x] Recuperar os metadados oficiais e os sinais de profiling disponíveis para a QLT-BADDATE-006 sob a autorização de início de Chris.
+- [x] Propor política conservadora, especificação lógica e gate de reconstrução da QLT-BADDATE-006 antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a QLT-BADDATE-006 somente após nova aprovação explícita de Chris para a política proposta.
+- [x] Revisar a proposta da QLT-BADDATE-006 para reconhecer estritamente DD-MM-AAAA além de AAAA-MM-DD, antes de solicitar nova aprovação de Chris.
+- [x] Revisar a proposta da QLT-BADDATE-006 para reconhecer estritamente DD/MM/AAAA além dos formatos com hífen, antes de solicitar nova aprovação de Chris.
+- [x] Formalizar o gate de reconstrução da QLT-BADDATE-006 com o aceite de Chris para os três formatos estritos aprovados.
+- [x] Implementar o perfil agregado e o avaliador da QLT-BADDATE-006 sem valores, posições ou identificadores brutos.
+- [x] Criar testes, golden dataset, manifesto SHA-256 e calibração reprodutível da QLT-BADDATE-006.
+- [x] Formalizar o gate individual de calibração da QLT-BADDATE-006 antes de sua ativação draft.
+- [x] Ativar a QLT-BADDATE-006 somente no perfil draft e sincronizar catálogo, índice, workspace e Gate MVP 1.0.

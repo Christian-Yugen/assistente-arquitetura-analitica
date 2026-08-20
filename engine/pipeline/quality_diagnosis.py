@@ -16,6 +16,7 @@ from engine.profiling.categorical_variations import CategoricalVariationProfile,
 from engine.profiling.duplicate_rows import DuplicateRowsProfile
 from engine.profiling.empty_rows import EmptyRowsProfile
 from engine.profiling.mixed_types import MixedTypesProfile, profile_mixed_types
+from engine.profiling.bad_dates import BadDateProfile, profile_bad_dates
 from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.catvar import CategoricalVariationColumnProfile
@@ -23,6 +24,7 @@ from engine.quality.duplicates import DuplicateRowsSheetProfile
 from engine.quality.empty_columns import EmptyColumnProfile
 from engine.quality.empty_rows import EmptyRowsSheetProfile
 from engine.quality.mixed_types import MixedTypesColumnProfile
+from engine.quality.bad_dates import BadDateColumnProfile
 
 
 @dataclass(frozen=True)
@@ -68,6 +70,7 @@ class ColumnAnalysisContext:
     duplicate_rows: DuplicateRowsProfile = field(default_factory=DuplicateRowsProfile)
     empty_rows: EmptyRowsProfile = field(default_factory=EmptyRowsProfile)
     mixed_types: MixedTypesProfile = field(default_factory=MixedTypesProfile)
+    bad_dates: BadDateProfile = field(default_factory=BadDateProfile)
 
 
 def build_column_analysis_context(
@@ -89,6 +92,7 @@ def build_column_analysis_context(
         missingness=profile_missingness(materialized_values),
         categorical_variations=profile_categorical_variations(materialized_values),
         mixed_types=profile_mixed_types(materialized_values),
+        bad_dates=profile_bad_dates(materialized_values),
     )
 
 
@@ -130,6 +134,10 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         mixed_types_profile = MixedTypesColumnProfile(name=column.column_name, mixed_types=column.mixed_types)
         if get_rule_execution_record("QLT-MIXTYPE-005").status == "executable_draft":
             for finding in execute_registered_rule("QLT-MIXTYPE-005", mixed_types_profile):
+                quality_findings.append((column.sheet_id, column.column_id, finding))
+        bad_date_profile = BadDateColumnProfile(name=column.column_name, bad_dates=column.bad_dates)
+        if get_rule_execution_record("QLT-BADDATE-006").status == "executable_draft":
+            for finding in execute_registered_rule("QLT-BADDATE-006", bad_date_profile):
                 quality_findings.append((column.sheet_id, column.column_id, finding))
 
     for sheet_id, sheet_columns in grouped_columns.items():

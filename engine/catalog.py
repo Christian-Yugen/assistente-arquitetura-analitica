@@ -21,6 +21,7 @@ DRAFT_RULE_AUTHORIZATIONS = {
     "QLT-EMPTYCOL-003": "QLT-EMPTYCOL-003-DRAFT-CALIBRATION-001",
     "QLT-EMPTYROW-004": "QLT-EMPTYROW-004-DRAFT-CALIBRATION-001",
     "QLT-MIXTYPE-005": "QLT-MIXTYPE-005-DRAFT-CALIBRATION-001",
+    "QLT-BADDATE-006": "QLT-BADDATE-006-DRAFT-CALIBRATION-001",
 }
 RuleExecutionStatus = Literal["executable_draft", "baseline_reference", "reference_catalog_draft", "reserved_definition", "unknown"]
 
