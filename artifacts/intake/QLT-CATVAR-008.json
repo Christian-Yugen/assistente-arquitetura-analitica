@@ -1,0 +1,47 @@
+{
+  "intake_id": "QLT-CATVAR-008-INTAKE-001",
+  "rule": {
+    "rule_id": "QLT-CATVAR-008",
+    "title": "Variações de categoria",
+    "category": "quality",
+    "purpose": "Detectar grafias potencialmente equivalentes.",
+    "priority": "P1",
+    "stage": "quality",
+    "scope": "column",
+    "depends_on": ["profiling"],
+    "primary_output": "finding",
+    "source_implementation_status": "planned"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifact": "artifacts/catalogs/official-rule-blueprint-95.json"
+  },
+  "local_readiness": "intake_required",
+  "authorization": {
+    "implementation_authorized": false,
+    "reason": "O blueprint oficial fornece propósito e metadados, mas não define condição, normalização, limiares, exclusões, evidências, confiança ou política de perguntas para esta regra.",
+    "required_gate": "QLT-CATVAR-008-AUTHORIZATION"
+  },
+  "required_before_implementation": [
+    "Definição explícita de equivalência de categoria e normalizações permitidas",
+    "Proteções contra mesclagem indevida de valores semanticamente distintos",
+    "Condição determinística, exclusões e limiares calibráveis",
+    "Evidências agregadas sem valores brutos",
+    "Severidade, confiança, outcome, pergunta e supressão",
+    "Testes unitários, limítrofes, interação e regressão",
+    "Golden dataset e gate de integração"
+  ],
+  "required_policy_elements": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "severity",
+    "confidence",
+    "questions",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ],
+  "status": "pending_policy_definition"
+}

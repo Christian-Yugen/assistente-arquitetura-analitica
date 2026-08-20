@@ -1,0 +1,2423 @@
+{
+  "readiness_id": "PM-MVP-PBI-RULE-READINESS-001",
+  "readiness_version": "1.0.0",
+  "source_blueprint": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "schema_version": "1.0.0",
+    "target_count": 95
+  },
+  "policy": "A regra só pode ser executada quando local_readiness for executable_draft e houver gate de implementação registrado.",
+  "counts": {
+    "baseline_reference": 6,
+    "executable_draft": 1,
+    "reference_catalog_draft": 6,
+    "intake_required": 82
+  },
+  "rules": [
+    {
+      "rule_id": "QLT-NULL-001",
+      "title": "Valores nulos relevantes",
+      "category": "quality",
+      "priority": "P0",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "source_implementation_status": "reference_implemented_draft",
+      "local_readiness": "baseline_reference",
+      "executable": false,
+      "missing_before_execution": []
+    },
+    {
+      "rule_id": "QLT-DUP-002",
+      "title": "Registros duplicados",
+      "category": "quality",
+      "priority": "P0",
+      "stage": "quality",
+      "scope": "sheet",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "baseline_reference",
+      "executable": false,
+      "missing_before_execution": []
+    },
+    {
+      "rule_id": "QLT-EMPTYCOL-003",
+      "title": "Colunas vazias",
+      "category": "quality",
+      "priority": "P1",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "baseline_reference",
+      "executable": false,
+      "missing_before_execution": []
+    },
+    {
+      "rule_id": "QLT-EMPTYROW-004",
+      "title": "Linhas vazias",
+      "category": "quality",
+      "priority": "P1",
+      "stage": "quality",
+      "scope": "sheet",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "baseline_reference",
+      "executable": false,
+      "missing_before_execution": []
+    },
+    {
+      "rule_id": "QLT-MIXTYPE-005",
+      "title": "Tipos mistos",
+      "category": "quality",
+      "priority": "P0",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "baseline_reference",
+      "executable": false,
+      "missing_before_execution": []
+    },
+    {
+      "rule_id": "QLT-BADDATE-006",
+      "title": "Datas inválidas",
+      "category": "quality",
+      "priority": "P0",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "baseline_reference",
+      "executable": false,
+      "missing_before_execution": []
+    },
+    {
+      "rule_id": "QLT-NUMTEXT-007",
+      "title": "Números armazenados como texto",
+      "category": "quality",
+      "priority": "P1",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
+    },
+    {
+      "rule_id": "QLT-CATVAR-008",
+      "title": "Variações de categoria",
+      "category": "quality",
+      "priority": "P1",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "QLT-WHITESPACE-009",
+      "title": "Espaços e caracteres ocultos",
+      "category": "quality",
+      "priority": "P1",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "QLT-TOTALROW-010",
+      "title": "Linhas totalizadoras",
+      "category": "quality",
+      "priority": "P0",
+      "stage": "quality",
+      "scope": "sheet",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "QLT-NEGATIVE-011",
+      "title": "Valores negativos suspeitos",
+      "category": "quality",
+      "priority": "P1",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "QLT-OUTLIER-012",
+      "title": "Valores atípicos",
+      "category": "quality",
+      "priority": "P1",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "QLT-FORMULA-013",
+      "title": "Fórmulas inconsistentes",
+      "category": "quality",
+      "priority": "P1",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "QLT-HEADERS-014",
+      "title": "Cabeçalhos inválidos",
+      "category": "quality",
+      "priority": "P0",
+      "stage": "quality",
+      "scope": "sheet",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "QLT-IDMISS-015",
+      "title": "Identificadores incompletos",
+      "category": "quality",
+      "priority": "P0",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "SEM-DATE-001",
+      "title": "Data genérica",
+      "category": "semantic_typing",
+      "priority": "P0",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "source_implementation_status": "reference_implemented_draft",
+      "local_readiness": "reference_catalog_draft",
+      "executable": false,
+      "missing_before_execution": []
+    },
+    {
+      "rule_id": "SEM-COMP-002",
+      "title": "Data de competência",
+      "category": "semantic_typing",
+      "priority": "P1",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "SEM-ID-003",
+      "title": "Identificador",
+      "category": "semantic_typing",
+      "priority": "P0",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "SEM-DESC-004",
+      "title": "Nome ou descrição",
+      "category": "semantic_typing",
+      "priority": "P1",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "SEM-QTY-005",
+      "title": "Quantidade",
+      "category": "semantic_typing",
+      "priority": "P0",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "SEM-CURR-006",
+      "title": "Valor monetário",
+      "category": "semantic_typing",
+      "priority": "P1",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "SEM-PCT-007",
+      "title": "Percentual",
+      "category": "semantic_typing",
+      "priority": "P0",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "SEM-DUR-008",
+      "title": "Duração",
+      "category": "semantic_typing",
+      "priority": "P1",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "SEM-STATUS-009",
+      "title": "Status",
+      "category": "semantic_typing",
+      "priority": "P1",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "SEM-CAT-010",
+      "title": "Categoria",
+      "category": "semantic_typing",
+      "priority": "P1",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "SEM-LOC-011",
+      "title": "Localização",
+      "category": "semantic_typing",
+      "priority": "P1",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "SEM-RESP-012",
+      "title": "Responsável",
+      "category": "semantic_typing",
+      "priority": "P1",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "SEM-TARGET-013",
+      "title": "Meta ou previsto",
+      "category": "semantic_typing",
+      "priority": "P0",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "SEM-ACTUAL-014",
+      "title": "Realizado",
+      "category": "semantic_typing",
+      "priority": "P0",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "SEM-SENS-015",
+      "title": "Sensibilidade e dado pessoal",
+      "category": "semantic_typing",
+      "priority": "P0",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "sensitivity",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "GRN-COMP-001",
+      "title": "Chave composta",
+      "category": "grain",
+      "priority": "P0",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "source_implementation_status": "reference_implemented_draft",
+      "local_readiness": "reference_catalog_draft",
+      "executable": false,
+      "missing_before_execution": []
+    },
+    {
+      "rule_id": "GRN-EXPL-002",
+      "title": "Chave explícita",
+      "category": "grain",
+      "priority": "P0",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "GRN-ENTITY-003",
+      "title": "Entidade por linha",
+      "category": "grain",
+      "priority": "P1",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "GRN-EVENT-004",
+      "title": "Evento por linha",
+      "category": "grain",
+      "priority": "P0",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "GRN-PERIOD-005",
+      "title": "Período por linha",
+      "category": "grain",
+      "priority": "P0",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "GRN-SNAP-006",
+      "title": "Snapshot periódico",
+      "category": "grain",
+      "priority": "P1",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "GRN-ASSOC-007",
+      "title": "Associação entre entidades",
+      "category": "grain",
+      "priority": "P1",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "GRN-PREAGG-008",
+      "title": "Agregação prévia",
+      "category": "grain",
+      "priority": "P1",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "GRN-INCONS-009",
+      "title": "Granularidade inconsistente",
+      "category": "grain",
+      "priority": "P0",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "GRN-DUP-010",
+      "title": "Duplicidade na granularidade",
+      "category": "grain",
+      "priority": "P0",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-FACTPER-001",
+      "title": "Fato periódica",
+      "category": "fact_dimension",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "reference_implemented_draft",
+      "local_readiness": "reference_catalog_draft",
+      "executable": false,
+      "missing_before_execution": []
+    },
+    {
+      "rule_id": "MDL-FACTTXN-002",
+      "title": "Fato transacional",
+      "category": "fact_dimension",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-FACTACC-003",
+      "title": "Snapshot acumulado",
+      "category": "fact_dimension",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-DIMSTD-004",
+      "title": "Dimensão cadastral",
+      "category": "fact_dimension",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-DIMCONF-005",
+      "title": "Dimensão compartilhada",
+      "category": "fact_dimension",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-DIMCAL-006",
+      "title": "Dimensão calendário",
+      "category": "fact_dimension",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-DIMROLE-007",
+      "title": "Dimensão de função",
+      "category": "fact_dimension",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-DIMDEG-008",
+      "title": "Dimensão degenerada",
+      "category": "fact_dimension",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-BRIDGE-009",
+      "title": "Tabela ponte",
+      "category": "fact_dimension",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-AUX-010",
+      "title": "Tabela auxiliar",
+      "category": "fact_dimension",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-PARAM-011",
+      "title": "Tabela parâmetro como auxiliar",
+      "category": "fact_dimension",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-FLAT-012",
+      "title": "Tabela desnormalizada",
+      "category": "fact_dimension",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-MIXED-013",
+      "title": "Tabela mista",
+      "category": "fact_dimension",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-ATTRREP-014",
+      "title": "Atributos repetidos",
+      "category": "fact_dimension",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-MEASURE-015",
+      "title": "Medidas armazenadas",
+      "category": "fact_dimension",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-DIMEXTRACT-016",
+      "title": "Dimensão extraível da fato",
+      "category": "fact_dimension",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-DIMMISS-017",
+      "title": "Dimensão ausente",
+      "category": "fact_dimension",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-FACTNOMEAS-018",
+      "title": "Fato sem medidas",
+      "category": "fact_dimension",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-FACTNOGRAIN-019",
+      "title": "Fato sem granularidade",
+      "category": "fact_dimension",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MDL-UNDEFINED-020",
+      "title": "Classificação indefinida",
+      "category": "fact_dimension",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "REL-ONEMANY-001",
+      "title": "Relacionamento um-para-muitos",
+      "category": "relationship",
+      "priority": "P0",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "source_implementation_status": "reference_implemented_draft",
+      "local_readiness": "reference_catalog_draft",
+      "executable": false,
+      "missing_before_execution": []
+    },
+    {
+      "rule_id": "REL-NONUNIQ-002",
+      "title": "Chave não única no lado 1",
+      "category": "relationship",
+      "priority": "P0",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "REL-ORPHAN-003",
+      "title": "Registros órfãos",
+      "category": "relationship",
+      "priority": "P1",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "REL-MANYMANY-004",
+      "title": "Muitos-para-muitos",
+      "category": "relationship",
+      "priority": "P0",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "REL-BRIDGE-005",
+      "title": "Necessidade de ponte",
+      "category": "relationship",
+      "priority": "P1",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "REL-FACTFACT-006",
+      "title": "Relacionamento direto entre fatos",
+      "category": "relationship",
+      "priority": "P0",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "REL-AMBIG-007",
+      "title": "Caminhos ambíguos",
+      "category": "relationship",
+      "priority": "P0",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "REL-BIDIR-008",
+      "title": "Filtro bidirecional suspeito",
+      "category": "relationship",
+      "priority": "P0",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "REL-COMPKEY-009",
+      "title": "Chave composta",
+      "category": "relationship",
+      "priority": "P1",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "REL-CONFORMED-010",
+      "title": "Dimensão compartilhada",
+      "category": "relationship",
+      "priority": "P1",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MET-COMPL-001",
+      "title": "Percentual de conclusão",
+      "category": "metric",
+      "priority": "P0",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "source_implementation_status": "reference_implemented_draft",
+      "local_readiness": "reference_catalog_draft",
+      "executable": false,
+      "missing_before_execution": []
+    },
+    {
+      "rule_id": "MET-SUM-002",
+      "title": "Soma",
+      "category": "metric",
+      "priority": "P0",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MET-COUNT-003",
+      "title": "Contagem",
+      "category": "metric",
+      "priority": "P0",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MET-DCOUNT-004",
+      "title": "Contagem distinta",
+      "category": "metric",
+      "priority": "P0",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MET-AVG-005",
+      "title": "Média",
+      "category": "metric",
+      "priority": "P1",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MET-MINMAX-006",
+      "title": "Mínimo e máximo",
+      "category": "metric",
+      "priority": "P1",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MET-RATE-007",
+      "title": "Taxa",
+      "category": "metric",
+      "priority": "P0",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MET-ABSDELTA-008",
+      "title": "Variação absoluta",
+      "category": "metric",
+      "priority": "P1",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MET-PCTDELTA-009",
+      "title": "Variação percentual",
+      "category": "metric",
+      "priority": "P1",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MET-RUNNING-010",
+      "title": "Acumulado",
+      "category": "metric",
+      "priority": "P1",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MET-WAVG-011",
+      "title": "Média ponderada",
+      "category": "metric",
+      "priority": "P1",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MET-SEMIADD-012",
+      "title": "Medida semiaditiva",
+      "category": "metric",
+      "priority": "P0",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MET-DOMAIN-013",
+      "title": "Métrica de domínio",
+      "category": "metric",
+      "priority": "P1",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MET-IMPOSS-014",
+      "title": "Métrica insuficiente",
+      "category": "metric",
+      "priority": "P0",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "MET-DAX-015",
+      "title": "DAX derivado da fórmula conceitual",
+      "category": "metric",
+      "priority": "P0",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "ALT-SENS-001",
+      "title": "Dado pessoal ou sensível",
+      "category": "alert",
+      "priority": "P0",
+      "stage": "alert_consolidation",
+      "scope": "column",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "source_implementation_status": "reference_implemented_draft",
+      "local_readiness": "reference_catalog_draft",
+      "executable": false,
+      "missing_before_execution": []
+    },
+    {
+      "rule_id": "ALT-QUALITY-002",
+      "title": "Risco crítico de qualidade",
+      "category": "alert",
+      "priority": "P1",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "ALT-GRAIN-003",
+      "title": "Granularidade indefinida",
+      "category": "alert",
+      "priority": "P0",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "ALT-KEY-004",
+      "title": "Chave inválida",
+      "category": "alert",
+      "priority": "P0",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "ALT-AMBIG-005",
+      "title": "Relacionamento ambíguo",
+      "category": "alert",
+      "priority": "P0",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "ALT-METRIC-006",
+      "title": "Métrica potencialmente enganosa",
+      "category": "alert",
+      "priority": "P0",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "ALT-SUMPCT-007",
+      "title": "Soma de percentuais",
+      "category": "alert",
+      "priority": "P0",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "ALT-AVGAVG-008",
+      "title": "Média de médias",
+      "category": "alert",
+      "priority": "P0",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "ALT-MIXGRAIN-009",
+      "title": "Mistura de granularidades",
+      "category": "alert",
+      "priority": "P0",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    },
+    {
+      "rule_id": "ALT-LOWCONF-010",
+      "title": "Baixa confiança acumulada",
+      "category": "alert",
+      "priority": "P1",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "source_implementation_status": "planned",
+      "local_readiness": "intake_required",
+      "executable": false,
+      "missing_before_execution": [
+        "condition",
+        "exclusions",
+        "evidence",
+        "severity",
+        "confidence",
+        "questions",
+        "tests",
+        "golden_dataset",
+        "authorization_gate"
+      ]
+    }
+  ]
+}

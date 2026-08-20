@@ -6,12 +6,12 @@ from dataclasses import dataclass
 from time import perf_counter
 from typing import Iterable, Literal
 
+from engine.catalog import executable_rule_count, execute_registered_rule
 from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
 from engine.profiling.numeric_text import NumericTextProfile, infer_physical_type, profile_numeric_text
 from engine.quality.numtext import NumericTextColumnProfile
-from engine.quality.registry import QUALITY_RULE_IMPLEMENTATIONS
 
 
 @dataclass(frozen=True)
@@ -92,7 +92,7 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
             numeric_text_basis=column.numeric_text.numeric_text_basis,
             numeric_text_ambiguity_count=column.numeric_text.numeric_text_ambiguity_count,
         )
-        for finding in QUALITY_RULE_IMPLEMENTATIONS["QLT-NUMTEXT-007"](column_profile):
+        for finding in execute_registered_rule("QLT-NUMTEXT-007", column_profile):
             quality_findings.append((column, finding))
 
     findings: list[dict[str, object]] = []
@@ -193,7 +193,7 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         },
         "summary": {
             "quality_score": None,
-            "completeness_ratio": round(len(QUALITY_RULE_IMPLEMENTATIONS) / profile.catalog_target_rule_count, 8),
+            "completeness_ratio": round(executable_rule_count() / profile.catalog_target_rule_count, 8),
             "counts": {"sheets": len(sheet_objects), "columns": sum(sheet["column_count"] for sheet in sheet_objects), "facts": 0, "dimensions": 0, "relationships": 0, "metrics": 0, "risks": len(findings)},
             "top_risk_finding_ids": [finding["finding_id"] for finding in findings[:10]],
             "executive_summary": profile.summary_template.format(sheet_count=len(sheet_objects), column_count=sum(sheet["column_count"] for sheet in sheet_objects), finding_count=len(findings)),
@@ -225,6 +225,6 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
     validate_governed_output(
         diagnosis,
         profile=profile,
-        executed_rule_count=len(QUALITY_RULE_IMPLEMENTATIONS),
+        executed_rule_count=executable_rule_count(),
     )
     return diagnosis

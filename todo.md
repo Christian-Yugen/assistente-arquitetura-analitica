@@ -42,7 +42,20 @@
 - [ ] Atualizar testes Vitest do projeto e verificar compilação antes do checkpoint de entrega.
 - [x] Documentar a separação entre conclusão do catálogo de 95 regras e conclusão integral do MVP da plataforma.
 - [x] Congelar um blueprint versionado das 95 regras com ID, categoria, entradas, condição, exclusões, evidências, precedência, dependências, testes e golden dataset esperado.
+- [x] Corrigir o blueprint local para usar os namespaces, IDs, títulos e estados do catálogo oficial de 95 regras, incluindo `MDL` em vez de namespace divergente.
+- [x] Sincronizar o registro executável do motor com o catálogo oficial e comprovar em teste a distribuição, os IDs de referência e os slots reservados.
+- [x] Confirmar o alinhamento de blueprint, registro e testes contra o namespace oficial `MDL` com a suíte completa de validação.
+- [x] Preencher no blueprint os títulos e estados oficiais das 95 regras de todas as categorias, conforme a fonte de prontidão aprovada.
+- [x] Classificar no registro do motor os IDs oficiais de referência de SEM, GRN, MDL, REL, MET e ALT sem torná-los executáveis indevidamente.
+- [x] Ampliar os testes para validar títulos, estados e IDs de referência oficiais por categoria antes de reconfirmar o alinhamento completo.
+- [x] Corrigir a tipagem da projeção do catálogo oficial e confirmar em arquivo os registros e testes sincronizados antes de reexecutar a suíte integral.
 - [ ] Completar as nove regras restantes da categoria Qualidade após o checkpoint global e a autorização formal de cada ciclo.
+- [x] Gerar o índice de prontidão das 95 regras a partir da fonte oficial, distinguindo baseline, regra executável draft, referência e regras que exigem intake formal.
+- [x] Registrar o intake da próxima regra QLT-CATVAR-008, expondo metadados de origem, lacunas de política e pré-condições de autorização sem criar uma regra executável.
+- [x] Validar em teste o índice de prontidão e o intake da QLT-CATVAR-008, confirmando que a regra permanece não executável.
+- [x] Implementar um registro de catálogo que diferencie regras executáveis, autorizadas para especificação e reservadas, bloqueando execução de políticas não definidas.
+- [x] Validar que o motor rejeita explicitamente qualquer tentativa de executar uma regra reservada ou sem gate de autorização.
+- [x] Confirmar o registro de catálogo, o teste de rejeição e a integração do pipeline com a suíte completa de validação.
 - [ ] Completar as categorias de Tipagem Semântica, Fato e Dimensão, Relacionamentos, Métricas, Alertas e Granularidade em ciclos com gates, regressão e fechamento documental.
 - [ ] Construir o motor completo com profiling, contexto normalizado, executor, precedência, confiança, agregação e contrato canônico de diagnóstico.
 - [ ] Criar golden datasets de referência e definir expectativas de contexto, findings, severidade, dimensões, fatos, relacionamentos e métricas.

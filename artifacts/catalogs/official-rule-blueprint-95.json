@@ -1,0 +1,1509 @@
+{
+  "schema_version": "1.0.0",
+  "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+  "created_at": "2026-07-14T17:55:20+00:00",
+  "target_count": 95,
+  "counts": {
+    "quality": 15,
+    "semantic_typing": 15,
+    "grain": 10,
+    "fact_dimension": 20,
+    "relationship": 10,
+    "metric": 15,
+    "alert": 10
+  },
+  "rules": [
+    {
+      "sequence": 1,
+      "rule_id": "QLT-NULL-001",
+      "category": "quality",
+      "title": "Valores nulos relevantes",
+      "purpose": "Detectar ausência elevada e qualquer nulo em chave candidata.",
+      "priority": "P0",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "implementation_status": "reference_implemented_draft"
+    },
+    {
+      "sequence": 2,
+      "rule_id": "QLT-DUP-002",
+      "category": "quality",
+      "title": "Registros duplicados",
+      "purpose": "Detectar linhas totalmente duplicadas.",
+      "priority": "P0",
+      "stage": "quality",
+      "scope": "sheet",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 3,
+      "rule_id": "QLT-EMPTYCOL-003",
+      "category": "quality",
+      "title": "Colunas vazias",
+      "purpose": "Detectar colunas sem informação útil.",
+      "priority": "P1",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 4,
+      "rule_id": "QLT-EMPTYROW-004",
+      "category": "quality",
+      "title": "Linhas vazias",
+      "purpose": "Detectar linhas totalmente vazias na região tabular.",
+      "priority": "P1",
+      "stage": "quality",
+      "scope": "sheet",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 5,
+      "rule_id": "QLT-MIXTYPE-005",
+      "category": "quality",
+      "title": "Tipos mistos",
+      "purpose": "Detectar coexistência incompatível de tipos.",
+      "priority": "P0",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 6,
+      "rule_id": "QLT-BADDATE-006",
+      "category": "quality",
+      "title": "Datas inválidas",
+      "purpose": "Detectar valores que não podem ser convertidos em datas.",
+      "priority": "P0",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 7,
+      "rule_id": "QLT-NUMTEXT-007",
+      "category": "quality",
+      "title": "Números armazenados como texto",
+      "purpose": "Detectar números serializados como texto.",
+      "priority": "P1",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 8,
+      "rule_id": "QLT-CATVAR-008",
+      "category": "quality",
+      "title": "Variações de categoria",
+      "purpose": "Detectar grafias potencialmente equivalentes.",
+      "priority": "P1",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 9,
+      "rule_id": "QLT-WHITESPACE-009",
+      "category": "quality",
+      "title": "Espaços e caracteres ocultos",
+      "purpose": "Detectar sujeira textual estrutural.",
+      "priority": "P1",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 10,
+      "rule_id": "QLT-TOTALROW-010",
+      "category": "quality",
+      "title": "Linhas totalizadoras",
+      "purpose": "Detectar totais e subtotais dentro da tabela.",
+      "priority": "P0",
+      "stage": "quality",
+      "scope": "sheet",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 11,
+      "rule_id": "QLT-NEGATIVE-011",
+      "category": "quality",
+      "title": "Valores negativos suspeitos",
+      "purpose": "Detectar sinais incompatíveis com a semântica provável.",
+      "priority": "P1",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 12,
+      "rule_id": "QLT-OUTLIER-012",
+      "category": "quality",
+      "title": "Valores atípicos",
+      "purpose": "Detectar extremos estatísticos para validação.",
+      "priority": "P1",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 13,
+      "rule_id": "QLT-FORMULA-013",
+      "category": "quality",
+      "title": "Fórmulas inconsistentes",
+      "purpose": "Detectar padrões de fórmula divergentes.",
+      "priority": "P1",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 14,
+      "rule_id": "QLT-HEADERS-014",
+      "category": "quality",
+      "title": "Cabeçalhos inválidos",
+      "purpose": "Detectar cabeçalhos ausentes, duplicados ou multinível.",
+      "priority": "P0",
+      "stage": "quality",
+      "scope": "sheet",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 15,
+      "rule_id": "QLT-IDMISS-015",
+      "category": "quality",
+      "title": "Identificadores incompletos",
+      "purpose": "Detectar nulos, duplicidades ou formatos inválidos em identificadores.",
+      "priority": "P0",
+      "stage": "quality",
+      "scope": "column",
+      "depends_on": [
+        "profiling"
+      ],
+      "primary_output": "finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 16,
+      "rule_id": "SEM-DATE-001",
+      "category": "semantic_typing",
+      "title": "Data genérica",
+      "purpose": "Classificar coluna como data genérica com evidências convergentes.",
+      "priority": "P0",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "implementation_status": "reference_implemented_draft"
+    },
+    {
+      "sequence": 17,
+      "rule_id": "SEM-COMP-002",
+      "category": "semantic_typing",
+      "title": "Data de competência",
+      "purpose": "Classificar coluna como data de competência com evidências convergentes.",
+      "priority": "P1",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 18,
+      "rule_id": "SEM-ID-003",
+      "category": "semantic_typing",
+      "title": "Identificador",
+      "purpose": "Classificar coluna como identificador com evidências convergentes.",
+      "priority": "P0",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 19,
+      "rule_id": "SEM-DESC-004",
+      "category": "semantic_typing",
+      "title": "Nome ou descrição",
+      "purpose": "Classificar coluna como nome ou descrição com evidências convergentes.",
+      "priority": "P1",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 20,
+      "rule_id": "SEM-QTY-005",
+      "category": "semantic_typing",
+      "title": "Quantidade",
+      "purpose": "Classificar coluna como quantidade com evidências convergentes.",
+      "priority": "P0",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 21,
+      "rule_id": "SEM-CURR-006",
+      "category": "semantic_typing",
+      "title": "Valor monetário",
+      "purpose": "Classificar coluna como valor monetário com evidências convergentes.",
+      "priority": "P1",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 22,
+      "rule_id": "SEM-PCT-007",
+      "category": "semantic_typing",
+      "title": "Percentual",
+      "purpose": "Classificar coluna como percentual com evidências convergentes.",
+      "priority": "P0",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 23,
+      "rule_id": "SEM-DUR-008",
+      "category": "semantic_typing",
+      "title": "Duração",
+      "purpose": "Classificar coluna como duração com evidências convergentes.",
+      "priority": "P1",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 24,
+      "rule_id": "SEM-STATUS-009",
+      "category": "semantic_typing",
+      "title": "Status",
+      "purpose": "Classificar coluna como status com evidências convergentes.",
+      "priority": "P1",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 25,
+      "rule_id": "SEM-CAT-010",
+      "category": "semantic_typing",
+      "title": "Categoria",
+      "purpose": "Classificar coluna como categoria com evidências convergentes.",
+      "priority": "P1",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 26,
+      "rule_id": "SEM-LOC-011",
+      "category": "semantic_typing",
+      "title": "Localização",
+      "purpose": "Classificar coluna como localização com evidências convergentes.",
+      "priority": "P1",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 27,
+      "rule_id": "SEM-RESP-012",
+      "category": "semantic_typing",
+      "title": "Responsável",
+      "purpose": "Classificar coluna como responsável com evidências convergentes.",
+      "priority": "P1",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 28,
+      "rule_id": "SEM-TARGET-013",
+      "category": "semantic_typing",
+      "title": "Meta ou previsto",
+      "purpose": "Classificar coluna como meta ou previsto com evidências convergentes.",
+      "priority": "P0",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 29,
+      "rule_id": "SEM-ACTUAL-014",
+      "category": "semantic_typing",
+      "title": "Realizado",
+      "purpose": "Classificar coluna como realizado com evidências convergentes.",
+      "priority": "P0",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "semantic_type",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 30,
+      "rule_id": "SEM-SENS-015",
+      "category": "semantic_typing",
+      "title": "Sensibilidade e dado pessoal",
+      "purpose": "Classificar coluna como sensibilidade e dado pessoal com evidências convergentes.",
+      "priority": "P0",
+      "stage": "semantic_typing",
+      "scope": "column",
+      "depends_on": [
+        "quality"
+      ],
+      "primary_output": "sensitivity",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 31,
+      "rule_id": "GRN-COMP-001",
+      "category": "grain",
+      "title": "Chave composta",
+      "purpose": "Inferir ou validar chave composta.",
+      "priority": "P0",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "implementation_status": "reference_implemented_draft"
+    },
+    {
+      "sequence": 32,
+      "rule_id": "GRN-EXPL-002",
+      "category": "grain",
+      "title": "Chave explícita",
+      "purpose": "Inferir ou validar chave explícita.",
+      "priority": "P0",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 33,
+      "rule_id": "GRN-ENTITY-003",
+      "category": "grain",
+      "title": "Entidade por linha",
+      "purpose": "Inferir ou validar entidade por linha.",
+      "priority": "P1",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 34,
+      "rule_id": "GRN-EVENT-004",
+      "category": "grain",
+      "title": "Evento por linha",
+      "purpose": "Inferir ou validar evento por linha.",
+      "priority": "P0",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 35,
+      "rule_id": "GRN-PERIOD-005",
+      "category": "grain",
+      "title": "Período por linha",
+      "purpose": "Inferir ou validar período por linha.",
+      "priority": "P0",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 36,
+      "rule_id": "GRN-SNAP-006",
+      "category": "grain",
+      "title": "Snapshot periódico",
+      "purpose": "Inferir ou validar snapshot periódico.",
+      "priority": "P1",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 37,
+      "rule_id": "GRN-ASSOC-007",
+      "category": "grain",
+      "title": "Associação entre entidades",
+      "purpose": "Inferir ou validar associação entre entidades.",
+      "priority": "P1",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 38,
+      "rule_id": "GRN-PREAGG-008",
+      "category": "grain",
+      "title": "Agregação prévia",
+      "purpose": "Inferir ou validar agregação prévia.",
+      "priority": "P1",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 39,
+      "rule_id": "GRN-INCONS-009",
+      "category": "grain",
+      "title": "Granularidade inconsistente",
+      "purpose": "Inferir ou validar granularidade inconsistente.",
+      "priority": "P0",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 40,
+      "rule_id": "GRN-DUP-010",
+      "category": "grain",
+      "title": "Duplicidade na granularidade",
+      "purpose": "Inferir ou validar duplicidade na granularidade.",
+      "priority": "P0",
+      "stage": "grain_inference",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing"
+      ],
+      "primary_output": "grain",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 41,
+      "rule_id": "MDL-FACTPER-001",
+      "category": "fact_dimension",
+      "title": "Fato periódica",
+      "purpose": "Classificar ou propor fato periódica.",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "reference_implemented_draft"
+    },
+    {
+      "sequence": 42,
+      "rule_id": "MDL-FACTTXN-002",
+      "category": "fact_dimension",
+      "title": "Fato transacional",
+      "purpose": "Classificar ou propor fato transacional.",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 43,
+      "rule_id": "MDL-FACTACC-003",
+      "category": "fact_dimension",
+      "title": "Snapshot acumulado",
+      "purpose": "Classificar ou propor snapshot acumulado.",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 44,
+      "rule_id": "MDL-DIMSTD-004",
+      "category": "fact_dimension",
+      "title": "Dimensão cadastral",
+      "purpose": "Classificar ou propor dimensão cadastral.",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 45,
+      "rule_id": "MDL-DIMCONF-005",
+      "category": "fact_dimension",
+      "title": "Dimensão compartilhada",
+      "purpose": "Classificar ou propor dimensão compartilhada.",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 46,
+      "rule_id": "MDL-DIMCAL-006",
+      "category": "fact_dimension",
+      "title": "Dimensão calendário",
+      "purpose": "Classificar ou propor dimensão calendário.",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 47,
+      "rule_id": "MDL-DIMROLE-007",
+      "category": "fact_dimension",
+      "title": "Dimensão de função",
+      "purpose": "Classificar ou propor dimensão de função.",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 48,
+      "rule_id": "MDL-DIMDEG-008",
+      "category": "fact_dimension",
+      "title": "Dimensão degenerada",
+      "purpose": "Classificar ou propor dimensão degenerada.",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 49,
+      "rule_id": "MDL-BRIDGE-009",
+      "category": "fact_dimension",
+      "title": "Tabela ponte",
+      "purpose": "Classificar ou propor tabela ponte.",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 50,
+      "rule_id": "MDL-AUX-010",
+      "category": "fact_dimension",
+      "title": "Tabela auxiliar",
+      "purpose": "Classificar ou propor tabela auxiliar.",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 51,
+      "rule_id": "MDL-PARAM-011",
+      "category": "fact_dimension",
+      "title": "Tabela parâmetro como auxiliar",
+      "purpose": "Classificar ou propor tabela parâmetro como auxiliar.",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 52,
+      "rule_id": "MDL-FLAT-012",
+      "category": "fact_dimension",
+      "title": "Tabela desnormalizada",
+      "purpose": "Classificar ou propor tabela desnormalizada.",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 53,
+      "rule_id": "MDL-MIXED-013",
+      "category": "fact_dimension",
+      "title": "Tabela mista",
+      "purpose": "Classificar ou propor tabela mista.",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 54,
+      "rule_id": "MDL-ATTRREP-014",
+      "category": "fact_dimension",
+      "title": "Atributos repetidos",
+      "purpose": "Classificar ou propor atributos repetidos.",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 55,
+      "rule_id": "MDL-MEASURE-015",
+      "category": "fact_dimension",
+      "title": "Medidas armazenadas",
+      "purpose": "Classificar ou propor medidas armazenadas.",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 56,
+      "rule_id": "MDL-DIMEXTRACT-016",
+      "category": "fact_dimension",
+      "title": "Dimensão extraível da fato",
+      "purpose": "Classificar ou propor dimensão extraível da fato.",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 57,
+      "rule_id": "MDL-DIMMISS-017",
+      "category": "fact_dimension",
+      "title": "Dimensão ausente",
+      "purpose": "Classificar ou propor dimensão ausente.",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 58,
+      "rule_id": "MDL-FACTNOMEAS-018",
+      "category": "fact_dimension",
+      "title": "Fato sem medidas",
+      "purpose": "Classificar ou propor fato sem medidas.",
+      "priority": "P1",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 59,
+      "rule_id": "MDL-FACTNOGRAIN-019",
+      "category": "fact_dimension",
+      "title": "Fato sem granularidade",
+      "purpose": "Classificar ou propor fato sem granularidade.",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 60,
+      "rule_id": "MDL-UNDEFINED-020",
+      "category": "fact_dimension",
+      "title": "Classificação indefinida",
+      "purpose": "Classificar ou propor classificação indefinida.",
+      "priority": "P0",
+      "stage": "table_classification",
+      "scope": "sheet",
+      "depends_on": [
+        "grain"
+      ],
+      "primary_output": "classification_or_table",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 61,
+      "rule_id": "REL-ONEMANY-001",
+      "category": "relationship",
+      "title": "Relacionamento um-para-muitos",
+      "purpose": "Detectar ou recomendar relacionamento um-para-muitos.",
+      "priority": "P0",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "implementation_status": "reference_implemented_draft"
+    },
+    {
+      "sequence": 62,
+      "rule_id": "REL-NONUNIQ-002",
+      "category": "relationship",
+      "title": "Chave não única no lado 1",
+      "purpose": "Detectar ou recomendar chave não única no lado 1.",
+      "priority": "P0",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 63,
+      "rule_id": "REL-ORPHAN-003",
+      "category": "relationship",
+      "title": "Registros órfãos",
+      "purpose": "Detectar ou recomendar registros órfãos.",
+      "priority": "P1",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 64,
+      "rule_id": "REL-MANYMANY-004",
+      "category": "relationship",
+      "title": "Muitos-para-muitos",
+      "purpose": "Detectar ou recomendar muitos-para-muitos.",
+      "priority": "P0",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 65,
+      "rule_id": "REL-BRIDGE-005",
+      "category": "relationship",
+      "title": "Necessidade de ponte",
+      "purpose": "Detectar ou recomendar necessidade de ponte.",
+      "priority": "P1",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 66,
+      "rule_id": "REL-FACTFACT-006",
+      "category": "relationship",
+      "title": "Relacionamento direto entre fatos",
+      "purpose": "Detectar ou recomendar relacionamento direto entre fatos.",
+      "priority": "P0",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 67,
+      "rule_id": "REL-AMBIG-007",
+      "category": "relationship",
+      "title": "Caminhos ambíguos",
+      "purpose": "Detectar ou recomendar caminhos ambíguos.",
+      "priority": "P0",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 68,
+      "rule_id": "REL-BIDIR-008",
+      "category": "relationship",
+      "title": "Filtro bidirecional suspeito",
+      "purpose": "Detectar ou recomendar filtro bidirecional suspeito.",
+      "priority": "P0",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 69,
+      "rule_id": "REL-COMPKEY-009",
+      "category": "relationship",
+      "title": "Chave composta",
+      "purpose": "Detectar ou recomendar chave composta.",
+      "priority": "P1",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 70,
+      "rule_id": "REL-CONFORMED-010",
+      "category": "relationship",
+      "title": "Dimensão compartilhada",
+      "purpose": "Detectar ou recomendar dimensão compartilhada.",
+      "priority": "P1",
+      "stage": "relationship_inference",
+      "scope": "sheet_pair",
+      "depends_on": [
+        "table_classification"
+      ],
+      "primary_output": "relationship_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 71,
+      "rule_id": "MET-COMPL-001",
+      "category": "metric",
+      "title": "Percentual de conclusão",
+      "purpose": "Sugerir ou validar percentual de conclusão.",
+      "priority": "P0",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "implementation_status": "reference_implemented_draft"
+    },
+    {
+      "sequence": 72,
+      "rule_id": "MET-SUM-002",
+      "category": "metric",
+      "title": "Soma",
+      "purpose": "Sugerir ou validar soma.",
+      "priority": "P0",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 73,
+      "rule_id": "MET-COUNT-003",
+      "category": "metric",
+      "title": "Contagem",
+      "purpose": "Sugerir ou validar contagem.",
+      "priority": "P0",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 74,
+      "rule_id": "MET-DCOUNT-004",
+      "category": "metric",
+      "title": "Contagem distinta",
+      "purpose": "Sugerir ou validar contagem distinta.",
+      "priority": "P0",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 75,
+      "rule_id": "MET-AVG-005",
+      "category": "metric",
+      "title": "Média",
+      "purpose": "Sugerir ou validar média.",
+      "priority": "P1",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 76,
+      "rule_id": "MET-MINMAX-006",
+      "category": "metric",
+      "title": "Mínimo e máximo",
+      "purpose": "Sugerir ou validar mínimo e máximo.",
+      "priority": "P1",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 77,
+      "rule_id": "MET-RATE-007",
+      "category": "metric",
+      "title": "Taxa",
+      "purpose": "Sugerir ou validar taxa.",
+      "priority": "P0",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 78,
+      "rule_id": "MET-ABSDELTA-008",
+      "category": "metric",
+      "title": "Variação absoluta",
+      "purpose": "Sugerir ou validar variação absoluta.",
+      "priority": "P1",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 79,
+      "rule_id": "MET-PCTDELTA-009",
+      "category": "metric",
+      "title": "Variação percentual",
+      "purpose": "Sugerir ou validar variação percentual.",
+      "priority": "P1",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 80,
+      "rule_id": "MET-RUNNING-010",
+      "category": "metric",
+      "title": "Acumulado",
+      "purpose": "Sugerir ou validar acumulado.",
+      "priority": "P1",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 81,
+      "rule_id": "MET-WAVG-011",
+      "category": "metric",
+      "title": "Média ponderada",
+      "purpose": "Sugerir ou validar média ponderada.",
+      "priority": "P1",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 82,
+      "rule_id": "MET-SEMIADD-012",
+      "category": "metric",
+      "title": "Medida semiaditiva",
+      "purpose": "Sugerir ou validar medida semiaditiva.",
+      "priority": "P0",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 83,
+      "rule_id": "MET-DOMAIN-013",
+      "category": "metric",
+      "title": "Métrica de domínio",
+      "purpose": "Sugerir ou validar métrica de domínio.",
+      "priority": "P1",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 84,
+      "rule_id": "MET-IMPOSS-014",
+      "category": "metric",
+      "title": "Métrica insuficiente",
+      "purpose": "Sugerir ou validar métrica insuficiente.",
+      "priority": "P0",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 85,
+      "rule_id": "MET-DAX-015",
+      "category": "metric",
+      "title": "DAX derivado da fórmula conceitual",
+      "purpose": "Sugerir ou validar dax derivado da fórmula conceitual.",
+      "priority": "P0",
+      "stage": "metric_suggestion",
+      "scope": "sheet",
+      "depends_on": [
+        "semantic_typing",
+        "grain_inference"
+      ],
+      "primary_output": "metric_or_finding",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 86,
+      "rule_id": "ALT-SENS-001",
+      "category": "alert",
+      "title": "Dado pessoal ou sensível",
+      "purpose": "Consolidar alerta de dado pessoal ou sensível.",
+      "priority": "P0",
+      "stage": "alert_consolidation",
+      "scope": "column",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "implementation_status": "reference_implemented_draft"
+    },
+    {
+      "sequence": 87,
+      "rule_id": "ALT-QUALITY-002",
+      "category": "alert",
+      "title": "Risco crítico de qualidade",
+      "purpose": "Consolidar alerta de risco crítico de qualidade.",
+      "priority": "P1",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 88,
+      "rule_id": "ALT-GRAIN-003",
+      "category": "alert",
+      "title": "Granularidade indefinida",
+      "purpose": "Consolidar alerta de granularidade indefinida.",
+      "priority": "P0",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 89,
+      "rule_id": "ALT-KEY-004",
+      "category": "alert",
+      "title": "Chave inválida",
+      "purpose": "Consolidar alerta de chave inválida.",
+      "priority": "P0",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 90,
+      "rule_id": "ALT-AMBIG-005",
+      "category": "alert",
+      "title": "Relacionamento ambíguo",
+      "purpose": "Consolidar alerta de relacionamento ambíguo.",
+      "priority": "P0",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 91,
+      "rule_id": "ALT-METRIC-006",
+      "category": "alert",
+      "title": "Métrica potencialmente enganosa",
+      "purpose": "Consolidar alerta de métrica potencialmente enganosa.",
+      "priority": "P0",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 92,
+      "rule_id": "ALT-SUMPCT-007",
+      "category": "alert",
+      "title": "Soma de percentuais",
+      "purpose": "Consolidar alerta de soma de percentuais.",
+      "priority": "P0",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 93,
+      "rule_id": "ALT-AVGAVG-008",
+      "category": "alert",
+      "title": "Média de médias",
+      "purpose": "Consolidar alerta de média de médias.",
+      "priority": "P0",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 94,
+      "rule_id": "ALT-MIXGRAIN-009",
+      "category": "alert",
+      "title": "Mistura de granularidades",
+      "purpose": "Consolidar alerta de mistura de granularidades.",
+      "priority": "P0",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "implementation_status": "planned"
+    },
+    {
+      "sequence": 95,
+      "rule_id": "ALT-LOWCONF-010",
+      "category": "alert",
+      "title": "Baixa confiança acumulada",
+      "purpose": "Consolidar alerta de baixa confiança acumulada.",
+      "priority": "P1",
+      "stage": "alert_consolidation",
+      "scope": "model",
+      "depends_on": [
+        "quality",
+        "semantic_typing",
+        "grain_inference",
+        "table_classification",
+        "relationship_inference",
+        "metric_suggestion"
+      ],
+      "primary_output": "finding_or_suppression",
+      "implementation_status": "planned"
+    }
+  ],
+  "imported_from": "PM-MVP-PBI-RULE-BP-001 v1.0.0",
+  "imported_for": "Assistente de Arquitetura Analítica"
+}
