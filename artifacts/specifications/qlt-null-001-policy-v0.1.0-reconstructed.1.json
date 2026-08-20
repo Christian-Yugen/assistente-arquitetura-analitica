@@ -1,0 +1,70 @@
+{
+  "artifact_id": "QLT-NULL-001-POLICY-RECONSTRUCTED-001",
+  "rule_id": "QLT-NULL-001",
+  "version": "0.1.0-reconstructed.1",
+  "status": "draft_for_governance_review",
+  "purpose": "Identify partially populated columns whose genuinely missing cells can compromise completeness analysis before dimensional modeling.",
+  "scope": {
+    "unit_of_evaluation": "column",
+    "denominator": "observed cells beneath the header within the analyzed worksheet region",
+    "applicability": [
+      "observed_cell_count > 0",
+      "non_missing_cell_count > 0",
+      "missing_cell_count > 0"
+    ]
+  },
+  "missing_classes": {
+    "structural_null": {
+      "definition": "Cell value is Python None after workbook streaming.",
+      "included_in_missing_count": true
+    },
+    "blank_text": {
+      "definition": "Cell value is text whose trimmed representation is empty.",
+      "included_in_missing_count": true
+    },
+    "numeric_nan": {
+      "definition": "Cell value is a floating NaN observed by the profiler.",
+      "included_in_missing_count": true
+    },
+    "textual_sentinel": {
+      "definition": "Business strings such as N/A, NA, null, unknown, zero or dash.",
+      "included_in_missing_count": false,
+      "reason": "Their business meaning is domain-dependent and requires a separate approved policy."
+    },
+    "formula_expression": {
+      "definition": "Formula source text loaded with data_only=False.",
+      "included_in_missing_count": false,
+      "reason": "The rule must not infer formula result semantics without a calculation policy."
+    }
+  },
+  "exclusions": [
+    "Columns with no observed cells or no non-missing cells, which are reserved for empty-column diagnostics.",
+    "Textual sentinels and formula expressions.",
+    "Any profile where the denominator cannot be established deterministically."
+  ],
+  "severity_thresholds": [
+    {"minimum_ratio_inclusive": 0.0, "maximum_ratio_exclusive": 0.05, "severity": "low"},
+    {"minimum_ratio_inclusive": 0.05, "maximum_ratio_exclusive": 0.2, "severity": "medium"},
+    {"minimum_ratio_inclusive": 0.2, "maximum_ratio_exclusive": 1.0, "severity": "high"}
+  ],
+  "confidence_policy": {
+    "base_confidence": 0.9,
+    "small_sample_observed_cell_count_lt": 20,
+    "small_sample_confidence": 0.6,
+    "mixed_missing_classes_penalty": 0.1,
+    "minimum_confidence": 0.5
+  },
+  "evidence": [
+    "EVD-NULL-OBSERVED-CELL-COUNT",
+    "EVD-NULL-MISSING-CELL-COUNT",
+    "EVD-NULL-MISSING-RATIO",
+    "EVD-NULL-CLASS-BREAKDOWN"
+  ],
+  "outcome": {
+    "finding_category": "quality",
+    "high_severity_question": "Confirm whether missingness is expected by business process, represents unknown data, or requires remediation at source.",
+    "recommendation": "Document the business meaning of missingness and apply an explicit treatment before assigning facts, dimensions, relationships or measures."
+  },
+  "implementation_status": "blocked_pending_reconstruction_gate",
+  "gate_id": "QLT-NULL-RECONSTRUCTION-001"
+}

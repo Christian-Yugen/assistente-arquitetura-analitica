@@ -15,11 +15,12 @@ O helper de armazenamento disponível neste projeto fornece operações de escri
 | Mensagens de erro sem detalhes internos | Implementado e testado |
 | Exclusão física do objeto | Bloqueada pela ausência de operação oficial disponível |
 
-## Exceção de retenção física — proposta de aceite
+## Exceção de retenção física — aceite formal
 
 **Identificador:** `RETENTION-EXCEPTION-001`  
-**Status:** pendente de aceite formal; não aprovada para produção.  
-**Responsável proposto pelo aceite:** proprietário do produto, Chris.
+**Status:** aprovada exclusivamente para o MVP draft; produção permanece bloqueada.  
+**Responsável pelo aceite:** proprietário do produto, Chris.  
+**Registro do aceite:** aprovado nesta sessão, condicionado à manutenção do bloqueio de produção.
 
 | Aspecto | Definição controlada |
 |---|---|
@@ -29,4 +30,6 @@ O helper de armazenamento disponível neste projeto fornece operações de escri
 | Restrição | Nenhuma promoção a produção é permitida enquanto a exclusão física não tiver implementação oficial, teste de integração e gate de governança aprovado. |
 | Gatilho de reavaliação | Disponibilização de operação oficial de exclusão no armazenamento, seguida de teste de deleção por proprietário e atualização desta exceção. |
 
-Esta proposta não reduz os requisitos de proteção de dados. Ela apenas documenta o controle compensatório temporário e o bloqueio de produção que permanece ativo até a resolução técnica da exclusão física.
+> “Sim. Aprovado.” — Chris, com o esclarecimento de que a aprovação reconhece o controle compensatório temporário e não autoriza a produção.
+
+Este aceite não reduz os requisitos de proteção de dados. Ele formaliza o controle compensatório temporário para o MVP draft e mantém o bloqueio de produção ativo até a resolução técnica da exclusão física.

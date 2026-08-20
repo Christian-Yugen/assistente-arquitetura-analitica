@@ -14,6 +14,7 @@ import pandas as pd
 from openpyxl import load_workbook
 
 from engine.pipeline.quality_diagnosis import ColumnAnalysisContext
+from engine.profiling.missingness import MissingnessProfile, missing_class, row_has_meaningful_value
 from engine.profiling.numeric_text import LOCALE_AMBIGUOUS_NUMBER, STRICT_CANONICAL_NUMBER, NumericTextProfile
 
 
@@ -27,6 +28,10 @@ class WorkbookValidationError(ValueError):
 
 @dataclass
 class StreamingColumnProfiler:
+    observed: int = 0
+    structural_null_count: int = 0
+    blank_text_count: int = 0
+    numeric_nan_count: int = 0
     non_empty: int = 0
     bool_count: int = 0
     numeric_count: int = 0
@@ -36,7 +41,16 @@ class StreamingColumnProfiler:
     numeric_text_ambiguities: int = 0
 
     def consume(self, value: object) -> None:
-        if value is None or (isinstance(value, str) and not value.strip()) or (isinstance(value, float) and pd.isna(value)):
+        self.observed += 1
+        kind = missing_class(value)
+        if kind == "structural_null":
+            self.structural_null_count += 1
+            return
+        if kind == "blank_text":
+            self.blank_text_count += 1
+            return
+        if kind == "numeric_nan":
+            self.numeric_nan_count += 1
             return
         self.non_empty += 1
         if isinstance(value, bool):
@@ -81,6 +95,15 @@ class StreamingColumnProfiler:
             numeric_text_ambiguity_count=self.numeric_text_ambiguities,
         )
 
+    def missingness_profile(self) -> MissingnessProfile:
+        return MissingnessProfile(
+            observed_cell_count=self.observed,
+            non_missing_cell_count=self.non_empty,
+            structural_null_count=self.structural_null_count,
+            blank_text_count=self.blank_text_count,
+            numeric_nan_count=self.numeric_nan_count,
+        )
+
 
 def safe_column_name(value: object, position: int) -> str:
     raw = str(value).strip() if value is not None else ""
@@ -123,8 +146,11 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
         column_count = len(header)
         profilers = [StreamingColumnProfiler() for _ in range(column_count)]
         for row in rows:
+            bounded_row = tuple(row[position] if position < len(row) else None for position in range(column_count))
+            if not row_has_meaningful_value(bounded_row):
+                continue
             for position in range(column_count):
-                profilers[position].consume(row[position] if position < len(row) else None)
+                profilers[position].consume(bounded_row[position])
         sheet_id = str(uuid4())
         for column_position, profiler in enumerate(profilers):
             contexts.append(
@@ -138,6 +164,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
                     column_position=column_position,
                     physical_type=profiler.physical_type(),
                     numeric_text=profiler.numeric_text_profile(),
+                    missingness=profiler.missingness_profile(),
                 )
             )
     if not contexts:

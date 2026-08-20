@@ -3,6 +3,19 @@
 - [x] Registrar no repositório o escopo, os limites e os artefatos de entrada da continuidade QLT-001 a QLT-007.
 - [ ] Inventariar as seis regras de qualidade existentes e validar IDs, versões, dependências, regras de saída e compatibilidade com o contrato de diagnóstico.
 - [ ] Recuperar o artefato canônico da QLT-NULL-001 e confirmar seu hash de baseline antes de qualquer gate de promoção de ambiente.
+- [x] Registrar a perda declarada do artefato canônico QLT-NULL-001 e a autorização de Chris para criar uma reconstrução equivalente não canônica.
+- [x] Criar o registro de linhagem, escopo e limites da QLT-NULL-001 reconstruída, mantendo bloqueada a alegação de recuperação canônica.
+- [x] Validar por teste documental a perda declarada, a autorização de Chris, a nova versão reconstruída, o baseline novo e o bloqueio de execução até gate.
+- [x] Criar o artefato de baseline verificável da QLT-NULL-001 reconstruída e ampliar o teste documental para validar seu hash, versão e origem.
+- [x] Definir a política de detecção de nulos, vazios e sentinelas da QLT-NULL-001 reconstruída com evidências, exclusões e outcomes.
+- [x] Especificar a QLT-NULL-001 reconstruída, criar baseline verificável e solicitar gate próprio antes da implementação.
+- [x] Elaborar e validar a política reconstruída de nulos, vazios, `NaN`, sentinelas e fórmulas com evidências agregadas.
+- [x] Elaborar e validar a especificação lógica reconstruída, incluindo perfil agregado, limiares, confiança e matriz de testes planejada.
+- [x] Implementar a QLT-NULL-001 somente após a aprovação documentada de sua especificação reconstruída.
+- [x] Vincular a executabilidade da QLT-NULL-001 a uma allowlist explícita de regras draft autorizadas, preservando o bloqueio de registros sem gate.
+- [x] Executar o runner completo com workbook contendo ausências determinísticas e validar o finding canônico QLT-NULL-001 sem valores brutos.
+- [x] Registrar a decisão final do gate de reconstrução, a nova contagem de regras draft e os bloqueios que permanecem para produção.
+- [x] Registrar o aceite de Chris ao gate `QLT-NULL-RECONSTRUCTION-001`, com escopo limitado à implementação e testes do perfil draft.
 - [ ] Recuperar o artefato canônico da QLT-NULL-001 e confirmar seu hash de baseline antes de qualquer gate de promoção de ambiente.
 - [x] Executar o Checkpoint Global QLT-001 a QLT-006 com relatório de interações, regressão, dívida técnica e decisão de gate rastreável.
 - [x] Registrar, para QLT-DUP-002, QLT-EMPTYCOL-003, QLT-EMPTYROW-004 e QLT-MIXTYPE-005, as dependências, outcomes e compatibilidade com o contrato de diagnóstico.
@@ -106,7 +119,9 @@
 - [x] Confirmar por teste ou código auditável que os logs operacionais do fluxo não incluem valores de workbook, dados pessoais ou detalhes de exceções.
 - [x] Consolidar a documentação dos controles implementados e distinguir a retenção operacional atual da exclusão física ainda bloqueada.
 - [x] Concluir os controles verificáveis de segurança do escopo draft: validação de upload, sanitização, bloqueio de payload sensível, logs seguros e retenção operacional com referência removida.
-- [ ] Formalizar a exceção de retenção física indisponível, com limite, controles compensatórios, responsável pelo aceite e gatilho de reavaliação.
+- [x] Formalizar a exceção de retenção física indisponível, com limite, controles compensatórios, responsável pelo aceite e gatilho de reavaliação.
+- [x] Registrar o aceite explícito de Chris à `RETENTION-EXCEPTION-001` para o MVP draft, mantendo o bloqueio de produção.
+- [x] Validar por teste documental o aceite de Chris, a limitação da exceção e a manutenção do bloqueio de produção.
 - [x] Mascarar CPF, e-mail e valores explicitamente identificados como nome nos metadados e rótulos persistidos.
 - [x] Reduzir mensagens de falha do motor para impedir propagação de detalhes de arquivos ou conteúdo ao cliente.
 - [x] Validar em testes que o orquestrador persiste somente textos sanitizados e remove a referência privada após a análise.

@@ -13,6 +13,10 @@ from engine.quality.registry import QUALITY_RULE_IMPLEMENTATIONS
 
 OFFICIAL_BLUEPRINT_PATH = Path(__file__).resolve().parents[1] / "artifacts/catalogs/official-rule-blueprint-95.json"
 CURRENT_QUALITY_BASELINE = {"QLT-NULL-001", "QLT-DUP-002", "QLT-EMPTYCOL-003", "QLT-EMPTYROW-004", "QLT-MIXTYPE-005", "QLT-BADDATE-006"}
+DRAFT_RULE_AUTHORIZATIONS = {
+    "QLT-NUMTEXT-007": "G7.4-R1",
+    "QLT-NULL-001": "QLT-NULL-RECONSTRUCTION-001",
+}
 RuleExecutionStatus = Literal["executable_draft", "baseline_reference", "reference_catalog_draft", "reserved_definition", "unknown"]
 
 
@@ -46,9 +50,10 @@ def category_caps() -> dict[str, int]:
 
 
 def get_rule_execution_record(rule_id: str) -> RuleExecutionRecord:
-    if rule_id in QUALITY_RULE_IMPLEMENTATIONS:
+    if rule_id in QUALITY_RULE_IMPLEMENTATIONS and rule_id in DRAFT_RULE_AUTHORIZATIONS:
         rule = load_official_catalog()[rule_id]
-        return RuleExecutionRecord(rule_id, "executable_draft", "Implementação e gate draft disponíveis.", rule["title"], rule["implementation_status"])
+        gate_id = DRAFT_RULE_AUTHORIZATIONS[rule_id]
+        return RuleExecutionRecord(rule_id, "executable_draft", f"Implementação e gate draft {gate_id} disponíveis.", rule["title"], rule["implementation_status"])
 
     rule = load_official_catalog().get(rule_id)
     if not rule:

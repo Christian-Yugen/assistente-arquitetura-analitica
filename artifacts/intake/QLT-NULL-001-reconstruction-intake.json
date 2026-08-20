@@ -1,0 +1,33 @@
+{
+  "artifact_id": "QLT-NULL-001-RECONSTRUCTION-INTAKE-001",
+  "rule_id": "QLT-NULL-001",
+  "candidate_version": "0.1.0-reconstructed.1",
+  "lifecycle_state": "intake_authorized_for_reconstruction",
+  "source_lineage": {
+    "canonical_artifact_status": "lost_by_user_declaration",
+    "canonical_hash_status": "unavailable",
+    "reconstruction_authorization": {
+      "authorized_by": "Chris",
+      "scope": "create an equivalent new artifact suitable for the MVP draft",
+      "does_not_authorize": [
+        "claiming recovery of the original canonical artifact",
+        "production promotion",
+        "execution before a reconstruction gate is approved"
+      ]
+    }
+  },
+  "reconstruction_constraints": [
+    "Use only the reconstructed PM-MVP-PBI-CON-001 contract and the available governed rule patterns as references.",
+    "Version, baseline, evidence catalog and gate identifiers must be new and attributable to this reconstruction.",
+    "The existing QLT-NULL recovery blocker remains historical evidence and must not be removed."
+  ],
+  "required_before_implementation": [
+    "null-policy",
+    "logical-specification",
+    "evidence-and-outcome-design",
+    "test-matrix",
+    "reconstruction-baseline",
+    "gate-approval"
+  ],
+  "gate_id": "QLT-NULL-RECONSTRUCTION-001"
+}

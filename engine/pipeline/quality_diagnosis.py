@@ -11,7 +11,9 @@ from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, 
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
 from engine.profiling.numeric_text import NumericTextProfile, infer_physical_type, profile_numeric_text
+from engine.profiling.missingness import MissingnessProfile, profile_missingness
 from engine.quality.numtext import NumericTextColumnProfile
+from engine.quality.nulls import NullColumnProfile
 
 
 @dataclass(frozen=True)
@@ -52,6 +54,7 @@ class ColumnAnalysisContext:
     column_position: int
     physical_type: str
     numeric_text: NumericTextProfile
+    missingness: MissingnessProfile = MissingnessProfile()
 
 
 def build_column_analysis_context(
@@ -70,6 +73,7 @@ def build_column_analysis_context(
         column_position=column_position,
         physical_type=infer_physical_type(materialized_values),
         numeric_text=profile_numeric_text(materialized_values),
+        missingness=profile_missingness(materialized_values),
     )
 
 
@@ -94,6 +98,9 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         )
         for finding in execute_registered_rule("QLT-NUMTEXT-007", column_profile):
             quality_findings.append((column, finding))
+        null_profile = NullColumnProfile(name=column.column_name, physical_type=column.physical_type, missingness=column.missingness)
+        for finding in execute_registered_rule("QLT-NULL-001", null_profile):
+            quality_findings.append((column, finding))
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []
@@ -116,7 +123,7 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
     sheet_objects = []
     for sheet_id, sheet_columns in grouped_columns.items():
         representative = sheet_columns[0]
-        row_count = max(column.numeric_text.non_empty_value_count for column in sheet_columns)
+        row_count = max(column.missingness.observed_cell_count for column in sheet_columns)
         sheet_objects.append(
             {
                 "sheet_id": sheet_id,

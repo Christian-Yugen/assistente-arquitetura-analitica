@@ -74,8 +74,8 @@ class DraftExecutionProfileTests(unittest.TestCase):
             column_position=0,
         )
         diagnosis = execute_quality_diagnosis([context], metadata=METADATA)
-        validate_governed_output(diagnosis, profile=profile, executed_rule_count=1)
-        expected = expected_governed_output_values(diagnosis, profile=profile, executed_rule_count=1)
+        validate_governed_output(diagnosis, profile=profile, executed_rule_count=2)
+        expected = expected_governed_output_values(diagnosis, profile=profile, executed_rule_count=2)
 
         self.assertEqual(set(expected), REQUIRED_GOVERNED_OUTPUT_PATHS)
         self.assertEqual(set(expected), set(profile.governed_output_paths))

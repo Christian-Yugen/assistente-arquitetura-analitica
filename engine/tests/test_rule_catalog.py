@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from engine.catalog import (
     RuleExecutionUnavailableError,
@@ -9,6 +10,9 @@ from engine.catalog import (
     load_official_catalog,
 )
 from engine.quality.numtext import CANONICAL_NUMERIC_TEXT_BASIS, NumericTextColumnProfile
+from engine.profiling.missingness import MissingnessProfile
+from engine.quality.nulls import NullColumnProfile
+from engine.quality.registry import QUALITY_RULE_IMPLEMENTATIONS
 
 
 class RuleCatalogTests(unittest.TestCase):
@@ -19,13 +23,20 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(catalog["QLT-CATVAR-008"]["title"], "Variações de categoria")
         self.assertEqual(catalog["ALT-LOWCONF-010"]["implementation_status"], "planned")
 
-    def test_only_the_implemented_draft_rule_is_executable(self):
+    def test_only_the_authorized_draft_rules_are_executable(self):
         profile = NumericTextColumnProfile("Valor", "text", 10, 8, 0.8, CANONICAL_NUMERIC_TEXT_BASIS)
         result = execute_registered_rule("QLT-NUMTEXT-007", profile)
+        null_result = execute_registered_rule(
+            "QLT-NULL-001",
+            NullColumnProfile("Observação", "text", MissingnessProfile(20, 16, 4, 0, 0)),
+        )
         record = get_rule_execution_record("QLT-NUMTEXT-007")
-        self.assertEqual(executable_rule_count(), 1)
+        null_record = get_rule_execution_record("QLT-NULL-001")
+        self.assertEqual(executable_rule_count(), 2)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
+        self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(record.status, "executable_draft")
+        self.assertEqual(null_record.status, "executable_draft")
         self.assertEqual(record.title, "Números armazenados como texto")
 
     def test_baseline_reference_and_reserved_official_slots_cannot_execute(self):
@@ -46,3 +57,10 @@ class RuleCatalogTests(unittest.TestCase):
             with self.assertRaises(RuleExecutionUnavailableError, msg=rule_id):
                 execute_registered_rule(rule_id, object())
         self.assertEqual(get_rule_execution_record("MDL-021").status, "unknown")
+
+    def test_registry_entry_without_explicit_draft_gate_remains_blocked(self):
+        with patch.dict(QUALITY_RULE_IMPLEMENTATIONS, {"QLT-DUP-002": lambda _: []}):
+            record = get_rule_execution_record("QLT-DUP-002")
+            self.assertEqual(record.status, "baseline_reference")
+            with self.assertRaises(RuleExecutionUnavailableError):
+                execute_registered_rule("QLT-DUP-002", object())

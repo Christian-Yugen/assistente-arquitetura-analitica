@@ -1,0 +1,82 @@
+{
+  "artifact_id": "QLT-NULL-001-LOGICAL-SPEC-RECONSTRUCTED-001",
+  "rule_id": "QLT-NULL-001",
+  "version": "0.1.0-reconstructed.1",
+  "status": "draft_for_governance_review",
+  "depends_on": [
+    "QLT-NULL-001-POLICY-RECONSTRUCTED-001",
+    "PM-MVP-PBI-CON-001 v1.0.0-reconstructed.1"
+  ],
+  "input_profile": {
+    "name": "NullColumnProfile",
+    "aggregated_fields": [
+      "name",
+      "physical_type",
+      "observed_cell_count",
+      "non_missing_cell_count",
+      "structural_null_count",
+      "blank_text_count",
+      "numeric_nan_count"
+    ],
+    "derived_fields": [
+      "missing_cell_count = structural_null_count + blank_text_count + numeric_nan_count",
+      "missing_ratio = missing_cell_count / observed_cell_count",
+      "missing_class_count = number of non-zero missing class counters"
+    ],
+    "prohibited_fields": [
+      "raw_cell_values",
+      "original_sheet_title",
+      "textual_sentinel_samples",
+      "formula_result_values"
+    ]
+  },
+  "row_inclusion": {
+    "rule": "A data row is included only when at least one header-bounded cell contains a non-missing, non-blank or formula-expression value.",
+    "reason": "Prevents trailing empty worksheet rows and formatting-only rows from inflating missingness."
+  },
+  "decision_algorithm": [
+    "Reject the profile when observed_cell_count is zero.",
+    "Reject the profile when non_missing_cell_count is zero; that case is reserved for empty-column diagnostics.",
+    "Reject the profile when missing_cell_count is zero.",
+    "Calculate missing_ratio from aggregated counters.",
+    "Assign low severity for 0 < missing_ratio < 0.05; medium for 0.05 <= missing_ratio < 0.20; high for missing_ratio >= 0.20.",
+    "Set confidence to 0.60 when observed_cell_count < 20; otherwise 0.90. Subtract 0.10 when more than one missing class is present, bounded at 0.50.",
+    "Emit counts, ratio and class breakdown as evidence; never emit raw values.",
+    "Attach one blocking validation question only when severity is high and observed_cell_count >= 20."
+  ],
+  "finding_contract": {
+    "category": "quality",
+    "finding_fields": [
+      "rule_id",
+      "category",
+      "severity",
+      "confidence",
+      "title",
+      "description",
+      "impact",
+      "recommendation",
+      "evidence",
+      "question"
+    ],
+    "evidence_codes": [
+      "EVD-NULL-OBSERVED-CELL-COUNT",
+      "EVD-NULL-MISSING-CELL-COUNT",
+      "EVD-NULL-MISSING-RATIO",
+      "EVD-NULL-CLASS-BREAKDOWN"
+    ]
+  },
+  "planned_test_matrix": [
+    "no observed cells produces no finding",
+    "all observed cells missing produces no finding",
+    "no missing cells produces no finding",
+    "one structural null in a large sample produces low severity",
+    "5 percent missingness produces medium severity",
+    "20 percent missingness produces high severity and blocking question",
+    "small sample produces confidence 0.60 and no blocking question",
+    "mixed structural-null and blank-text classes apply confidence penalty",
+    "numeric NaN is included in missingness",
+    "sentinel and formula expressions are excluded from missing counts"
+  ],
+  "implementation_status": "blocked_pending_reconstruction_gate",
+  "gate_id": "QLT-NULL-RECONSTRUCTION-001"
+}

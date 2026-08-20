@@ -5,12 +5,12 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from engine.quality.numtext import Finding
-
-
 CONTRACT_ID = "PM-MVP-PBI-CON-001"
 SCHEMA_VERSION = "1.0.0"
-NUMTEXT_RULE_VERSION = "1.0.0-draft"
+RULE_VERSIONS = {
+    "QLT-NUMTEXT-007": "1.0.0-draft",
+    "QLT-NULL-001": "0.1.0-reconstructed.1",
+}
 
 
 def _timestamp() -> str:
@@ -18,7 +18,7 @@ def _timestamp() -> str:
 
 
 def to_diagnosis_fragment(
-    findings: list[Finding],
+    findings: list[dict[str, object]],
     *,
     sheet_id: str,
     column_id: str,
@@ -34,6 +34,10 @@ def to_diagnosis_fragment(
     contract_questions: list[dict[str, object]] = []
 
     for finding in findings:
+        rule_id = str(finding["rule_id"])
+        rule_version = RULE_VERSIONS.get(rule_id)
+        if not rule_version:
+            raise ValueError(f"Versão de regra não registrada para {rule_id}.")
         evidence = [
             {
                 "code": item["code"],
@@ -58,8 +62,8 @@ def to_diagnosis_fragment(
                 "evidence": evidence,
                 "impact": finding["impact"],
                 "recommendation": finding["recommendation"],
-                "rule_id": finding["rule_id"],
-                "rule_version": NUMTEXT_RULE_VERSION,
+                "rule_id": rule_id,
+                "rule_version": rule_version,
                 "affected_entities": [
                     {"entity_type": "sheet", "entity_id": sheet_id},
                     {"entity_type": "column", "entity_id": column_id},

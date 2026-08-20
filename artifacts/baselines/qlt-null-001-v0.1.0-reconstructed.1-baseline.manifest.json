@@ -1,0 +1,10 @@
+{
+  "artifact_id": "QLT-NULL-001-BASELINE-MANIFEST-RECONSTRUCTED-001",
+  "rule_id": "QLT-NULL-001",
+  "rule_version": "0.1.0-reconstructed.1",
+  "baseline_path": "artifacts/baselines/qlt-null-001-v0.1.0-reconstructed.1-baseline.json",
+  "sha256": "8ed38e2164ade5500c51fb8dc6219dec700781499c071ade1495f5416e8794ac",
+  "origin": "new reconstruction baseline; the canonical baseline hash is unavailable because the original artifact was lost",
+  "status": "approved_for_mvp_draft_execution",
+  "gate_id": "QLT-NULL-RECONSTRUCTION-001"
+}
