@@ -1,0 +1,7 @@
+{
+  "dataset_id": "GD-QLT-EMPTYCOL-003-001",
+  "manifest_id": "MANIFEST-QLT-EMPTYCOL-003-001",
+  "sha256": "174de4e6de82ae6560af96d5d8495f3bb32653a67c007cf71606a06dccb11f01",
+  "scope": "aggregate_only_draft_calibration",
+  "production_release": "blocked"
+}

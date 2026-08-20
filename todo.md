@@ -76,6 +76,10 @@
 - [x] Implementar a QLT-DUP-002 provisória com perfil agregado de duplicidade, sem inferir chaves de negócio nem expor valores brutos.
 - [x] Criar golden dataset, calibração limitada, gate e regressão da QLT-DUP-002 antes de incluí-la na allowlist draft.
 - [x] Atualizar o workspace, o Gate MVP 1.0 e a prova documental para registrar a quarta regra draft e o bloqueio produtivo da QLT-DUP-002.
+- [x] Registrar a ausência da fonte materializada da QLT-EMPTYCOL-003 e formalizar a política provisória A aprovada por Chris para colunas totalmente vazias.
+- [x] Implementar a QLT-EMPTYCOL-003 provisória com perfil agregado, sem tratar valores válidos, fórmulas ou sentinelas como vazios.
+- [x] Criar golden dataset, calibração limitada, gate e regressão da QLT-EMPTYCOL-003 antes de incluí-la na allowlist draft.
+- [x] Atualizar o workspace, o Gate MVP 1.0 e a prova documental para registrar a quinta regra draft e o bloqueio produtivo da QLT-EMPTYCOL-003.
 - [x] Implementar um registro de catálogo que diferencie regras executáveis, autorizadas para especificação e reservadas, bloqueando execução de políticas não definidas.
 - [x] Validar que o motor rejeita explicitamente qualquer tentativa de executar uma regra reservada ou sem gate de autorização.
 - [x] Confirmar o registro de catálogo, o teste de rejeição e a integração do pipeline com a suíte completa de validação.

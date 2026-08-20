@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from time import perf_counter
 from typing import Iterable, Literal
 
-from engine.catalog import executable_rule_count, execute_registered_rule
+from engine.catalog import executable_rule_count, execute_registered_rule, get_rule_execution_record
 from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
@@ -18,6 +18,7 @@ from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.catvar import CategoricalVariationColumnProfile
 from engine.quality.duplicates import DuplicateRowsSheetProfile
+from engine.quality.empty_columns import EmptyColumnProfile
 
 
 @dataclass(frozen=True)
@@ -115,6 +116,10 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         )
         for finding in execute_registered_rule("QLT-CATVAR-008", categorical_variation_profile):
             quality_findings.append((column.sheet_id, column.column_id, finding))
+        empty_column_profile = EmptyColumnProfile(name=column.column_name, missingness=column.missingness)
+        if get_rule_execution_record("QLT-EMPTYCOL-003").status == "executable_draft":
+            for finding in execute_registered_rule("QLT-EMPTYCOL-003", empty_column_profile):
+                quality_findings.append((column.sheet_id, column.column_id, finding))
 
     for sheet_id, sheet_columns in grouped_columns.items():
         representative = sheet_columns[0]

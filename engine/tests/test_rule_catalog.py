@@ -47,7 +47,7 @@ class RuleCatalogTests(unittest.TestCase):
         null_record = get_rule_execution_record("QLT-NULL-001")
         catvar_record = get_rule_execution_record("QLT-CATVAR-008")
         duplicate_record = get_rule_execution_record("QLT-DUP-002")
-        self.assertEqual(executable_rule_count(), 4)
+        self.assertEqual(executable_rule_count(), 5)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")

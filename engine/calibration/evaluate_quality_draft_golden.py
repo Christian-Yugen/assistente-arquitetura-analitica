@@ -54,6 +54,7 @@ def evaluate() -> dict[str, object]:
         "QLT-NUMTEXT-007": {"true_positive": 0, "false_positive": 0, "false_negative": 0},
         "QLT-NULL-001": {"true_positive": 0, "false_positive": 0, "false_negative": 0},
     }
+    tracked_rule_ids = frozenset(by_rule)
     scenarios: list[dict[str, object]] = []
 
     for position, scenario in enumerate(golden["scenarios"]):
@@ -79,6 +80,7 @@ def evaluate() -> dict[str, object]:
                 any(finding["rule_id"] in question["impact"]["affected_rule_ids"] for question in diagnosis["questions"]),
             )
             for finding in diagnosis["findings"]
+            if str(finding["rule_id"]) in tracked_rule_ids
         }
         for rule_id, severity, question in actual & expected:
             by_rule[rule_id]["true_positive"] += 1

@@ -59,6 +59,7 @@ class GoldenQualityDraftTests(unittest.TestCase):
         self.assertTrue(golden["privacy"]["contains_raw_workbook_values"] is False)
         self.assertTrue(golden["privacy"]["contains_original_sheet_titles"] is False)
         self.assertTrue(golden["privacy"]["contains_personal_data"] is False)
+        tracked_rule_ids = {item["rule_id"] for item in golden["rules"]}
 
         for position, scenario in enumerate(golden["scenarios"]):
             column = scenario["column"]
@@ -114,6 +115,7 @@ class GoldenQualityDraftTests(unittest.TestCase):
                     ),
                 }
                 for finding in diagnosis["findings"]
+                if finding["rule_id"] in tracked_rule_ids
             ]
             canonical_expected = [
                 {
