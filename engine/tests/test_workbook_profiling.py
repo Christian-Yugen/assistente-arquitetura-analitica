@@ -38,6 +38,8 @@ class WorkbookProfilingTests(unittest.TestCase):
         self.assertEqual(value_column.numeric_text.numeric_text_candidate_count, 2)
         self.assertEqual(value_column.numeric_text.numeric_text_candidate_ratio, 1.0)
         self.assertEqual(email_column.column_name, "Campo sensível 3")
+        self.assertEqual({context.sheet_name for context in contexts}, {"Aba 1"})
+        self.assertNotIn("Vendas", {context.sheet_name for context in contexts})
         self.assertFalse(hasattr(value_column, "raw_values"))
 
     def test_rejects_workbook_with_more_than_ten_sheets(self):

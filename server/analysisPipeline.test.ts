@@ -43,4 +43,28 @@ describe("validateWorkbookUpload", () => {
     expect(metadata.owner_user_id).not.toBe(anotherOwner.owner_user_id);
     expect(metadata.retention_status).toBe("reference_removed");
   });
+
+  it("masks sensitive text in workbook-facing metadata and filename labels", () => {
+    const workbook = validateWorkbookUpload({
+      fileName: "cliente.ana@example.com.xlsx",
+      mimeType: xlsxMime,
+      dataBase64: zipHeader.toString("base64"),
+    });
+    const metadata = buildWorkbookMetadata({
+      analysisId: "a",
+      projectId: "p",
+      ownerNumericId: 42,
+      projectName: "Nome: Ana Maria; CPF 123.456.789-09",
+      objective: "Contatar ana.maria@example.com para validar o modelo",
+      fileId: "f",
+      workbook,
+    });
+
+    expect(workbook.originalName).not.toContain("ana@example.com");
+    expect(metadata.project_name).toContain("[nome mascarado]");
+    expect(metadata.project_name).not.toContain("Ana Maria");
+    expect(metadata.project_name).not.toContain("123.456.789-09");
+    expect(metadata.objective).toContain("[e-mail mascarado]");
+    expect(metadata.objective).not.toContain("ana.maria@example.com");
+  });
 });

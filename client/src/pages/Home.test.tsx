@@ -2,11 +2,19 @@ import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+type DiagnosticMock = {
+  id: string;
+  projectId: string;
+  version: number;
+  contractVersion: string;
+  payload: Record<string, unknown>;
+};
+
 const state = vi.hoisted(() => ({
   auth: { loading: false, isAuthenticated: true, error: null as Error | null },
   mutation: { isPending: false, isSuccess: false, data: undefined as { diagnosticId: string; version: number } | undefined },
   projects: { data: [], isLoading: false, isError: false },
-  diagnostic: { data: undefined, isFetching: false, isError: false },
+  diagnostic: { data: undefined as DiagnosticMock | undefined, isFetching: false, isError: false },
 }));
 
 vi.mock("@/_core/hooks/useAuth", () => ({ useAuth: () => state.auth }));
@@ -66,5 +74,25 @@ describe("Home workspace flow", () => {
     const success = renderHome();
     expect(success).toContain("Versão 5 criada com sucesso");
     expect(success).toContain("Ver diagnóstico");
+  });
+
+  it("shows the JSON export action only for a loaded diagnostic version", () => {
+    expect(renderHome()).not.toContain("Exportar JSON");
+    expect(renderHome()).not.toContain("Exportar PDF");
+    state.diagnostic = {
+      data: {
+        id: "11111111-1111-4111-8111-111111111111",
+        projectId: "22222222-2222-4222-8222-222222222222",
+        version: 2,
+        contractVersion: "1.0.0-reconstructed.1",
+        payload: { summary: { counts: { sheets: 1, risks: 0 } }, findings: [], questions: [], file: { retention: { status: "reference_removed" } } },
+      },
+      isFetching: false,
+      isError: false,
+    };
+
+    const loadedDiagnostic = renderHome();
+    expect(loadedDiagnostic).toContain("Exportar JSON");
+    expect(loadedDiagnostic).not.toContain("Exportar PDF");
   });
 });

@@ -3,6 +3,7 @@ import { spawn } from "node:child_process";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { sanitizeSensitiveText, sanitizeWorkbookFileName } from "./privacy";
 
 const MAX_BYTES = 25 * 1024 * 1024;
 const XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -10,6 +11,7 @@ const XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.s
 export class UploadValidationError extends Error {}
 
 export type ValidatedWorkbook = { buffer: Buffer; originalName: string; mimeType: string; sha256: string };
+export { sanitizeSensitiveText } from "./privacy";
 export type WorkbookInspection = { sheetCount: number };
 
 function contractUuid(seed: string): string {
@@ -18,8 +20,9 @@ function contractUuid(seed: string): string {
 }
 
 export function validateWorkbookUpload(input: { fileName: string; mimeType: string; dataBase64: string }): ValidatedWorkbook {
-  const originalName = input.fileName.trim().replace(/[\\/\0]/g, "_").slice(0, 255);
-  if (!originalName.toLowerCase().endsWith(".xlsx")) throw new UploadValidationError("Envie somente arquivos .xlsx.");
+  const requestedName = input.fileName.trim().replace(/[\\/\0]/g, "_").slice(0, 255);
+  if (!requestedName.toLowerCase().endsWith(".xlsx")) throw new UploadValidationError("Envie somente arquivos .xlsx.");
+  const originalName = sanitizeWorkbookFileName(requestedName);
   if (input.mimeType && input.mimeType !== XLSX_MIME && input.mimeType !== "application/octet-stream") {
     throw new UploadValidationError("O tipo informado não corresponde a uma planilha XLSX.");
   }
@@ -59,7 +62,7 @@ export async function inspectWorkbookBeforePersistence(workbook: ValidatedWorkbo
       child.once("close", code => {
         clearTimeout(timer);
         if (code === 0) resolve(output);
-        else reject(new UploadValidationError(`Não foi possível validar as abas do workbook: ${stderr.slice(0, 300) || `código ${code}`}`));
+        else reject(new UploadValidationError("Não foi possível validar a estrutura do workbook."));
       });
     });
     return validateWorkbookInspection(JSON.parse(stdout) as { sheet_count: unknown });
@@ -84,7 +87,7 @@ export async function executeWorkbookEngine(workbook: ValidatedWorkbook, metadat
       child.once("close", code => {
         clearTimeout(timer);
         if (code === 0) resolve();
-        else reject(new Error(`O motor de análise não concluiu o workbook: ${stderr.slice(0, 500) || `código ${code}`}`));
+        else reject(new Error("O motor de análise não concluiu o workbook."));
       });
     });
     return JSON.parse(await readFile(outputPath, "utf8")) as Record<string, unknown>;
@@ -101,8 +104,8 @@ export function buildWorkbookMetadata(input: {
     analysis_id: input.analysisId,
     project_id: input.projectId,
     owner_user_id: contractUuid(`owner:${input.ownerNumericId}`),
-    project_name: input.projectName,
-    objective: input.objective,
+    project_name: sanitizeSensitiveText(input.projectName),
+    objective: sanitizeSensitiveText(input.objective),
     file_id: input.fileId,
     original_name: input.workbook.originalName,
     file_size_bytes: input.workbook.buffer.length,

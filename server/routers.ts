@@ -6,7 +6,8 @@ import { TRPCError } from "@trpc/server";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import * as db from "./db";
-import { buildWorkbookMetadata, executeWorkbookEngine, inspectWorkbookBeforePersistence, UploadValidationError, validateWorkbookUpload } from "./analysisPipeline";
+import { buildWorkbookMetadata, executeWorkbookEngine, inspectWorkbookBeforePersistence, sanitizeSensitiveText, UploadValidationError, validateWorkbookUpload } from "./analysisPipeline";
+import { containsUnsafeDiagnosticContent } from "./privacy";
 import { storagePut } from "./storage";
 
 export const appRouter = router({
@@ -47,7 +48,7 @@ export const appRouter = router({
       const fileId = randomUUID();
       const diagnosticId = randomUUID();
       try {
-        await db.createAnalysisProject({ id: projectId, ownerId: ctx.user.id, name: input.projectName, domain: "generic" });
+        await db.createAnalysisProject({ id: projectId, ownerId: ctx.user.id, name: sanitizeSensitiveText(input.projectName), domain: "generic" });
         await db.updateAnalysisProjectStatus(projectId, ctx.user.id, "uploading");
         const stored = await storagePut(`analysis/${ctx.user.id}/${projectId}/${fileId}.xlsx`, workbook.buffer, workbook.mimeType);
         await db.createAnalysisFile({
@@ -60,6 +61,9 @@ export const appRouter = router({
         const diagnosis = await executeWorkbookEngine(workbook, buildWorkbookMetadata({
           analysisId: diagnosticId, projectId, ownerNumericId: ctx.user.id, projectName: input.projectName, objective: input.objective, fileId, workbook,
         }));
+        if (containsUnsafeDiagnosticContent(diagnosis)) {
+          throw new Error("O diagnóstico contém dados sensíveis detectáveis.");
+        }
         const execution = diagnosis.execution as { engine_version: string; ruleset_version: string };
         const analysis = diagnosis.analysis as { status: "completed_with_warnings" | "failed" | "draft" };
         const file = diagnosis.file as { sheet_count: number; analyzable_sheet_count: number };
@@ -72,7 +76,7 @@ export const appRouter = router({
         return { projectId, diagnosticId, version };
       } catch (error) {
         await db.updateAnalysisProjectStatus(projectId, ctx.user.id, "failed").catch(() => undefined);
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: error instanceof Error ? error.message : "Não foi possível concluir a análise." });
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Não foi possível concluir a análise." });
       }
     }),
   }),

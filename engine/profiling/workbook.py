@@ -99,6 +99,11 @@ def worksheet_visibility(value: str) -> Literal["visible", "hidden", "very_hidde
     return "visible"
 
 
+def safe_sheet_name(position: int) -> str:
+    """Evita reter títulos de abas, que podem conter identificadores pessoais ou comerciais."""
+    return f"Aba {position + 1}"
+
+
 def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
     try:
         workbook = load_workbook(path, read_only=True, data_only=False, keep_links=False)
@@ -125,7 +130,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
             contexts.append(
                 ColumnAnalysisContext(
                     sheet_id=sheet_id,
-                    sheet_name=worksheet.title[:160],
+                    sheet_name=safe_sheet_name(sheet_position),
                     sheet_position=sheet_position,
                     sheet_visibility=worksheet_visibility(worksheet.sheet_state),
                     column_id=str(uuid4()),

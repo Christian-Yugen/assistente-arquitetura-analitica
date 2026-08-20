@@ -74,10 +74,15 @@
 - [ ] Implementar exclusão física do objeto privado no armazenamento assim que uma operação de deleção suportada estiver disponível, além da remoção de referência já controlada no banco.
 - [x] Validar no servidor o limite de até 10 abas antes de `storagePut` ou qualquer persistência de projeto e arquivo.
 - [ ] Criar teste integrado do fluxo pós-análise que comprove a atualização owner-scoped de `storageKey`, `retentionStatus` e metadados de auditoria.
+- [x] Limpar e revalidar o cache do servidor de desenvolvimento para remover o erro de exportação obsoleta de `inspectWorkbookBeforePersistence`.
 - [ ] Adicionar prova de integração com persistência real ou helper de banco real para criação de projeto, arquivo e diagnóstico no escopo do owner.
 - [x] Cobrir todas as leituras owner-scoped do módulo de análise, comprovando que outro usuário não acessa projetos ou diagnósticos alheios.
 - [x] Criar teste de integração estruturado para os helpers de listagem e consulta que comprove isolamento entre dois proprietários.
 - [ ] Construir telas de upload, processamento, diagnóstico segmentado, perguntas de validação, versões e exportação.
+- [x] Adicionar exportação JSON do diagnóstico selecionado, derivada exclusivamente da consulta owner-scoped já autorizada.
+- [x] Exibir uma ação de exportação JSON no painel de diagnóstico e testar a composição segura do arquivo baixado.
+- [x] Documentar a indisponibilidade temporária da exportação PDF no MVP draft sem simular esse formato.
+- [x] Comprovar em teste de interface que não há ação nem placeholder de exportação PDF no MVP draft.
 - [x] Substituir a página inicial de exemplo por um workspace responsivo de análise, com entrada de projeto, seleção XLSX e limites visíveis.
 - [x] Exibir estados de autenticação, carregamento, erro e resultado para o procedimento `analysis.analyzeWorkbook`.
 - [x] Criar a visualização inicial de projetos e diagnóstico, incluindo achados, perguntas pendentes, versão e aviso de retenção.
@@ -93,5 +98,12 @@
 - [x] Verificar em `Home.tsx` a confirmação da versão após sucesso da mutation e a ação de navegação ao diagnóstico.
 - [x] Adicionar teste interativo da ação “Ver diagnóstico” no estado de sucesso para comprovar o deslocamento à seção `#versoes`.
 - [ ] Implementar validações de segurança, LGPD, limites de arquivo, proteção contra arquivos malformados, logs sem dados pessoais e política de retenção.
+- [x] Mascarar CPF, e-mail e valores explicitamente identificados como nome nos metadados e rótulos persistidos.
+- [x] Reduzir mensagens de falha do motor para impedir propagação de detalhes de arquivos ou conteúdo ao cliente.
+- [x] Validar em testes que o orquestrador persiste somente textos sanitizados e remove a referência privada após a análise.
+- [x] Adicionar teste integrado do orquestrador com metadados reais para verificar mascaramento em projeto, arquivo e entrada enviada ao motor.
+- [x] Verificar no fluxo integrado que o diagnóstico persistido não contém CPF, e-mail, nome explicitamente rotulado ou título bruto de aba.
+- [x] Persistir no teste uma fixture representativa de diagnóstico seguro e verificar explicitamente a ausência de CPF, e-mail, nome rotulado e título bruto de aba no payload.
+- [x] Verificar no fluxo de rejeição que payloads com CPF, e-mail, nome rotulado ou título de aba bruto não alcançam `createAnalysisDiagnostic`.
 - [ ] Produzir documentação de arquitetura, contrato, executor, desenvolvimento de regras, testes, API, segurança e manual do usuário.
 - [ ] Executar testes ponta a ponta automatizados e aprovar o Gate formal de MVP 1.0 somente quando todos os critérios de conclusão estiverem atendidos.

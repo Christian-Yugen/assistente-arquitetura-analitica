@@ -1,8 +1,15 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const calls = vi.hoisted(() => ({
-  createProject: vi.fn(), updateProject: vi.fn(), createFile: vi.fn(), nextVersion: vi.fn(), createDiagnostic: vi.fn(), removeReference: vi.fn(),
+  createProject: vi.fn(), updateProject: vi.fn().mockResolvedValue(undefined), createFile: vi.fn(), nextVersion: vi.fn(), createDiagnostic: vi.fn(), removeReference: vi.fn(),
+  executeEngine: vi.fn(),
 }));
+
+const safeDiagnosis = {
+  analysis: { status: "completed_with_warnings" },
+  execution: { engine_version: "0.1.0", ruleset_version: "0.7.0-draft" },
+  sheets: [{ sheet_id: "sheet-1", name: "Aba 1", position: 0, visibility: "visible" }],
+};
 
 vi.mock("./db", () => ({
   createAnalysisProject: calls.createProject,
@@ -15,29 +22,77 @@ vi.mock("./db", () => ({
   getAnalysisDiagnosticForOwner: vi.fn(),
 }));
 vi.mock("./storage", () => ({ storagePut: vi.fn().mockResolvedValue({ key: "private/generated.xlsx", url: "/manus-storage/private/generated.xlsx" }) }));
-vi.mock("./analysisPipeline", () => ({
-  UploadValidationError: class UploadValidationError extends Error {},
-  validateWorkbookUpload: vi.fn().mockReturnValue({ buffer: Buffer.from([0x50, 0x4b, 0x03, 0x04]), originalName: "arquivo.xlsx", mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", sha256: "a".repeat(64) }),
-  inspectWorkbookBeforePersistence: vi.fn().mockResolvedValue({ sheetCount: 1 }),
-  buildWorkbookMetadata: vi.fn().mockReturnValue({}),
-  executeWorkbookEngine: vi.fn().mockResolvedValue({ analysis: { status: "completed_with_warnings" }, execution: { engine_version: "0.1.0", ruleset_version: "0.7.0-draft" } }),
-}));
+vi.mock("./analysisPipeline", async importOriginal => {
+  const actual = await importOriginal<typeof import("./analysisPipeline")>();
+  return {
+    ...actual,
+    inspectWorkbookBeforePersistence: vi.fn().mockResolvedValue({ sheetCount: 1 }),
+    executeWorkbookEngine: calls.executeEngine,
+  };
+});
 
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 
 describe("analysis router flow", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    calls.executeEngine.mockResolvedValue(safeDiagnosis);
+  });
+
   it("persists every resource with the authenticated owner and removes the private reference after diagnosis", async () => {
     calls.nextVersion.mockResolvedValue(1);
     const user = { id: 77, openId: "owner-77", email: null, name: null, loginMethod: "manus", role: "user" as const, createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date() };
     const caller = appRouter.createCaller({ user, req: {} as TrpcContext["req"], res: {} as TrpcContext["res"] });
-    const result = await caller.analysis.analyzeWorkbook({ projectName: "Projeto", objective: "Objetivo", fileName: "arquivo.xlsx", mimeType: "application/octet-stream", dataBase64: "UEsDBA==" });
+    const result = await caller.analysis.analyzeWorkbook({ projectName: "Nome: Ana Maria; CPF 123.456.789-09", objective: "Contatar ana.maria@example.com", fileName: "cliente.ana@example.com.xlsx", mimeType: "application/octet-stream", dataBase64: "UEsDBA==" });
 
     expect(result.version).toBe(1);
-    expect(calls.createProject.mock.calls[0][0]).toMatchObject({ ownerId: 77, name: "Projeto" });
-    expect(calls.createFile.mock.calls[0][0]).toMatchObject({ ownerId: 77, retentionStatus: "private_active" });
-    expect(calls.createDiagnostic.mock.calls[0][0]).toMatchObject({ ownerId: 77, version: 1 });
+    const persistedProject = calls.createProject.mock.calls[0][0];
+    const persistedFile = calls.createFile.mock.calls[0][0];
+    const engineMetadata = calls.executeEngine.mock.calls[0][1];
+    const persistedDiagnostic = calls.createDiagnostic.mock.calls[0][0];
+    expect(persistedProject).toMatchObject({ ownerId: 77, name: "Nome: [nome mascarado]; CPF [CPF mascarado]" });
+    expect(persistedFile).toMatchObject({ ownerId: 77, retentionStatus: "private_active" });
+    expect(persistedFile.originalName).not.toContain("ana@example.com");
+    expect(JSON.stringify(engineMetadata)).not.toContain("Ana Maria");
+    expect(JSON.stringify(engineMetadata)).not.toContain("ana.maria@example.com");
+    expect(JSON.stringify(engineMetadata)).not.toContain("123.456.789-09");
+    expect(persistedDiagnostic).toMatchObject({ ownerId: 77, version: 1 });
+    const persistedPayload = JSON.stringify(persistedDiagnostic.payload);
+    for (const rawValue of ["Ana Maria", "123.456.789-09", "ana.maria@example.com", "Nome: Ana Maria", "Vendas RH"]) {
+      expect(persistedPayload).not.toContain(rawValue);
+    }
     expect(calls.removeReference).toHaveBeenCalledWith(expect.any(String), 77);
     expect(calls.updateProject).toHaveBeenLastCalledWith(expect.any(String), 77, "completed");
+  });
+
+  it("returns a generic error when the engine fails with internal details", async () => {
+    calls.executeEngine.mockRejectedValueOnce(new Error("CPF 123.456.789-09 in temporary file"));
+    const user = { id: 77, openId: "owner-77", email: null, name: null, loginMethod: "manus", role: "user" as const, createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date() };
+    const caller = appRouter.createCaller({ user, req: {} as TrpcContext["req"], res: {} as TrpcContext["res"] });
+
+    const error = await caller.analysis.analyzeWorkbook({ projectName: "Projeto", objective: "Objetivo", fileName: "arquivo.xlsx", mimeType: "application/octet-stream", dataBase64: "UEsDBA==" })
+      .catch(error => error);
+
+    expect(error).toMatchObject({ code: "INTERNAL_SERVER_ERROR" });
+    expect(error.message).toBe("Não foi possível concluir a análise.");
+  });
+
+  it.each([
+    ["CPF", { ...safeDiagnosis, evidence: "CPF 123.456.789-09" }],
+    ["e-mail", { ...safeDiagnosis, evidence: "ana.maria@example.com" }],
+    ["nome rotulado", { ...safeDiagnosis, evidence: "Nome: Ana Maria" }],
+    ["título bruto de aba", { ...safeDiagnosis, sheets: [{ name: "Vendas RH" }] }],
+  ])("blocks a diagnosis with %s before diagnostic persistence", async (_label, diagnosis) => {
+    calls.nextVersion.mockResolvedValue(1);
+    calls.executeEngine.mockResolvedValueOnce(diagnosis);
+    const user = { id: 77, openId: "owner-77", email: null, name: null, loginMethod: "manus", role: "user" as const, createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date() };
+    const caller = appRouter.createCaller({ user, req: {} as TrpcContext["req"], res: {} as TrpcContext["res"] });
+    const error = await caller.analysis.analyzeWorkbook({ projectName: "Projeto", objective: "Objetivo", fileName: "arquivo.xlsx", mimeType: "application/octet-stream", dataBase64: "UEsDBA==" })
+      .catch(error => error);
+
+    expect(error.message).toBe("Não foi possível concluir a análise.");
+    expect(calls.createDiagnostic).not.toHaveBeenCalled();
+    expect(calls.removeReference).not.toHaveBeenCalled();
   });
 });

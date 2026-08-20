@@ -7,10 +7,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
 import { getAnalysisUiState } from "@/lib/analysisUiState";
+import { downloadDiagnosticJson } from "@/lib/diagnosticExport";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { startLogin } from "@/const";
 import { AnalysisAuthNotice, AnalysisSubmitButton, AnalysisSuccessNotice } from "@/components/AnalysisFlowState";
-import { AlertTriangle, ArrowUpRight, CheckCircle2, Clock3, FileSpreadsheet, FileUp, Loader2, ShieldCheck, Sparkles } from "lucide-react";
+import { AlertTriangle, ArrowUpRight, CheckCircle2, Clock3, Download, FileSpreadsheet, FileUp, Loader2, ShieldCheck, Sparkles } from "lucide-react";
 import React, { ChangeEvent, FormEvent, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -101,6 +102,16 @@ export default function Home() {
     }
   }
 
+  function exportDiagnostic() {
+    if (!diagnosticQuery.data) return;
+    try {
+      downloadDiagnosticJson(diagnosticQuery.data);
+      toast.success("Diagnóstico JSON preparado para download.");
+    } catch {
+      toast.error("Não foi possível preparar a exportação JSON.");
+    }
+  }
+
   return (
     <DashboardLayout>
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-8 sm:py-8">
@@ -148,7 +159,7 @@ export default function Home() {
           <Card id="projetos" className="rounded-[1.5rem] border-[#dfe5dc] bg-white"><CardContent className="p-6"><div className="mb-5 flex items-center justify-between"><div><p className="text-xs font-semibold tracking-[0.12em] text-[#66816e] uppercase">Projetos recentes</p><h2 className="mt-1 font-serif text-2xl text-[#18332c]">Histórico de análises</h2></div><Clock3 className="h-5 w-5 text-[#7a9680]" /></div>
             {projectsQuery.isLoading ? <div className="py-10 text-center text-sm text-[#718078]">Carregando seus projetos…</div> : projectsQuery.isError ? <div className="rounded-xl bg-[#fff3ef] p-5 text-sm leading-6 text-[#9a4d3e]">Não foi possível carregar seus projetos agora. Atualize a página para tentar novamente.</div> : projectsQuery.data?.length ? <div className="space-y-2">{projectsQuery.data.slice(0, 6).map(project => <button key={project.id} disabled={!project.lastDiagnosticId} onClick={() => project.lastDiagnosticId && setSelectedDiagnosticId(project.lastDiagnosticId)} className="flex w-full items-center gap-3 rounded-xl border border-transparent p-3 text-left transition-colors hover:border-[#dbe7d9] hover:bg-[#f6f9f5] disabled:cursor-not-allowed disabled:opacity-60"><span className="grid h-9 w-9 place-items-center rounded-lg bg-[#edf3ea] text-[#578066]"><FileSpreadsheet className="h-4 w-4" /></span><span className="min-w-0 flex-1"><span className="block truncate text-sm font-semibold text-[#2d4c40]">{project.name}</span><span className="block text-xs text-[#77867c]">{project.status.replaceAll("_", " ")} · {project.lastDiagnosticVersion ? `v${project.lastDiagnosticVersion}` : "sem versão"}</span></span><ArrowUpRight className="h-4 w-4 text-[#9aac9d]" /></button>)}</div> : <div className="rounded-xl bg-[#f7f9f5] p-5 text-sm leading-6 text-[#718078]">Seu histórico aparecerá aqui após a primeira análise concluída.</div>}</CardContent></Card>
 
-          <Card id="versoes" className="rounded-[1.5rem] border-[#dfe5dc] bg-[#173f35] text-white"><CardContent className="p-6"><div className="mb-7 flex items-center justify-between"><div><p className="text-xs font-semibold tracking-[0.12em] text-[#a9cfac] uppercase">Diagnóstico selecionado</p><h2 className="mt-1 font-serif text-2xl">{diagnosticQuery.data ? `Versão ${diagnosticQuery.data.version}` : "Aguardando análise"}</h2></div><span className="rounded-full border border-white/15 px-3 py-1 text-xs text-[#d0e3ce]">Contrato v1.0</span></div>
+          <Card id="versoes" className="rounded-[1.5rem] border-[#dfe5dc] bg-[#173f35] text-white"><CardContent className="p-6"><div className="mb-7 flex items-center justify-between gap-3"><div><p className="text-xs font-semibold tracking-[0.12em] text-[#a9cfac] uppercase">Diagnóstico selecionado</p><h2 className="mt-1 font-serif text-2xl">{diagnosticQuery.data ? `Versão ${diagnosticQuery.data.version}` : "Aguardando análise"}</h2></div>{diagnosticQuery.data ? <Button type="button" onClick={exportDiagnostic} variant="outline" className="border-white/20 bg-white/8 text-white hover:bg-white/15 hover:text-white"><Download className="h-4 w-4" />Exportar JSON</Button> : <span className="rounded-full border border-white/15 px-3 py-1 text-xs text-[#d0e3ce]">Contrato v1.0</span>}</div>
             {diagnosticQuery.isFetching ? <div className="flex min-h-44 items-center justify-center"><Loader2 className="h-5 w-5 animate-spin text-[#b4d4ad]" /></div> : diagnosticQuery.isError ? <div className="rounded-xl border border-[#ffb9a9] bg-[#fff1ed] p-5 text-sm leading-6 text-[#8c3d31]">Não foi possível abrir esta versão de diagnóstico. Verifique sua sessão e tente novamente.</div> : diagnosticQuery.data ? <div className="space-y-3"><div className="grid gap-3 sm:grid-cols-3">{[{ label: "Achados", value: activeFindingCount }, { label: "Perguntas", value: activeQuestionCount }, { label: "Abas", value: getCount(diagnosticPayload, "sheets") }].map(metric => <div key={metric.label} className="rounded-xl border border-white/10 bg-white/8 p-4"><p className="text-xs text-[#b9cfc0]">{metric.label}</p><p className="mt-1 font-serif text-3xl">{metric.value}</p></div>)}</div><div className="grid gap-3 sm:grid-cols-2">{findings.slice(0, 2).map((finding, index) => <div key={String(finding.finding_id ?? index)} className="rounded-xl border border-white/10 bg-white/8 p-4"><p className="text-xs font-semibold text-[#b8d9b7]">ACHADO</p><p className="mt-1 text-sm font-semibold text-white">{String(finding.title ?? "Achado de qualidade")}</p><p className="mt-1 text-xs leading-5 text-[#c7d8c8]">{String(finding.description ?? finding.impact ?? "Sem descrição adicional.")}</p></div>)}{questions.slice(0, 2).map((question, index) => <div key={String(question.question_id ?? index)} className="rounded-xl border border-[#b8d7a7]/25 bg-[#b8d7a7]/10 p-4"><p className="text-xs font-semibold text-[#cde9bb]">VALIDAÇÃO PENDENTE</p><p className="mt-1 text-sm font-semibold text-white">{String(question.text ?? "Pergunta pendente")}</p><p className="mt-1 text-xs leading-5 text-[#d5e7d5]">{String(question.reason ?? "A resposta influencia o diagnóstico.")}</p></div>)}</div><div className="rounded-xl border border-white/10 bg-white/8 p-4 text-xs leading-5 text-[#d5e5d4]">Retenção: {String(retention.status ?? "referência controlada")} {retention.delete_at ? `· exclusão prevista em ${new Date(String(retention.delete_at)).toLocaleString("pt-BR")}` : "· o arquivo não é exibido no histórico"}.</div><div className="rounded-xl border border-white/10 bg-white/8 p-4 text-sm leading-6 text-[#d5e5d4]">O resultado permanece em modo draft: recomendações de modelo, relacionamentos e métricas só serão habilitadas após os próximos ciclos de regras e calibração.</div></div> : <div className="min-h-44 rounded-xl border border-dashed border-white/20 p-6 text-sm leading-6 text-[#c2d4c4]">Selecione um projeto concluído para consultar seus achados, perguntas de validação e versão de diagnóstico.</div>}</CardContent></Card>
         </section>
       </main>
