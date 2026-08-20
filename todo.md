@@ -112,6 +112,7 @@
 - [x] Adicionar teste de `Home.tsx` que force `analyze.isPending=true` e confirme a renderização do painel de processamento no workspace real.
 - [x] Confirmar no teste de `Home.tsx` o atributo `disabled` em nome do projeto, objetivo e input de arquivo durante a mutation pendente.
 - [x] Atualizar os indicadores do workspace para refletir as duas regras draft autorizadas e o bloqueio histórico do gate G7.5.
+- [x] Atualizar os indicadores e testes do workspace para refletir as três regras draft autorizadas após a ativação provisória da QLT-CATVAR-008.
 - [x] Documentar o indicador de processamento síncrono e a proibição de percentuais não observáveis no MVP draft.
 - [x] Validar por teste documental o estado pendente, a ausência de percentual ou ETA e os controles bloqueados do processamento síncrono.
 - [x] Adicionar exportação JSON do diagnóstico selecionado, derivada exclusivamente da consulta owner-scoped já autorizada.
@@ -151,6 +152,7 @@
 - [x] Adicionar teste documental que comprove a documentação da validação XLSX real, a indisponibilidade de exclusão física e a exceção de retenção aprovada.
 - [x] Produzir documentação de arquitetura, contrato, executor, desenvolvimento de regras, testes, API, segurança e manual do usuário.
 - [x] Elaborar o Gate `MVP-1.0-READINESS-001`, registrando a aprovação limitada ao draft e os bloqueios objetivos à promoção produtiva.
+- [x] Atualizar o Gate MVP 1.0 e a estratégia de testes para registrar a terceira regra draft, sem remover os bloqueios de produção.
 - [x] Adicionar teste documental ao inventário QLT-001 a QLT-006, preservando a distinção entre as cinco regras materializadas e a QLT-NULL-001 sem fonte canônica original.
 - [x] Exibir todos os achados e perguntas do diagnóstico selecionado em seções acessíveis, sem truncar a evidência do perfil draft.
 - [ ] Executar testes ponta a ponta automatizados e aprovar o Gate formal de MVP 1.0 somente quando todos os critérios de conclusão estiverem atendidos.

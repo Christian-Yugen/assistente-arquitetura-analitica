@@ -66,6 +66,12 @@ describe("Home workspace flow", () => {
     expect(renderHome()).toContain("Tentar login novamente");
   });
 
+  it("shows the three rules authorized for the current draft profile", () => {
+    const workspace = renderHome();
+    expect(workspace).toContain("Regras executáveis");
+    expect(workspace).toContain("QLT-001, QLT-007 e QLT-008");
+  });
+
   it("renders the pending processing panel and blocks all workbook edits during the real mutation state", () => {
     expect(renderHome()).toContain("Nome do projeto");
     state.mutation = { isPending: true, isSuccess: false, data: undefined };

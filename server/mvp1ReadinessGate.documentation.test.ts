@@ -10,7 +10,8 @@ describe("MVP-1.0-READINESS-001", () => {
 
     expect(gate).toContain("**BLOQUEADO para MVP 1.0 produtivo.**");
     expect(gate).toContain("MVP draft controlado");
-    expect(gate).toContain("Somente 2 de 95 regras");
+    expect(gate).toContain("Somente 3 de 95 regras");
+    expect(gate).toContain("QLT-CATVAR-008@0.1.0-provisional.1");
     expect(gate).toContain("exclusão física owner-scoped");
     expect(gate).toContain("Prova E2E produtiva ausente");
     expect(gate).toContain("não autoriza produção");
