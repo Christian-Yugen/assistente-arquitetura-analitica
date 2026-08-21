@@ -1,0 +1,50 @@
+[
+  {
+    "id": "percentage_full_word_unit_interval_numbers",
+    "header": "Percentual",
+    "physical_type": "numeric",
+    "formula_count": 0,
+    "values": [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0],
+    "expected": true
+  },
+  {
+    "id": "percentage_abbreviation_pct",
+    "header": "pct",
+    "physical_type": "numeric",
+    "formula_count": 0,
+    "values": [0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6],
+    "expected": true
+  },
+  {
+    "id": "percentage_percent_symbol",
+    "header": "%",
+    "physical_type": "numeric",
+    "formula_count": 0,
+    "values": [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5],
+    "expected": true
+  },
+  {
+    "id": "non_closed_header",
+    "header": "taxa",
+    "physical_type": "numeric",
+    "formula_count": 0,
+    "values": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+    "expected": false
+  },
+  {
+    "id": "out_of_unit_interval",
+    "header": "percentagem",
+    "physical_type": "numeric",
+    "formula_count": 0,
+    "values": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.1],
+    "expected": false
+  },
+  {
+    "id": "insufficient_physical_base",
+    "header": "percentual",
+    "physical_type": "numeric",
+    "formula_count": 0,
+    "values": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+    "expected": false
+  }
+]

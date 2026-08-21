@@ -66,10 +66,10 @@ describe("Home workspace flow", () => {
     expect(renderHome()).toContain("Tentar login novamente");
   });
 
-  it("shows the twenty-three rules authorized for the current draft profile", () => {
+  it("shows the twenty-four rules authorized for the current draft profile", () => {
     const workspace = renderHome();
     expect(workspace).toContain("Regras executáveis");
-    expect(workspace).toContain("QLT-001 a QLT-015 + SEM-DATE-001 + SEM-ID-003 + SEM-QTY-005 + GRN-COMP-001 + MDL-FACTPER-001 + MDL-FACTTXN-002 + MDL-DIMSTD-004 + MDL-DIMCAL-006");
+    expect(workspace).toContain("QLT-001 a QLT-015 + SEM-DATE-001 + SEM-ID-003 + SEM-QTY-005 + SEM-PCT-007 + GRN-COMP-001 + MDL-FACTPER-001 + MDL-FACTTXN-002 + MDL-DIMSTD-004 + MDL-DIMCAL-006");
   });
 
   it("renders the pending processing panel and blocks all workbook edits during the real mutation state", () => {
