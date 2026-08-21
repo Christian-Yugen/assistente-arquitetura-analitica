@@ -1,0 +1,25 @@
+{
+  "rule_id": "SEM-TARGET-013",
+  "title": "Meta ou previsto",
+  "status": "executable_draft",
+  "priority": "P0",
+  "stage": "semantic_typing",
+  "scope": "column",
+  "depends_on": ["quality"],
+  "primary_output": "semantic_type",
+  "execution_blocked": false,
+  "source_traceability": {
+    "catalog": "artifacts/catalogs/rule-implementation-readiness-v1.json",
+    "blueprint": "artifacts/catalogs/official-rule-blueprint-95.json",
+    "master_plan": "PM-MVP-PBI-001 v1.0",
+    "requirements": "PM-MVP-PBI-REQ-001 v1.0"
+  },
+  "known_constraints": [
+    "the official scope is a column and the declared dependency is quality",
+    "the canonical output is semantic_type",
+    "the official blueprint requests converging evidence for target-or-forecast classification but does not define an executable condition, vocabulary, exclusions, confidence, evidence, questions, tests or calibration",
+    "the local draft implementation requires closed-header eligibility, a numeric physical base and exclusion of formulas, numeric text, ambiguity and recognized dates",
+    "the rule remains a candidate requiring human confirmation and is not authorized for production"
+  ],
+  "missing_before_execution": []
+}
