@@ -11,6 +11,7 @@ from typing import Callable, Literal
 from engine.quality.registry import QUALITY_RULE_IMPLEMENTATIONS
 from engine.semantic.registry import SEMANTIC_RULE_IMPLEMENTATIONS
 from engine.granularity.registry import GRANULARITY_RULE_IMPLEMENTATIONS
+from engine.fact_dimension.registry import FACT_DIMENSION_RULE_IMPLEMENTATIONS
 
 
 OFFICIAL_BLUEPRINT_PATH = Path(__file__).resolve().parents[1] / "artifacts/catalogs/official-rule-blueprint-95.json"
@@ -34,8 +35,9 @@ DRAFT_RULE_AUTHORIZATIONS = {
     "SEM-DATE-001": "SEM-DATE-001-DRAFT-CALIBRATION-001",
     "SEM-ID-003": "SEM-ID-003-DRAFT-CALIBRATION-001",
     "GRN-COMP-001": "GRN-COMP-001-DRAFT-CALIBRATION-001",
+    "MDL-FACTPER-001": "MDL-FACTPER-001-DRAFT-CALIBRATION-001",
 }
-RULE_IMPLEMENTATIONS = {**QUALITY_RULE_IMPLEMENTATIONS, **SEMANTIC_RULE_IMPLEMENTATIONS, **GRANULARITY_RULE_IMPLEMENTATIONS}
+RULE_IMPLEMENTATIONS = {**QUALITY_RULE_IMPLEMENTATIONS, **SEMANTIC_RULE_IMPLEMENTATIONS, **GRANULARITY_RULE_IMPLEMENTATIONS, **FACT_DIMENSION_RULE_IMPLEMENTATIONS}
 RuleExecutionStatus = Literal["executable_draft", "baseline_reference", "reference_catalog_draft", "reserved_definition", "unknown"]
 
 

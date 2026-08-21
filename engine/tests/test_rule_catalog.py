@@ -124,7 +124,7 @@ class RuleCatalogTests(unittest.TestCase):
         semantic_record = get_rule_execution_record("SEM-DATE-001")
         identifier_result = execute_registered_rule("SEM-ID-003", SemanticIdentifierColumnProfile("numeric", 0, profile_semantic_identifier("codigo", range(1, 21))))
         identifier_record = get_rule_execution_record("SEM-ID-003")
-        self.assertEqual(executable_rule_count(), 18)
+        self.assertEqual(executable_rule_count(), 19)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
@@ -158,11 +158,11 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(idmiss_record.status, "executable_draft")
         self.assertEqual(semantic_record.status, "executable_draft")
         self.assertEqual(get_rule_execution_record("GRN-COMP-001").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("MDL-FACTPER-001").status, "executable_draft")
         self.assertEqual(record.title, "Números armazenados como texto")
 
     def test_baseline_reference_and_reserved_official_slots_cannot_execute(self):
         expected_statuses = {
-            "MDL-FACTPER-001": "reference_catalog_draft",
             "REL-ONEMANY-001": "reference_catalog_draft",
             "MET-COMPL-001": "reference_catalog_draft",
             "ALT-SENS-001": "reference_catalog_draft",

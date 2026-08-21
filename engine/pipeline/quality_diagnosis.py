@@ -7,7 +7,7 @@ from time import perf_counter
 from typing import Iterable, Literal
 
 from engine.catalog import executable_rule_count, execute_registered_rule, get_rule_execution_record
-from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_semantic_classification_fragment
+from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_semantic_classification_fragment, to_table_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
 from engine.profiling.numeric_text import NumericTextProfile, infer_physical_type, profile_numeric_text
@@ -27,6 +27,7 @@ from engine.profiling.identifier_completeness import IdentifierCompletenessProfi
 from engine.profiling.semantic_date import SemanticDateProfile, profile_semantic_date
 from engine.profiling.semantic_identifier import SemanticIdentifierProfile, profile_semantic_identifier
 from engine.profiling.composite_grain import CompositeGrainProfile
+from engine.profiling.periodic_fact import PeriodicDateProfile, profile_periodic_date
 from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.catvar import CategoricalVariationColumnProfile
@@ -45,6 +46,7 @@ from engine.quality.identifier_completeness import IdentifierCompletenessColumnP
 from engine.semantic.date_generic import SemanticDateColumnProfile
 from engine.semantic.identifier import SemanticIdentifierColumnProfile, classify_identifier
 from engine.granularity.composite import CompositeGrainSheetProfile
+from engine.fact_dimension.periodic import PeriodicFactSheetProfile
 
 
 @dataclass(frozen=True)
@@ -101,6 +103,7 @@ class ColumnAnalysisContext:
     semantic_date: SemanticDateProfile = field(default_factory=SemanticDateProfile)
     semantic_identifier: SemanticIdentifierProfile = field(default_factory=SemanticIdentifierProfile)
     composite_grain: CompositeGrainProfile = field(default_factory=CompositeGrainProfile)
+    periodic_date: PeriodicDateProfile = field(default_factory=PeriodicDateProfile)
 
 
 def build_column_analysis_context(
@@ -129,6 +132,7 @@ def build_column_analysis_context(
         identifiers=profile_identifier_completeness(column_name, materialized_values),
         semantic_date=profile_semantic_date(materialized_values),
         semantic_identifier=profile_semantic_identifier(column_name, materialized_values),
+        periodic_date=profile_periodic_date(materialized_values),
     )
 
 
@@ -141,6 +145,7 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
     quality_findings: list[tuple[str, str | None, dict[str, object]]] = []
     semantic_candidates: list[tuple[str, str, list[dict[str, object]]]] = []
     grain_candidates: dict[str, list[dict[str, object]]] = {}
+    table_candidates: dict[str, list[dict[str, object]]] = {}
     grouped_columns: dict[str, list[ColumnAnalysisContext]] = {}
     for column in columns:
         grouped_columns.setdefault(column.sheet_id, []).append(column)
@@ -237,11 +242,25 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
                 composite_grain=representative.composite_grain,
                 semantic_identifier_component_positions=identifier_positions,
             ))
+        if get_rule_execution_record("MDL-FACTPER-001").status == "executable_draft":
+            table_candidates[sheet_id] = execute_registered_rule("MDL-FACTPER-001", PeriodicFactSheetProfile(
+                observed_row_count=max(column.missingness.observed_cell_count for column in sheet_columns),
+                grain_available=bool(grain_candidates.get(sheet_id)),
+                periodic_dates=tuple(
+                    column.periodic_date for column in sheet_columns
+                    if column.semantic_date.recognized_date_ratio == 1.0
+                ),
+                eligible_measure_column_count=sum(
+                    1 for column in sheet_columns
+                    if column.physical_type == "numeric" and column.formulas.formula_count == 0
+                ),
+            ))
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []
     semantic_classifications: list[dict[str, object]] = []
     grains_by_sheet: dict[str, dict[str, object] | None] = {sheet_id: None for sheet_id in grouped_columns}
+    classifications_by_sheet: dict[str, dict[str, object] | None] = {sheet_id: None for sheet_id in grouped_columns}
     question_ids_by_sheet: dict[str, list[str]] = {sheet_id: [] for sheet_id in grouped_columns}
     for sheet_id, column_id, finding in quality_findings:
         fragment = to_diagnosis_fragment([finding], sheet_id=sheet_id, column_id=column_id)
@@ -261,6 +280,12 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         grain_questions = fragment["questions"]  # type: ignore[assignment]
         questions.extend(grain_questions)  # type: ignore[arg-type]
         question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in grain_questions)  # type: ignore[index,union-attr]
+    for sheet_id, candidates in table_candidates.items():
+        fragment = to_table_classification_fragment(candidates, sheet_id=sheet_id)
+        classifications_by_sheet[sheet_id] = fragment["classification"]  # type: ignore[assignment]
+        table_questions = fragment["questions"]  # type: ignore[assignment]
+        questions.extend(table_questions)  # type: ignore[arg-type]
+        question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in table_questions)  # type: ignore[index,union-attr]
 
     finding_ids_by_sheet: dict[str, list[str]] = {sheet_id: [] for sheet_id in grouped_columns}
     for finding in findings:
@@ -287,7 +312,7 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
                 "column_count": len(sheet_columns),
                 "quality_score": None,
                 "grain": grains_by_sheet[sheet_id],
-                "classification": None,
+                "classification": classifications_by_sheet[sheet_id],
                 "columns": [
                     {
                         "column_id": column.column_id,
