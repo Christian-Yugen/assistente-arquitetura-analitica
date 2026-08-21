@@ -7,7 +7,7 @@ from time import perf_counter
 from typing import Iterable, Literal
 
 from engine.catalog import executable_rule_count, execute_registered_rule, get_rule_execution_record
-from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_semantic_classification_fragment
+from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_semantic_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
 from engine.profiling.numeric_text import NumericTextProfile, infer_physical_type, profile_numeric_text
@@ -26,6 +26,7 @@ from engine.profiling.headers import HeadersProfile
 from engine.profiling.identifier_completeness import IdentifierCompletenessProfile, profile_identifier_completeness
 from engine.profiling.semantic_date import SemanticDateProfile, profile_semantic_date
 from engine.profiling.semantic_identifier import SemanticIdentifierProfile, profile_semantic_identifier
+from engine.profiling.composite_grain import CompositeGrainProfile
 from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.catvar import CategoricalVariationColumnProfile
@@ -42,7 +43,8 @@ from engine.quality.formula_consistency import FormulaConsistencyColumnProfile
 from engine.quality.headers import HeadersSheetProfile
 from engine.quality.identifier_completeness import IdentifierCompletenessColumnProfile
 from engine.semantic.date_generic import SemanticDateColumnProfile
-from engine.semantic.identifier import SemanticIdentifierColumnProfile
+from engine.semantic.identifier import SemanticIdentifierColumnProfile, classify_identifier
+from engine.granularity.composite import CompositeGrainSheetProfile
 
 
 @dataclass(frozen=True)
@@ -98,6 +100,7 @@ class ColumnAnalysisContext:
     identifiers: IdentifierCompletenessProfile = field(default_factory=IdentifierCompletenessProfile)
     semantic_date: SemanticDateProfile = field(default_factory=SemanticDateProfile)
     semantic_identifier: SemanticIdentifierProfile = field(default_factory=SemanticIdentifierProfile)
+    composite_grain: CompositeGrainProfile = field(default_factory=CompositeGrainProfile)
 
 
 def build_column_analysis_context(
@@ -137,6 +140,7 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
     started_clock = perf_counter()
     quality_findings: list[tuple[str, str | None, dict[str, object]]] = []
     semantic_candidates: list[tuple[str, str, list[dict[str, object]]]] = []
+    grain_candidates: dict[str, list[dict[str, object]]] = {}
     grouped_columns: dict[str, list[ColumnAnalysisContext]] = {}
     for column in columns:
         grouped_columns.setdefault(column.sheet_id, []).append(column)
@@ -220,10 +224,24 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         if get_rule_execution_record("QLT-HEADERS-014").status == "executable_draft":
             for finding in execute_registered_rule("QLT-HEADERS-014", headers_profile):
                 quality_findings.append((sheet_id, None, finding))
+        if get_rule_execution_record("GRN-COMP-001").status == "executable_draft":
+            identifier_positions = frozenset(
+                column.column_position for column in sheet_columns
+                if classify_identifier(SemanticIdentifierColumnProfile(
+                    physical_type=column.physical_type,
+                    formula_count=column.formulas.formula_count,
+                    semantic_identifier=column.semantic_identifier,
+                )) and column.semantic_identifier.distinct_ratio != 1.0
+            )
+            grain_candidates[sheet_id] = execute_registered_rule("GRN-COMP-001", CompositeGrainSheetProfile(
+                composite_grain=representative.composite_grain,
+                semantic_identifier_component_positions=identifier_positions,
+            ))
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []
     semantic_classifications: list[dict[str, object]] = []
+    grains_by_sheet: dict[str, dict[str, object] | None] = {sheet_id: None for sheet_id in grouped_columns}
     question_ids_by_sheet: dict[str, list[str]] = {sheet_id: [] for sheet_id in grouped_columns}
     for sheet_id, column_id, finding in quality_findings:
         fragment = to_diagnosis_fragment([finding], sheet_id=sheet_id, column_id=column_id)
@@ -237,6 +255,12 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         semantic_questions = fragment["questions"]  # type: ignore[assignment]
         questions.extend(semantic_questions)  # type: ignore[arg-type]
         question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in semantic_questions)  # type: ignore[index,union-attr]
+    for sheet_id, candidates in grain_candidates.items():
+        fragment = to_grain_fragment(candidates, sheet_id=sheet_id)
+        grains_by_sheet[sheet_id] = fragment["grain"]  # type: ignore[assignment]
+        grain_questions = fragment["questions"]  # type: ignore[assignment]
+        questions.extend(grain_questions)  # type: ignore[arg-type]
+        question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in grain_questions)  # type: ignore[index,union-attr]
 
     finding_ids_by_sheet: dict[str, list[str]] = {sheet_id: [] for sheet_id in grouped_columns}
     for finding in findings:
@@ -262,7 +286,7 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
                 "row_count": row_count,
                 "column_count": len(sheet_columns),
                 "quality_score": None,
-                "grain": None,
+                "grain": grains_by_sheet[sheet_id],
                 "classification": None,
                 "columns": [
                     {

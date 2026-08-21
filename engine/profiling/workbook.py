@@ -29,6 +29,8 @@ from engine.profiling.total_rows import TotalRowsAccumulator
 from engine.profiling.formula_consistency import FormulaConsistencyAccumulator
 from engine.profiling.headers import profile_headers
 from engine.profiling.semantic_identifier import SemanticIdentifierAccumulator, SemanticIdentifierProfile
+from engine.profiling.semantic_identifier import ELIGIBLE_HEADERS, SENSITIVE_HEADERS, _normalize_header
+from engine.profiling.composite_grain import CompositeGrainAccumulator
 
 
 MAX_SHEETS = 10
@@ -212,6 +214,9 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
             second_row_cells,
             _merged_ranges_for_worksheet(workbook, worksheet),
         )
+        candidate_positions = [position for position, value in enumerate(header) if _normalize_header(str(value or "")) in ELIGIBLE_HEADERS and _normalize_header(str(value or "")) not in SENSITIVE_HEADERS]
+        candidate_pairs = [(candidate_positions[left], candidate_positions[right]) for left in range(len(candidate_positions)) for right in range(left + 1, len(candidate_positions))]
+        composite_grain_accumulator = CompositeGrainAccumulator(candidate_pairs[:10])
         profilers = [StreamingColumnProfiler(semantic_identifier_accumulator=SemanticIdentifierAccumulator(str(header[position] or ""))) for position in range(column_count)]
         formula_accumulators = [FormulaConsistencyAccumulator() for _ in range(column_count)]
         duplicate_rows_accumulator = DuplicateRowsAccumulator()
@@ -225,6 +230,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
             total_rows_accumulator.consume(bounded_row)
             if not row_has_meaningful_value(bounded_row):
                 continue
+            composite_grain_accumulator.consume(bounded_row)
             duplicate_rows_accumulator.consume(bounded_row)
             for position in range(column_count):
                 profilers[position].consume(bounded_row[position])
@@ -236,6 +242,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
         duplicate_rows = duplicate_rows_accumulator.finalize()
         empty_rows = empty_rows_accumulator.finalize()
         total_rows = total_rows_accumulator.finalize()
+        composite_grain = composite_grain_accumulator.finalize(eligible_pair_count=len(candidate_pairs))
         sheet_id = str(uuid4())
         for column_position, profiler in enumerate(profilers):
             categorical_variations = profiler.categorical_variation_profile()
@@ -262,6 +269,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
                     formulas=formula_accumulators[column_position].finalize(),
                     headers=headers_profile,
                     semantic_identifier=profiler.semantic_identifier_profile(),
+                    composite_grain=composite_grain,
                 )
             )
     if not contexts:

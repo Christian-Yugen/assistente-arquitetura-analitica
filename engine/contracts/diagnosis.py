@@ -24,6 +24,8 @@ RULE_VERSIONS = {
     "QLT-HEADERS-014": "0.1.0-provisional.1",
     "QLT-IDMISS-015": "0.1.0-provisional.1",
     "SEM-DATE-001": "0.1.0-provisional.1",
+    "SEM-ID-003": "0.1.0-provisional.1",
+    "GRN-COMP-001": "0.1.0-provisional.1",
 }
 
 
@@ -133,3 +135,27 @@ def to_semantic_classification_fragment(classifications: list[dict[str, object]]
                           "status": "pending", "options": question["options"],
                           "impact": {"affected_modules": ["semantic_typing"], "affected_rule_ids": [rule_id], "affected_recommendation_ids": []}, "answer": None, "created_at": created_at})
     return {"semantic_classifications": projected, "questions": questions}
+
+
+def to_grain_fragment(candidates: list[dict[str, object]], *, sheet_id: str) -> dict[str, object]:
+    """Projeta uma hipótese de grão por aba com evidência exclusivamente agregada."""
+    if not candidates:
+        return {"grain": None, "questions": []}
+    candidate = candidates[0]
+    rule_id = str(candidate["rule_id"])
+    question = candidate["question"]
+    created_at = _timestamp()
+    return {
+        "grain": {
+            "type": candidate["grain_type"], "confidence": candidate["confidence"],
+            "evidence": candidate["evidence"], "rule_id": rule_id,
+            "rule_version": RULE_VERSIONS[rule_id], "status": "hypothesis",
+        },
+        "questions": [{
+            "question_id": str(uuid4()), "text": question["text"], "reason": question["reason"],
+            "question_type": question["question_type"], "priority": question["priority"],
+            "blocking": question["blocking"], "status": "pending", "options": question["options"],
+            "impact": {"affected_modules": ["granularity"], "affected_rule_ids": [rule_id], "affected_recommendation_ids": []},
+            "answer": None, "created_at": created_at,
+        }],
+    }
