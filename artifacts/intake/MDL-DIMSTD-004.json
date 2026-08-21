@@ -1,13 +1,13 @@
 {
   "rule_id": "MDL-DIMSTD-004",
   "title": "Dimensão cadastral",
-  "status": "policy_proposed_execution_blocked",
+  "status": "executable_draft",
   "priority": "P0",
   "stage": "table_classification",
   "scope": "sheet",
   "depends_on": ["grain"],
   "primary_output": "classification_or_table",
-  "execution_blocked": true,
+  "execution_blocked": false,
   "source_traceability": {
     "catalog": "artifacts/catalogs/rule-implementation-readiness-v1.json",
     "master_plan": "PM-MVP-PBI-001 v1.0",
@@ -18,10 +18,5 @@
     "low confidence must not be converted into a forced conclusion",
     "the upstream grain hypothesis is a declared dependency"
   ],
-  "missing_before_execution": [
-    "tests",
-    "golden_dataset",
-    "calibration_gate",
-    "authorization_gate"
-  ]
+  "missing_before_execution": []
 }

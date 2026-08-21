@@ -48,6 +48,7 @@ from engine.semantic.date_generic import SemanticDateColumnProfile
 from engine.semantic.identifier import SemanticIdentifierColumnProfile, classify_identifier
 from engine.granularity.composite import CompositeGrainSheetProfile
 from engine.fact_dimension.periodic import PeriodicFactSheetProfile
+from engine.fact_dimension.standard_dimension import StandardDimensionSheetProfile
 from engine.fact_dimension.transactional import TransactionalFactSheetProfile
 
 
@@ -272,6 +273,45 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
                     eligible_measure_column_count=sum(
                         1 for column in sheet_columns
                         if column.physical_type == "numeric" and column.formulas.formula_count == 0
+                    ),
+                ),
+            ))
+        if get_rule_execution_record("MDL-DIMSTD-004").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-DIMSTD-004",
+                StandardDimensionSheetProfile(
+                    observed_row_count=max(column.missingness.observed_cell_count for column in sheet_columns),
+                    grain_available=bool(grain_candidates.get(sheet_id)),
+                    individually_unique_identifier_count=sum(
+                        1 for column in sheet_columns
+                        if classify_identifier(SemanticIdentifierColumnProfile(
+                            physical_type=column.physical_type,
+                            formula_count=column.formulas.formula_count,
+                            semantic_identifier=column.semantic_identifier,
+                        ))
+                        and column.semantic_identifier.non_missing_ratio == 1.0
+                        and column.semantic_identifier.distinct_ratio == 1.0
+                    ),
+                    descriptive_attribute_count=sum(
+                        1 for column in sheet_columns
+                        if column.physical_type == "text"
+                        and column.formulas.formula_count == 0
+                        and not column.semantic_identifier.sensitive_header
+                        and not classify_identifier(SemanticIdentifierColumnProfile(
+                            physical_type=column.physical_type,
+                            formula_count=column.formulas.formula_count,
+                            semantic_identifier=column.semantic_identifier,
+                        ))
+                        and column.semantic_date.recognized_date_ratio != 1.0
+                        and 0.05 <= column.semantic_identifier.distinct_ratio <= 0.90
+                    ),
+                    eligible_measure_column_count=sum(
+                        1 for column in sheet_columns
+                        if column.physical_type == "numeric" and column.formulas.formula_count == 0
+                    ),
+                    fully_recognized_temporal_column_count=sum(
+                        1 for column in sheet_columns
+                        if column.semantic_date.recognized_date_ratio == 1.0
                     ),
                 ),
             ))

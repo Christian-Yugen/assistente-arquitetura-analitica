@@ -43,6 +43,7 @@ from engine.profiling.identifier_completeness import IdentifierCompletenessProfi
 from engine.quality.identifier_completeness import IdentifierCompletenessColumnProfile
 from engine.fact_dimension.transactional import TransactionalFactSheetProfile
 from engine.profiling.transactional_fact import TransactionalDateProfile
+from engine.fact_dimension.standard_dimension import StandardDimensionSheetProfile
 
 
 class RuleCatalogTests(unittest.TestCase):
@@ -130,7 +131,11 @@ class RuleCatalogTests(unittest.TestCase):
             "MDL-FACTTXN-002",
             TransactionalFactSheetProfile(20, True, (TransactionalDateProfile(20, 18),), 1),
         )
-        self.assertEqual(executable_rule_count(), 20)
+        dimension_result = execute_registered_rule(
+            "MDL-DIMSTD-004",
+            StandardDimensionSheetProfile(20, True, 1, 1, 0, 0),
+        )
+        self.assertEqual(executable_rule_count(), 21)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
@@ -148,6 +153,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(semantic_result[0]["semantic_type"], "date_generic")
         self.assertEqual(identifier_result[0]["semantic_type"], "identifier")
         self.assertEqual(transactional_result[0]["classification_type"], "fact_transactional_candidate")
+        self.assertEqual(dimension_result[0]["classification_type"], "dimension_standard_candidate")
         self.assertEqual(record.status, "executable_draft")
         self.assertEqual(null_record.status, "executable_draft")
         self.assertEqual(identifier_record.status, "executable_draft")
@@ -167,6 +173,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(get_rule_execution_record("GRN-COMP-001").status, "executable_draft")
         self.assertEqual(get_rule_execution_record("MDL-FACTPER-001").status, "executable_draft")
         self.assertEqual(get_rule_execution_record("MDL-FACTTXN-002").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("MDL-DIMSTD-004").status, "executable_draft")
         self.assertEqual(record.title, "Números armazenados como texto")
 
     def test_baseline_reference_and_reserved_official_slots_cannot_execute(self):
