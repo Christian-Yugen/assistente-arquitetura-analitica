@@ -1,0 +1,7 @@
+[
+  {"id": "GD-SEM-ID-001", "header": "codigo", "physical_type": "numeric", "formula_count": 0, "values": [101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120], "expected": true},
+  {"id": "GD-SEM-ID-002", "header": "cod", "physical_type": "numeric", "formula_count": 0, "values": [1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10], "expected": true},
+  {"id": "GD-SEM-ID-003", "header": "cpf", "physical_type": "numeric", "formula_count": 0, "values": [101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120], "expected": false},
+  {"id": "GD-SEM-ID-004", "header": "codigo", "physical_type": "numeric", "formula_count": 0, "values": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,null,null,null], "expected": false},
+  {"id": "GD-SEM-ID-005", "header": "codigo", "physical_type": "numeric", "formula_count": 0, "values": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], "expected": false}
+]

@@ -25,6 +25,7 @@ from engine.profiling.formula_consistency import FormulaConsistencyProfile
 from engine.profiling.headers import HeadersProfile
 from engine.profiling.identifier_completeness import IdentifierCompletenessProfile, profile_identifier_completeness
 from engine.profiling.semantic_date import SemanticDateProfile, profile_semantic_date
+from engine.profiling.semantic_identifier import SemanticIdentifierProfile, profile_semantic_identifier
 from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.catvar import CategoricalVariationColumnProfile
@@ -41,6 +42,7 @@ from engine.quality.formula_consistency import FormulaConsistencyColumnProfile
 from engine.quality.headers import HeadersSheetProfile
 from engine.quality.identifier_completeness import IdentifierCompletenessColumnProfile
 from engine.semantic.date_generic import SemanticDateColumnProfile
+from engine.semantic.identifier import SemanticIdentifierColumnProfile
 
 
 @dataclass(frozen=True)
@@ -95,6 +97,7 @@ class ColumnAnalysisContext:
     headers: HeadersProfile = field(default_factory=HeadersProfile)
     identifiers: IdentifierCompletenessProfile = field(default_factory=IdentifierCompletenessProfile)
     semantic_date: SemanticDateProfile = field(default_factory=SemanticDateProfile)
+    semantic_identifier: SemanticIdentifierProfile = field(default_factory=SemanticIdentifierProfile)
 
 
 def build_column_analysis_context(
@@ -122,6 +125,7 @@ def build_column_analysis_context(
         outliers=profile_outliers(materialized_values),
         identifiers=profile_identifier_completeness(column_name, materialized_values),
         semantic_date=profile_semantic_date(materialized_values),
+        semantic_identifier=profile_semantic_identifier(column_name, materialized_values),
     )
 
 
@@ -192,6 +196,12 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         if get_rule_execution_record("SEM-DATE-001").status == "executable_draft":
             semantic_profile = SemanticDateColumnProfile(name=column.column_name, semantic_date=column.semantic_date)
             semantic_candidates.append((column.sheet_id, column.column_id, execute_registered_rule("SEM-DATE-001", semantic_profile)))
+        if get_rule_execution_record("SEM-ID-003").status == "executable_draft":
+            identifier_semantic_profile = SemanticIdentifierColumnProfile(
+                physical_type=column.physical_type, formula_count=column.formulas.formula_count,
+                semantic_identifier=column.semantic_identifier,
+            )
+            semantic_candidates.append((column.sheet_id, column.column_id, execute_registered_rule("SEM-ID-003", identifier_semantic_profile)))
 
     for sheet_id, sheet_columns in grouped_columns.items():
         representative = sheet_columns[0]

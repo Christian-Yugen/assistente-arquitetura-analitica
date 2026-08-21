@@ -226,3 +226,11 @@
 - [x] Propor uma política conservadora, especificação e gate de reconstrução da SEM-DATE-001 para aprovação explícita de Chris.
 - [x] Criar branch de segurança da SEM-DATE-001 antes de qualquer código executável.
 - [x] Implementar, testar, calibrar e ativar a SEM-DATE-001 exclusivamente após autorização explícita de Chris para a política proposta.
+- [x] Recuperar metadados oficiais, dependências e lacunas da GRN-COMP-001 após autorização de Chris, sem implementar lógica executável.
+- [x] Elaborar proposta de política e especificação lógica não executável para a GRN-COMP-001 e solicitar nova autorização explícita antes de implementação.
+- [x] Formalizar o gate de reconstrução da GRN-COMP-001 para a Opção A aprovada por Chris.
+- [ ] Implementar, testar, calibrar e ativar a GRN-COMP-001 somente no perfil draft, com hipótese de granularidade e confirmação humana obrigatória.
+- [x] Recuperar metadados, propor política e obter gate de reconstrução para a próxima regra de tipagem semântica de identificador aprovada na decisão A1.
+- [x] Implementar, testar, calibrar e ativar a tipagem semântica de identificador exclusivamente no perfil draft antes de retomar a GRN-COMP-001.
+- [x] Formalizar o gate de reconstrução da SEM-ID-003 conforme a Proposta A aprovada por Chris.
+- [x] Implementar, testar, calibrar e ativar a SEM-ID-003 exclusivamente no perfil draft com classificação identifier e pergunta humana.

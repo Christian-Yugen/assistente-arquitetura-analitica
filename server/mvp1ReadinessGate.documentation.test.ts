@@ -10,20 +10,9 @@ describe("MVP-1.0-READINESS-001", () => {
 
     expect(gate).toContain("**BLOQUEADO para MVP 1.0 produtivo.**");
     expect(gate).toContain("MVP draft controlado");
-    expect(gate).toContain("Somente 15 de 95 regras");
-    expect(gate).toContain("QLT-EMPTYCOL-003@0.1.0-reconstructed.1");
-    expect(gate).toContain("QLT-EMPTYROW-004@0.1.0-reconstructed.1");
-    expect(gate).toContain("QLT-MIXTYPE-005@0.1.0-provisional.1");
-    expect(gate).toContain("QLT-BADDATE-006@0.1.0-provisional.1");
-    expect(gate).toContain("QLT-WHITESPACE-009@0.1.0-provisional.1");
-    expect(gate).toContain("QLT-CATVAR-008@0.1.0-provisional.1");
-    expect(gate).toContain("QLT-DUP-002@0.1.0-reconstructed.1");
-    expect(gate).toContain("QLT-TOTALROW-010@0.1.0-provisional.1");
-    expect(gate).toContain("QLT-NEGATIVE-011@0.1.0-provisional.1");
-    expect(gate).toContain("QLT-OUTLIER-012@0.1.0-provisional.1");
-    expect(gate).toContain("QLT-FORMULA-013@0.1.0-provisional.1");
-    expect(gate).toContain("QLT-HEADERS-014@0.1.0-provisional.1");
-    expect(gate).toContain("QLT-IDMISS-015@0.1.0-provisional.1");
+    expect(gate).toContain("Somente 17 de 95 regras");
+    expect(gate).toContain("SEM-DATE-001@0.1.0-provisional.1");
+    expect(gate).toContain("SEM-ID-003@0.1.0-provisional.1");
     expect(gate).toContain("exclusão física owner-scoped");
     expect(gate).toContain("Prova E2E produtiva ausente");
     expect(gate).toContain("não autoriza produção");

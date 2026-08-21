@@ -28,6 +28,7 @@ from engine.profiling.whitespace import WhitespaceAccumulator
 from engine.profiling.total_rows import TotalRowsAccumulator
 from engine.profiling.formula_consistency import FormulaConsistencyAccumulator
 from engine.profiling.headers import profile_headers
+from engine.profiling.semantic_identifier import SemanticIdentifierAccumulator, SemanticIdentifierProfile
 
 
 MAX_SHEETS = 10
@@ -55,12 +56,15 @@ class StreamingColumnProfiler:
     bad_dates_accumulator: BadDateAccumulator = field(default_factory=BadDateAccumulator, repr=False)
     whitespace_accumulator: WhitespaceAccumulator = field(default_factory=WhitespaceAccumulator, repr=False)
     categorical_text_values: list[str] = field(default_factory=list, repr=False)
+    semantic_identifier_accumulator: SemanticIdentifierAccumulator | None = field(default=None, repr=False)
 
     def consume(self, value: object) -> None:
         self.observed += 1
         self.mixed_types_accumulator.consume(value)
         self.bad_dates_accumulator.consume(value)
         self.whitespace_accumulator.consume(value)
+        if self.semantic_identifier_accumulator is not None:
+            self.semantic_identifier_accumulator.consume(value)
         kind = missing_class(value)
         if kind == "structural_null":
             self.structural_null_count += 1
@@ -136,6 +140,9 @@ class StreamingColumnProfiler:
     def whitespace_profile(self):
         return self.whitespace_accumulator.finalize()
 
+    def semantic_identifier_profile(self) -> SemanticIdentifierProfile:
+        return self.semantic_identifier_accumulator.finalize() if self.semantic_identifier_accumulator else SemanticIdentifierProfile()
+
 
 def safe_column_name(value: object, position: int) -> str:
     raw = str(value).strip() if value is not None else ""
@@ -205,7 +212,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
             second_row_cells,
             _merged_ranges_for_worksheet(workbook, worksheet),
         )
-        profilers = [StreamingColumnProfiler() for _ in range(column_count)]
+        profilers = [StreamingColumnProfiler(semantic_identifier_accumulator=SemanticIdentifierAccumulator(str(header[position] or ""))) for position in range(column_count)]
         formula_accumulators = [FormulaConsistencyAccumulator() for _ in range(column_count)]
         duplicate_rows_accumulator = DuplicateRowsAccumulator()
         empty_rows_accumulator = EmptyRowsAccumulator()
@@ -254,6 +261,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
                     total_rows=total_rows,
                     formulas=formula_accumulators[column_position].finalize(),
                     headers=headers_profile,
+                    semantic_identifier=profiler.semantic_identifier_profile(),
                 )
             )
     if not contexts:

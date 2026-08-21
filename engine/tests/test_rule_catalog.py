@@ -35,6 +35,8 @@ from engine.profiling.formula_consistency import FormulaConsistencyProfile
 from engine.quality.formula_consistency import FormulaConsistencyColumnProfile
 from engine.profiling.semantic_date import profile_semantic_date
 from engine.semantic.date_generic import SemanticDateColumnProfile
+from engine.profiling.semantic_identifier import profile_semantic_identifier
+from engine.semantic.identifier import SemanticIdentifierColumnProfile
 from engine.profiling.headers import HeadersProfile
 from engine.quality.headers import HeadersSheetProfile
 from engine.profiling.identifier_completeness import IdentifierCompletenessProfile
@@ -120,7 +122,9 @@ class RuleCatalogTests(unittest.TestCase):
         idmiss_record = get_rule_execution_record("QLT-IDMISS-015")
         semantic_result = execute_registered_rule("SEM-DATE-001", SemanticDateColumnProfile("Data", profile_semantic_date(["2026-01-01"] * 10)))
         semantic_record = get_rule_execution_record("SEM-DATE-001")
-        self.assertEqual(executable_rule_count(), 16)
+        identifier_result = execute_registered_rule("SEM-ID-003", SemanticIdentifierColumnProfile("numeric", 0, profile_semantic_identifier("codigo", range(1, 21))))
+        identifier_record = get_rule_execution_record("SEM-ID-003")
+        self.assertEqual(executable_rule_count(), 17)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
@@ -136,8 +140,10 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(headers_result[0]["rule_id"], "QLT-HEADERS-014")
         self.assertEqual(idmiss_result[0]["rule_id"], "QLT-IDMISS-015")
         self.assertEqual(semantic_result[0]["semantic_type"], "date_generic")
+        self.assertEqual(identifier_result[0]["semantic_type"], "identifier")
         self.assertEqual(record.status, "executable_draft")
         self.assertEqual(null_record.status, "executable_draft")
+        self.assertEqual(identifier_record.status, "executable_draft")
         self.assertEqual(catvar_record.status, "executable_draft")
         self.assertEqual(duplicate_record.status, "executable_draft")
         self.assertEqual(emptyrow_record.status, "executable_draft")
