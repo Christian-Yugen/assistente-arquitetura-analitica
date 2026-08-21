@@ -28,6 +28,7 @@ RULE_VERSIONS = {
     "SEM-ID-003": "0.1.0-provisional.1",
     "SEM-QTY-005": "0.1.0-provisional.1",
     "SEM-PCT-007": "0.1.0-provisional.1",
+    "SEM-TARGET-013": "0.1.0-provisional.1",
     "GRN-COMP-001": "0.1.0-provisional.1",
     "MDL-FACTPER-001": "0.1.0-provisional.1",
     "MDL-FACTTXN-002": "0.1.0-provisional.1",
