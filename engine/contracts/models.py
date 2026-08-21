@@ -204,6 +204,15 @@ class SemanticClassification(StrictModel):
     affected_entities: list[SemanticClassificationImpact]
 
 
+class SensitivityClassification(StrictModel):
+    sensitivity: str
+    confidence: float = Field(ge=0, le=1)
+    evidence: dict[str, Any]
+    rule_id: str
+    rule_version: str
+    affected_entities: list[SemanticClassificationImpact]
+
+
 class ReconstructedDiagnosis(StrictModel):
     schema_version: Literal["1.0.0"]
     contract_id: Literal["PM-MVP-PBI-CON-001"]
@@ -217,6 +226,7 @@ class ReconstructedDiagnosis(StrictModel):
     questions: list[Question]
     findings: list[Finding]
     semantic_classifications: list[SemanticClassification] = Field(default_factory=list)
+    sensitivity_classifications: list[SensitivityClassification] = Field(default_factory=list)
     execution: Execution
 
     @model_validator(mode="after")

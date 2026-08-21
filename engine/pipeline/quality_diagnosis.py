@@ -7,7 +7,7 @@ from time import perf_counter
 from typing import Iterable, Literal
 
 from engine.catalog import executable_rule_count, execute_registered_rule, get_rule_execution_record
-from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_semantic_classification_fragment, to_table_classification_fragment
+from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
 from engine.profiling.numeric_text import NumericTextProfile, infer_physical_type, profile_numeric_text
@@ -30,6 +30,7 @@ from engine.profiling.semantic_currency import SemanticCurrencyProfile, profile_
 from engine.profiling.semantic_identifier import SemanticIdentifierProfile, profile_semantic_identifier
 from engine.profiling.semantic_percentage import SemanticPercentageProfile, profile_semantic_percentage
 from engine.profiling.semantic_quantity import SemanticQuantityProfile, profile_semantic_quantity
+from engine.profiling.semantic_sensitivity import profile_semantic_sensitivity
 from engine.profiling.semantic_target import SemanticTargetProfile, profile_semantic_target
 from engine.profiling.composite_grain import CompositeGrainProfile
 from engine.profiling.periodic_fact import PeriodicDateProfile, profile_periodic_date
@@ -56,6 +57,7 @@ from engine.semantic.currency import SemanticCurrencyColumnProfile
 from engine.semantic.identifier import SemanticIdentifierColumnProfile, classify_identifier
 from engine.semantic.percentage import SemanticPercentageColumnProfile
 from engine.semantic.quantity import SemanticQuantityColumnProfile
+from engine.semantic.sensitivity import SemanticSensitivityColumnProfile
 from engine.semantic.target import SemanticTargetColumnProfile
 from engine.granularity.composite import CompositeGrainSheetProfile
 from engine.fact_dimension.periodic import PeriodicFactSheetProfile
@@ -134,13 +136,15 @@ def build_column_analysis_context(
     """Descarta valores brutos depois do profiling e preserva apenas métricas agregadas."""
 
     materialized_values = list(values)
+    semantic_identifier = profile_semantic_identifier(column_name, materialized_values)
+    safe_column_name = f"Campo sensível {column_position + 1}" if semantic_identifier.sensitive_header else column_name
     return ColumnAnalysisContext(
         sheet_id=sheet_id,
         sheet_name=sheet_name,
         sheet_position=sheet_position,
         sheet_visibility=sheet_visibility,
         column_id=column_id,
-        column_name=column_name,
+        column_name=safe_column_name,
         column_position=column_position,
         physical_type=infer_physical_type(materialized_values),
         numeric_text=profile_numeric_text(materialized_values),
@@ -149,13 +153,13 @@ def build_column_analysis_context(
         mixed_types=profile_mixed_types(materialized_values),
         bad_dates=profile_bad_dates(materialized_values),
         whitespace=profile_whitespace(materialized_values),
-        negative_values=profile_negative_values(column_name, materialized_values),
+        negative_values=profile_negative_values(safe_column_name, materialized_values),
         outliers=profile_outliers(materialized_values),
-        identifiers=profile_identifier_completeness(column_name, materialized_values),
+        identifiers=profile_identifier_completeness(safe_column_name, materialized_values),
         semantic_date=profile_semantic_date(materialized_values),
         semantic_actual=profile_semantic_actual(column_name, materialized_values),
         semantic_currency=profile_semantic_currency(column_name, materialized_values),
-        semantic_identifier=profile_semantic_identifier(column_name, materialized_values),
+        semantic_identifier=semantic_identifier,
         semantic_percentage=profile_semantic_percentage(column_name, materialized_values),
         semantic_quantity=profile_semantic_quantity(column_name, materialized_values),
         semantic_target=profile_semantic_target(column_name, materialized_values),
@@ -173,6 +177,7 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
     started_clock = perf_counter()
     quality_findings: list[tuple[str, str | None, dict[str, object]]] = []
     semantic_candidates: list[tuple[str, str, list[dict[str, object]]]] = []
+    sensitivity_candidates: list[tuple[str, str, list[dict[str, object]]]] = []
     grain_candidates: dict[str, list[dict[str, object]]] = {}
     table_candidates: dict[str, list[dict[str, object]]] = {}
     grouped_columns: dict[str, list[ColumnAnalysisContext]] = {}
@@ -285,6 +290,11 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
                 semantic_actual=column.semantic_actual,
             )
             semantic_candidates.append((column.sheet_id, column.column_id, execute_registered_rule("SEM-ACTUAL-014", actual_semantic_profile)))
+        if get_rule_execution_record("SEM-SENS-015").status == "executable_draft":
+            sensitivity_profile = SemanticSensitivityColumnProfile(
+                semantic_sensitivity=profile_semantic_sensitivity(column.semantic_identifier),
+            )
+            sensitivity_candidates.append((column.sheet_id, column.column_id, execute_registered_rule("SEM-SENS-015", sensitivity_profile)))
 
     for sheet_id, sheet_columns in grouped_columns.items():
         representative = sheet_columns[0]
@@ -404,6 +414,7 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []
     semantic_classifications: list[dict[str, object]] = []
+    sensitivity_classifications: list[dict[str, object]] = []
     grains_by_sheet: dict[str, dict[str, object] | None] = {sheet_id: None for sheet_id in grouped_columns}
     classifications_by_sheet: dict[str, dict[str, object] | None] = {sheet_id: None for sheet_id in grouped_columns}
     question_ids_by_sheet: dict[str, list[str]] = {sheet_id: [] for sheet_id in grouped_columns}
@@ -419,6 +430,12 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         semantic_questions = fragment["questions"]  # type: ignore[assignment]
         questions.extend(semantic_questions)  # type: ignore[arg-type]
         question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in semantic_questions)  # type: ignore[index,union-attr]
+    for sheet_id, column_id, candidates in sensitivity_candidates:
+        fragment = to_sensitivity_fragment(candidates, sheet_id=sheet_id, column_id=column_id)
+        sensitivity_classifications.extend(fragment["sensitivity_classifications"])  # type: ignore[arg-type]
+        sensitivity_questions = fragment["questions"]  # type: ignore[assignment]
+        questions.extend(sensitivity_questions)  # type: ignore[arg-type]
+        question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in sensitivity_questions)  # type: ignore[index,union-attr]
     for sheet_id, candidates in grain_candidates.items():
         fragment = to_grain_fragment(candidates, sheet_id=sheet_id)
         grains_by_sheet[sheet_id] = fragment["grain"]  # type: ignore[assignment]
@@ -533,6 +550,7 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         "questions": questions,
         "findings": findings,
         "semantic_classifications": semantic_classifications,
+        "sensitivity_classifications": sensitivity_classifications,
         "execution": {
             "correlation_id": metadata.correlation_id,
             "status": profile.execution_status,

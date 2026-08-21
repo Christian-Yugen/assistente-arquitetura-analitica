@@ -30,6 +30,7 @@ RULE_VERSIONS = {
     "SEM-PCT-007": "0.1.0-provisional.1",
     "SEM-TARGET-013": "0.1.0-provisional.1",
     "SEM-ACTUAL-014": "0.1.0-provisional.1",
+    "SEM-SENS-015": "0.1.0-provisional.1",
     "GRN-COMP-001": "0.1.0-provisional.1",
     "MDL-FACTPER-001": "0.1.0-provisional.1",
     "MDL-FACTTXN-002": "0.1.0-provisional.1",
@@ -144,6 +145,28 @@ def to_semantic_classification_fragment(classifications: list[dict[str, object]]
                           "status": "pending", "options": question["options"],
                           "impact": {"affected_modules": ["semantic_typing"], "affected_rule_ids": [rule_id], "affected_recommendation_ids": []}, "answer": None, "created_at": created_at})
     return {"semantic_classifications": projected, "questions": questions}
+
+
+def to_sensitivity_fragment(classifications: list[dict[str, object]], *, sheet_id: str, column_id: str) -> dict[str, object]:
+    """Projeta candidatos de sensibilidade em coleção própria, sem dados brutos ou cabeçalhos."""
+    projected: list[dict[str, object]] = []
+    questions: list[dict[str, object]] = []
+    created_at = _timestamp()
+    for classification in classifications:
+        rule_id = str(classification["rule_id"])
+        rule_version = RULE_VERSIONS.get(rule_id)
+        if not rule_version:
+            raise ValueError(f"Versão de regra não registrada para {rule_id}.")
+        projected.append({"sensitivity": classification["sensitivity"], "confidence": classification["confidence"],
+                          "evidence": classification["evidence"], "rule_id": rule_id,
+                          "rule_version": rule_version,
+                          "affected_entities": [{"entity_type": "sheet", "entity_id": sheet_id}, {"entity_type": "column", "entity_id": column_id}]})
+        question = classification["question"]
+        questions.append({"question_id": str(uuid4()), "text": question["text"], "reason": question["reason"],
+                          "question_type": question["question_type"], "priority": question["priority"], "blocking": question["blocking"],
+                          "status": "pending", "options": question["options"],
+                          "impact": {"affected_modules": ["sensitivity"], "affected_rule_ids": [rule_id], "affected_recommendation_ids": []}, "answer": None, "created_at": created_at})
+    return {"sensitivity_classifications": projected, "questions": questions}
 
 
 def to_grain_fragment(candidates: list[dict[str, object]], *, sheet_id: str) -> dict[str, object]:

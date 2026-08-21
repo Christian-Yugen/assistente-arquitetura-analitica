@@ -464,33 +464,6 @@
       },
       "type": "array"
     },
-    "semantic_classifications": {
-      "items": {
-        "additionalProperties": false,
-        "properties": {
-          "affected_entities": {
-            "items": {
-              "additionalProperties": false,
-              "properties": {
-                "entity_id": { "type": "string" },
-                "entity_type": { "type": "string" }
-              },
-              "required": ["entity_type", "entity_id"],
-              "type": "object"
-            },
-            "type": "array"
-          },
-          "confidence": { "maximum": 1, "minimum": 0, "type": "number" },
-          "evidence": { "additionalProperties": true, "type": "object" },
-          "rule_id": { "type": "string" },
-          "rule_version": { "type": "string" },
-          "semantic_type": { "type": "string" }
-        },
-        "required": ["semantic_type", "confidence", "evidence", "rule_id", "rule_version", "affected_entities"],
-        "type": "object"
-      },
-      "type": "array"
-    },
     "metrics": {
       "type": "array"
     },
@@ -648,6 +621,114 @@
     },
     "schema_version": {
       "const": "1.0.0"
+    },
+    "semantic_classifications": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "affected_entities": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "entity_id": {
+                  "type": "string"
+                },
+                "entity_type": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "entity_type",
+                "entity_id"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "confidence": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "evidence": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "rule_id": {
+            "type": "string"
+          },
+          "rule_version": {
+            "type": "string"
+          },
+          "semantic_type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "semantic_type",
+          "confidence",
+          "evidence",
+          "rule_id",
+          "rule_version",
+          "affected_entities"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "sensitivity_classifications": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "affected_entities": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "entity_id": {
+                  "type": "string"
+                },
+                "entity_type": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "entity_type",
+                "entity_id"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "confidence": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "evidence": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "rule_id": {
+            "type": "string"
+          },
+          "rule_version": {
+            "type": "string"
+          },
+          "sensitivity": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "sensitivity",
+          "confidence",
+          "evidence",
+          "rule_id",
+          "rule_version",
+          "affected_entities"
+        ],
+        "type": "object"
+      },
+      "type": "array"
     },
     "sheets": {
       "items": {
