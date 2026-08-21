@@ -1,0 +1,49 @@
+{
+  "intake_id": "QLT-NEGATIVE-011-INTAKE-001",
+  "rule": {
+    "rule_id": "QLT-NEGATIVE-011",
+    "title": "Valores negativos suspeitos",
+    "category": "quality",
+    "purpose": "Detectar sinais incompatíveis com a semântica provável.",
+    "priority": "P1",
+    "stage": "quality",
+    "scope": "column",
+    "depends_on": ["profiling"],
+    "primary_output": "finding",
+    "source_implementation_status": "planned"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "Plano_Mestre_MVP_Modelagem_Dimensional_PowerBI_v1.0.docx"
+    ]
+  },
+  "source_gap": "As fontes recuperadas definem apenas propósito, prioridade, escopo, dependência e saída. Não há condição materializada, vocabulário semântico, limiar, exclusão, evidência, confiança, pergunta ou matriz de testes específica para a QLT-NEGATIVE-011.",
+  "local_readiness": "intake_required",
+  "authorization": {
+    "implementation_authorized": false,
+    "reason": "A proposta local ainda depende de autorização explícita de Chris para o vocabulário fechado de cabeçalhos e para os limites de detecção.",
+    "required_gate": "QLT-NEGATIVE-011-RECONSTRUCTION-AUTHORIZATION-001"
+  },
+  "required_before_implementation": [
+    "Decisão humana sobre a política conservadora proposta",
+    "Perfil agregado sem valores, cabeçalhos, posições ou identificadores brutos",
+    "Condição determinística, exclusões, severidade, confiança e pergunta humana",
+    "Testes unitários, limítrofes, de privacidade e de integração",
+    "Golden dataset, manifesto SHA-256, calibração reprodutível e gate individual de calibração"
+  ],
+  "required_policy_elements": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "severity",
+    "confidence",
+    "questions",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ],
+  "status": "pending_policy_authorization"
+}

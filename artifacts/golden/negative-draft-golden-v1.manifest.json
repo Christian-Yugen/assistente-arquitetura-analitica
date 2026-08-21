@@ -1,0 +1,12 @@
+{
+  "dataset_id": "GD-QLT-NEGATIVE-011-001",
+  "rule_id": "QLT-NEGATIVE-011",
+  "artifact": "negative-draft-golden-v1.json",
+  "sha256": "7146db1f63b2ecf692f82981f672e8b0c80b4515bf68f2a83f005d957644981f",
+  "privacy": {
+    "contains_raw_workbook_values": false,
+    "contains_cell_positions": false,
+    "contains_column_headers": false,
+    "contains_sheet_titles": false
+  }
+}

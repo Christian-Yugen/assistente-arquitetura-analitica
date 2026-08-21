@@ -19,6 +19,7 @@ from engine.profiling.mixed_types import MixedTypesProfile, profile_mixed_types
 from engine.profiling.bad_dates import BadDateProfile, profile_bad_dates
 from engine.profiling.whitespace import WhitespaceProfile, profile_whitespace
 from engine.profiling.total_rows import TotalRowsProfile
+from engine.profiling.negative_values import NegativeValuesProfile, profile_negative_values
 from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.catvar import CategoricalVariationColumnProfile
@@ -29,6 +30,7 @@ from engine.quality.mixed_types import MixedTypesColumnProfile
 from engine.quality.bad_dates import BadDateColumnProfile
 from engine.quality.whitespace import WhitespaceColumnProfile
 from engine.quality.total_rows import TotalRowsSheetProfile
+from engine.quality.negative_values import NegativeValuesColumnProfile
 
 
 @dataclass(frozen=True)
@@ -77,6 +79,7 @@ class ColumnAnalysisContext:
     bad_dates: BadDateProfile = field(default_factory=BadDateProfile)
     whitespace: WhitespaceProfile = field(default_factory=WhitespaceProfile)
     total_rows: TotalRowsProfile = field(default_factory=TotalRowsProfile)
+    negative_values: NegativeValuesProfile = field(default_factory=NegativeValuesProfile)
 
 
 def build_column_analysis_context(
@@ -100,6 +103,7 @@ def build_column_analysis_context(
         mixed_types=profile_mixed_types(materialized_values),
         bad_dates=profile_bad_dates(materialized_values),
         whitespace=profile_whitespace(materialized_values),
+        negative_values=profile_negative_values(column_name, materialized_values),
     )
 
 
@@ -149,6 +153,10 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         whitespace_profile = WhitespaceColumnProfile(name=column.column_name, whitespace=column.whitespace)
         if get_rule_execution_record("QLT-WHITESPACE-009").status == "executable_draft":
             for finding in execute_registered_rule("QLT-WHITESPACE-009", whitespace_profile):
+                quality_findings.append((column.sheet_id, column.column_id, finding))
+        negative_values_profile = NegativeValuesColumnProfile(name=column.column_name, negative_values=column.negative_values)
+        if get_rule_execution_record("QLT-NEGATIVE-011").status == "executable_draft":
+            for finding in execute_registered_rule("QLT-NEGATIVE-011", negative_values_profile):
                 quality_findings.append((column.sheet_id, column.column_id, finding))
 
     for sheet_id, sheet_columns in grouped_columns.items():

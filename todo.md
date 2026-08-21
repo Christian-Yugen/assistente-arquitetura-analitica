@@ -202,3 +202,7 @@
 - [x] Criar testes, golden dataset, manifesto SHA-256 e calibração reprodutível da QLT-TOTALROW-010.
 - [x] Formalizar o gate individual de calibração da QLT-TOTALROW-010 antes de sua ativação draft.
 - [x] Ativar a QLT-TOTALROW-010 somente no perfil draft e sincronizar catálogo, índice, workspace e Gate MVP 1.0.
+- [x] Recuperar os metadados oficiais e os sinais disponíveis para a QLT-NEGATIVE-011 sem implementar lógica executável.
+- [x] Propor uma política conservadora, especificação e gate de reconstrução da QLT-NEGATIVE-011 para aprovação explícita de Chris.
+- [x] Criar branch de segurança da QLT-NEGATIVE-011 antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a QLT-NEGATIVE-011 exclusivamente após autorização explícita de Chris para a política proposta.

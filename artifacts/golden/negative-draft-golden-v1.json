@@ -1,0 +1,49 @@
+{
+  "dataset_id": "GD-QLT-NEGATIVE-011-001",
+  "rule_id": "QLT-NEGATIVE-011",
+  "rule_version": "0.1.0-provisional.1",
+  "scope": "draft_only",
+  "privacy": {
+    "contains_raw_workbook_values": false,
+    "contains_cell_positions": false,
+    "contains_column_headers": false,
+    "contains_sheet_titles": false
+  },
+  "scenarios": [
+    {
+      "case_id": "negative-low-one-of-twenty",
+      "column": {"negative_values": {"header_eligible": true, "physical_numeric_count": 20, "negative_physical_count": 1, "negative_physical_ratio": 0.05, "basis": "nfkc_casefold_accentless_collapsed_ptbr_nonnegative_measure_headers_with_finite_physical_numbers"}},
+      "expected_findings": [{"rule_id": "QLT-NEGATIVE-011", "severity": "low", "confidence": 0.85, "question": true}]
+    },
+    {
+      "case_id": "negative-medium-two-of-twenty",
+      "column": {"negative_values": {"header_eligible": true, "physical_numeric_count": 20, "negative_physical_count": 2, "negative_physical_ratio": 0.1, "basis": "nfkc_casefold_accentless_collapsed_ptbr_nonnegative_measure_headers_with_finite_physical_numbers"}},
+      "expected_findings": [{"rule_id": "QLT-NEGATIVE-011", "severity": "medium", "confidence": 0.85, "question": true}]
+    },
+    {
+      "case_id": "negative-high-three-of-ten",
+      "column": {"negative_values": {"header_eligible": true, "physical_numeric_count": 10, "negative_physical_count": 3, "negative_physical_ratio": 0.3, "basis": "nfkc_casefold_accentless_collapsed_ptbr_nonnegative_measure_headers_with_finite_physical_numbers"}},
+      "expected_findings": [{"rule_id": "QLT-NEGATIVE-011", "severity": "high", "confidence": 0.85, "question": true}]
+    },
+    {
+      "case_id": "negative-none",
+      "column": {"negative_values": {"header_eligible": true, "physical_numeric_count": 20, "negative_physical_count": 0, "negative_physical_ratio": 0.0, "basis": "nfkc_casefold_accentless_collapsed_ptbr_nonnegative_measure_headers_with_finite_physical_numbers"}},
+      "expected_findings": []
+    },
+    {
+      "case_id": "negative-ineligible-header",
+      "column": {"negative_values": {"header_eligible": false, "physical_numeric_count": 20, "negative_physical_count": 3, "negative_physical_ratio": 0.15, "basis": "nfkc_casefold_accentless_collapsed_ptbr_nonnegative_measure_headers_with_finite_physical_numbers"}},
+      "expected_findings": []
+    },
+    {
+      "case_id": "negative-insufficient-physical-base",
+      "column": {"negative_values": {"header_eligible": true, "physical_numeric_count": 9, "negative_physical_count": 1, "negative_physical_ratio": 0.11111111, "basis": "nfkc_casefold_accentless_collapsed_ptbr_nonnegative_measure_headers_with_finite_physical_numbers"}},
+      "expected_findings": []
+    },
+    {
+      "case_id": "negative-unapproved-basis",
+      "column": {"negative_values": {"header_eligible": true, "physical_numeric_count": 10, "negative_physical_count": 1, "negative_physical_ratio": 0.1, "basis": "unapproved_basis"}},
+      "expected_findings": []
+    }
+  ]
+}

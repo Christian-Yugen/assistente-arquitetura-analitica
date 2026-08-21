@@ -27,6 +27,8 @@ from engine.profiling.whitespace import WhitespaceProfile
 from engine.quality.whitespace import WhitespaceColumnProfile
 from engine.profiling.total_rows import TotalRowsProfile
 from engine.quality.total_rows import TotalRowsSheetProfile
+from engine.profiling.negative_values import NegativeValuesProfile
+from engine.quality.negative_values import NegativeValuesColumnProfile
 
 
 class RuleCatalogTests(unittest.TestCase):
@@ -72,6 +74,10 @@ class RuleCatalogTests(unittest.TestCase):
             "QLT-TOTALROW-010",
             TotalRowsSheetProfile("Aba 1", TotalRowsProfile(10, 1, 0.1)),
         )
+        negative_result = execute_registered_rule(
+            "QLT-NEGATIVE-011",
+            NegativeValuesColumnProfile("Quantidade", NegativeValuesProfile(True, 20, 2, 0.1)),
+        )
         record = get_rule_execution_record("QLT-NUMTEXT-007")
         null_record = get_rule_execution_record("QLT-NULL-001")
         catvar_record = get_rule_execution_record("QLT-CATVAR-008")
@@ -81,7 +87,8 @@ class RuleCatalogTests(unittest.TestCase):
         baddate_record = get_rule_execution_record("QLT-BADDATE-006")
         whitespace_record = get_rule_execution_record("QLT-WHITESPACE-009")
         totalrow_record = get_rule_execution_record("QLT-TOTALROW-010")
-        self.assertEqual(executable_rule_count(), 10)
+        negative_record = get_rule_execution_record("QLT-NEGATIVE-011")
+        self.assertEqual(executable_rule_count(), 11)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
@@ -91,6 +98,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(baddate_result[0]["rule_id"], "QLT-BADDATE-006")
         self.assertEqual(whitespace_result[0]["rule_id"], "QLT-WHITESPACE-009")
         self.assertEqual(totalrow_result[0]["rule_id"], "QLT-TOTALROW-010")
+        self.assertEqual(negative_result[0]["rule_id"], "QLT-NEGATIVE-011")
         self.assertEqual(record.status, "executable_draft")
         self.assertEqual(null_record.status, "executable_draft")
         self.assertEqual(catvar_record.status, "executable_draft")
@@ -100,6 +108,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(baddate_record.status, "executable_draft")
         self.assertEqual(whitespace_record.status, "executable_draft")
         self.assertEqual(totalrow_record.status, "executable_draft")
+        self.assertEqual(negative_record.status, "executable_draft")
         self.assertEqual(record.title, "Números armazenados como texto")
 
     def test_baseline_reference_and_reserved_official_slots_cannot_execute(self):
