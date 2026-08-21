@@ -298,3 +298,8 @@
 - [x] Implementar o perfil privado, classificador, registro, contrato e integração canônica da SEM-SENS-015 sem inspecionar valores pessoais.
 - [x] Criar testes unitários, golden dataset sem dados pessoais, avaliador e calibração reproduzível da SEM-SENS-015.
 - [x] Ativar a SEM-SENS-015 exclusivamente no perfil draft e sincronizar catálogo, índice de prontidão, Gate MVP e indicador do workspace.
+- [x] Recuperar metadados, dependências e lacunas da SEM-COMP-002 sem implementar lógica executável.
+- [x] Elaborar política e especificação lógica não executáveis para a SEM-COMP-002 e solicitar aprovação específica antes de implementação.
+- [ ] Formalizar o gate de reconstrução da SEM-COMP-002 somente após a aprovação explícita de Chris para a proposta selecionada.
+- [ ] Implementar, testar, calibrar e ativar a SEM-COMP-002 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
+- [x] Exportar integralmente o estado versionado atual do projeto para o repositório privado de Chris no GitHub.

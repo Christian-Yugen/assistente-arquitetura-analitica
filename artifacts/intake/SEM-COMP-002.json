@@ -1,0 +1,67 @@
+{
+  "intake_id": "SEM-COMP-002-INTAKE-001",
+  "rule": {
+    "rule_id": "SEM-COMP-002",
+    "title": "Data de competência",
+    "category": "semantic",
+    "purpose": "Classificar coluna como data de competência com evidências convergentes.",
+    "priority": "P1",
+    "stage": "semantic_typing",
+    "scope": "column",
+    "depends_on": ["quality"],
+    "primary_output": "semantic_type",
+    "source_implementation_status": "planned"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "Plano_Mestre_MVP_Modelagem_Dimensional_PowerBI_v1.0.docx",
+      "docs/rules/SEM_DATE_001_POLICY_PROPOSAL_001.md",
+      "docs/rules/SEM_DATE_001_LOGICAL_SPEC_PROPOSAL_001.md",
+      "engine/contracts/diagnosis.py"
+    ]
+  },
+  "source_gap": "O blueprint oficial define somente título, propósito, prioridade P1, escopo por coluna, dependência de qualidade e saída semantic_type. Não há dicionário materializado de cabeçalhos de competência, definição de competência por domínio, limiar, precedência frente à SEM-DATE-001, evidências, confiança, pergunta, perfil agregado ou projeção específica. A regra não pode interpretar datas pelo valor, inferir período, converter dados, usar formato Excel ou assumir sinônimos sem política aprovada.",
+  "local_readiness": "intake_required",
+  "authorization": {
+    "implementation_authorized": false,
+    "reason": "A distinção entre data genérica e data de competência depende de vocabulário de negócio fechado, precedência explícita e confirmação humana; Chris deve aprovar a política e o gate de reconstrução antes de qualquer código executável.",
+    "required_gate": "SEM-COMP-002-RECONSTRUCTION-AUTHORIZATION-001"
+  },
+  "required_before_implementation": [
+    "Decisão humana sobre o vocabulário fechado de competência, a pré-condição de data integralmente reconhecida e a precedência sobre SEM-DATE-001",
+    "Perfil agregado que não retenha valores, cabeçalhos, posições, exemplos, títulos de abas ou formatos de célula",
+    "Classificador determinístico, confiança, pergunta humana e projeção canônica versionada",
+    "Testes unitários, limítrofes, de privacidade, de contrato e de integração",
+    "Golden dataset sintético, manifesto SHA-256, calibração reprodutível e gate individual de calibração"
+  ],
+  "required_policy_elements": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "precedence",
+    "confidence",
+    "questions",
+    "contract_projection",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ],
+  "status": "intake_required",
+  "execution_blocked": true,
+  "missing_before_execution": [
+    "policy",
+    "logical_specification",
+    "reconstruction_authorization_gate",
+    "private_profile",
+    "classifier",
+    "contract_version",
+    "pipeline_integration",
+    "tests",
+    "golden_dataset",
+    "calibration_gate",
+    "draft_authorization"
+  ]
+}
