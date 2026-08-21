@@ -242,3 +242,6 @@
 - [x] Implementar, testar, calibrar e ativar a tipagem semântica de identificador exclusivamente no perfil draft antes de retomar a GRN-COMP-001.
 - [x] Formalizar o gate de reconstrução da SEM-ID-003 conforme a Proposta A aprovada por Chris.
 - [x] Implementar, testar, calibrar e ativar a SEM-ID-003 exclusivamente no perfil draft com classificação identifier e pergunta humana.
+- [x] Recuperar metadados oficiais, dependências e lacunas da MDL-DIMSTD-004 sem implementar lógica executável.
+- [x] Elaborar política e especificação lógica não executável para a MDL-DIMSTD-004 e solicitar aprovação específica antes de implementação.
+- [ ] Formalizar o gate de reconstrução, implementar, testar, calibrar e ativar a MDL-DIMSTD-004 exclusivamente após autorização explícita de Chris no perfil draft.

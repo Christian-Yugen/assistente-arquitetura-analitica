@@ -1,0 +1,27 @@
+{
+  "rule_id": "MDL-DIMSTD-004",
+  "title": "Dimensão cadastral",
+  "status": "policy_proposed_execution_blocked",
+  "priority": "P0",
+  "stage": "table_classification",
+  "scope": "sheet",
+  "depends_on": ["grain"],
+  "primary_output": "classification_or_table",
+  "execution_blocked": true,
+  "source_traceability": {
+    "catalog": "artifacts/catalogs/rule-implementation-readiness-v1.json",
+    "master_plan": "PM-MVP-PBI-001 v1.0",
+    "requirements": "PM-MVP-PBI-REQ-001 v1.0"
+  },
+  "known_constraints": [
+    "classification must preserve positive and negative evidence, confidence, and human validation when ambiguous",
+    "low confidence must not be converted into a forced conclusion",
+    "the upstream grain hypothesis is a declared dependency"
+  ],
+  "missing_before_execution": [
+    "tests",
+    "golden_dataset",
+    "calibration_gate",
+    "authorization_gate"
+  ]
+}
