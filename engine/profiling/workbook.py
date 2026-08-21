@@ -21,6 +21,7 @@ from engine.profiling.duplicate_rows import DuplicateRowsAccumulator
 from engine.profiling.empty_rows import EmptyRowsAccumulator
 from engine.profiling.mixed_types import MixedTypesAccumulator
 from engine.profiling.bad_dates import BadDateAccumulator
+from engine.profiling.whitespace import WhitespaceAccumulator
 
 
 MAX_SHEETS = 10
@@ -46,12 +47,14 @@ class StreamingColumnProfiler:
     numeric_text_ambiguities: int = 0
     mixed_types_accumulator: MixedTypesAccumulator = field(default_factory=MixedTypesAccumulator, repr=False)
     bad_dates_accumulator: BadDateAccumulator = field(default_factory=BadDateAccumulator, repr=False)
+    whitespace_accumulator: WhitespaceAccumulator = field(default_factory=WhitespaceAccumulator, repr=False)
     categorical_text_values: list[str] = field(default_factory=list, repr=False)
 
     def consume(self, value: object) -> None:
         self.observed += 1
         self.mixed_types_accumulator.consume(value)
         self.bad_dates_accumulator.consume(value)
+        self.whitespace_accumulator.consume(value)
         kind = missing_class(value)
         if kind == "structural_null":
             self.structural_null_count += 1
@@ -123,6 +126,9 @@ class StreamingColumnProfiler:
 
     def bad_dates_profile(self):
         return self.bad_dates_accumulator.finalize()
+
+    def whitespace_profile(self):
+        return self.whitespace_accumulator.finalize()
 
 
 def safe_column_name(value: object, position: int) -> str:
@@ -196,6 +202,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
                     categorical_variations=categorical_variations,
                     mixed_types=profiler.mixed_types_profile(),
                     bad_dates=profiler.bad_dates_profile(),
+                    whitespace=profiler.whitespace_profile(),
                     duplicate_rows=duplicate_rows,
                     empty_rows=empty_rows,
                 )

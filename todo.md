@@ -185,3 +185,11 @@
 - [x] Criar testes, golden dataset, manifesto SHA-256 e calibração reprodutível da QLT-BADDATE-006.
 - [x] Formalizar o gate individual de calibração da QLT-BADDATE-006 antes de sua ativação draft.
 - [x] Ativar a QLT-BADDATE-006 somente no perfil draft e sincronizar catálogo, índice, workspace e Gate MVP 1.0.
+- [x] Identificar no blueprint a próxima regra de Qualidade não executável e recuperar seus metadados oficiais sob autorização de Chris.
+- [x] Propor política conservadora, especificação lógica e gate de reconstrução da próxima regra de Qualidade antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a próxima regra de Qualidade somente após nova aprovação explícita de Chris para a política proposta.
+- [x] Formalizar o gate de reconstrução da QLT-WHITESPACE-009 com o aceite de Chris para a Opção A.
+- [x] Implementar o perfil agregado e o avaliador da QLT-WHITESPACE-009 sem valores, posições ou identificadores brutos.
+- [x] Criar testes, golden dataset, manifesto SHA-256 e calibração reprodutível da QLT-WHITESPACE-009.
+- [x] Formalizar o gate individual de calibração da QLT-WHITESPACE-009 antes de sua ativação draft.
+- [x] Ativar a QLT-WHITESPACE-009 somente no perfil draft e sincronizar catálogo, índice, workspace e Gate MVP 1.0.

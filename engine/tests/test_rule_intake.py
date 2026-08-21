@@ -18,13 +18,13 @@ class RuleIntakeTests(unittest.TestCase):
         self.assertEqual(len(readiness["rules"]), 95)
         self.assertEqual(readiness["counts"], {
             "baseline_reference": 0,
-            "executable_draft": 8,
+            "executable_draft": 9,
             "reference_catalog_draft": 6,
-            "intake_required": 81,
+            "intake_required": 80,
         })
 
         by_id = {rule["rule_id"]: rule for rule in readiness["rules"]}
-        for rule_id in ("QLT-NULL-001", "QLT-DUP-002", "QLT-EMPTYCOL-003", "QLT-EMPTYROW-004", "QLT-MIXTYPE-005", "QLT-BADDATE-006", "QLT-NUMTEXT-007", "QLT-CATVAR-008"):
+        for rule_id in ("QLT-NULL-001", "QLT-DUP-002", "QLT-EMPTYCOL-003", "QLT-EMPTYROW-004", "QLT-MIXTYPE-005", "QLT-BADDATE-006", "QLT-NUMTEXT-007", "QLT-CATVAR-008", "QLT-WHITESPACE-009"):
             self.assertEqual(by_id[rule_id]["local_readiness"], "executable_draft")
             self.assertTrue(by_id[rule_id]["executable"])
 

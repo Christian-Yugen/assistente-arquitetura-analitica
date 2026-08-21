@@ -1,0 +1,12 @@
+{
+  "dataset_id": "GD-QLT-WHITESPACE-009-001",
+  "file": "whitespace-draft-golden-v1.json",
+  "sha256": "f340b66558470ec7418e89fe11e45ff7259a26cc0ba9c76a88885f598ca295af",
+  "scope": "draft_only",
+  "privacy": {
+    "contains_raw_workbook_values": false,
+    "contains_cell_positions": false,
+    "contains_sheet_titles": false,
+    "contains_column_names": false
+  }
+}

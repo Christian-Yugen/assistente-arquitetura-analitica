@@ -8,6 +8,7 @@ from .empty_columns import EmptyColumnProfile, evaluate_empty_column
 from .empty_rows import EmptyRowsSheetProfile, evaluate_empty_rows
 from .mixed_types import MixedTypesColumnProfile, evaluate_mixed_types
 from .bad_dates import BadDateColumnProfile, evaluate_bad_dates
+from .whitespace import WhitespaceColumnProfile, evaluate_whitespace
 
 
 QUALITY_RULE_IMPLEMENTATIONS = {
@@ -19,6 +20,7 @@ QUALITY_RULE_IMPLEMENTATIONS = {
     "QLT-EMPTYROW-004": evaluate_empty_rows,
     "QLT-MIXTYPE-005": evaluate_mixed_types,
     "QLT-BADDATE-006": evaluate_bad_dates,
+    "QLT-WHITESPACE-009": evaluate_whitespace,
 }
 
-__all__ = ["NumericTextColumnProfile", "NullColumnProfile", "CategoricalVariationColumnProfile", "DuplicateRowsSheetProfile", "EmptyColumnProfile", "EmptyRowsSheetProfile", "MixedTypesColumnProfile", "BadDateColumnProfile", "QUALITY_RULE_IMPLEMENTATIONS"]
+__all__ = ["NumericTextColumnProfile", "NullColumnProfile", "CategoricalVariationColumnProfile", "DuplicateRowsSheetProfile", "EmptyColumnProfile", "EmptyRowsSheetProfile", "MixedTypesColumnProfile", "BadDateColumnProfile", "WhitespaceColumnProfile", "QUALITY_RULE_IMPLEMENTATIONS"]
