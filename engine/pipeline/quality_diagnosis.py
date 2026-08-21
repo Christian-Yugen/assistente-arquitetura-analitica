@@ -25,7 +25,9 @@ from engine.profiling.formula_consistency import FormulaConsistencyProfile
 from engine.profiling.headers import HeadersProfile
 from engine.profiling.identifier_completeness import IdentifierCompletenessProfile, profile_identifier_completeness
 from engine.profiling.semantic_date import SemanticDateProfile, profile_semantic_date
+from engine.profiling.semantic_currency import SemanticCurrencyProfile, profile_semantic_currency
 from engine.profiling.semantic_identifier import SemanticIdentifierProfile, profile_semantic_identifier
+from engine.profiling.semantic_percentage import SemanticPercentageProfile, profile_semantic_percentage
 from engine.profiling.semantic_quantity import SemanticQuantityProfile, profile_semantic_quantity
 from engine.profiling.composite_grain import CompositeGrainProfile
 from engine.profiling.periodic_fact import PeriodicDateProfile, profile_periodic_date
@@ -47,7 +49,9 @@ from engine.quality.formula_consistency import FormulaConsistencyColumnProfile
 from engine.quality.headers import HeadersSheetProfile
 from engine.quality.identifier_completeness import IdentifierCompletenessColumnProfile
 from engine.semantic.date_generic import SemanticDateColumnProfile
+from engine.semantic.currency import SemanticCurrencyColumnProfile
 from engine.semantic.identifier import SemanticIdentifierColumnProfile, classify_identifier
+from engine.semantic.percentage import SemanticPercentageColumnProfile
 from engine.semantic.quantity import SemanticQuantityColumnProfile
 from engine.granularity.composite import CompositeGrainSheetProfile
 from engine.fact_dimension.periodic import PeriodicFactSheetProfile
@@ -108,7 +112,9 @@ class ColumnAnalysisContext:
     headers: HeadersProfile = field(default_factory=HeadersProfile)
     identifiers: IdentifierCompletenessProfile = field(default_factory=IdentifierCompletenessProfile)
     semantic_date: SemanticDateProfile = field(default_factory=SemanticDateProfile)
+    semantic_currency: SemanticCurrencyProfile = field(default_factory=SemanticCurrencyProfile)
     semantic_identifier: SemanticIdentifierProfile = field(default_factory=SemanticIdentifierProfile)
+    semantic_percentage: SemanticPercentageProfile = field(default_factory=SemanticPercentageProfile)
     semantic_quantity: SemanticQuantityProfile = field(default_factory=SemanticQuantityProfile)
     composite_grain: CompositeGrainProfile = field(default_factory=CompositeGrainProfile)
     periodic_date: PeriodicDateProfile = field(default_factory=PeriodicDateProfile)
@@ -141,7 +147,9 @@ def build_column_analysis_context(
         outliers=profile_outliers(materialized_values),
         identifiers=profile_identifier_completeness(column_name, materialized_values),
         semantic_date=profile_semantic_date(materialized_values),
+        semantic_currency=profile_semantic_currency(column_name, materialized_values),
         semantic_identifier=profile_semantic_identifier(column_name, materialized_values),
+        semantic_percentage=profile_semantic_percentage(column_name, materialized_values),
         semantic_quantity=profile_semantic_quantity(column_name, materialized_values),
         periodic_date=profile_periodic_date(materialized_values),
         transactional_date=profile_transactional_date(materialized_values),
@@ -233,6 +241,24 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
                 semantic_quantity=column.semantic_quantity,
             )
             semantic_candidates.append((column.sheet_id, column.column_id, execute_registered_rule("SEM-QTY-005", quantity_semantic_profile)))
+        if get_rule_execution_record("SEM-PCT-007").status == "executable_draft":
+            percentage_semantic_profile = SemanticPercentageColumnProfile(
+                physical_type=column.physical_type,
+                formulas=column.formulas,
+                numeric_text=column.numeric_text,
+                semantic_date=column.semantic_date,
+                semantic_percentage=column.semantic_percentage,
+            )
+            semantic_candidates.append((column.sheet_id, column.column_id, execute_registered_rule("SEM-PCT-007", percentage_semantic_profile)))
+        if get_rule_execution_record("SEM-CURR-006").status == "executable_draft":
+            currency_semantic_profile = SemanticCurrencyColumnProfile(
+                physical_type=column.physical_type,
+                formulas=column.formulas,
+                numeric_text=column.numeric_text,
+                semantic_date=column.semantic_date,
+                semantic_currency=column.semantic_currency,
+            )
+            semantic_candidates.append((column.sheet_id, column.column_id, execute_registered_rule("SEM-CURR-006", currency_semantic_profile)))
 
     for sheet_id, sheet_columns in grouped_columns.items():
         representative = sheet_columns[0]
