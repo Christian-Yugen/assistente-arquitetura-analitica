@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildWorkbookMetadata, UploadValidationError, validateWorkbookInspection, validateWorkbookUpload } from "./analysisPipeline";
+import { buildWorkbookMetadata, inspectWorkbookBeforePersistence, UploadValidationError, validateWorkbookInspection, validateWorkbookUpload } from "./analysisPipeline";
 
 const zipHeader = Buffer.from([0x50, 0x4b, 0x03, 0x04, 0x00, 0x00]);
 const xlsxMime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -31,6 +31,16 @@ describe("validateWorkbookUpload", () => {
     expect(() => validateWorkbookInspection({ sheet_count: 0 })).toThrow(UploadValidationError);
     expect(() => validateWorkbookInspection({ sheet_count: 11 })).toThrow(UploadValidationError);
     expect(() => validateWorkbookInspection({ sheet_count: "2" })).toThrow(UploadValidationError);
+  });
+
+  it("rejects a ZIP-shaped payload that is not a readable XLSX before persistence", async () => {
+    const zipButNotWorkbook = validateWorkbookUpload({
+      fileName: "arquivo.xlsx",
+      mimeType: xlsxMime,
+      dataBase64: zipHeader.toString("base64"),
+    });
+
+    await expect(inspectWorkbookBeforePersistence(zipButNotWorkbook)).rejects.toThrow("Não foi possível validar a estrutura do workbook.");
   });
 
   it("builds deterministic pseudonymous metadata that separates owners", () => {

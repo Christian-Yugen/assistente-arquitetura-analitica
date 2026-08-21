@@ -1,0 +1,52 @@
+{
+  "dataset_id": "GD-QLT-DUP-002-001",
+  "version": "1.0.0-reconstructed.1",
+  "purpose": "Calibração determinística da QLT-DUP-002 a partir de perfis agregados de linhas duplicadas.",
+  "privacy": {
+    "contains_raw_workbook_values": false,
+    "contains_original_sheet_titles": false,
+    "contains_personal_data": false,
+    "contains_row_signatures": false,
+    "contains_row_indices": false
+  },
+  "rules": [
+    {"rule_id": "QLT-DUP-002", "version": "0.1.0-reconstructed.1"}
+  ],
+  "scenarios": [
+    {
+      "case_id": "dup-low-ratio",
+      "sheet": {"duplicates": {"non_empty_row_count": 50, "duplicate_group_count": 1, "duplicate_row_count": 2, "duplicate_row_ratio": 0.04, "largest_duplicate_group": 2, "normalization_basis": "type_tagged_nfkc_trim_newlines"}},
+      "expected_findings": [{"rule_id": "QLT-DUP-002", "severity": "low", "confidence": 0.92, "question": false}]
+    },
+    {
+      "case_id": "dup-medium-boundary",
+      "sheet": {"duplicates": {"non_empty_row_count": 40, "duplicate_group_count": 1, "duplicate_row_count": 2, "duplicate_row_ratio": 0.05, "largest_duplicate_group": 2, "normalization_basis": "type_tagged_nfkc_trim_newlines"}},
+      "expected_findings": [{"rule_id": "QLT-DUP-002", "severity": "medium", "confidence": 0.92, "question": false}]
+    },
+    {
+      "case_id": "dup-high-boundary",
+      "sheet": {"duplicates": {"non_empty_row_count": 20, "duplicate_group_count": 1, "duplicate_row_count": 4, "duplicate_row_ratio": 0.2, "largest_duplicate_group": 4, "normalization_basis": "type_tagged_nfkc_trim_newlines"}},
+      "expected_findings": [{"rule_id": "QLT-DUP-002", "severity": "high", "confidence": 0.92, "question": true}]
+    },
+    {
+      "case_id": "dup-minimal-evidence-confidence-penalty",
+      "sheet": {"duplicates": {"non_empty_row_count": 2, "duplicate_group_count": 1, "duplicate_row_count": 2, "duplicate_row_ratio": 1.0, "largest_duplicate_group": 2, "normalization_basis": "type_tagged_nfkc_trim_newlines"}},
+      "expected_findings": [{"rule_id": "QLT-DUP-002", "severity": "high", "confidence": 0.78, "question": true}]
+    },
+    {
+      "case_id": "dup-large-group-confidence-penalty",
+      "sheet": {"duplicates": {"non_empty_row_count": 200, "duplicate_group_count": 1, "duplicate_row_count": 101, "duplicate_row_ratio": 0.505, "largest_duplicate_group": 101, "normalization_basis": "type_tagged_nfkc_trim_newlines"}},
+      "expected_findings": [{"rule_id": "QLT-DUP-002", "severity": "high", "confidence": 0.82, "question": true}]
+    },
+    {
+      "case_id": "dup-excluded-no-duplicates",
+      "sheet": {"duplicates": {"non_empty_row_count": 20, "duplicate_group_count": 0, "duplicate_row_count": 0, "duplicate_row_ratio": 0.0, "largest_duplicate_group": 0, "normalization_basis": "type_tagged_nfkc_trim_newlines"}},
+      "expected_findings": []
+    },
+    {
+      "case_id": "dup-excluded-unsupported-normalization",
+      "sheet": {"duplicates": {"non_empty_row_count": 20, "duplicate_group_count": 1, "duplicate_row_count": 2, "duplicate_row_ratio": 0.1, "largest_duplicate_group": 2, "normalization_basis": "unsupported"}},
+      "expected_findings": []
+    }
+  ]
+}

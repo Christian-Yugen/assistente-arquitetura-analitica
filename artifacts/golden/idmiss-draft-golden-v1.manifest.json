@@ -1,0 +1,9 @@
+{
+  "manifest_version": "1.0.0",
+  "dataset_id": "GD-QLT-IDMISS-015-001",
+  "rule_id": "QLT-IDMISS-015",
+  "file": "idmiss-draft-golden-v1.json",
+  "sha256": "f40384ef5e0c8b98d4cf7d23dfd8f8a8f5bc039c66b3051297a316274b4408b1",
+  "contains_raw_identifiers": false,
+  "scope": "draft_aggregate_reference_only"
+}

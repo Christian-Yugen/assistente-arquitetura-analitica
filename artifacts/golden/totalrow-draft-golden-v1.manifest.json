@@ -1,0 +1,13 @@
+{
+  "dataset_id": "GD-QLT-TOTALROW-010-001",
+  "rule_id": "QLT-TOTALROW-010",
+  "rule_version": "0.1.0-provisional.1",
+  "scope": "draft_only",
+  "sha256": "2a4386f9bec7af12b0ab6a69499aedb95831979e643191aac5aa68ac2118697b",
+  "scenario_count": 6,
+  "privacy": {
+    "contains_raw_workbook_values": false,
+    "contains_cell_positions": false,
+    "contains_sheet_titles": false
+  }
+}

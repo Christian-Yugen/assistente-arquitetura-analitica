@@ -17,13 +17,18 @@ class RuleIntakeTests(unittest.TestCase):
         self.assertEqual(readiness["source_blueprint"]["blueprint_id"], "PM-MVP-PBI-RULE-BP-001")
         self.assertEqual(len(readiness["rules"]), 95)
         self.assertEqual(readiness["counts"], {
-            "baseline_reference": 6,
-            "executable_draft": 1,
-            "reference_catalog_draft": 6,
-            "intake_required": 82,
+            "baseline_reference": 0,
+            "executable_draft": 23,
+            "reference_catalog_draft": 3,
+            "intake_required": 69,
         })
 
-    def test_catvar_intake_preserves_policy_gaps_and_blocks_execution(self):
+        by_id = {rule["rule_id"]: rule for rule in readiness["rules"]}
+        for rule_id in ("QLT-NULL-001", "QLT-DUP-002", "QLT-EMPTYCOL-003", "QLT-EMPTYROW-004", "QLT-MIXTYPE-005", "QLT-BADDATE-006", "QLT-NUMTEXT-007", "QLT-CATVAR-008", "QLT-WHITESPACE-009", "QLT-TOTALROW-010", "QLT-NEGATIVE-011", "QLT-OUTLIER-012", "QLT-FORMULA-013", "QLT-HEADERS-014", "QLT-IDMISS-015", "SEM-DATE-001", "SEM-ID-003", "SEM-QTY-005", "GRN-COMP-001", "MDL-FACTPER-001", "MDL-FACTTXN-002", "MDL-DIMSTD-004", "MDL-DIMCAL-006"):
+            self.assertEqual(by_id[rule_id]["local_readiness"], "executable_draft")
+            self.assertTrue(by_id[rule_id]["executable"])
+
+    def test_catvar_intake_preserves_policy_gaps_after_provisional_draft_activation(self):
         intake = json.loads(
             (PROJECT_ROOT / "artifacts/intake/QLT-CATVAR-008.json").read_text(encoding="utf-8")
         )
@@ -34,4 +39,4 @@ class RuleIntakeTests(unittest.TestCase):
         self.assertFalse(intake["authorization"]["implementation_authorized"])
         self.assertEqual(intake["authorization"]["required_gate"], "QLT-CATVAR-008-AUTHORIZATION")
         self.assertIn("condition", intake["required_policy_elements"])
-        self.assertEqual(get_rule_execution_record("QLT-CATVAR-008").status, "reserved_definition")
+        self.assertEqual(get_rule_execution_record("QLT-CATVAR-008").status, "executable_draft")

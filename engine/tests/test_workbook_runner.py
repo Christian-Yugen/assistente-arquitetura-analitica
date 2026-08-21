@@ -44,3 +44,41 @@ class WorkbookRunnerTests(unittest.TestCase):
             self.assertNotIn("Alpha", serialized)
             self.assertNotIn("Beta", serialized)
             self.assertNotIn("raw_values", serialized)
+
+    def test_runs_missingness_workbook_to_reconstructed_null_finding_without_raw_values(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            workbook_path = base / "entrada_nulos.xlsx"
+            metadata_path = base / "metadata.json"
+            workbook = Workbook()
+            sheet = workbook.active
+            sheet.title = "Dados privados"
+            sheet.append(["Observação", "Referência"])
+            for position in range(16):
+                sheet.append(["conteúdo confidencial", f"REF-{position}"])
+            for position in range(4):
+                sheet.append([None, f"AUS-{position}"])
+            workbook.save(workbook_path)
+            content = workbook_path.read_bytes()
+            metadata_path.write_text(json.dumps({
+                "analysis_id": str(uuid4()), "project_id": str(uuid4()), "owner_user_id": str(uuid4()),
+                "project_name": "Teste", "objective": "Validar runner", "file_id": str(uuid4()),
+                "original_name": "entrada_nulos.xlsx", "file_size_bytes": len(content), "file_sha256": hashlib.sha256(content).hexdigest(),
+                "file_mime_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "workbook_readable": True,
+                "consented_at": "2026-08-20T00:00:00Z", "created_at": "2026-08-20T00:00:00Z",
+                "uploaded_at": "2026-08-20T00:00:00Z", "retention_delete_at": "2026-08-20T00:00:00Z",
+                "retention_status": "reference_removed", "correlation_id": str(uuid4()), "terms_version": "1.0",
+                "domain": "generic", "business_questions": [], "analysis_version": 1, "supersedes_analysis_id": None,
+            }), encoding="utf-8")
+
+            diagnosis = run(workbook_path, metadata_path)
+            serialized = json.dumps(diagnosis)
+            null_findings = [finding for finding in diagnosis["findings"] if finding["rule_id"] == "QLT-NULL-001"]
+
+            self.assertEqual(len(null_findings), 1)
+            self.assertEqual(null_findings[0]["severity"], "high")
+            self.assertEqual(null_findings[0]["rule_version"], "0.1.0-reconstructed.1")
+            self.assertEqual(diagnosis["questions"][0]["impact"]["affected_rule_ids"], ["QLT-NULL-001"])
+            self.assertNotIn("conteúdo confidencial", serialized)
+            self.assertNotIn("REF-0", serialized)
+            self.assertNotIn("raw_values", serialized)

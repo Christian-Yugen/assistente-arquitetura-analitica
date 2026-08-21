@@ -10,6 +10,7 @@ from engine.contracts.execution_profile import (
     load_authorized_draft_profile,
     validate_governed_output,
 )
+from engine.catalog import executable_rule_count
 from engine.pipeline.quality_diagnosis import build_column_analysis_context, execute_quality_diagnosis
 from engine.tests.test_numtext_pipeline import METADATA
 
@@ -74,8 +75,9 @@ class DraftExecutionProfileTests(unittest.TestCase):
             column_position=0,
         )
         diagnosis = execute_quality_diagnosis([context], metadata=METADATA)
-        validate_governed_output(diagnosis, profile=profile, executed_rule_count=1)
-        expected = expected_governed_output_values(diagnosis, profile=profile, executed_rule_count=1)
+        executed_rule_count = executable_rule_count()
+        validate_governed_output(diagnosis, profile=profile, executed_rule_count=executed_rule_count)
+        expected = expected_governed_output_values(diagnosis, profile=profile, executed_rule_count=executed_rule_count)
 
         self.assertEqual(set(expected), REQUIRED_GOVERNED_OUTPUT_PATHS)
         self.assertEqual(set(expected), set(profile.governed_output_paths))
@@ -88,4 +90,4 @@ class DraftExecutionProfileTests(unittest.TestCase):
             invalid = deepcopy(diagnosis)
             self._set_path(invalid, path, self._divergent_value(_read_path(diagnosis, path)))
             with self.assertRaises(ValueError, msg=path):
-                validate_governed_output(invalid, profile=profile, executed_rule_count=1)
+                validate_governed_output(invalid, profile=profile, executed_rule_count=executed_rule_count)

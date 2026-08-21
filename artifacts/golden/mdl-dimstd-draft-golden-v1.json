@@ -1,0 +1,14 @@
+{
+  "dataset_id": "GD-MDL-DIMSTD-004-001",
+  "rule_id": "MDL-DIMSTD-004",
+  "version": "1.0",
+  "cases": [
+    {"case_id": "standard_dimension_positive", "observed_row_count": 20, "grain_available": true, "individually_unique_identifier_count": 1, "descriptive_attribute_count": 1, "eligible_measure_column_count": 0, "fully_recognized_temporal_column_count": 0, "expected": true},
+    {"case_id": "insufficient_rows_negative", "observed_row_count": 19, "grain_available": true, "individually_unique_identifier_count": 1, "descriptive_attribute_count": 1, "eligible_measure_column_count": 0, "fully_recognized_temporal_column_count": 0, "expected": false},
+    {"case_id": "missing_grain_negative", "observed_row_count": 20, "grain_available": false, "individually_unique_identifier_count": 1, "descriptive_attribute_count": 1, "eligible_measure_column_count": 0, "fully_recognized_temporal_column_count": 0, "expected": false},
+    {"case_id": "missing_unique_identifier_negative", "observed_row_count": 20, "grain_available": true, "individually_unique_identifier_count": 0, "descriptive_attribute_count": 1, "eligible_measure_column_count": 0, "fully_recognized_temporal_column_count": 0, "expected": false},
+    {"case_id": "missing_descriptive_attribute_negative", "observed_row_count": 20, "grain_available": true, "individually_unique_identifier_count": 1, "descriptive_attribute_count": 0, "eligible_measure_column_count": 0, "fully_recognized_temporal_column_count": 0, "expected": false},
+    {"case_id": "numeric_measure_negative", "observed_row_count": 20, "grain_available": true, "individually_unique_identifier_count": 1, "descriptive_attribute_count": 1, "eligible_measure_column_count": 1, "fully_recognized_temporal_column_count": 0, "expected": false},
+    {"case_id": "temporal_column_negative", "observed_row_count": 20, "grain_available": true, "individually_unique_identifier_count": 1, "descriptive_attribute_count": 1, "eligible_measure_column_count": 0, "fully_recognized_temporal_column_count": 1, "expected": false}
+  ]
+}

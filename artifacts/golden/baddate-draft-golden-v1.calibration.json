@@ -1,0 +1,51 @@
+{
+  "calibration_id": "CAL-QLT-BADDATE-006-001",
+  "dataset_id": "GD-QLT-BADDATE-006-001",
+  "rule_id": "QLT-BADDATE-006",
+  "rule_version": "0.1.0-provisional.1",
+  "scope": "draft_only",
+  "production_release": "blocked",
+  "metrics": {
+    "true_positive": 3,
+    "false_positive": 0,
+    "false_negative": 0
+  },
+  "scenarios": [
+    {
+      "case_id": "low_invalid_ratio_at_five_percent",
+      "status": "pass",
+      "expected_count": 1,
+      "actual_count": 1
+    },
+    {
+      "case_id": "medium_invalid_ratio_inclusive",
+      "status": "pass",
+      "expected_count": 1,
+      "actual_count": 1
+    },
+    {
+      "case_id": "high_invalid_ratio",
+      "status": "pass",
+      "expected_count": 1,
+      "actual_count": 1
+    },
+    {
+      "case_id": "excluded_valid_strict_dates_only",
+      "status": "pass",
+      "expected_count": 0,
+      "actual_count": 0
+    },
+    {
+      "case_id": "excluded_without_strict_date_candidates",
+      "status": "pass",
+      "expected_count": 0,
+      "actual_count": 0
+    },
+    {
+      "case_id": "excluded_inconsistent_ratio",
+      "status": "pass",
+      "expected_count": 0,
+      "actual_count": 0
+    }
+  ]
+}

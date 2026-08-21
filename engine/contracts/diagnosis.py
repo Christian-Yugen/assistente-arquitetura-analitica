@@ -5,12 +5,33 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from engine.quality.numtext import Finding
-
-
 CONTRACT_ID = "PM-MVP-PBI-CON-001"
 SCHEMA_VERSION = "1.0.0"
-NUMTEXT_RULE_VERSION = "1.0.0-draft"
+RULE_VERSIONS = {
+    "QLT-NUMTEXT-007": "1.0.0-draft",
+    "QLT-NULL-001": "0.1.0-reconstructed.1",
+    "QLT-CATVAR-008": "0.1.0-provisional.1",
+    "QLT-DUP-002": "0.1.0-reconstructed.1",
+    "QLT-EMPTYCOL-003": "0.1.0-reconstructed.1",
+    "QLT-EMPTYROW-004": "0.1.0-reconstructed.1",
+    "QLT-MIXTYPE-005": "0.1.0-provisional.1",
+    "QLT-BADDATE-006": "0.1.0-provisional.1",
+    "QLT-WHITESPACE-009": "0.1.0-provisional.1",
+    "QLT-TOTALROW-010": "0.1.0-provisional.1",
+    "QLT-NEGATIVE-011": "0.1.0-provisional.1",
+    "QLT-OUTLIER-012": "0.1.0-provisional.1",
+    "QLT-FORMULA-013": "0.1.0-provisional.1",
+    "QLT-HEADERS-014": "0.1.0-provisional.1",
+    "QLT-IDMISS-015": "0.1.0-provisional.1",
+    "SEM-DATE-001": "0.1.0-provisional.1",
+    "SEM-ID-003": "0.1.0-provisional.1",
+    "SEM-QTY-005": "0.1.0-provisional.1",
+    "GRN-COMP-001": "0.1.0-provisional.1",
+    "MDL-FACTPER-001": "0.1.0-provisional.1",
+    "MDL-FACTTXN-002": "0.1.0-provisional.1",
+    "MDL-DIMSTD-004": "0.1.0-provisional.1",
+    "MDL-DIMCAL-006": "0.1.0-provisional.1",
+}
 
 
 def _timestamp() -> str:
@@ -18,10 +39,10 @@ def _timestamp() -> str:
 
 
 def to_diagnosis_fragment(
-    findings: list[Finding],
+    findings: list[dict[str, object]],
     *,
     sheet_id: str,
-    column_id: str,
+    column_id: str | None,
 ) -> dict[str, object]:
     """Converte findings internos em `findings` e `questions` rastreáveis do contrato raiz.
 
@@ -34,6 +55,10 @@ def to_diagnosis_fragment(
     contract_questions: list[dict[str, object]] = []
 
     for finding in findings:
+        rule_id = str(finding["rule_id"])
+        rule_version = RULE_VERSIONS.get(rule_id)
+        if not rule_version:
+            raise ValueError(f"Versão de regra não registrada para {rule_id}.")
         evidence = [
             {
                 "code": item["code"],
@@ -47,6 +72,9 @@ def to_diagnosis_fragment(
             }
             for item in finding["evidence"]
         ]
+        affected_entities = [{"entity_type": "sheet", "entity_id": sheet_id}]
+        if column_id is not None:
+            affected_entities.append({"entity_type": "column", "entity_id": column_id})
         contract_findings.append(
             {
                 "finding_id": str(uuid4()),
@@ -58,12 +86,9 @@ def to_diagnosis_fragment(
                 "evidence": evidence,
                 "impact": finding["impact"],
                 "recommendation": finding["recommendation"],
-                "rule_id": finding["rule_id"],
-                "rule_version": NUMTEXT_RULE_VERSION,
-                "affected_entities": [
-                    {"entity_type": "sheet", "entity_id": sheet_id},
-                    {"entity_type": "column", "entity_id": column_id},
-                ],
+                "rule_id": rule_id,
+                "rule_version": rule_version,
+                "affected_entities": affected_entities,
                 "created_at": created_at,
             }
         )
@@ -95,4 +120,69 @@ def to_diagnosis_fragment(
         "contract_id": CONTRACT_ID,
         "findings": contract_findings,
         "questions": contract_questions,
+    }
+
+
+def to_semantic_classification_fragment(classifications: list[dict[str, object]], *, sheet_id: str, column_id: str) -> dict[str, object]:
+    """Projeta classificações agregadas sem valores brutos, cabeçalhos ou posições."""
+    projected: list[dict[str, object]] = []
+    questions: list[dict[str, object]] = []
+    created_at = _timestamp()
+    for classification in classifications:
+        rule_id = str(classification["rule_id"])
+        projected.append({"semantic_type": classification["semantic_type"], "confidence": classification["confidence"],
+                          "evidence": classification["evidence"], "rule_id": rule_id,
+                          "rule_version": RULE_VERSIONS[rule_id],
+                          "affected_entities": [{"entity_type": "sheet", "entity_id": sheet_id}, {"entity_type": "column", "entity_id": column_id}]})
+        question = classification["question"]
+        questions.append({"question_id": str(uuid4()), "text": question["text"], "reason": question["reason"],
+                          "question_type": question["question_type"], "priority": question["priority"], "blocking": question["blocking"],
+                          "status": "pending", "options": question["options"],
+                          "impact": {"affected_modules": ["semantic_typing"], "affected_rule_ids": [rule_id], "affected_recommendation_ids": []}, "answer": None, "created_at": created_at})
+    return {"semantic_classifications": projected, "questions": questions}
+
+
+def to_grain_fragment(candidates: list[dict[str, object]], *, sheet_id: str) -> dict[str, object]:
+    """Projeta uma hipótese de grão por aba com evidência exclusivamente agregada."""
+    if not candidates:
+        return {"grain": None, "questions": []}
+    candidate = candidates[0]
+    rule_id = str(candidate["rule_id"])
+    question = candidate["question"]
+    created_at = _timestamp()
+    return {
+        "grain": {
+            "type": candidate["grain_type"], "confidence": candidate["confidence"],
+            "evidence": candidate["evidence"], "rule_id": rule_id,
+            "rule_version": RULE_VERSIONS[rule_id], "status": "hypothesis",
+        },
+        "questions": [{
+            "question_id": str(uuid4()), "text": question["text"], "reason": question["reason"],
+            "question_type": question["question_type"], "priority": question["priority"],
+            "blocking": question["blocking"], "status": "pending", "options": question["options"],
+            "impact": {"affected_modules": ["granularity"], "affected_rule_ids": [rule_id], "affected_recommendation_ids": []},
+            "answer": None, "created_at": created_at,
+        }],
+    }
+
+
+def to_table_classification_fragment(candidates: list[dict[str, object]], *, sheet_id: str) -> dict[str, object]:
+    """Projeta uma classificação de tabela por aba e a confirmação humana correspondente."""
+    if not candidates:
+        return {"classification": None, "questions": []}
+    candidate = candidates[0]
+    created_at = _timestamp()
+    return {
+        "classification": {
+            "type": candidate["classification_type"], "confidence": candidate["confidence"],
+            "evidence": candidate["evidence"], "rule_id": str(candidate["rule_id"]),
+            "rule_version": RULE_VERSIONS[str(candidate["rule_id"])], "status": "hypothesis",
+        },
+        "questions": [{
+            "question_id": str(uuid4()), "text": candidate_question["text"], "reason": candidate_question["reason"],
+            "question_type": candidate_question["question_type"], "priority": candidate_question["priority"],
+            "blocking": candidate_question["blocking"], "status": "pending", "options": candidate_question["options"],
+            "impact": {"affected_modules": ["fact_dimension"], "affected_rule_ids": [str(item["rule_id"])], "affected_recommendation_ids": []},
+            "answer": None, "created_at": created_at,
+        } for item in candidates for candidate_question in [item["question"]]],
     }

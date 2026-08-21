@@ -1,0 +1,11 @@
+{
+  "rule_id": "MDL-FACTTXN-002",
+  "title": "Fato transacional",
+  "status": "pending_policy_authorization",
+  "priority": "P0",
+  "scope": "sheet",
+  "depends_on": ["grain"],
+  "primary_output": "classification_or_table",
+  "execution_blocked": true,
+  "missing_before_execution": ["policy_authorization", "authorization_gate", "tests", "golden_dataset", "calibration_gate"]
+}

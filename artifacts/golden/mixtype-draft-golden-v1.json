@@ -1,0 +1,110 @@
+{
+  "dataset_id": "GD-QLT-MIXTYPE-005-001",
+  "rule_id": "QLT-MIXTYPE-005",
+  "rule_version": "0.1.0-provisional.1",
+  "scope": "draft_only",
+  "privacy": {
+    "contains_raw_workbook_values": false,
+    "contains_cell_positions": false,
+    "contains_sheet_titles": false,
+    "contains_column_names": false
+  },
+  "scenarios": [
+    {
+      "case_id": "low_material_numeric_and_text",
+      "column": {
+        "mixed_types": {
+          "non_empty_value_count": 23,
+          "boolean_count": 0,
+          "numeric_count": 21,
+          "text_non_numeric_count": 2,
+          "temporal_count": 0,
+          "strict_numeric_text_count": 0,
+          "unsupported_count": 0,
+          "normalization_basis": "missingness_excluded__strict_canonical_numeric_text_delegated__python_physical_groups_v1"
+        }
+      },
+      "expected_findings": [{"rule_id": "QLT-MIXTYPE-005", "severity": "low", "confidence": 0.95, "question": false}]
+    },
+    {
+      "case_id": "medium_material_numeric_and_text",
+      "column": {
+        "mixed_types": {
+          "non_empty_value_count": 10,
+          "boolean_count": 0,
+          "numeric_count": 8,
+          "text_non_numeric_count": 2,
+          "temporal_count": 0,
+          "strict_numeric_text_count": 0,
+          "unsupported_count": 0,
+          "normalization_basis": "missingness_excluded__strict_canonical_numeric_text_delegated__python_physical_groups_v1"
+        }
+      },
+      "expected_findings": [{"rule_id": "QLT-MIXTYPE-005", "severity": "medium", "confidence": 0.95, "question": true}]
+    },
+    {
+      "case_id": "high_balanced_boolean_and_temporal",
+      "column": {
+        "mixed_types": {
+          "non_empty_value_count": 6,
+          "boolean_count": 3,
+          "numeric_count": 0,
+          "text_non_numeric_count": 0,
+          "temporal_count": 3,
+          "strict_numeric_text_count": 0,
+          "unsupported_count": 0,
+          "normalization_basis": "missingness_excluded__strict_canonical_numeric_text_delegated__python_physical_groups_v1"
+        }
+      },
+      "expected_findings": [{"rule_id": "QLT-MIXTYPE-005", "severity": "high", "confidence": 0.95, "question": true}]
+    },
+    {
+      "case_id": "excluded_single_outlier",
+      "column": {
+        "mixed_types": {
+          "non_empty_value_count": 10,
+          "boolean_count": 0,
+          "numeric_count": 9,
+          "text_non_numeric_count": 1,
+          "temporal_count": 0,
+          "strict_numeric_text_count": 0,
+          "unsupported_count": 0,
+          "normalization_basis": "missingness_excluded__strict_canonical_numeric_text_delegated__python_physical_groups_v1"
+        }
+      },
+      "expected_findings": []
+    },
+    {
+      "case_id": "excluded_strict_numeric_text_delegated",
+      "column": {
+        "mixed_types": {
+          "non_empty_value_count": 10,
+          "boolean_count": 0,
+          "numeric_count": 5,
+          "text_non_numeric_count": 0,
+          "temporal_count": 0,
+          "strict_numeric_text_count": 5,
+          "unsupported_count": 0,
+          "normalization_basis": "missingness_excluded__strict_canonical_numeric_text_delegated__python_physical_groups_v1"
+        }
+      },
+      "expected_findings": []
+    },
+    {
+      "case_id": "excluded_without_material_values",
+      "column": {
+        "mixed_types": {
+          "non_empty_value_count": 0,
+          "boolean_count": 0,
+          "numeric_count": 0,
+          "text_non_numeric_count": 0,
+          "temporal_count": 0,
+          "strict_numeric_text_count": 0,
+          "unsupported_count": 0,
+          "normalization_basis": "missingness_excluded__strict_canonical_numeric_text_delegated__python_physical_groups_v1"
+        }
+      },
+      "expected_findings": []
+    }
+  ]
+}

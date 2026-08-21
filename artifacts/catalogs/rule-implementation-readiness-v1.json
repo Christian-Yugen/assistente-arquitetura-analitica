@@ -8,10 +8,10 @@
   },
   "policy": "A regra só pode ser executada quando local_readiness for executable_draft e houver gate de implementação registrado.",
   "counts": {
-    "baseline_reference": 6,
-    "executable_draft": 1,
-    "reference_catalog_draft": 6,
-    "intake_required": 82
+    "baseline_reference": 0,
+    "executable_draft": 23,
+    "reference_catalog_draft": 3,
+    "intake_required": 69
   },
   "rules": [
     {
@@ -26,8 +26,8 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "reference_implemented_draft",
-      "local_readiness": "baseline_reference",
-      "executable": false,
+      "local_readiness": "executable_draft",
+      "executable": true,
       "missing_before_execution": []
     },
     {
@@ -42,8 +42,8 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "planned",
-      "local_readiness": "baseline_reference",
-      "executable": false,
+      "local_readiness": "executable_draft",
+      "executable": true,
       "missing_before_execution": []
     },
     {
@@ -58,8 +58,8 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "planned",
-      "local_readiness": "baseline_reference",
-      "executable": false,
+      "local_readiness": "executable_draft",
+      "executable": true,
       "missing_before_execution": []
     },
     {
@@ -74,8 +74,8 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "planned",
-      "local_readiness": "baseline_reference",
-      "executable": false,
+      "local_readiness": "executable_draft",
+      "executable": true,
       "missing_before_execution": []
     },
     {
@@ -90,8 +90,8 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "planned",
-      "local_readiness": "baseline_reference",
-      "executable": false,
+      "local_readiness": "executable_draft",
+      "executable": true,
       "missing_before_execution": []
     },
     {
@@ -106,8 +106,8 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "planned",
-      "local_readiness": "baseline_reference",
-      "executable": false,
+      "local_readiness": "executable_draft",
+      "executable": true,
       "missing_before_execution": []
     },
     {
@@ -138,19 +138,9 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "QLT-WHITESPACE-009",
@@ -164,19 +154,9 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "QLT-TOTALROW-010",
@@ -190,19 +170,9 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "QLT-NEGATIVE-011",
@@ -216,19 +186,9 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "QLT-OUTLIER-012",
@@ -242,19 +202,9 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "QLT-FORMULA-013",
@@ -268,19 +218,9 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "QLT-HEADERS-014",
@@ -294,19 +234,9 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "QLT-IDMISS-015",
@@ -320,19 +250,9 @@
       ],
       "primary_output": "finding",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "SEM-DATE-001",
@@ -346,8 +266,8 @@
       ],
       "primary_output": "semantic_type",
       "source_implementation_status": "reference_implemented_draft",
-      "local_readiness": "reference_catalog_draft",
-      "executable": false,
+      "local_readiness": "executable_draft",
+      "executable": true,
       "missing_before_execution": []
     },
     {
@@ -388,19 +308,9 @@
       ],
       "primary_output": "semantic_type",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "SEM-DESC-004",
@@ -440,19 +350,9 @@
       ],
       "primary_output": "semantic_type",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "SEM-CURR-006",
@@ -726,8 +626,8 @@
       ],
       "primary_output": "grain",
       "source_implementation_status": "reference_implemented_draft",
-      "local_readiness": "reference_catalog_draft",
-      "executable": false,
+      "local_readiness": "executable_draft",
+      "executable": true,
       "missing_before_execution": []
     },
     {
@@ -976,8 +876,8 @@
       ],
       "primary_output": "classification_or_table",
       "source_implementation_status": "reference_implemented_draft",
-      "local_readiness": "reference_catalog_draft",
-      "executable": false,
+      "local_readiness": "executable_draft",
+      "executable": true,
       "missing_before_execution": []
     },
     {
@@ -992,19 +892,9 @@
       ],
       "primary_output": "classification_or_table",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "MDL-FACTACC-003",
@@ -1044,19 +934,9 @@
       ],
       "primary_output": "classification_or_table",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "MDL-DIMCONF-005",
@@ -1096,19 +976,9 @@
       ],
       "primary_output": "classification_or_table",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "MDL-DIMROLE-007",

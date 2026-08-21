@@ -1,0 +1,39 @@
+{
+  "intake_id": "GRN-COMP-001-INTAKE-001",
+  "rule": {
+    "rule_id": "GRN-COMP-001",
+    "title": "Chave composta",
+    "category": "grain",
+    "purpose": "Inferir ou validar chave composta.",
+    "priority": "P0",
+    "stage": "grain_inference",
+    "scope": "sheet",
+    "depends_on": ["semantic_typing"],
+    "primary_output": "grain",
+    "source_implementation_status": "reference_implemented_draft"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "artifacts/catalogs/rule-implementation-readiness-v1.json",
+      "Plano_Mestre_MVP_Modelagem_Dimensional_PowerBI_v1.0.docx"
+    ]
+  },
+  "source_gap": "As fontes recuperadas estabelecem apenas título, propósito, prioridade P0, estágio grain_inference, escopo por aba, dependência de tipagem semântica e saída grain. Não há definição materializada de candidatos, limites de cardinalidade, proteção contra combinações espúrias, evidência, confiança, pergunta humana, estrutura de saída ou critérios de exclusão.",
+  "local_readiness": "intake_required",
+  "authorization": {
+    "implementation_authorized": false,
+    "reason": "Chris autorizou somente recuperação de metadados e proposta de política. A regra permanece sem implementação, sem registro executável e sem gate de calibração.",
+    "required_gate": "GRN-COMP-001-RECONSTRUCTION-AUTHORIZATION-001"
+  },
+  "required_before_implementation": [
+    "Política humana explícita para geração e aceitação de candidatos de chave composta",
+    "Perfis agregados sem valores, combinações, cabeçalhos, posições ou títulos de abas",
+    "Proteções contra inferência de chave de negócio, explosão combinatória e falsos positivos",
+    "Modelo de saída grain e pergunta humana no contrato canônico",
+    "Testes, golden dataset assinado, calibração reproduzível e gate individual"
+  ],
+  "status": "pending_policy_authorization"
+}

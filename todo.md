@@ -1,13 +1,26 @@
 # Project TODO
 
 - [x] Registrar no repositório o escopo, os limites e os artefatos de entrada da continuidade QLT-001 a QLT-007.
-- [ ] Inventariar as seis regras de qualidade existentes e validar IDs, versões, dependências, regras de saída e compatibilidade com o contrato de diagnóstico.
+- [x] Inventariar as seis regras de qualidade existentes e validar IDs, versões, dependências, regras de saída e compatibilidade com o contrato de diagnóstico; a lacuna da fonte canônica de nulos permanece em tarefa própria.
 - [ ] Recuperar o artefato canônico da QLT-NULL-001 e confirmar seu hash de baseline antes de qualquer gate de promoção de ambiente.
+- [x] Registrar a perda declarada do artefato canônico QLT-NULL-001 e a autorização de Chris para criar uma reconstrução equivalente não canônica.
+- [x] Criar o registro de linhagem, escopo e limites da QLT-NULL-001 reconstruída, mantendo bloqueada a alegação de recuperação canônica.
+- [x] Validar por teste documental a perda declarada, a autorização de Chris, a nova versão reconstruída, o baseline novo e o bloqueio de execução até gate.
+- [x] Criar o artefato de baseline verificável da QLT-NULL-001 reconstruída e ampliar o teste documental para validar seu hash, versão e origem.
+- [x] Definir a política de detecção de nulos, vazios e sentinelas da QLT-NULL-001 reconstruída com evidências, exclusões e outcomes.
+- [x] Especificar a QLT-NULL-001 reconstruída, criar baseline verificável e solicitar gate próprio antes da implementação.
+- [x] Elaborar e validar a política reconstruída de nulos, vazios, `NaN`, sentinelas e fórmulas com evidências agregadas.
+- [x] Elaborar e validar a especificação lógica reconstruída, incluindo perfil agregado, limiares, confiança e matriz de testes planejada.
+- [x] Implementar a QLT-NULL-001 somente após a aprovação documentada de sua especificação reconstruída.
+- [x] Vincular a executabilidade da QLT-NULL-001 a uma allowlist explícita de regras draft autorizadas, preservando o bloqueio de registros sem gate.
+- [x] Executar o runner completo com workbook contendo ausências determinísticas e validar o finding canônico QLT-NULL-001 sem valores brutos.
+- [x] Registrar a decisão final do gate de reconstrução, a nova contagem de regras draft e os bloqueios que permanecem para produção.
+- [x] Registrar o aceite de Chris ao gate `QLT-NULL-RECONSTRUCTION-001`, com escopo limitado à implementação e testes do perfil draft.
 - [ ] Recuperar o artefato canônico da QLT-NULL-001 e confirmar seu hash de baseline antes de qualquer gate de promoção de ambiente.
 - [x] Executar o Checkpoint Global QLT-001 a QLT-006 com relatório de interações, regressão, dívida técnica e decisão de gate rastreável.
 - [x] Registrar, para QLT-DUP-002, QLT-EMPTYCOL-003, QLT-EMPTYROW-004 e QLT-MIXTYPE-005, as dependências, outcomes e compatibilidade com o contrato de diagnóstico.
 - [x] Consolidar a matriz de inventário das seis regras com ID, versão, status, dependências, outcomes e confirmação de contrato.
-- [ ] Corrigir somente não conformidades autorizadas pelo checkpoint, preservando a linhagem dos artefatos aprovados.
+- [x] Corrigir somente não conformidades autorizadas pelo checkpoint, preservando a linhagem dos artefatos aprovados; nenhuma correção foi executada porque as duas inconsistências registradas exigem hardening versionado e autorização explícita.
 - [x] Formalizar a autorização da QLT-NUMTEXT-007 após a aprovação do checkpoint global.
 - [x] Especificar QLT-NUMTEXT-007 com condição, exceções, evidências, outcomes, confiança, perguntas e referências ao contrato JSON.
 - [x] Implementar a regra QLT-NUMTEXT-007 no motor de diagnóstico com execução exclusivamente no servidor.
@@ -37,7 +50,7 @@
 - [x] Aprovar ou bloquear o gate CONTRACT-RECONSTRUCTION-001 com evidências de validação, lacunas e critérios de promoção.
 - [x] Revalidar a QLT-NUMTEXT-007 exclusivamente contra o contrato reconstruído aprovado e atualizar seus gates de integração.
 - [x] Confirmar o artefato G7.4-R1 da QLT-NUMTEXT-007, atualizar G7.5 e o resumo de gates, e vincular a validação executada a essa evidência.
-- [ ] Preparar os componentes de segurança para isolamento por usuário, armazenamento privado, mascaramento e retenção de artefatos.
+- [x] Preparar os componentes de segurança para isolamento por usuário, armazenamento privado, mascaramento e retenção de artefatos no escopo draft; exclusão física continua bloqueada em tarefa própria.
 - [x] Validar o fluxo de análise e registrar gates, evidências, pendências e próximos passos no repositório.
 - [x] Validar por teste de documentação a presença da decisão, evidências, pendências, próximos passos e bloqueios no gate de consolidação do MVP draft.
 - [x] Adicionar ao gate de consolidação seções explícitas de pendências e próximos passos, com validação automatizada da documentação.
@@ -55,14 +68,35 @@
 - [x] Gerar o índice de prontidão das 95 regras a partir da fonte oficial, distinguindo baseline, regra executável draft, referência e regras que exigem intake formal.
 - [x] Registrar o intake da próxima regra QLT-CATVAR-008, expondo metadados de origem, lacunas de política e pré-condições de autorização sem criar uma regra executável.
 - [x] Validar em teste o índice de prontidão e o intake da QLT-CATVAR-008, confirmando que a regra permanece não executável.
+- [x] Formalizar a política provisória autorizada da QLT-CATVAR-008, com normalização técnica ampliada e dicionário de domínio versionável vazio por padrão.
+- [x] Implementar a QLT-CATVAR-008 após o gate provisório, com perfil agregado, finding, pergunta de validação e sem fusão automática de categorias.
+- [x] Criar golden dataset, calibração limitada e regressão da QLT-CATVAR-008 antes de incluí-la na allowlist draft.
+- [x] Adicionar teste documental que vincule o gate de calibração da QLT-CATVAR-008 à autorização de Chris, ao golden dataset e ao bloqueio produtivo.
+- [x] Registrar a perda da fonte materializada da QLT-DUP-002 e formalizar a política provisória A autorizada por Chris para linhas integralmente idênticas.
+- [x] Implementar a QLT-DUP-002 provisória com perfil agregado de duplicidade, sem inferir chaves de negócio nem expor valores brutos.
+- [x] Criar golden dataset, calibração limitada, gate e regressão da QLT-DUP-002 antes de incluí-la na allowlist draft.
+- [x] Atualizar o workspace, o Gate MVP 1.0 e a prova documental para registrar a quarta regra draft e o bloqueio produtivo da QLT-DUP-002.
+- [x] Registrar a ausência da fonte materializada da QLT-EMPTYCOL-003 e formalizar a política provisória A aprovada por Chris para colunas totalmente vazias.
+- [x] Implementar a QLT-EMPTYCOL-003 provisória com perfil agregado, sem tratar valores válidos, fórmulas ou sentinelas como vazios.
+- [x] Criar golden dataset, calibração limitada, gate e regressão da QLT-EMPTYCOL-003 antes de incluí-la na allowlist draft.
+- [x] Atualizar o workspace, o Gate MVP 1.0 e a prova documental para registrar a quinta regra draft e o bloqueio produtivo da QLT-EMPTYCOL-003.
+- [x] Registrar a ausência da fonte materializada da QLT-EMPTYROW-004 e formalizar a política provisória A aprovada por Chris para linhas inteiramente vazias entre linhas com conteúdo.
+- [x] Implementar a QLT-EMPTYROW-004 provisória com perfil agregado, sem remover linhas nem expor números de linha ou valores brutos.
+- [x] Criar golden dataset, calibração limitada, gate e regressão da QLT-EMPTYROW-004 antes de incluí-la na allowlist draft.
 - [x] Implementar um registro de catálogo que diferencie regras executáveis, autorizadas para especificação e reservadas, bloqueando execução de políticas não definidas.
 - [x] Validar que o motor rejeita explicitamente qualquer tentativa de executar uma regra reservada ou sem gate de autorização.
 - [x] Confirmar o registro de catálogo, o teste de rejeição e a integração do pipeline com a suíte completa de validação.
 - [ ] Completar as categorias de Tipagem Semântica, Fato e Dimensão, Relacionamentos, Métricas, Alertas e Granularidade em ciclos com gates, regressão e fechamento documental.
 - [ ] Construir o motor completo com profiling, contexto normalizado, executor, precedência, confiança, agregação e contrato canônico de diagnóstico.
 - [ ] Criar golden datasets de referência e definir expectativas de contexto, findings, severidade, dimensões, fatos, relacionamentos e métricas.
+- [x] Definir o escopo de calibração e as expectativas determinísticas dos golden datasets para QLT-NUMTEXT-007 e QLT-NULL-001.
+- [x] Criar fixtures de calibração, manifestos verificáveis e testes de regressão para as regras executáveis do perfil draft.
+- [x] Medir falsos positivos e falsos negativos conhecidos dos golden datasets e registrar a decisão de calibração limitada ao draft.
+- [x] Gerar relatório reprodutível de calibração para a fixture golden, com contagem de verdadeiros e falsos resultados por regra e cenário.
+- [x] Adicionar teste de regressão para o relatório de calibração, incluindo métricas por regra, cenários sem finding e bloqueio de produção.
 - [ ] Calibrar o motor por falsos positivos e falsos negativos antes de qualquer ativação produtiva.
-- [ ] Implementar pipeline real de upload, parser Excel, profiler, context builder, executor e recomendação, com análise no servidor.
+- [x] Implementar pipeline real de upload, parser Excel, profiler, context builder, executor e recomendação, com análise no servidor, no escopo limitado das regras draft autorizadas.
+- [x] Evidenciar em código, teste e documentação a geração de recomendações reais do diagnóstico draft no pipeline servidor, distinguindo recomendações de marcadores parciais autorizados.
 - [x] Criar tabelas isoladas por proprietário para projetos analíticos, arquivos, diagnósticos e versões, com chaves e índices de acesso por usuário.
 - [x] Implementar validação de upload `.xlsx`, limite de 25 MB, limite de 10 abas, nome seguro e checksum antes de qualquer persistência.
 - [x] Implementar leitor Python de workbook que produz contexto agregado e descarta valores brutos após o profiling.
@@ -83,7 +117,15 @@
 - [x] Adicionar prova de integração com persistência real ou helper de banco real para criação de projeto, arquivo e diagnóstico no escopo do owner.
 - [x] Cobrir todas as leituras owner-scoped do módulo de análise, comprovando que outro usuário não acessa projetos ou diagnósticos alheios.
 - [x] Criar teste de integração estruturado para os helpers de listagem e consulta que comprove isolamento entre dois proprietários.
-- [ ] Construir telas de upload, processamento, diagnóstico segmentado, perguntas de validação, versões e exportação.
+- [x] Construir telas de upload, processamento, diagnóstico segmentado, perguntas de validação, versões e exportação JSON no escopo draft; PDF permanece explicitamente indisponível.
+- [x] Exibir um painel de processamento acessível durante a mutation, com etapas qualitativas e sem estimativa ou percentual simulado.
+- [x] Cobrir em teste a visibilidade do painel pendente e o bloqueio de edição durante a análise do workbook.
+- [x] Adicionar teste de `Home.tsx` que force `analyze.isPending=true` e confirme a renderização do painel de processamento no workspace real.
+- [x] Confirmar no teste de `Home.tsx` o atributo `disabled` em nome do projeto, objetivo e input de arquivo durante a mutation pendente.
+- [x] Atualizar os indicadores do workspace para refletir as duas regras draft autorizadas e o bloqueio histórico do gate G7.5.
+- [x] Atualizar os indicadores e testes do workspace para refletir as três regras draft autorizadas após a ativação provisória da QLT-CATVAR-008.
+- [x] Documentar o indicador de processamento síncrono e a proibição de percentuais não observáveis no MVP draft.
+- [x] Validar por teste documental o estado pendente, a ausência de percentual ou ETA e os controles bloqueados do processamento síncrono.
 - [x] Adicionar exportação JSON do diagnóstico selecionado, derivada exclusivamente da consulta owner-scoped já autorizada.
 - [x] Exibir uma ação de exportação JSON no painel de diagnóstico e testar a composição segura do arquivo baixado.
 - [x] Documentar a indisponibilidade temporária da exportação PDF no MVP draft sem simular esse formato.
@@ -102,11 +144,14 @@
 - [x] Verificar em `Home.tsx` o login quando não autenticado, o formulário apenas nos estados permitidos e o bloqueio durante a mutation pendente.
 - [x] Verificar em `Home.tsx` a confirmação da versão após sucesso da mutation e a ação de navegação ao diagnóstico.
 - [x] Adicionar teste interativo da ação “Ver diagnóstico” no estado de sucesso para comprovar o deslocamento à seção `#versoes`.
-- [ ] Implementar validações de segurança, LGPD, limites de arquivo, proteção contra arquivos malformados, logs sem dados pessoais e política de retenção.
+- [x] Implementar validações de segurança, LGPD, limites de arquivo, proteção contra arquivos malformados, logs sem dados pessoais e política de retenção no escopo draft; exclusão física permanece em tarefa própria bloqueada.
+- [x] Completar a prova auditável de validação de tipo XLSX real e delimitar formalmente os controles LGPD restantes, incluindo a exclusão física ainda indisponível.
 - [x] Confirmar por teste ou código auditável que os logs operacionais do fluxo não incluem valores de workbook, dados pessoais ou detalhes de exceções.
 - [x] Consolidar a documentação dos controles implementados e distinguir a retenção operacional atual da exclusão física ainda bloqueada.
 - [x] Concluir os controles verificáveis de segurança do escopo draft: validação de upload, sanitização, bloqueio de payload sensível, logs seguros e retenção operacional com referência removida.
-- [ ] Formalizar a exceção de retenção física indisponível, com limite, controles compensatórios, responsável pelo aceite e gatilho de reavaliação.
+- [x] Formalizar a exceção de retenção física indisponível, com limite, controles compensatórios, responsável pelo aceite e gatilho de reavaliação.
+- [x] Registrar o aceite explícito de Chris à `RETENTION-EXCEPTION-001` para o MVP draft, mantendo o bloqueio de produção.
+- [x] Validar por teste documental o aceite de Chris, a limitação da exceção e a manutenção do bloqueio de produção.
 - [x] Mascarar CPF, e-mail e valores explicitamente identificados como nome nos metadados e rótulos persistidos.
 - [x] Reduzir mensagens de falha do motor para impedir propagação de detalhes de arquivos ou conteúdo ao cliente.
 - [x] Validar em testes que o orquestrador persiste somente textos sanitizados e remove a referência privada após a análise.
@@ -114,5 +159,110 @@
 - [x] Verificar no fluxo integrado que o diagnóstico persistido não contém CPF, e-mail, nome explicitamente rotulado ou título bruto de aba.
 - [x] Persistir no teste uma fixture representativa de diagnóstico seguro e verificar explicitamente a ausência de CPF, e-mail, nome rotulado e título bruto de aba no payload.
 - [x] Verificar no fluxo de rejeição que payloads com CPF, e-mail, nome rotulado ou título de aba bruto não alcançam `createAnalysisDiagnostic`.
-- [ ] Produzir documentação de arquitetura, contrato, executor, desenvolvimento de regras, testes, API, segurança e manual do usuário.
+- [x] Documentar de forma auditável a validação de XLSX real via inspeção pré-persistência com `openpyxl`, os controles LGPD implementados e os controles remanescentes.
+- [x] Adicionar teste documental que comprove a documentação da validação XLSX real, a indisponibilidade de exclusão física e a exceção de retenção aprovada.
+- [x] Produzir documentação de arquitetura, contrato, executor, desenvolvimento de regras, testes, API, segurança e manual do usuário.
+- [x] Elaborar o Gate `MVP-1.0-READINESS-001`, registrando a aprovação limitada ao draft e os bloqueios objetivos à promoção produtiva.
+- [x] Atualizar o Gate MVP 1.0 e a estratégia de testes para registrar a terceira regra draft, sem remover os bloqueios de produção.
+- [x] Adicionar teste documental ao inventário QLT-001 a QLT-006, preservando a distinção entre as cinco regras materializadas e a QLT-NULL-001 sem fonte canônica original.
+- [x] Exibir todos os achados e perguntas do diagnóstico selecionado em seções acessíveis, sem truncar a evidência do perfil draft.
 - [ ] Executar testes ponta a ponta automatizados e aprovar o Gate formal de MVP 1.0 somente quando todos os critérios de conclusão estiverem atendidos.
+- [x] Recuperar os metadados oficiais e dependências da QLT-MIXTYPE-005 sob a autorização de início de Chris.
+- [x] Propor política conservadora, especificação lógica e gate de reconstrução da QLT-MIXTYPE-005 antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a QLT-MIXTYPE-005 somente após nova aprovação explícita de Chris para a política proposta.
+- [x] Formalizar o gate de reconstrução da QLT-MIXTYPE-005 com o aceite de Chris para a Opção A.
+- [x] Implementar o perfil agregado e o avaliador da QLT-MIXTYPE-005 sem valores, posições ou identificadores brutos.
+- [x] Criar testes, golden dataset, manifesto SHA-256 e calibração reprodutível da QLT-MIXTYPE-005.
+- [x] Formalizar o gate individual de calibração da QLT-MIXTYPE-005 antes de sua ativação draft.
+- [x] Ativar a QLT-MIXTYPE-005 somente no perfil draft e sincronizar catálogo, índice, workspace e Gate MVP 1.0.
+- [x] Recuperar os metadados oficiais e os sinais de profiling disponíveis para a QLT-BADDATE-006 sob a autorização de início de Chris.
+- [x] Propor política conservadora, especificação lógica e gate de reconstrução da QLT-BADDATE-006 antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a QLT-BADDATE-006 somente após nova aprovação explícita de Chris para a política proposta.
+- [x] Revisar a proposta da QLT-BADDATE-006 para reconhecer estritamente DD-MM-AAAA além de AAAA-MM-DD, antes de solicitar nova aprovação de Chris.
+- [x] Revisar a proposta da QLT-BADDATE-006 para reconhecer estritamente DD/MM/AAAA além dos formatos com hífen, antes de solicitar nova aprovação de Chris.
+- [x] Formalizar o gate de reconstrução da QLT-BADDATE-006 com o aceite de Chris para os três formatos estritos aprovados.
+- [x] Implementar o perfil agregado e o avaliador da QLT-BADDATE-006 sem valores, posições ou identificadores brutos.
+- [x] Criar testes, golden dataset, manifesto SHA-256 e calibração reprodutível da QLT-BADDATE-006.
+- [x] Formalizar o gate individual de calibração da QLT-BADDATE-006 antes de sua ativação draft.
+- [x] Ativar a QLT-BADDATE-006 somente no perfil draft e sincronizar catálogo, índice, workspace e Gate MVP 1.0.
+- [x] Identificar no blueprint a próxima regra de Qualidade não executável e recuperar seus metadados oficiais sob autorização de Chris.
+- [x] Propor política conservadora, especificação lógica e gate de reconstrução da próxima regra de Qualidade antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a próxima regra de Qualidade somente após nova aprovação explícita de Chris para a política proposta.
+- [x] Formalizar o gate de reconstrução da QLT-WHITESPACE-009 com o aceite de Chris para a Opção A.
+- [x] Implementar o perfil agregado e o avaliador da QLT-WHITESPACE-009 sem valores, posições ou identificadores brutos.
+- [x] Criar testes, golden dataset, manifesto SHA-256 e calibração reprodutível da QLT-WHITESPACE-009.
+- [x] Formalizar o gate individual de calibração da QLT-WHITESPACE-009 antes de sua ativação draft.
+- [x] Ativar a QLT-WHITESPACE-009 somente no perfil draft e sincronizar catálogo, índice, workspace e Gate MVP 1.0.
+- [x] Recuperar os metadados oficiais e os sinais tabulares disponíveis para a QLT-TOTALROW-010 sob a autorização de início de Chris.
+- [x] Propor política conservadora, especificação lógica e gate de reconstrução da QLT-TOTALROW-010 antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a QLT-TOTALROW-010 somente após nova aprovação explícita de Chris para a política proposta.
+- [x] Criar uma branch de segurança para o ciclo da QLT-TOTALROW-010 antes de alterar código executável.
+- [x] Formalizar o gate de reconstrução da QLT-TOTALROW-010 com o aceite de Chris para a Opção A.
+- [x] Implementar o perfil agregado e o avaliador da QLT-TOTALROW-010 sem reter valores, fórmulas, posições ou identificadores brutos.
+- [x] Criar testes, golden dataset, manifesto SHA-256 e calibração reprodutível da QLT-TOTALROW-010.
+- [x] Formalizar o gate individual de calibração da QLT-TOTALROW-010 antes de sua ativação draft.
+- [x] Ativar a QLT-TOTALROW-010 somente no perfil draft e sincronizar catálogo, índice, workspace e Gate MVP 1.0.
+- [x] Recuperar os metadados oficiais e os sinais disponíveis para a QLT-NEGATIVE-011 sem implementar lógica executável.
+- [x] Propor uma política conservadora, especificação e gate de reconstrução da QLT-NEGATIVE-011 para aprovação explícita de Chris.
+- [x] Criar branch de segurança da QLT-NEGATIVE-011 antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a QLT-NEGATIVE-011 exclusivamente após autorização explícita de Chris para a política proposta.
+- [x] Recuperar os metadados oficiais e os sinais disponíveis para a QLT-OUTLIER-012 sem implementar lógica executável.
+- [x] Propor uma política conservadora, especificação e gate de reconstrução da QLT-OUTLIER-012 para aprovação explícita de Chris.
+- [x] Criar branch de segurança da QLT-OUTLIER-012 antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a QLT-OUTLIER-012 exclusivamente após autorização explícita de Chris para a política proposta.
+- [x] Recuperar os metadados oficiais e os sinais disponíveis para a QLT-FORMULA-013 sem implementar lógica executável.
+- [x] Propor uma política conservadora, especificação e gate de reconstrução da QLT-FORMULA-013 para aprovação explícita de Chris.
+- [x] Criar branch de segurança da QLT-FORMULA-013 antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a QLT-FORMULA-013 exclusivamente após autorização explícita de Chris para a política proposta.
+- [x] Recuperar os metadados oficiais e os sinais disponíveis para a QLT-HEADERS-014 sem implementar lógica executável.
+- [x] Propor uma política conservadora, especificação e gate de reconstrução da QLT-HEADERS-014 para aprovação explícita de Chris.
+- [x] Criar branch de segurança da QLT-HEADERS-014 antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a QLT-HEADERS-014 exclusivamente após autorização explícita de Chris para a política proposta.
+- [x] Recuperar os metadados oficiais e os sinais disponíveis para a QLT-IDMISS-015 sem implementar lógica executável.
+- [x] Propor uma política conservadora, especificação e gate de reconstrução da QLT-IDMISS-015 para aprovação explícita de Chris.
+- [x] Criar branch de segurança da QLT-IDMISS-015 antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a QLT-IDMISS-015 exclusivamente após autorização explícita de Chris para a política proposta.
+- [x] Recuperar os metadados oficiais e os sinais disponíveis para a SEM-DATE-001 sem implementar lógica executável.
+- [x] Propor uma política conservadora, especificação e gate de reconstrução da SEM-DATE-001 para aprovação explícita de Chris.
+- [x] Criar branch de segurança da SEM-DATE-001 antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a SEM-DATE-001 exclusivamente após autorização explícita de Chris para a política proposta.
+- [x] Recuperar metadados oficiais, dependências e lacunas da GRN-COMP-001 após autorização de Chris, sem implementar lógica executável.
+- [x] Elaborar proposta de política e especificação lógica não executável para a GRN-COMP-001 e solicitar nova autorização explícita antes de implementação.
+- [x] Formalizar o gate de reconstrução da GRN-COMP-001 para a Opção A aprovada por Chris.
+- [x] Implementar, testar, calibrar e ativar a GRN-COMP-001 somente no perfil draft, com hipótese de granularidade e confirmação humana obrigatória.
+- [x] Recuperar metadados oficiais, dependências e lacunas da MDL-FACTPER-001 sem implementar lógica executável.
+- [x] Elaborar política e especificação lógica não executável para a MDL-FACTPER-001 e solicitar aprovação específica antes de implementação.
+- [x] Recuperar metadados oficiais, dependências e lacunas da MDL-FACTTXN-002 sem implementar lógica executável.
+- [x] Elaborar política e especificação lógica não executável para a MDL-FACTTXN-002 e solicitar aprovação específica antes de implementação.
+- [x] Formalizar o gate de reconstrução da MDL-FACTTXN-002 conforme a Proposta A aprovada por Chris.
+- [x] Implementar, testar, calibrar e ativar a MDL-FACTTXN-002 exclusivamente no perfil draft, com confirmação humana obrigatória.
+- [x] Formalizar o gate de reconstrução da MDL-FACTPER-001 conforme a Proposta A aprovada por Chris.
+- [x] Implementar, testar, calibrar e ativar a MDL-FACTPER-001 exclusivamente no perfil draft, com confirmação humana obrigatória.
+- [x] Recuperar metadados, propor política e obter gate de reconstrução para a próxima regra de tipagem semântica de identificador aprovada na decisão A1.
+- [x] Implementar, testar, calibrar e ativar a tipagem semântica de identificador exclusivamente no perfil draft antes de retomar a GRN-COMP-001.
+- [x] Formalizar o gate de reconstrução da SEM-ID-003 conforme a Proposta A aprovada por Chris.
+- [x] Implementar, testar, calibrar e ativar a SEM-ID-003 exclusivamente no perfil draft com classificação identifier e pergunta humana.
+- [x] Recuperar metadados oficiais, dependências e lacunas da MDL-DIMSTD-004 sem implementar lógica executável.
+- [x] Elaborar política e especificação lógica não executável para a MDL-DIMSTD-004 e solicitar aprovação específica antes de implementação.
+- [x] Formalizar o gate de reconstrução, implementar, testar, calibrar e ativar a MDL-DIMSTD-004 exclusivamente após autorização explícita de Chris no perfil draft.
+- [x] Formalizar o gate de reconstrução da MDL-DIMSTD-004 conforme a Proposta A aprovada por Chris.
+- [x] Implementar o perfil privado, classificador, registro, contrato e integração canônica da MDL-DIMSTD-004 sob guarda de catálogo.
+- [x] Criar testes unitários, golden dataset assinado, avaliador e calibração reproduzível da MDL-DIMSTD-004.
+- [x] Ativar a MDL-DIMSTD-004 exclusivamente no perfil draft e sincronizar catálogo, índice de prontidão, Gate MVP e indicador do workspace.
+- [x] Recuperar metadados, dependências e lacunas da MDL-DIMCAL-006 sem implementar lógica executável.
+- [x] Elaborar política e especificação lógica não executável para a MDL-DIMCAL-006 e solicitar aprovação específica antes de implementação.
+- [x] Formalizar o gate de reconstrução, implementar, testar, calibrar e ativar a MDL-DIMCAL-006 exclusivamente após autorização explícita de Chris no perfil draft.
+- [x] Formalizar o gate de reconstrução da MDL-DIMCAL-006 conforme a Proposta A aprovada por Chris.
+- [x] Implementar o perfil temporal privado, classificador, registro, contrato e integração canônica da MDL-DIMCAL-006 sob guarda de catálogo.
+- [x] Criar testes unitários, golden dataset assinado, avaliador e calibração reproduzível da MDL-DIMCAL-006.
+- [x] Ativar a MDL-DIMCAL-006 exclusivamente no perfil draft e sincronizar catálogo, índice de prontidão, Gate MVP e indicador do workspace.
+- [x] Recuperar metadados, dependências e lacunas da SEM-QTY-005 sem implementar lógica executável.
+- [x] Elaborar política e especificação lógica não executável para a SEM-QTY-005 e solicitar aprovação específica antes de implementação.
+- [x] Formalizar o gate de reconstrução, implementar, testar, calibrar e ativar a SEM-QTY-005 exclusivamente após autorização explícita de Chris no perfil draft.
+- [x] Formalizar o gate de reconstrução da SEM-QTY-005 conforme a Proposta A aprovada por Chris.
+- [x] Implementar o perfil privado, classificador, registro, contrato e integração canônica da SEM-QTY-005 sob guarda de catálogo.
+- [x] Criar testes unitários, golden dataset assinado, avaliador e calibração reproduzível da SEM-QTY-005.
+- [x] Ativar a SEM-QTY-005 exclusivamente no perfil draft e sincronizar catálogo, índice de prontidão, Gate MVP e indicador do workspace.
+- [x] Recuperar metadados, dependências e lacunas da SEM-PCT-007 sem implementar lógica executável.
+- [x] Elaborar política e especificação lógica não executável para a SEM-PCT-007 e solicitar aprovação específica antes de implementação.
+- [ ] Formalizar o gate de reconstrução, implementar, testar, calibrar e ativar a SEM-PCT-007 exclusivamente após autorização explícita de Chris no perfil draft.

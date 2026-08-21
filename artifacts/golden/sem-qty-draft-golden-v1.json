@@ -1,0 +1,50 @@
+[
+  {
+    "id": "quantity_full_word_physical_numbers",
+    "header": "Quantidade",
+    "physical_type": "numeric",
+    "formula_count": 0,
+    "values": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+    "expected": true
+  },
+  {
+    "id": "quantity_abbreviation_qtd",
+    "header": "qtd",
+    "physical_type": "numeric",
+    "formula_count": 0,
+    "values": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "expected": true
+  },
+  {
+    "id": "quantity_abbreviation_qtde",
+    "header": "qtde",
+    "physical_type": "numeric",
+    "formula_count": 0,
+    "values": [20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
+    "expected": true
+  },
+  {
+    "id": "non_closed_header",
+    "header": "estoque",
+    "physical_type": "numeric",
+    "formula_count": 0,
+    "values": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "expected": false
+  },
+  {
+    "id": "insufficient_physical_base",
+    "header": "quantidade",
+    "physical_type": "numeric",
+    "formula_count": 0,
+    "values": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "expected": false
+  },
+  {
+    "id": "formula_present",
+    "header": "qtd",
+    "physical_type": "numeric",
+    "formula_count": 1,
+    "values": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "expected": false
+  }
+]

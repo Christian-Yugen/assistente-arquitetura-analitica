@@ -1,0 +1,10 @@
+{
+  "dataset_id": "GD-MDL-FACTPER-001-001",
+  "rule_id": "MDL-FACTPER-001",
+  "version": "1.0",
+  "cases": [
+    {"case_id": "periodic_fact_positive", "observed_row_count": 20, "grain_available": true, "distinct_period_count": 2, "eligible_measure_column_count": 1, "expected": true},
+    {"case_id": "one_period_negative", "observed_row_count": 20, "grain_available": true, "distinct_period_count": 1, "eligible_measure_column_count": 1, "expected": false},
+    {"case_id": "no_measure_negative", "observed_row_count": 20, "grain_available": true, "distinct_period_count": 2, "eligible_measure_column_count": 0, "expected": false}
+  ]
+}

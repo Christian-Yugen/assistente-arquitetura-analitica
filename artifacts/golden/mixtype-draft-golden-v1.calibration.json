@@ -1,0 +1,51 @@
+{
+  "calibration_id": "CAL-QLT-MIXTYPE-005-001",
+  "dataset_id": "GD-QLT-MIXTYPE-005-001",
+  "rule_id": "QLT-MIXTYPE-005",
+  "rule_version": "0.1.0-provisional.1",
+  "scope": "draft_only",
+  "production_release": "blocked",
+  "metrics": {
+    "true_positive": 3,
+    "false_positive": 0,
+    "false_negative": 0
+  },
+  "scenarios": [
+    {
+      "case_id": "low_material_numeric_and_text",
+      "status": "pass",
+      "expected_count": 1,
+      "actual_count": 1
+    },
+    {
+      "case_id": "medium_material_numeric_and_text",
+      "status": "pass",
+      "expected_count": 1,
+      "actual_count": 1
+    },
+    {
+      "case_id": "high_balanced_boolean_and_temporal",
+      "status": "pass",
+      "expected_count": 1,
+      "actual_count": 1
+    },
+    {
+      "case_id": "excluded_single_outlier",
+      "status": "pass",
+      "expected_count": 0,
+      "actual_count": 0
+    },
+    {
+      "case_id": "excluded_strict_numeric_text_delegated",
+      "status": "pass",
+      "expected_count": 0,
+      "actual_count": 0
+    },
+    {
+      "case_id": "excluded_without_material_values",
+      "status": "pass",
+      "expected_count": 0,
+      "actual_count": 0
+    }
+  ]
+}

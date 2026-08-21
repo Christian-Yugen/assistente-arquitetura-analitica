@@ -1,7 +1,7 @@
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { AnalysisAuthNotice, AnalysisSubmitButton, AnalysisSuccessNotice } from "./AnalysisFlowState";
+import { AnalysisAuthNotice, AnalysisProcessingPanel, AnalysisSubmitButton, AnalysisSuccessNotice } from "./AnalysisFlowState";
 
 describe("AnalysisFlowState", () => {
   const login = () => undefined;
@@ -18,5 +18,13 @@ describe("AnalysisFlowState", () => {
     expect(pending).toContain("disabled");
     expect(pending).toContain("Analisando estrutura");
     expect(renderToStaticMarkup(<AnalysisSuccessNotice version={3} onView={login} />)).toContain("Versão 3 criada com sucesso");
+  });
+
+  it("renders an honest accessible processing notice without simulated percentage", () => {
+    const pending = renderToStaticMarkup(<AnalysisProcessingPanel fileName="estrutura.xlsx" />);
+    expect(pending).toContain('role="status"');
+    expect(pending).toContain("Análise em andamento no servidor");
+    expect(pending).toContain("estrutura.xlsx");
+    expect(pending).toContain("Nenhum percentual é estimado");
   });
 });

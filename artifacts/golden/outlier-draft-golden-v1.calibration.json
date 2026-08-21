@@ -1,0 +1,47 @@
+{
+  "calibration_id": "CAL-QLT-OUTLIER-012-001",
+  "dataset_id": "GD-QLT-OUTLIER-012-001",
+  "rule_id": "QLT-OUTLIER-012",
+  "rule_version": "0.1.0-provisional.1",
+  "scope": "draft_only",
+  "metrics": {
+    "true_positive": 3,
+    "false_positive": 0,
+    "false_negative": 0
+  },
+  "production_release": "blocked",
+  "scenarios": [
+    {
+      "scenario_id": "low_upper",
+      "passed": true
+    },
+    {
+      "scenario_id": "medium_both",
+      "passed": true
+    },
+    {
+      "scenario_id": "high",
+      "passed": true
+    },
+    {
+      "scenario_id": "no_candidates",
+      "passed": true
+    },
+    {
+      "scenario_id": "iqr_zero_or_ineligible",
+      "passed": true
+    },
+    {
+      "scenario_id": "insufficient_numeric_base",
+      "passed": true
+    },
+    {
+      "scenario_id": "low_numeric_share",
+      "passed": true
+    },
+    {
+      "scenario_id": "unapproved_basis",
+      "passed": true
+    }
+  ]
+}

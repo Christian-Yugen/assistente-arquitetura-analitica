@@ -1,0 +1,43 @@
+{
+  "dataset_id": "GD-QLT-IDMISS-015-001",
+  "rule_id": "QLT-IDMISS-015",
+  "scope": "draft_aggregate_reference_only",
+  "privacy": {
+    "contains_raw_identifiers": false,
+    "contains_headers": false,
+    "contains_positions": false,
+    "contains_examples": false
+  },
+  "scenarios": [
+    {
+      "scenario_id": "low_missing",
+      "profile": {"header_eligible": true, "observed_cell_count": 20, "missing_cell_count": 1, "non_missing_cell_count": 19, "duplicate_group_count": 0, "duplicate_occurrence_count": 0, "missing_ratio": 0.05, "duplicate_ratio": 0.0},
+      "expected_findings": [{"rule_id": "QLT-IDMISS-015", "severity": "low", "question": true}]
+    },
+    {
+      "scenario_id": "medium_duplicate",
+      "profile": {"header_eligible": true, "observed_cell_count": 20, "missing_cell_count": 0, "non_missing_cell_count": 20, "duplicate_group_count": 1, "duplicate_occurrence_count": 2, "missing_ratio": 0.0, "duplicate_ratio": 0.1},
+      "expected_findings": [{"rule_id": "QLT-IDMISS-015", "severity": "medium", "question": true}]
+    },
+    {
+      "scenario_id": "high_mixed_signal",
+      "profile": {"header_eligible": true, "observed_cell_count": 10, "missing_cell_count": 3, "non_missing_cell_count": 7, "duplicate_group_count": 1, "duplicate_occurrence_count": 2, "missing_ratio": 0.3, "duplicate_ratio": 0.2},
+      "expected_findings": [{"rule_id": "QLT-IDMISS-015", "severity": "high", "question": true}]
+    },
+    {
+      "scenario_id": "no_signal",
+      "profile": {"header_eligible": true, "observed_cell_count": 20, "missing_cell_count": 0, "non_missing_cell_count": 20, "duplicate_group_count": 0, "duplicate_occurrence_count": 0, "missing_ratio": 0.0, "duplicate_ratio": 0.0},
+      "expected_findings": []
+    },
+    {
+      "scenario_id": "noneligible_header",
+      "profile": {"header_eligible": false, "observed_cell_count": 20, "missing_cell_count": 1, "non_missing_cell_count": 19, "duplicate_group_count": 1, "duplicate_occurrence_count": 2, "missing_ratio": 0.05, "duplicate_ratio": 0.1},
+      "expected_findings": []
+    },
+    {
+      "scenario_id": "insufficient_base",
+      "profile": {"header_eligible": true, "observed_cell_count": 9, "missing_cell_count": 1, "non_missing_cell_count": 8, "duplicate_group_count": 1, "duplicate_occurrence_count": 2, "missing_ratio": 0.11111111, "duplicate_ratio": 0.22222222},
+      "expected_findings": []
+    }
+  ]
+}

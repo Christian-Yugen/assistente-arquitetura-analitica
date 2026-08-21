@@ -1,0 +1,51 @@
+{
+  "intake_id": "SEM-DATE-001-INTAKE-001",
+  "rule": {
+    "rule_id": "SEM-DATE-001",
+    "title": "Data genérica",
+    "category": "semantic",
+    "purpose": "Classificar colunas de data em sentido amplo.",
+    "priority": "P0",
+    "stage": "semantic_typing",
+    "scope": "column",
+    "depends_on": ["profiling"],
+    "primary_output": "semantic_type",
+    "source_implementation_status": "planned"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "Plano_Mestre_MVP_Modelagem_Dimensional_PowerBI_v1.0.docx",
+      "engine/contracts/diagnosis.py",
+      "engine/profiling/bad_dates.py"
+    ]
+  },
+  "source_gap": "As fontes recuperadas definem somente a classificação ampla de colunas de data, prioridade P0, escopo por coluna, dependência de profiling e saída semantic_type. Não há definição materializada de formatos aceitos, base mínima, limiar, evidência, confiança, pergunta ou projeção no contrato. O contrato atual projeta findings e questions, mas não possui coleção de classificações semânticas; por isso, a proposta inclui uma extensão canônica mínima e isolada, sujeita à aprovação de Chris.",
+  "local_readiness": "intake_required",
+  "authorization": {
+    "implementation_authorized": false,
+    "reason": "A política de classificação de data, os formatos estritos, a base mínima e a extensão canônica de saída semantic_classifications exigem autorização explícita de Chris antes de qualquer módulo executável.",
+    "required_gate": "SEM-DATE-001-RECONSTRUCTION-AUTHORIZATION-001"
+  },
+  "required_before_implementation": [
+    "Decisão humana sobre os formatos estritos, a exigência de cobertura total e a saída semantic_classifications",
+    "Perfil agregado que não retenha valores, cabeçalhos, posições, exemplos ou títulos de abas",
+    "Classificador determinístico, confiança, pergunta humana e projeção canônica versionada",
+    "Testes unitários, limítrofes, de privacidade, de contrato e de integração",
+    "Golden dataset, manifesto SHA-256, calibração reprodutível e gate individual de calibração"
+  ],
+  "required_policy_elements": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "confidence",
+    "questions",
+    "contract_projection",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ],
+  "status": "pending_policy_authorization"
+}

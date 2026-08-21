@@ -1,0 +1,171 @@
+{
+  "report_id": "CAL-QUALITY-DRAFT-001",
+  "dataset_id": "GD-QUALITY-DRAFT-001",
+  "dataset_version": "1.0.0-draft",
+  "rules": {
+    "QLT-NUMTEXT-007": {
+      "true_positive": 4,
+      "false_positive": 0,
+      "false_negative": 0
+    },
+    "QLT-NULL-001": {
+      "true_positive": 4,
+      "false_positive": 0,
+      "false_negative": 0
+    }
+  },
+  "scenario_count": 9,
+  "mismatch_count": 0,
+  "scenarios": [
+    {
+      "case_id": "null-low-structural",
+      "expected_signatures": [
+        [
+          "QLT-NULL-001",
+          "low",
+          false
+        ]
+      ],
+      "actual_signatures": [
+        [
+          "QLT-NULL-001",
+          "low",
+          false
+        ]
+      ],
+      "status": "pass"
+    },
+    {
+      "case_id": "null-medium-blank-boundary",
+      "expected_signatures": [
+        [
+          "QLT-NULL-001",
+          "medium",
+          false
+        ]
+      ],
+      "actual_signatures": [
+        [
+          "QLT-NULL-001",
+          "medium",
+          false
+        ]
+      ],
+      "status": "pass"
+    },
+    {
+      "case_id": "null-high-nan-boundary",
+      "expected_signatures": [
+        [
+          "QLT-NULL-001",
+          "high",
+          true
+        ]
+      ],
+      "actual_signatures": [
+        [
+          "QLT-NULL-001",
+          "high",
+          true
+        ]
+      ],
+      "status": "pass"
+    },
+    {
+      "case_id": "null-excluded-empty-column",
+      "expected_signatures": [],
+      "actual_signatures": [],
+      "status": "pass"
+    },
+    {
+      "case_id": "numtext-low-ratio",
+      "expected_signatures": [
+        [
+          "QLT-NUMTEXT-007",
+          "low",
+          false
+        ]
+      ],
+      "actual_signatures": [
+        [
+          "QLT-NUMTEXT-007",
+          "low",
+          false
+        ]
+      ],
+      "status": "pass"
+    },
+    {
+      "case_id": "numtext-medium-with-ambiguity",
+      "expected_signatures": [
+        [
+          "QLT-NUMTEXT-007",
+          "medium",
+          false
+        ]
+      ],
+      "actual_signatures": [
+        [
+          "QLT-NUMTEXT-007",
+          "medium",
+          false
+        ]
+      ],
+      "status": "pass"
+    },
+    {
+      "case_id": "numtext-high-boundary",
+      "expected_signatures": [
+        [
+          "QLT-NUMTEXT-007",
+          "high",
+          true
+        ]
+      ],
+      "actual_signatures": [
+        [
+          "QLT-NUMTEXT-007",
+          "high",
+          true
+        ]
+      ],
+      "status": "pass"
+    },
+    {
+      "case_id": "numtext-excluded-numeric-column",
+      "expected_signatures": [],
+      "actual_signatures": [],
+      "status": "pass"
+    },
+    {
+      "case_id": "joint-null-and-numtext",
+      "expected_signatures": [
+        [
+          "QLT-NULL-001",
+          "high",
+          true
+        ],
+        [
+          "QLT-NUMTEXT-007",
+          "high",
+          true
+        ]
+      ],
+      "actual_signatures": [
+        [
+          "QLT-NULL-001",
+          "high",
+          true
+        ],
+        [
+          "QLT-NUMTEXT-007",
+          "high",
+          true
+        ]
+      ],
+      "status": "pass"
+    }
+  ],
+  "decision": "calibrated_for_draft",
+  "production_status": "blocked"
+}

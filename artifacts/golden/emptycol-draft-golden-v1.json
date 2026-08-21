@@ -1,0 +1,47 @@
+{
+  "dataset_id": "GD-QLT-EMPTYCOL-003-001",
+  "version": "1.0.0-reconstructed.1",
+  "purpose": "Deterministic calibration of QLT-EMPTYCOL-003 using aggregate missingness profiles only.",
+  "privacy": {
+    "contains_raw_workbook_values": false,
+    "contains_original_sheet_titles": false,
+    "contains_personal_data": false,
+    "column_names_are_synthetic": true,
+    "contains_cell_positions": false
+  },
+  "rules": [
+    {"rule_id": "QLT-EMPTYCOL-003", "version": "0.1.0-reconstructed.1"}
+  ],
+  "scenarios": [
+    {
+      "case_id": "emptycol-single-structural-null",
+      "column": {"missingness": {"observed_cell_count": 1, "non_missing_cell_count": 0, "structural_null_count": 1, "blank_text_count": 0, "numeric_nan_count": 0}},
+      "expected_findings": [{"rule_id": "QLT-EMPTYCOL-003", "severity": "low", "confidence": 0.8, "question": false}]
+    },
+    {
+      "case_id": "emptycol-low-blank-text",
+      "column": {"missingness": {"observed_cell_count": 10, "non_missing_cell_count": 0, "structural_null_count": 0, "blank_text_count": 10, "numeric_nan_count": 0}},
+      "expected_findings": [{"rule_id": "QLT-EMPTYCOL-003", "severity": "low", "confidence": 0.95, "question": false}]
+    },
+    {
+      "case_id": "emptycol-medium-boundary",
+      "column": {"missingness": {"observed_cell_count": 11, "non_missing_cell_count": 0, "structural_null_count": 11, "blank_text_count": 0, "numeric_nan_count": 0}},
+      "expected_findings": [{"rule_id": "QLT-EMPTYCOL-003", "severity": "medium", "confidence": 0.95, "question": false}]
+    },
+    {
+      "case_id": "emptycol-high-boundary",
+      "column": {"missingness": {"observed_cell_count": 101, "non_missing_cell_count": 0, "structural_null_count": 50, "blank_text_count": 51, "numeric_nan_count": 0}},
+      "expected_findings": [{"rule_id": "QLT-EMPTYCOL-003", "severity": "high", "confidence": 0.95, "question": true}]
+    },
+    {
+      "case_id": "emptycol-excluded-numeric-nan",
+      "column": {"missingness": {"observed_cell_count": 3, "non_missing_cell_count": 0, "structural_null_count": 1, "blank_text_count": 1, "numeric_nan_count": 1}},
+      "expected_findings": []
+    },
+    {
+      "case_id": "emptycol-excluded-valid-value",
+      "column": {"missingness": {"observed_cell_count": 3, "non_missing_cell_count": 1, "structural_null_count": 1, "blank_text_count": 1, "numeric_nan_count": 0}},
+      "expected_findings": []
+    }
+  ]
+}

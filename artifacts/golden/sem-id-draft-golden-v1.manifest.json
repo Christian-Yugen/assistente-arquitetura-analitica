@@ -1,0 +1,8 @@
+{
+  "dataset_id": "GD-SEM-ID-003-001",
+  "file": "sem-id-draft-golden-v1.json",
+  "sha256": "89818f9da12c60d50beb4e50ae788b4fc928219bb7d6c485d1ea4b9c0766a8ab",
+  "scenario_count": 5,
+  "calibration_id": "CAL-SEM-ID-003-001",
+  "expected": {"tp": 2, "fp": 0, "fn": 0}
+}

@@ -1,0 +1,38 @@
+{
+  "intake_id": "SEM-ID-003-INTAKE-001",
+  "rule": {
+    "rule_id": "SEM-ID-003",
+    "title": "Identificador",
+    "category": "semantic_typing",
+    "purpose": "Classificar coluna como identificador com evidências convergentes.",
+    "priority": "P0",
+    "stage": "semantic_typing",
+    "scope": "column",
+    "depends_on": ["quality"],
+    "primary_output": "semantic_type",
+    "source_implementation_status": "planned"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "artifacts/catalogs/rule-implementation-readiness-v1.json",
+      "engine/profiling/identifier_completeness.py"
+    ]
+  },
+  "source_gap": "A fonte oficial define somente classificação com evidências convergentes, prioridade P0, escopo por coluna, dependência de qualidade e saída semantic_type. Não determina o vocabulário de evidências, limiares, base mínima, confiança, exclusões, pergunta humana, privacidade ou projeção canônica.",
+  "local_readiness": "intake_required",
+  "authorization": {
+    "implementation_authorized": false,
+    "reason": "Chris aprovou a direção A1 — implementar primeiro a tipagem semântica de identificador — mas ainda não aprovou a política específica da SEM-ID-003.",
+    "required_gate": "SEM-ID-003-RECONSTRUCTION-AUTHORIZATION-001"
+  },
+  "required_before_implementation": [
+    "Política humana explícita para evidências convergentes, limiares e exclusões",
+    "Perfil agregado sem valores, hashes, cabeçalhos, posições ou títulos de abas",
+    "Classificador determinístico, pergunta humana e extensão canônica versionada",
+    "Testes, golden dataset assinado, calibração reproduzível e gate individual"
+  ],
+  "status": "pending_policy_authorization"
+}

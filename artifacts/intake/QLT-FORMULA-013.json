@@ -1,0 +1,49 @@
+{
+  "intake_id": "QLT-FORMULA-013-INTAKE-001",
+  "rule": {
+    "rule_id": "QLT-FORMULA-013",
+    "title": "Fórmulas inconsistentes",
+    "category": "quality",
+    "purpose": "Detectar padrões de fórmula divergentes.",
+    "priority": "P1",
+    "stage": "quality",
+    "scope": "column",
+    "depends_on": ["profiling"],
+    "primary_output": "finding",
+    "source_implementation_status": "planned"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "Plano_Mestre_MVP_Modelagem_Dimensional_PowerBI_v1.0.docx"
+    ]
+  },
+  "source_gap": "As fontes recuperadas definem propósito, prioridade, escopo, dependência e saída, mas não definem o que constitui divergência de fórmula, quais elementos da expressão podem ser lidos, como tratar substituições manuais, qual base é suficiente, nem quais evidências podem ser expostas. O profiler atual abre o workbook com data_only=False, mas percorre valores sem o tipo de célula; uma eventual implementação exigirá fluxo adicional que classifique somente data_type, sem reter a expressão da fórmula.",
+  "local_readiness": "intake_required",
+  "authorization": {
+    "implementation_authorized": false,
+    "reason": "A política para limitar a divergência a presença versus ausência de fórmulas e o acesso transitório ao tipo de célula exigem autorização explícita de Chris antes de qualquer módulo executável.",
+    "required_gate": "QLT-FORMULA-013-RECONSTRUCTION-AUTHORIZATION-001"
+  },
+  "required_before_implementation": [
+    "Decisão humana sobre a política conservadora de divergência presença versus ausência",
+    "Perfil agregado que não retenha expressões, valores calculados, cabeçalhos, posições ou identificadores brutos",
+    "Condição determinística, exclusões, severidade, confiança e pergunta humana",
+    "Testes unitários, limítrofes, de privacidade e de integração",
+    "Golden dataset, manifesto SHA-256, calibração reprodutível e gate individual de calibração"
+  ],
+  "required_policy_elements": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "severity",
+    "confidence",
+    "questions",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ],
+  "status": "pending_policy_authorization"
+}

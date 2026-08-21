@@ -1,0 +1,44 @@
+{
+  "dataset_id": "GD-QLT-BADDATE-006-001",
+  "rule_id": "QLT-BADDATE-006",
+  "rule_version": "0.1.0-provisional.1",
+  "scope": "draft_only",
+  "privacy": {
+    "contains_raw_workbook_values": false,
+    "contains_cell_positions": false,
+    "contains_sheet_titles": false,
+    "contains_column_names": false
+  },
+  "scenarios": [
+    {
+      "case_id": "low_invalid_ratio_at_five_percent",
+      "column": {"bad_dates": {"strict_date_candidate_count": 20, "invalid_strict_date_count": 1, "invalid_strict_date_ratio": 0.05, "normalization_basis": "missingness_excluded__strict_iso_and_pt_br_date_text_v1"}},
+      "expected_findings": [{"rule_id": "QLT-BADDATE-006", "severity": "low", "confidence": 0.98, "question": false}]
+    },
+    {
+      "case_id": "medium_invalid_ratio_inclusive",
+      "column": {"bad_dates": {"strict_date_candidate_count": 10, "invalid_strict_date_count": 2, "invalid_strict_date_ratio": 0.2, "normalization_basis": "missingness_excluded__strict_iso_and_pt_br_date_text_v1"}},
+      "expected_findings": [{"rule_id": "QLT-BADDATE-006", "severity": "medium", "confidence": 0.98, "question": true}]
+    },
+    {
+      "case_id": "high_invalid_ratio",
+      "column": {"bad_dates": {"strict_date_candidate_count": 8, "invalid_strict_date_count": 2, "invalid_strict_date_ratio": 0.25, "normalization_basis": "missingness_excluded__strict_iso_and_pt_br_date_text_v1"}},
+      "expected_findings": [{"rule_id": "QLT-BADDATE-006", "severity": "high", "confidence": 0.98, "question": true}]
+    },
+    {
+      "case_id": "excluded_valid_strict_dates_only",
+      "column": {"bad_dates": {"strict_date_candidate_count": 12, "invalid_strict_date_count": 0, "invalid_strict_date_ratio": 0.0, "normalization_basis": "missingness_excluded__strict_iso_and_pt_br_date_text_v1"}},
+      "expected_findings": []
+    },
+    {
+      "case_id": "excluded_without_strict_date_candidates",
+      "column": {"bad_dates": {"strict_date_candidate_count": 0, "invalid_strict_date_count": 0, "invalid_strict_date_ratio": 0.0, "normalization_basis": "missingness_excluded__strict_iso_and_pt_br_date_text_v1"}},
+      "expected_findings": []
+    },
+    {
+      "case_id": "excluded_inconsistent_ratio",
+      "column": {"bad_dates": {"strict_date_candidate_count": 10, "invalid_strict_date_count": 2, "invalid_strict_date_ratio": 0.1, "normalization_basis": "missingness_excluded__strict_iso_and_pt_br_date_text_v1"}},
+      "expected_findings": []
+    }
+  ]
+}

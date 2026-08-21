@@ -190,6 +190,20 @@ class Execution(StrictModel):
     ai_usage: dict[str, Any]
 
 
+class SemanticClassificationImpact(StrictModel):
+    entity_type: str
+    entity_id: str
+
+
+class SemanticClassification(StrictModel):
+    semantic_type: str
+    confidence: float = Field(ge=0, le=1)
+    evidence: dict[str, Any]
+    rule_id: str
+    rule_version: str
+    affected_entities: list[SemanticClassificationImpact]
+
+
 class ReconstructedDiagnosis(StrictModel):
     schema_version: Literal["1.0.0"]
     contract_id: Literal["PM-MVP-PBI-CON-001"]
@@ -202,6 +216,7 @@ class ReconstructedDiagnosis(StrictModel):
     metrics: list[dict[str, Any]]
     questions: list[Question]
     findings: list[Finding]
+    semantic_classifications: list[SemanticClassification] = Field(default_factory=list)
     execution: Execution
 
     @model_validator(mode="after")

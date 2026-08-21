@@ -1,0 +1,39 @@
+{
+  "calibration_id": "CAL-QLT-HEADERS-014-001",
+  "dataset_id": "GD-QLT-HEADERS-014-001",
+  "rule_id": "QLT-HEADERS-014",
+  "rule_version": "0.1.0-provisional.1",
+  "scope": "draft_only",
+  "metrics": {
+    "true_positive": 3,
+    "false_positive": 0,
+    "false_negative": 0
+  },
+  "production_release": "blocked",
+  "scenarios": [
+    {
+      "scenario_id": "missing_header",
+      "passed": true
+    },
+    {
+      "scenario_id": "normalized_duplicates",
+      "passed": true
+    },
+    {
+      "scenario_id": "multilevel_candidate",
+      "passed": true
+    },
+    {
+      "scenario_id": "no_signals",
+      "passed": true
+    },
+    {
+      "scenario_id": "inconsistent_duplicate_aggregate",
+      "passed": true
+    },
+    {
+      "scenario_id": "empty_header_base",
+      "passed": true
+    }
+  ]
+}

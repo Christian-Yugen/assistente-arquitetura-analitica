@@ -1,0 +1,17 @@
+{
+  "dataset_id": "GD-QLT-OUTLIER-012-001",
+  "rule_id": "QLT-OUTLIER-012",
+  "rule_version": "0.1.0-provisional.1",
+  "scope": "draft_only",
+  "privacy": {"contains_raw_values": false, "contains_positions": false, "contains_headers": false, "contains_sheet_names": false},
+  "scenarios": [
+    {"scenario_id": "low_upper", "column": {"outliers": {"eligible": true, "physical_nonempty_count": 20, "physical_numeric_count": 20, "lower_outlier_count": 0, "upper_outlier_count": 1, "outlier_count": 1, "outlier_ratio": 0.05}}, "expected_findings": [{"rule_id": "QLT-OUTLIER-012", "severity": "low", "confidence": 0.85, "question": true}]},
+    {"scenario_id": "medium_both", "column": {"outliers": {"eligible": true, "physical_nonempty_count": 20, "physical_numeric_count": 20, "lower_outlier_count": 1, "upper_outlier_count": 2, "outlier_count": 3, "outlier_ratio": 0.15}}, "expected_findings": [{"rule_id": "QLT-OUTLIER-012", "severity": "medium", "confidence": 0.85, "question": true}]},
+    {"scenario_id": "high", "column": {"outliers": {"eligible": true, "physical_nonempty_count": 20, "physical_numeric_count": 20, "lower_outlier_count": 2, "upper_outlier_count": 3, "outlier_count": 5, "outlier_ratio": 0.25}}, "expected_findings": [{"rule_id": "QLT-OUTLIER-012", "severity": "high", "confidence": 0.85, "question": true}]},
+    {"scenario_id": "no_candidates", "column": {"outliers": {"eligible": true, "physical_nonempty_count": 20, "physical_numeric_count": 20, "lower_outlier_count": 0, "upper_outlier_count": 0, "outlier_count": 0, "outlier_ratio": 0.0}}, "expected_findings": []},
+    {"scenario_id": "iqr_zero_or_ineligible", "column": {"outliers": {"eligible": false, "physical_nonempty_count": 20, "physical_numeric_count": 20, "lower_outlier_count": 0, "upper_outlier_count": 0, "outlier_count": 0, "outlier_ratio": 0.0}}, "expected_findings": []},
+    {"scenario_id": "insufficient_numeric_base", "column": {"outliers": {"eligible": false, "physical_nonempty_count": 19, "physical_numeric_count": 19, "lower_outlier_count": 0, "upper_outlier_count": 0, "outlier_count": 0, "outlier_ratio": 0.0}}, "expected_findings": []},
+    {"scenario_id": "low_numeric_share", "column": {"outliers": {"eligible": false, "physical_nonempty_count": 30, "physical_numeric_count": 20, "lower_outlier_count": 0, "upper_outlier_count": 0, "outlier_count": 0, "outlier_ratio": 0.0}}, "expected_findings": []},
+    {"scenario_id": "unapproved_basis", "column": {"outliers": {"eligible": true, "physical_nonempty_count": 20, "physical_numeric_count": 20, "lower_outlier_count": 1, "upper_outlier_count": 0, "outlier_count": 1, "outlier_ratio": 0.05, "basis": "unapproved_basis"}}, "expected_findings": []}
+  ]
+}

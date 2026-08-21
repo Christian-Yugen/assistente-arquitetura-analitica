@@ -1,0 +1,13 @@
+{
+  "dataset_id": "GD-QLT-OUTLIER-012-001",
+  "rule_id": "QLT-OUTLIER-012",
+  "file": "outlier-draft-golden-v1.json",
+  "sha256": "af197507e12f8d8b863566360a0322ae2d6dae361d9198754fd64f97d66a12a8",
+  "scope": "draft_only",
+  "privacy": {
+    "contains_raw_values": false,
+    "contains_positions": false,
+    "contains_headers": false,
+    "contains_sheet_names": false
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "dataset_id": "GD-QLT-CATVAR-008-001",
+  "version": "1.0.0-provisional.1",
+  "purpose": "Deterministic calibration of QLT-CATVAR-008 using aggregate category-variation profiles only.",
+  "privacy": {
+    "contains_raw_workbook_values": false,
+    "contains_original_sheet_titles": false,
+    "contains_personal_data": false,
+    "column_names_are_synthetic": true,
+    "contains_normalized_category_keys": false
+  },
+  "rules": [
+    {"rule_id": "QLT-CATVAR-008", "version": "0.1.0-provisional.1"}
+  ],
+  "scenarios": [
+    {
+      "case_id": "catvar-low-ratio",
+      "column": {
+        "physical_type": "text",
+        "variations": {"text_value_count": 50, "distinct_text_count": 49, "collision_group_count": 1, "affected_value_count": 2, "affected_value_ratio": 0.04, "max_variants_in_group": 2, "high_cardinality": false, "normalization_basis": "technical_expanded_nfkd_casefold_punctuation_whitespace_v1", "dictionary_status": "empty_pending_domain_approval", "dictionary_entry_count": 0}
+      },
+      "expected_findings": [{"rule_id": "QLT-CATVAR-008", "severity": "low", "confidence": 0.88, "question": false}]
+    },
+    {
+      "case_id": "catvar-medium-boundary",
+      "column": {
+        "physical_type": "mixed",
+        "variations": {"text_value_count": 40, "distinct_text_count": 39, "collision_group_count": 1, "affected_value_count": 2, "affected_value_ratio": 0.05, "max_variants_in_group": 2, "high_cardinality": false, "normalization_basis": "technical_expanded_nfkd_casefold_punctuation_whitespace_v1", "dictionary_status": "empty_pending_domain_approval", "dictionary_entry_count": 0}
+      },
+      "expected_findings": [{"rule_id": "QLT-CATVAR-008", "severity": "medium", "confidence": 0.88, "question": false}]
+    },
+    {
+      "case_id": "catvar-high-boundary",
+      "column": {
+        "physical_type": "text",
+        "variations": {"text_value_count": 20, "distinct_text_count": 18, "collision_group_count": 1, "affected_value_count": 4, "affected_value_ratio": 0.2, "max_variants_in_group": 2, "high_cardinality": false, "normalization_basis": "technical_expanded_nfkd_casefold_punctuation_whitespace_v1", "dictionary_status": "empty_pending_domain_approval", "dictionary_entry_count": 0}
+      },
+      "expected_findings": [{"rule_id": "QLT-CATVAR-008", "severity": "high", "confidence": 0.88, "question": true}]
+    },
+    {
+      "case_id": "catvar-confidence-penalty-many-variants",
+      "column": {
+        "physical_type": "text",
+        "variations": {"text_value_count": 20, "distinct_text_count": 17, "collision_group_count": 1, "affected_value_count": 8, "affected_value_ratio": 0.4, "max_variants_in_group": 4, "high_cardinality": false, "normalization_basis": "technical_expanded_nfkd_casefold_punctuation_whitespace_v1", "dictionary_status": "empty_pending_domain_approval", "dictionary_entry_count": 0}
+      },
+      "expected_findings": [{"rule_id": "QLT-CATVAR-008", "severity": "high", "confidence": 0.7, "question": true}]
+    },
+    {
+      "case_id": "catvar-excluded-high-cardinality",
+      "column": {
+        "physical_type": "text",
+        "variations": {"text_value_count": 101, "distinct_text_count": 101, "collision_group_count": 1, "affected_value_count": 2, "affected_value_ratio": 0.01980198, "max_variants_in_group": 2, "high_cardinality": true, "normalization_basis": "technical_expanded_nfkd_casefold_punctuation_whitespace_v1", "dictionary_status": "empty_pending_domain_approval", "dictionary_entry_count": 0}
+      },
+      "expected_findings": []
+    },
+    {
+      "case_id": "catvar-excluded-no-collision",
+      "column": {
+        "physical_type": "text",
+        "variations": {"text_value_count": 20, "distinct_text_count": 20, "collision_group_count": 0, "affected_value_count": 0, "affected_value_ratio": 0.0, "max_variants_in_group": 0, "high_cardinality": false, "normalization_basis": "technical_expanded_nfkd_casefold_punctuation_whitespace_v1", "dictionary_status": "empty_pending_domain_approval", "dictionary_entry_count": 0}
+      },
+      "expected_findings": []
+    }
+  ]
+}

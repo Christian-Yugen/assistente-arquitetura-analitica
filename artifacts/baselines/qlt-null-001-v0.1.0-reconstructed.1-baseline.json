@@ -1,0 +1,66 @@
+{
+  "artifact_id": "QLT-NULL-001-BASELINE-RECONSTRUCTED-001",
+  "rule_id": "QLT-NULL-001",
+  "rule_version": "0.1.0-reconstructed.1",
+  "baseline_type": "pre_implementation_expected_outcomes",
+  "lineage": "Created for the reconstruction because the original canonical artifact and baseline hash are unavailable.",
+  "privacy": {
+    "contains_raw_workbook_values": false,
+    "contains_original_sheet_titles": false,
+    "contains_personal_data": false
+  },
+  "profiles": [
+    {
+      "case_id": "no_observed_cells",
+      "profile": {"observed_cell_count": 0, "non_missing_cell_count": 0, "structural_null_count": 0, "blank_text_count": 0, "numeric_nan_count": 0},
+      "expected": {"finding": false}
+    },
+    {
+      "case_id": "all_cells_missing_reserved_for_empty_column",
+      "profile": {"observed_cell_count": 20, "non_missing_cell_count": 0, "structural_null_count": 20, "blank_text_count": 0, "numeric_nan_count": 0},
+      "expected": {"finding": false}
+    },
+    {
+      "case_id": "no_missing_cells",
+      "profile": {"observed_cell_count": 20, "non_missing_cell_count": 20, "structural_null_count": 0, "blank_text_count": 0, "numeric_nan_count": 0},
+      "expected": {"finding": false}
+    },
+    {
+      "case_id": "low_structural_null_ratio",
+      "profile": {"observed_cell_count": 100, "non_missing_cell_count": 99, "structural_null_count": 1, "blank_text_count": 0, "numeric_nan_count": 0},
+      "expected": {"finding": true, "severity": "low", "confidence": 0.9, "question": false}
+    },
+    {
+      "case_id": "medium_blank_text_boundary",
+      "profile": {"observed_cell_count": 20, "non_missing_cell_count": 19, "structural_null_count": 0, "blank_text_count": 1, "numeric_nan_count": 0},
+      "expected": {"finding": true, "severity": "medium", "confidence": 0.9, "question": false}
+    },
+    {
+      "case_id": "high_numeric_nan_boundary",
+      "profile": {"observed_cell_count": 20, "non_missing_cell_count": 16, "structural_null_count": 0, "blank_text_count": 0, "numeric_nan_count": 4},
+      "expected": {"finding": true, "severity": "high", "confidence": 0.9, "question": true}
+    },
+    {
+      "case_id": "small_sample_high_ratio",
+      "profile": {"observed_cell_count": 10, "non_missing_cell_count": 8, "structural_null_count": 2, "blank_text_count": 0, "numeric_nan_count": 0},
+      "expected": {"finding": true, "severity": "high", "confidence": 0.6, "question": false}
+    },
+    {
+      "case_id": "mixed_missing_classes_penalty",
+      "profile": {"observed_cell_count": 20, "non_missing_cell_count": 18, "structural_null_count": 1, "blank_text_count": 1, "numeric_nan_count": 0},
+      "expected": {"finding": true, "severity": "medium", "confidence": 0.8, "question": false}
+    },
+    {
+      "case_id": "sentinel_and_formula_excluded",
+      "profile": {"observed_cell_count": 20, "non_missing_cell_count": 20, "structural_null_count": 0, "blank_text_count": 0, "numeric_nan_count": 0},
+      "expected": {"finding": false, "note": "Sentinel strings and formula expressions are intentionally absent from missing counters."}
+    }
+  ],
+  "implementation_status": "not_executed_against_rule",
+  "validation_requirements": [
+    "SHA-256 manifest matches this JSON artifact.",
+    "Each profile becomes a governed unit test only after gate approval.",
+    "Engine integration comparison must match every expected outcome before draft execution is expanded."
+  ],
+  "gate_id": "QLT-NULL-RECONSTRUCTION-001"
+}

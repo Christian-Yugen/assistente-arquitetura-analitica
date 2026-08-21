@@ -9,10 +9,39 @@ from pathlib import Path
 from typing import Callable, Literal
 
 from engine.quality.registry import QUALITY_RULE_IMPLEMENTATIONS
+from engine.semantic.registry import SEMANTIC_RULE_IMPLEMENTATIONS
+from engine.granularity.registry import GRANULARITY_RULE_IMPLEMENTATIONS
+from engine.fact_dimension.registry import FACT_DIMENSION_RULE_IMPLEMENTATIONS
 
 
 OFFICIAL_BLUEPRINT_PATH = Path(__file__).resolve().parents[1] / "artifacts/catalogs/official-rule-blueprint-95.json"
-CURRENT_QUALITY_BASELINE = {"QLT-NULL-001", "QLT-DUP-002", "QLT-EMPTYCOL-003", "QLT-EMPTYROW-004", "QLT-MIXTYPE-005", "QLT-BADDATE-006"}
+CURRENT_QUALITY_BASELINE = {"QLT-NULL-001", "QLT-DUP-002", "QLT-EMPTYCOL-003", "QLT-EMPTYROW-004", "QLT-MIXTYPE-005", "QLT-BADDATE-006", "QLT-WHITESPACE-009"}
+DRAFT_RULE_AUTHORIZATIONS = {
+    "QLT-NUMTEXT-007": "G7.4-R1",
+    "QLT-NULL-001": "QLT-NULL-RECONSTRUCTION-001",
+    "QLT-CATVAR-008": "QLT-CATVAR-008-DRAFT-CALIBRATION-001",
+    "QLT-DUP-002": "QLT-DUP-002-DRAFT-CALIBRATION-001",
+    "QLT-EMPTYCOL-003": "QLT-EMPTYCOL-003-DRAFT-CALIBRATION-001",
+    "QLT-EMPTYROW-004": "QLT-EMPTYROW-004-DRAFT-CALIBRATION-001",
+    "QLT-MIXTYPE-005": "QLT-MIXTYPE-005-DRAFT-CALIBRATION-001",
+    "QLT-BADDATE-006": "QLT-BADDATE-006-DRAFT-CALIBRATION-001",
+    "QLT-WHITESPACE-009": "QLT-WHITESPACE-009-DRAFT-CALIBRATION-001",
+    "QLT-TOTALROW-010": "QLT-TOTALROW-010-DRAFT-CALIBRATION-001",
+    "QLT-NEGATIVE-011": "QLT-NEGATIVE-011-DRAFT-CALIBRATION-001",
+    "QLT-OUTLIER-012": "QLT-OUTLIER-012-DRAFT-CALIBRATION-001",
+    "QLT-FORMULA-013": "QLT-FORMULA-013-DRAFT-CALIBRATION-001",
+    "QLT-HEADERS-014": "QLT-HEADERS-014-DRAFT-CALIBRATION-001",
+    "QLT-IDMISS-015": "QLT-IDMISS-015-DRAFT-CALIBRATION-001",
+    "SEM-DATE-001": "SEM-DATE-001-DRAFT-CALIBRATION-001",
+    "SEM-ID-003": "SEM-ID-003-DRAFT-CALIBRATION-001",
+    "SEM-QTY-005": "SEM-QTY-005-DRAFT-CALIBRATION-001",
+    "GRN-COMP-001": "GRN-COMP-001-DRAFT-CALIBRATION-001",
+    "MDL-FACTPER-001": "MDL-FACTPER-001-DRAFT-CALIBRATION-001",
+    "MDL-FACTTXN-002": "MDL-FACTTXN-002-DRAFT-CALIBRATION-001",
+    "MDL-DIMSTD-004": "MDL-DIMSTD-004-DRAFT-CALIBRATION-001",
+    "MDL-DIMCAL-006": "MDL-DIMCAL-006-DRAFT-CALIBRATION-001",
+}
+RULE_IMPLEMENTATIONS = {**QUALITY_RULE_IMPLEMENTATIONS, **SEMANTIC_RULE_IMPLEMENTATIONS, **GRANULARITY_RULE_IMPLEMENTATIONS, **FACT_DIMENSION_RULE_IMPLEMENTATIONS}
 RuleExecutionStatus = Literal["executable_draft", "baseline_reference", "reference_catalog_draft", "reserved_definition", "unknown"]
 
 
@@ -46,9 +75,10 @@ def category_caps() -> dict[str, int]:
 
 
 def get_rule_execution_record(rule_id: str) -> RuleExecutionRecord:
-    if rule_id in QUALITY_RULE_IMPLEMENTATIONS:
+    if rule_id in RULE_IMPLEMENTATIONS and rule_id in DRAFT_RULE_AUTHORIZATIONS:
         rule = load_official_catalog()[rule_id]
-        return RuleExecutionRecord(rule_id, "executable_draft", "Implementação e gate draft disponíveis.", rule["title"], rule["implementation_status"])
+        gate_id = DRAFT_RULE_AUTHORIZATIONS[rule_id]
+        return RuleExecutionRecord(rule_id, "executable_draft", f"Implementação e gate draft {gate_id} disponíveis.", rule["title"], rule["implementation_status"])
 
     rule = load_official_catalog().get(rule_id)
     if not rule:
@@ -64,9 +94,9 @@ def execute_registered_rule(rule_id: str, payload: object) -> object:
     record = get_rule_execution_record(rule_id)
     if record.status != "executable_draft":
         raise RuleExecutionUnavailableError(f"{rule_id} não pode ser executada: {record.reason}")
-    evaluator: Callable[[object], object] = QUALITY_RULE_IMPLEMENTATIONS[rule_id]  # type: ignore[assignment]
+    evaluator: Callable[[object], object] = RULE_IMPLEMENTATIONS[rule_id]  # type: ignore[assignment]
     return evaluator(payload)
 
 
 def executable_rule_count() -> int:
-    return len(QUALITY_RULE_IMPLEMENTATIONS)
+    return len(set(RULE_IMPLEMENTATIONS) & set(DRAFT_RULE_AUTHORIZATIONS))

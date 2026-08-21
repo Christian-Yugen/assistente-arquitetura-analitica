@@ -1,0 +1,18 @@
+{
+  "rule_id": "MDL-FACTPER-001",
+  "title": "Fato periódica",
+  "category": "fact_dimension",
+  "priority": "P0",
+  "stage": "table_classification",
+  "scope": "sheet",
+  "depends_on": ["grain"],
+  "primary_output": "classification_or_table",
+  "source_implementation_status": "reference_implemented_draft",
+  "local_status": "pending_policy_authorization",
+  "execution_blocked": true,
+  "recovered_on": "2026-08-21",
+  "notes": [
+    "A fonte oficial define prioridade, escopo, dependência e saída, mas não fixa limites ou sinais observáveis.",
+    "Nenhuma lógica executável, registro de catálogo ou alteração de contrato é autorizada por este intake."
+  ]
+}

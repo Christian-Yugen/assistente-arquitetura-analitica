@@ -1,0 +1,45 @@
+{
+  "calibration_id": "CAL-QLT-EMPTYROW-004-001",
+  "dataset_id": "GD-QLT-EMPTYROW-004-001",
+  "rule_id": "QLT-EMPTYROW-004",
+  "rule_version": "0.1.0-reconstructed.1",
+  "scope": "draft_only",
+  "production_release": "blocked",
+  "metrics": {
+    "true_positive": 3,
+    "false_positive": 0,
+    "false_negative": 0
+  },
+  "scenarios": [
+    {
+      "case_id": "low_internal_empty_ratio",
+      "status": "pass",
+      "expected_count": 1,
+      "actual_count": 1
+    },
+    {
+      "case_id": "medium_internal_empty_ratio",
+      "status": "pass",
+      "expected_count": 1,
+      "actual_count": 1
+    },
+    {
+      "case_id": "high_internal_empty_ratio",
+      "status": "pass",
+      "expected_count": 1,
+      "actual_count": 1
+    },
+    {
+      "case_id": "excluded_without_internal_empty_rows",
+      "status": "pass",
+      "expected_count": 0,
+      "actual_count": 0
+    },
+    {
+      "case_id": "excluded_without_content_rows",
+      "status": "pass",
+      "expected_count": 0,
+      "actual_count": 0
+    }
+  ]
+}
