@@ -1,0 +1,44 @@
+{
+  "dataset_id": "GD-QLT-FORMULA-013-001",
+  "rule_id": "QLT-FORMULA-013",
+  "rule_version": "0.1.0-provisional.1",
+  "privacy": {
+    "contains_raw_cell_values": false,
+    "contains_formula_expressions": false,
+    "contains_positions": false,
+    "contains_headers": false,
+    "contains_sheet_titles": false
+  },
+  "scenarios": [
+    {
+      "id": "low",
+      "profile": {"eligible": true, "physical_nonempty_count": 20, "formula_count": 19, "nonformula_count": 1, "nonformula_ratio": 0.05},
+      "expected_findings": [{"rule_id": "QLT-FORMULA-013", "severity": "low", "confidence": 0.85, "question": true}]
+    },
+    {
+      "id": "medium",
+      "profile": {"eligible": true, "physical_nonempty_count": 20, "formula_count": 18, "nonformula_count": 2, "nonformula_ratio": 0.1},
+      "expected_findings": [{"rule_id": "QLT-FORMULA-013", "severity": "medium", "confidence": 0.85, "question": true}]
+    },
+    {
+      "id": "high",
+      "profile": {"eligible": true, "physical_nonempty_count": 20, "formula_count": 16, "nonformula_count": 4, "nonformula_ratio": 0.2},
+      "expected_findings": [{"rule_id": "QLT-FORMULA-013", "severity": "high", "confidence": 0.85, "question": true}]
+    },
+    {
+      "id": "no_manual_values",
+      "profile": {"eligible": true, "physical_nonempty_count": 20, "formula_count": 20, "nonformula_count": 0, "nonformula_ratio": 0.0},
+      "expected_findings": []
+    },
+    {
+      "id": "insufficient_base",
+      "profile": {"eligible": false, "physical_nonempty_count": 9, "formula_count": 8, "nonformula_count": 1, "nonformula_ratio": 0.11111111},
+      "expected_findings": []
+    },
+    {
+      "id": "low_formula_share",
+      "profile": {"eligible": false, "physical_nonempty_count": 10, "formula_count": 7, "nonformula_count": 3, "nonformula_ratio": 0.3},
+      "expected_findings": []
+    }
+  ]
+}

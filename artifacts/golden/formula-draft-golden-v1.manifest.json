@@ -1,0 +1,8 @@
+{
+  "dataset_id": "GD-QLT-FORMULA-013-001",
+  "file": "formula-draft-golden-v1.json",
+  "sha256": "dc18f7e4a1f912fc97627df975780cd771971586a39cecbbce1e9f09b9ca5e61",
+  "contains_raw_cell_values": false,
+  "contains_formula_expressions": false,
+  "scope": "draft_only"
+}

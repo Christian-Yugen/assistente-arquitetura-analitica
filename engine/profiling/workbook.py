@@ -23,6 +23,7 @@ from engine.profiling.mixed_types import MixedTypesAccumulator
 from engine.profiling.bad_dates import BadDateAccumulator
 from engine.profiling.whitespace import WhitespaceAccumulator
 from engine.profiling.total_rows import TotalRowsAccumulator
+from engine.profiling.formula_consistency import FormulaConsistencyAccumulator
 
 
 MAX_SHEETS = 10
@@ -166,17 +167,20 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
 
     contexts: list[ColumnAnalysisContext] = []
     for sheet_position, worksheet in enumerate(workbook.worksheets):
-        rows = worksheet.iter_rows(values_only=True)
-        header = next(rows, None)
-        if header is None:
+        rows = worksheet.iter_rows()
+        header_cells = next(rows, None)
+        if header_cells is None:
             continue
+        header = tuple(cell.value for cell in header_cells)
         column_count = len(header)
         profilers = [StreamingColumnProfiler() for _ in range(column_count)]
+        formula_accumulators = [FormulaConsistencyAccumulator() for _ in range(column_count)]
         duplicate_rows_accumulator = DuplicateRowsAccumulator()
         empty_rows_accumulator = EmptyRowsAccumulator()
         total_rows_accumulator = TotalRowsAccumulator()
         for row in rows:
-            bounded_row = tuple(row[position] if position < len(row) else None for position in range(column_count))
+            bounded_cells = tuple(row[position] if position < len(row) else None for position in range(column_count))
+            bounded_row = tuple(cell.value if cell is not None else None for cell in bounded_cells)
             empty_rows_accumulator.consume(bounded_row)
             total_rows_accumulator.consume(bounded_row)
             if not row_has_meaningful_value(bounded_row):
@@ -184,6 +188,11 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
             duplicate_rows_accumulator.consume(bounded_row)
             for position in range(column_count):
                 profilers[position].consume(bounded_row[position])
+                cell = bounded_cells[position]
+                formula_accumulators[position].consume(
+                    bounded_row[position],
+                    is_formula=bool(cell is not None and cell.data_type == "f"),
+                )
         duplicate_rows = duplicate_rows_accumulator.finalize()
         empty_rows = empty_rows_accumulator.finalize()
         total_rows = total_rows_accumulator.finalize()
@@ -210,6 +219,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
                     duplicate_rows=duplicate_rows,
                     empty_rows=empty_rows,
                     total_rows=total_rows,
+                    formulas=formula_accumulators[column_position].finalize(),
                 )
             )
     if not contexts:

@@ -1,0 +1,39 @@
+{
+  "calibration_id": "CAL-QLT-FORMULA-013-001",
+  "dataset_id": "GD-QLT-FORMULA-013-001",
+  "rule_id": "QLT-FORMULA-013",
+  "rule_version": "0.1.0-provisional.1",
+  "scope": "draft_only",
+  "metrics": {
+    "true_positive": 3,
+    "false_positive": 0,
+    "false_negative": 0
+  },
+  "production_release": "blocked",
+  "scenarios": [
+    {
+      "scenario_id": "low",
+      "passed": true
+    },
+    {
+      "scenario_id": "medium",
+      "passed": true
+    },
+    {
+      "scenario_id": "high",
+      "passed": true
+    },
+    {
+      "scenario_id": "no_manual_values",
+      "passed": true
+    },
+    {
+      "scenario_id": "insufficient_base",
+      "passed": true
+    },
+    {
+      "scenario_id": "low_formula_share",
+      "passed": true
+    }
+  ]
+}

@@ -21,6 +21,7 @@ from engine.profiling.whitespace import WhitespaceProfile, profile_whitespace
 from engine.profiling.total_rows import TotalRowsProfile
 from engine.profiling.negative_values import NegativeValuesProfile, profile_negative_values
 from engine.profiling.outliers import OutlierProfile, profile_outliers
+from engine.profiling.formula_consistency import FormulaConsistencyProfile
 from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.catvar import CategoricalVariationColumnProfile
@@ -33,6 +34,7 @@ from engine.quality.whitespace import WhitespaceColumnProfile
 from engine.quality.total_rows import TotalRowsSheetProfile
 from engine.quality.negative_values import NegativeValuesColumnProfile
 from engine.quality.outliers import OutlierColumnProfile
+from engine.quality.formula_consistency import FormulaConsistencyColumnProfile
 
 
 @dataclass(frozen=True)
@@ -83,6 +85,7 @@ class ColumnAnalysisContext:
     total_rows: TotalRowsProfile = field(default_factory=TotalRowsProfile)
     negative_values: NegativeValuesProfile = field(default_factory=NegativeValuesProfile)
     outliers: OutlierProfile = field(default_factory=OutlierProfile)
+    formulas: FormulaConsistencyProfile = field(default_factory=FormulaConsistencyProfile)
 
 
 def build_column_analysis_context(
@@ -165,6 +168,10 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         outlier_profile = OutlierColumnProfile(name=column.column_name, outliers=column.outliers)
         if get_rule_execution_record("QLT-OUTLIER-012").status == "executable_draft":
             for finding in execute_registered_rule("QLT-OUTLIER-012", outlier_profile):
+                quality_findings.append((column.sheet_id, column.column_id, finding))
+        formula_profile = FormulaConsistencyColumnProfile(name=column.column_name, formulas=column.formulas)
+        if get_rule_execution_record("QLT-FORMULA-013").status == "executable_draft":
+            for finding in execute_registered_rule("QLT-FORMULA-013", formula_profile):
                 quality_findings.append((column.sheet_id, column.column_id, finding))
 
     for sheet_id, sheet_columns in grouped_columns.items():

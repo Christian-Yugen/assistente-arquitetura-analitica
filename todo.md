@@ -210,3 +210,7 @@
 - [x] Propor uma política conservadora, especificação e gate de reconstrução da QLT-OUTLIER-012 para aprovação explícita de Chris.
 - [x] Criar branch de segurança da QLT-OUTLIER-012 antes de qualquer código executável.
 - [x] Implementar, testar, calibrar e ativar a QLT-OUTLIER-012 exclusivamente após autorização explícita de Chris para a política proposta.
+- [x] Recuperar os metadados oficiais e os sinais disponíveis para a QLT-FORMULA-013 sem implementar lógica executável.
+- [x] Propor uma política conservadora, especificação e gate de reconstrução da QLT-FORMULA-013 para aprovação explícita de Chris.
+- [x] Criar branch de segurança da QLT-FORMULA-013 antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a QLT-FORMULA-013 exclusivamente após autorização explícita de Chris para a política proposta.

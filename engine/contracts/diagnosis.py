@@ -20,6 +20,7 @@ RULE_VERSIONS = {
     "QLT-TOTALROW-010": "0.1.0-provisional.1",
     "QLT-NEGATIVE-011": "0.1.0-provisional.1",
     "QLT-OUTLIER-012": "0.1.0-provisional.1",
+    "QLT-FORMULA-013": "0.1.0-provisional.1",
 }
 
 
