@@ -1,0 +1,7 @@
+{
+  "golden_dataset_id": "GD-SEM-DATE-001-001",
+  "file": "sem-date-draft-golden-v1.json",
+  "sha256": "ce22b8df5bf00b7dee3cce6bf939bc5217b430c3bae0e955f3eb31fc234a5aac",
+  "rule_id": "SEM-DATE-001",
+  "expected_calibration": {"tp": 3, "fp": 0, "fn": 0}
+}

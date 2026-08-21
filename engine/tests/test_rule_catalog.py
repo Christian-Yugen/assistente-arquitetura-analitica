@@ -33,6 +33,8 @@ from engine.profiling.outliers import OutlierProfile
 from engine.quality.outliers import OutlierColumnProfile
 from engine.profiling.formula_consistency import FormulaConsistencyProfile
 from engine.quality.formula_consistency import FormulaConsistencyColumnProfile
+from engine.profiling.semantic_date import profile_semantic_date
+from engine.semantic.date_generic import SemanticDateColumnProfile
 from engine.profiling.headers import HeadersProfile
 from engine.quality.headers import HeadersSheetProfile
 from engine.profiling.identifier_completeness import IdentifierCompletenessProfile
@@ -116,7 +118,9 @@ class RuleCatalogTests(unittest.TestCase):
         formula_record = get_rule_execution_record("QLT-FORMULA-013")
         headers_record = get_rule_execution_record("QLT-HEADERS-014")
         idmiss_record = get_rule_execution_record("QLT-IDMISS-015")
-        self.assertEqual(executable_rule_count(), 15)
+        semantic_result = execute_registered_rule("SEM-DATE-001", SemanticDateColumnProfile("Data", profile_semantic_date(["2026-01-01"] * 10)))
+        semantic_record = get_rule_execution_record("SEM-DATE-001")
+        self.assertEqual(executable_rule_count(), 16)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
@@ -131,6 +135,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(formula_result[0]["rule_id"], "QLT-FORMULA-013")
         self.assertEqual(headers_result[0]["rule_id"], "QLT-HEADERS-014")
         self.assertEqual(idmiss_result[0]["rule_id"], "QLT-IDMISS-015")
+        self.assertEqual(semantic_result[0]["semantic_type"], "date_generic")
         self.assertEqual(record.status, "executable_draft")
         self.assertEqual(null_record.status, "executable_draft")
         self.assertEqual(catvar_record.status, "executable_draft")
@@ -145,11 +150,11 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(formula_record.status, "executable_draft")
         self.assertEqual(headers_record.status, "executable_draft")
         self.assertEqual(idmiss_record.status, "executable_draft")
+        self.assertEqual(semantic_record.status, "executable_draft")
         self.assertEqual(record.title, "Números armazenados como texto")
 
     def test_baseline_reference_and_reserved_official_slots_cannot_execute(self):
         expected_statuses = {
-            "SEM-DATE-001": "reference_catalog_draft",
             "GRN-COMP-001": "reference_catalog_draft",
             "MDL-FACTPER-001": "reference_catalog_draft",
             "REL-ONEMANY-001": "reference_catalog_draft",

@@ -23,6 +23,7 @@ RULE_VERSIONS = {
     "QLT-FORMULA-013": "0.1.0-provisional.1",
     "QLT-HEADERS-014": "0.1.0-provisional.1",
     "QLT-IDMISS-015": "0.1.0-provisional.1",
+    "SEM-DATE-001": "0.1.0-provisional.1",
 }
 
 
@@ -113,3 +114,22 @@ def to_diagnosis_fragment(
         "findings": contract_findings,
         "questions": contract_questions,
     }
+
+
+def to_semantic_classification_fragment(classifications: list[dict[str, object]], *, sheet_id: str, column_id: str) -> dict[str, object]:
+    """Projeta classificações agregadas sem valores brutos, cabeçalhos ou posições."""
+    projected: list[dict[str, object]] = []
+    questions: list[dict[str, object]] = []
+    created_at = _timestamp()
+    for classification in classifications:
+        rule_id = str(classification["rule_id"])
+        projected.append({"semantic_type": classification["semantic_type"], "confidence": classification["confidence"],
+                          "evidence": classification["evidence"], "rule_id": rule_id,
+                          "rule_version": RULE_VERSIONS[rule_id],
+                          "affected_entities": [{"entity_type": "sheet", "entity_id": sheet_id}, {"entity_type": "column", "entity_id": column_id}]})
+        question = classification["question"]
+        questions.append({"question_id": str(uuid4()), "text": question["text"], "reason": question["reason"],
+                          "question_type": question["question_type"], "priority": question["priority"], "blocking": question["blocking"],
+                          "status": "pending", "options": question["options"],
+                          "impact": {"affected_modules": ["semantic_typing"], "affected_rule_ids": [rule_id], "affected_recommendation_ids": []}, "answer": None, "created_at": created_at})
+    return {"semantic_classifications": projected, "questions": questions}

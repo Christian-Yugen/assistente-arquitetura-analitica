@@ -222,3 +222,7 @@
 - [x] Propor uma política conservadora, especificação e gate de reconstrução da QLT-IDMISS-015 para aprovação explícita de Chris.
 - [x] Criar branch de segurança da QLT-IDMISS-015 antes de qualquer código executável.
 - [x] Implementar, testar, calibrar e ativar a QLT-IDMISS-015 exclusivamente após autorização explícita de Chris para a política proposta.
+- [x] Recuperar os metadados oficiais e os sinais disponíveis para a SEM-DATE-001 sem implementar lógica executável.
+- [x] Propor uma política conservadora, especificação e gate de reconstrução da SEM-DATE-001 para aprovação explícita de Chris.
+- [x] Criar branch de segurança da SEM-DATE-001 antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a SEM-DATE-001 exclusivamente após autorização explícita de Chris para a política proposta.

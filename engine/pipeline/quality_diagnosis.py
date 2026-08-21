@@ -7,7 +7,7 @@ from time import perf_counter
 from typing import Iterable, Literal
 
 from engine.catalog import executable_rule_count, execute_registered_rule, get_rule_execution_record
-from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment
+from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_semantic_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
 from engine.profiling.numeric_text import NumericTextProfile, infer_physical_type, profile_numeric_text
@@ -24,6 +24,7 @@ from engine.profiling.outliers import OutlierProfile, profile_outliers
 from engine.profiling.formula_consistency import FormulaConsistencyProfile
 from engine.profiling.headers import HeadersProfile
 from engine.profiling.identifier_completeness import IdentifierCompletenessProfile, profile_identifier_completeness
+from engine.profiling.semantic_date import SemanticDateProfile, profile_semantic_date
 from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.catvar import CategoricalVariationColumnProfile
@@ -39,6 +40,7 @@ from engine.quality.outliers import OutlierColumnProfile
 from engine.quality.formula_consistency import FormulaConsistencyColumnProfile
 from engine.quality.headers import HeadersSheetProfile
 from engine.quality.identifier_completeness import IdentifierCompletenessColumnProfile
+from engine.semantic.date_generic import SemanticDateColumnProfile
 
 
 @dataclass(frozen=True)
@@ -92,6 +94,7 @@ class ColumnAnalysisContext:
     formulas: FormulaConsistencyProfile = field(default_factory=FormulaConsistencyProfile)
     headers: HeadersProfile = field(default_factory=HeadersProfile)
     identifiers: IdentifierCompletenessProfile = field(default_factory=IdentifierCompletenessProfile)
+    semantic_date: SemanticDateProfile = field(default_factory=SemanticDateProfile)
 
 
 def build_column_analysis_context(
@@ -118,6 +121,7 @@ def build_column_analysis_context(
         negative_values=profile_negative_values(column_name, materialized_values),
         outliers=profile_outliers(materialized_values),
         identifiers=profile_identifier_completeness(column_name, materialized_values),
+        semantic_date=profile_semantic_date(materialized_values),
     )
 
 
@@ -128,6 +132,7 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
     started_at = _timestamp()
     started_clock = perf_counter()
     quality_findings: list[tuple[str, str | None, dict[str, object]]] = []
+    semantic_candidates: list[tuple[str, str, list[dict[str, object]]]] = []
     grouped_columns: dict[str, list[ColumnAnalysisContext]] = {}
     for column in columns:
         grouped_columns.setdefault(column.sheet_id, []).append(column)
@@ -184,6 +189,9 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         if get_rule_execution_record("QLT-IDMISS-015").status == "executable_draft":
             for finding in execute_registered_rule("QLT-IDMISS-015", identifier_profile):
                 quality_findings.append((column.sheet_id, column.column_id, finding))
+        if get_rule_execution_record("SEM-DATE-001").status == "executable_draft":
+            semantic_profile = SemanticDateColumnProfile(name=column.column_name, semantic_date=column.semantic_date)
+            semantic_candidates.append((column.sheet_id, column.column_id, execute_registered_rule("SEM-DATE-001", semantic_profile)))
 
     for sheet_id, sheet_columns in grouped_columns.items():
         representative = sheet_columns[0]
@@ -205,6 +213,7 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []
+    semantic_classifications: list[dict[str, object]] = []
     question_ids_by_sheet: dict[str, list[str]] = {sheet_id: [] for sheet_id in grouped_columns}
     for sheet_id, column_id, finding in quality_findings:
         fragment = to_diagnosis_fragment([finding], sheet_id=sheet_id, column_id=column_id)
@@ -212,6 +221,12 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         fragment_questions = fragment["questions"]  # type: ignore[assignment]
         questions.extend(fragment_questions)  # type: ignore[arg-type]
         question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in fragment_questions)  # type: ignore[index, union-attr]
+    for sheet_id, column_id, candidates in semantic_candidates:
+        fragment = to_semantic_classification_fragment(candidates, sheet_id=sheet_id, column_id=column_id)
+        semantic_classifications.extend(fragment["semantic_classifications"])  # type: ignore[arg-type]
+        semantic_questions = fragment["questions"]  # type: ignore[assignment]
+        questions.extend(semantic_questions)  # type: ignore[arg-type]
+        question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in semantic_questions)  # type: ignore[index,union-attr]
 
     finding_ids_by_sheet: dict[str, list[str]] = {sheet_id: [] for sheet_id in grouped_columns}
     for finding in findings:
@@ -313,6 +328,7 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         "metrics": [],
         "questions": questions,
         "findings": findings,
+        "semantic_classifications": semantic_classifications,
         "execution": {
             "correlation_id": metadata.correlation_id,
             "status": profile.execution_status,

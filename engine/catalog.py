@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Callable, Literal
 
 from engine.quality.registry import QUALITY_RULE_IMPLEMENTATIONS
+from engine.semantic.registry import SEMANTIC_RULE_IMPLEMENTATIONS
 
 
 OFFICIAL_BLUEPRINT_PATH = Path(__file__).resolve().parents[1] / "artifacts/catalogs/official-rule-blueprint-95.json"
@@ -29,7 +30,9 @@ DRAFT_RULE_AUTHORIZATIONS = {
     "QLT-FORMULA-013": "QLT-FORMULA-013-DRAFT-CALIBRATION-001",
     "QLT-HEADERS-014": "QLT-HEADERS-014-DRAFT-CALIBRATION-001",
     "QLT-IDMISS-015": "QLT-IDMISS-015-DRAFT-CALIBRATION-001",
+    "SEM-DATE-001": "SEM-DATE-001-DRAFT-CALIBRATION-001",
 }
+RULE_IMPLEMENTATIONS = {**QUALITY_RULE_IMPLEMENTATIONS, **SEMANTIC_RULE_IMPLEMENTATIONS}
 RuleExecutionStatus = Literal["executable_draft", "baseline_reference", "reference_catalog_draft", "reserved_definition", "unknown"]
 
 
@@ -63,7 +66,7 @@ def category_caps() -> dict[str, int]:
 
 
 def get_rule_execution_record(rule_id: str) -> RuleExecutionRecord:
-    if rule_id in QUALITY_RULE_IMPLEMENTATIONS and rule_id in DRAFT_RULE_AUTHORIZATIONS:
+    if rule_id in RULE_IMPLEMENTATIONS and rule_id in DRAFT_RULE_AUTHORIZATIONS:
         rule = load_official_catalog()[rule_id]
         gate_id = DRAFT_RULE_AUTHORIZATIONS[rule_id]
         return RuleExecutionRecord(rule_id, "executable_draft", f"Implementação e gate draft {gate_id} disponíveis.", rule["title"], rule["implementation_status"])
@@ -82,9 +85,9 @@ def execute_registered_rule(rule_id: str, payload: object) -> object:
     record = get_rule_execution_record(rule_id)
     if record.status != "executable_draft":
         raise RuleExecutionUnavailableError(f"{rule_id} não pode ser executada: {record.reason}")
-    evaluator: Callable[[object], object] = QUALITY_RULE_IMPLEMENTATIONS[rule_id]  # type: ignore[assignment]
+    evaluator: Callable[[object], object] = RULE_IMPLEMENTATIONS[rule_id]  # type: ignore[assignment]
     return evaluator(payload)
 
 
 def executable_rule_count() -> int:
-    return len(set(QUALITY_RULE_IMPLEMENTATIONS) & set(DRAFT_RULE_AUTHORIZATIONS))
+    return len(set(RULE_IMPLEMENTATIONS) & set(DRAFT_RULE_AUTHORIZATIONS))
