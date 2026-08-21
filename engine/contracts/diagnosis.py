@@ -25,6 +25,7 @@ RULE_VERSIONS = {
     "QLT-IDMISS-015": "0.1.0-provisional.1",
     "SEM-DATE-001": "0.1.0-provisional.1",
     "SEM-ID-003": "0.1.0-provisional.1",
+    "SEM-QTY-005": "0.1.0-provisional.1",
     "GRN-COMP-001": "0.1.0-provisional.1",
     "MDL-FACTPER-001": "0.1.0-provisional.1",
     "MDL-FACTTXN-002": "0.1.0-provisional.1",

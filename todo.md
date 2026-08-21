@@ -258,4 +258,8 @@
 - [x] Ativar a MDL-DIMCAL-006 exclusivamente no perfil draft e sincronizar catálogo, índice de prontidão, Gate MVP e indicador do workspace.
 - [x] Recuperar metadados, dependências e lacunas da SEM-QTY-005 sem implementar lógica executável.
 - [x] Elaborar política e especificação lógica não executável para a SEM-QTY-005 e solicitar aprovação específica antes de implementação.
-- [ ] Formalizar o gate de reconstrução, implementar, testar, calibrar e ativar a SEM-QTY-005 exclusivamente após autorização explícita de Chris no perfil draft.
+- [x] Formalizar o gate de reconstrução, implementar, testar, calibrar e ativar a SEM-QTY-005 exclusivamente após autorização explícita de Chris no perfil draft.
+- [x] Formalizar o gate de reconstrução da SEM-QTY-005 conforme a Proposta A aprovada por Chris.
+- [x] Implementar o perfil privado, classificador, registro, contrato e integração canônica da SEM-QTY-005 sob guarda de catálogo.
+- [x] Criar testes unitários, golden dataset assinado, avaliador e calibração reproduzível da SEM-QTY-005.
+- [x] Ativar a SEM-QTY-005 exclusivamente no perfil draft e sincronizar catálogo, índice de prontidão, Gate MVP e indicador do workspace.

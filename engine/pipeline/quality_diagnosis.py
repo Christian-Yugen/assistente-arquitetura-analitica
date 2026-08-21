@@ -26,6 +26,7 @@ from engine.profiling.headers import HeadersProfile
 from engine.profiling.identifier_completeness import IdentifierCompletenessProfile, profile_identifier_completeness
 from engine.profiling.semantic_date import SemanticDateProfile, profile_semantic_date
 from engine.profiling.semantic_identifier import SemanticIdentifierProfile, profile_semantic_identifier
+from engine.profiling.semantic_quantity import SemanticQuantityProfile, profile_semantic_quantity
 from engine.profiling.composite_grain import CompositeGrainProfile
 from engine.profiling.periodic_fact import PeriodicDateProfile, profile_periodic_date
 from engine.profiling.transactional_fact import TransactionalDateProfile, profile_transactional_date
@@ -47,6 +48,7 @@ from engine.quality.headers import HeadersSheetProfile
 from engine.quality.identifier_completeness import IdentifierCompletenessColumnProfile
 from engine.semantic.date_generic import SemanticDateColumnProfile
 from engine.semantic.identifier import SemanticIdentifierColumnProfile, classify_identifier
+from engine.semantic.quantity import SemanticQuantityColumnProfile
 from engine.granularity.composite import CompositeGrainSheetProfile
 from engine.fact_dimension.periodic import PeriodicFactSheetProfile
 from engine.fact_dimension.standard_dimension import StandardDimensionSheetProfile
@@ -107,6 +109,7 @@ class ColumnAnalysisContext:
     identifiers: IdentifierCompletenessProfile = field(default_factory=IdentifierCompletenessProfile)
     semantic_date: SemanticDateProfile = field(default_factory=SemanticDateProfile)
     semantic_identifier: SemanticIdentifierProfile = field(default_factory=SemanticIdentifierProfile)
+    semantic_quantity: SemanticQuantityProfile = field(default_factory=SemanticQuantityProfile)
     composite_grain: CompositeGrainProfile = field(default_factory=CompositeGrainProfile)
     periodic_date: PeriodicDateProfile = field(default_factory=PeriodicDateProfile)
     transactional_date: TransactionalDateProfile = field(default_factory=TransactionalDateProfile)
@@ -139,6 +142,7 @@ def build_column_analysis_context(
         identifiers=profile_identifier_completeness(column_name, materialized_values),
         semantic_date=profile_semantic_date(materialized_values),
         semantic_identifier=profile_semantic_identifier(column_name, materialized_values),
+        semantic_quantity=profile_semantic_quantity(column_name, materialized_values),
         periodic_date=profile_periodic_date(materialized_values),
         transactional_date=profile_transactional_date(materialized_values),
         calendar_date=profile_calendar_date(materialized_values),
@@ -220,6 +224,15 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
                 semantic_identifier=column.semantic_identifier,
             )
             semantic_candidates.append((column.sheet_id, column.column_id, execute_registered_rule("SEM-ID-003", identifier_semantic_profile)))
+        if get_rule_execution_record("SEM-QTY-005").status == "executable_draft":
+            quantity_semantic_profile = SemanticQuantityColumnProfile(
+                physical_type=column.physical_type,
+                formulas=column.formulas,
+                numeric_text=column.numeric_text,
+                semantic_date=column.semantic_date,
+                semantic_quantity=column.semantic_quantity,
+            )
+            semantic_candidates.append((column.sheet_id, column.column_id, execute_registered_rule("SEM-QTY-005", quantity_semantic_profile)))
 
     for sheet_id, sheet_columns in grouped_columns.items():
         representative = sheet_columns[0]

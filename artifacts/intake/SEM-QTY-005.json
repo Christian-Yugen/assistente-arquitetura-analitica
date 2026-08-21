@@ -1,13 +1,13 @@
 {
   "rule_id": "SEM-QTY-005",
   "title": "Quantidade",
-  "status": "policy_proposed_execution_blocked",
+  "status": "executable_draft",
   "priority": "P0",
   "stage": "semantic_typing",
   "scope": "column",
   "depends_on": ["quality"],
   "primary_output": "semantic_type",
-  "execution_blocked": true,
+  "execution_blocked": false,
   "source_traceability": {
     "catalog": "artifacts/catalogs/rule-implementation-readiness-v1.json",
     "blueprint": "artifacts/catalogs/official-rule-blueprint-95.json",
@@ -19,10 +19,5 @@
     "the canonical output is semantic_type",
     "the available source material does not define an executable condition, exclusions, confidence, evidence, questions, tests or calibration for this rule"
   ],
-  "missing_before_execution": [
-    "tests",
-    "golden_dataset",
-    "calibration_gate",
-    "authorization_gate"
-  ]
+  "missing_before_execution": []
 }
