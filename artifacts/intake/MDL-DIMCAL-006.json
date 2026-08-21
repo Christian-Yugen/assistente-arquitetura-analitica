@@ -1,13 +1,13 @@
 {
   "rule_id": "MDL-DIMCAL-006",
   "title": "Dimensão calendário",
-  "status": "policy_proposed_execution_blocked",
+  "status": "executable_draft",
   "priority": "P0",
   "stage": "table_classification",
   "scope": "sheet",
   "depends_on": ["grain"],
   "primary_output": "classification_or_table",
-  "execution_blocked": true,
+  "execution_blocked": false,
   "source_traceability": {
     "catalog": "artifacts/catalogs/rule-implementation-readiness-v1.json",
     "blueprint": "artifacts/catalogs/official-rule-blueprint-95.json",
@@ -20,10 +20,5 @@
     "the canonical output is classification_or_table",
     "the available source material does not define an executable condition, exclusions, confidence, evidence, questions, tests or calibration for this rule"
   ],
-  "missing_before_execution": [
-    "tests",
-    "golden_dataset",
-    "calibration_gate",
-    "authorization_gate"
-  ]
+  "missing_before_execution": []
 }

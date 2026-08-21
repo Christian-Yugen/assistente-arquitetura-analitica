@@ -251,4 +251,8 @@
 - [x] Ativar a MDL-DIMSTD-004 exclusivamente no perfil draft e sincronizar catálogo, índice de prontidão, Gate MVP e indicador do workspace.
 - [x] Recuperar metadados, dependências e lacunas da MDL-DIMCAL-006 sem implementar lógica executável.
 - [x] Elaborar política e especificação lógica não executável para a MDL-DIMCAL-006 e solicitar aprovação específica antes de implementação.
-- [ ] Formalizar o gate de reconstrução, implementar, testar, calibrar e ativar a MDL-DIMCAL-006 exclusivamente após autorização explícita de Chris no perfil draft.
+- [x] Formalizar o gate de reconstrução, implementar, testar, calibrar e ativar a MDL-DIMCAL-006 exclusivamente após autorização explícita de Chris no perfil draft.
+- [x] Formalizar o gate de reconstrução da MDL-DIMCAL-006 conforme a Proposta A aprovada por Chris.
+- [x] Implementar o perfil temporal privado, classificador, registro, contrato e integração canônica da MDL-DIMCAL-006 sob guarda de catálogo.
+- [x] Criar testes unitários, golden dataset assinado, avaliador e calibração reproduzível da MDL-DIMCAL-006.
+- [x] Ativar a MDL-DIMCAL-006 exclusivamente no perfil draft e sincronizar catálogo, índice de prontidão, Gate MVP e indicador do workspace.

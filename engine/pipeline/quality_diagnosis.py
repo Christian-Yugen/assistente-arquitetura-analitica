@@ -29,6 +29,7 @@ from engine.profiling.semantic_identifier import SemanticIdentifierProfile, prof
 from engine.profiling.composite_grain import CompositeGrainProfile
 from engine.profiling.periodic_fact import PeriodicDateProfile, profile_periodic_date
 from engine.profiling.transactional_fact import TransactionalDateProfile, profile_transactional_date
+from engine.profiling.calendar_dimension import CalendarDateProfile, profile_calendar_date
 from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.catvar import CategoricalVariationColumnProfile
@@ -50,6 +51,7 @@ from engine.granularity.composite import CompositeGrainSheetProfile
 from engine.fact_dimension.periodic import PeriodicFactSheetProfile
 from engine.fact_dimension.standard_dimension import StandardDimensionSheetProfile
 from engine.fact_dimension.transactional import TransactionalFactSheetProfile
+from engine.fact_dimension.calendar_dimension import CalendarDimensionSheetProfile
 
 
 @dataclass(frozen=True)
@@ -108,6 +110,7 @@ class ColumnAnalysisContext:
     composite_grain: CompositeGrainProfile = field(default_factory=CompositeGrainProfile)
     periodic_date: PeriodicDateProfile = field(default_factory=PeriodicDateProfile)
     transactional_date: TransactionalDateProfile = field(default_factory=TransactionalDateProfile)
+    calendar_date: CalendarDateProfile = field(default_factory=CalendarDateProfile)
 
 
 def build_column_analysis_context(
@@ -138,6 +141,7 @@ def build_column_analysis_context(
         semantic_identifier=profile_semantic_identifier(column_name, materialized_values),
         periodic_date=profile_periodic_date(materialized_values),
         transactional_date=profile_transactional_date(materialized_values),
+        calendar_date=profile_calendar_date(materialized_values),
     )
 
 
@@ -312,6 +316,22 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
                     fully_recognized_temporal_column_count=sum(
                         1 for column in sheet_columns
                         if column.semantic_date.recognized_date_ratio == 1.0
+                    ),
+                ),
+            ))
+        if get_rule_execution_record("MDL-DIMCAL-006").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-DIMCAL-006",
+                CalendarDimensionSheetProfile(
+                    observed_row_count=max(column.missingness.observed_cell_count for column in sheet_columns),
+                    grain_available=bool(grain_candidates.get(sheet_id)),
+                    calendar_dates=tuple(
+                        column.calendar_date for column in sheet_columns
+                        if column.semantic_date.recognized_date_ratio == 1.0
+                    ),
+                    eligible_measure_column_count=sum(
+                        1 for column in sheet_columns
+                        if column.physical_type == "numeric" and column.formulas.formula_count == 0
                     ),
                 ),
             ))
