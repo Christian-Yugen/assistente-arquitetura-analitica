@@ -302,4 +302,4 @@
 - [x] Elaborar política e especificação lógica não executáveis para a SEM-COMP-002 e solicitar aprovação específica antes de implementação.
 - [ ] Formalizar o gate de reconstrução da SEM-COMP-002 somente após a aprovação explícita de Chris para a proposta selecionada.
 - [ ] Implementar, testar, calibrar e ativar a SEM-COMP-002 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
-- [ ] Exportar integralmente o estado versionado atual do projeto para o repositório privado de Chris no GitHub.
+- [x] Exportar integralmente o estado versionado atual do projeto para o repositório privado de Chris no GitHub.
