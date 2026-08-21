@@ -1,0 +1,36 @@
+{
+  "rule_id": "SEM-TARGET-013",
+  "title": "Meta ou previsto",
+  "status": "intake_required",
+  "priority": "P0",
+  "stage": "semantic_typing",
+  "scope": "column",
+  "depends_on": ["quality"],
+  "primary_output": "semantic_type",
+  "execution_blocked": true,
+  "source_traceability": {
+    "catalog": "artifacts/catalogs/rule-implementation-readiness-v1.json",
+    "blueprint": "artifacts/catalogs/official-rule-blueprint-95.json",
+    "master_plan": "PM-MVP-PBI-001 v1.0",
+    "requirements": "PM-MVP-PBI-REQ-001 v1.0"
+  },
+  "known_constraints": [
+    "the official scope is a column and the declared dependency is quality",
+    "the canonical output is semantic_type",
+    "the official blueprint requests converging evidence for target-or-forecast classification but does not define an executable condition, vocabulary, exclusions, confidence, evidence, questions, tests or calibration",
+    "the current column context has aggregate physical-type, formula, numeric-text, semantic-date and header signals, but no business-period semantics"
+  ],
+  "missing_before_execution": [
+    "policy",
+    "logical_specification",
+    "reconstruction_authorization_gate",
+    "private_profile",
+    "classifier",
+    "contract_version",
+    "pipeline_integration",
+    "tests",
+    "golden_dataset",
+    "calibration_gate",
+    "draft_authorization"
+  ]
+}
