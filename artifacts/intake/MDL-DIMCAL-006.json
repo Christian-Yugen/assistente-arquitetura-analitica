@@ -1,0 +1,29 @@
+{
+  "rule_id": "MDL-DIMCAL-006",
+  "title": "Dimensão calendário",
+  "status": "policy_proposed_execution_blocked",
+  "priority": "P0",
+  "stage": "table_classification",
+  "scope": "sheet",
+  "depends_on": ["grain"],
+  "primary_output": "classification_or_table",
+  "execution_blocked": true,
+  "source_traceability": {
+    "catalog": "artifacts/catalogs/rule-implementation-readiness-v1.json",
+    "blueprint": "artifacts/catalogs/official-rule-blueprint-95.json",
+    "master_plan": "PM-MVP-PBI-001 v1.0",
+    "requirements": "PM-MVP-PBI-REQ-001 v1.0"
+  },
+  "known_constraints": [
+    "the official purpose is to classify or propose a calendar dimension",
+    "the official scope is a sheet and the declared dependency is grain",
+    "the canonical output is classification_or_table",
+    "the available source material does not define an executable condition, exclusions, confidence, evidence, questions, tests or calibration for this rule"
+  ],
+  "missing_before_execution": [
+    "tests",
+    "golden_dataset",
+    "calibration_gate",
+    "authorization_gate"
+  ]
+}
