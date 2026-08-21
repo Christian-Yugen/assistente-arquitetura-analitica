@@ -23,6 +23,7 @@ from engine.profiling.negative_values import NegativeValuesProfile, profile_nega
 from engine.profiling.outliers import OutlierProfile, profile_outliers
 from engine.profiling.formula_consistency import FormulaConsistencyProfile
 from engine.profiling.headers import HeadersProfile
+from engine.profiling.identifier_completeness import IdentifierCompletenessProfile, profile_identifier_completeness
 from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.catvar import CategoricalVariationColumnProfile
@@ -37,6 +38,7 @@ from engine.quality.negative_values import NegativeValuesColumnProfile
 from engine.quality.outliers import OutlierColumnProfile
 from engine.quality.formula_consistency import FormulaConsistencyColumnProfile
 from engine.quality.headers import HeadersSheetProfile
+from engine.quality.identifier_completeness import IdentifierCompletenessColumnProfile
 
 
 @dataclass(frozen=True)
@@ -89,6 +91,7 @@ class ColumnAnalysisContext:
     outliers: OutlierProfile = field(default_factory=OutlierProfile)
     formulas: FormulaConsistencyProfile = field(default_factory=FormulaConsistencyProfile)
     headers: HeadersProfile = field(default_factory=HeadersProfile)
+    identifiers: IdentifierCompletenessProfile = field(default_factory=IdentifierCompletenessProfile)
 
 
 def build_column_analysis_context(
@@ -114,6 +117,7 @@ def build_column_analysis_context(
         whitespace=profile_whitespace(materialized_values),
         negative_values=profile_negative_values(column_name, materialized_values),
         outliers=profile_outliers(materialized_values),
+        identifiers=profile_identifier_completeness(column_name, materialized_values),
     )
 
 
@@ -175,6 +179,10 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         formula_profile = FormulaConsistencyColumnProfile(name=column.column_name, formulas=column.formulas)
         if get_rule_execution_record("QLT-FORMULA-013").status == "executable_draft":
             for finding in execute_registered_rule("QLT-FORMULA-013", formula_profile):
+                quality_findings.append((column.sheet_id, column.column_id, finding))
+        identifier_profile = IdentifierCompletenessColumnProfile(name=column.column_name, identifiers=column.identifiers)
+        if get_rule_execution_record("QLT-IDMISS-015").status == "executable_draft":
+            for finding in execute_registered_rule("QLT-IDMISS-015", identifier_profile):
                 quality_findings.append((column.sheet_id, column.column_id, finding))
 
     for sheet_id, sheet_columns in grouped_columns.items():

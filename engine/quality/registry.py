@@ -14,6 +14,7 @@ from .negative_values import NegativeValuesColumnProfile, evaluate_negative_valu
 from .outliers import OutlierColumnProfile, evaluate_outliers
 from .formula_consistency import FormulaConsistencyColumnProfile, evaluate_formula_consistency
 from .headers import HeadersSheetProfile, evaluate_headers
+from .identifier_completeness import IdentifierCompletenessColumnProfile, evaluate_identifier_completeness
 
 
 QUALITY_RULE_IMPLEMENTATIONS = {
@@ -31,6 +32,7 @@ QUALITY_RULE_IMPLEMENTATIONS = {
     "QLT-OUTLIER-012": evaluate_outliers,
     "QLT-FORMULA-013": evaluate_formula_consistency,
     "QLT-HEADERS-014": evaluate_headers,
+    "QLT-IDMISS-015": evaluate_identifier_completeness,
 }
 
-__all__ = ["NumericTextColumnProfile", "NullColumnProfile", "CategoricalVariationColumnProfile", "DuplicateRowsSheetProfile", "EmptyColumnProfile", "EmptyRowsSheetProfile", "MixedTypesColumnProfile", "BadDateColumnProfile", "WhitespaceColumnProfile", "TotalRowsSheetProfile", "NegativeValuesColumnProfile", "OutlierColumnProfile", "FormulaConsistencyColumnProfile", "HeadersSheetProfile", "QUALITY_RULE_IMPLEMENTATIONS"]
+__all__ = ["NumericTextColumnProfile", "NullColumnProfile", "CategoricalVariationColumnProfile", "DuplicateRowsSheetProfile", "EmptyColumnProfile", "EmptyRowsSheetProfile", "MixedTypesColumnProfile", "BadDateColumnProfile", "WhitespaceColumnProfile", "TotalRowsSheetProfile", "NegativeValuesColumnProfile", "OutlierColumnProfile", "FormulaConsistencyColumnProfile", "HeadersSheetProfile", "IdentifierCompletenessColumnProfile", "QUALITY_RULE_IMPLEMENTATIONS"]

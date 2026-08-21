@@ -28,6 +28,7 @@ DRAFT_RULE_AUTHORIZATIONS = {
     "QLT-OUTLIER-012": "QLT-OUTLIER-012-DRAFT-CALIBRATION-001",
     "QLT-FORMULA-013": "QLT-FORMULA-013-DRAFT-CALIBRATION-001",
     "QLT-HEADERS-014": "QLT-HEADERS-014-DRAFT-CALIBRATION-001",
+    "QLT-IDMISS-015": "QLT-IDMISS-015-DRAFT-CALIBRATION-001",
 }
 RuleExecutionStatus = Literal["executable_draft", "baseline_reference", "reference_catalog_draft", "reserved_definition", "unknown"]
 

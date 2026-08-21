@@ -1,0 +1,49 @@
+{
+  "intake_id": "QLT-IDMISS-015-INTAKE-001",
+  "rule": {
+    "rule_id": "QLT-IDMISS-015",
+    "title": "Identificadores incompletos",
+    "category": "quality",
+    "purpose": "Detectar nulos, duplicidades ou formatos inválidos em identificadores.",
+    "priority": "P0",
+    "stage": "quality",
+    "scope": "column",
+    "depends_on": ["profiling"],
+    "primary_output": "finding",
+    "source_implementation_status": "planned"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "Plano_Mestre_MVP_Modelagem_Dimensional_PowerBI_v1.0.docx"
+    ]
+  },
+  "source_gap": "As fontes recuperadas definem que identificadores incompletos abrangem nulos, duplicidades ou formatos inválidos, mas não materializam quais cabeçalhos representam identificadores, quais formatos são válidos, a normalização de valores, os limiares, a evidência permitida, a severidade, a confiança ou a pergunta humana. A proposta limita a primeira versão a ausência e duplicidade exata em vocabulário fechado; formato inválido permanece explicitamente fora do escopo até que uma especificação formal seja recuperada ou aprovada.",
+  "local_readiness": "intake_required",
+  "authorization": {
+    "implementation_authorized": false,
+    "reason": "O vocabulário fechado de cabeçalhos, a base mínima e a exclusão deliberada de formatos inválidos exigem autorização explícita de Chris antes de qualquer módulo executável.",
+    "required_gate": "QLT-IDMISS-015-RECONSTRUCTION-AUTHORIZATION-001"
+  },
+  "required_before_implementation": [
+    "Decisão humana sobre a política conservadora de ausência e duplicidade exata",
+    "Perfil agregado que não retenha cabeçalhos, valores, hashes de valores, posições ou identificadores brutos",
+    "Condição determinística, exclusões, severidade, confiança e pergunta humana",
+    "Testes unitários, limítrofes, de privacidade e de integração",
+    "Golden dataset, manifesto SHA-256, calibração reprodutível e gate individual de calibração"
+  ],
+  "required_policy_elements": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "severity",
+    "confidence",
+    "questions",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ],
+  "status": "pending_policy_authorization"
+}

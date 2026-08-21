@@ -35,6 +35,8 @@ from engine.profiling.formula_consistency import FormulaConsistencyProfile
 from engine.quality.formula_consistency import FormulaConsistencyColumnProfile
 from engine.profiling.headers import HeadersProfile
 from engine.quality.headers import HeadersSheetProfile
+from engine.profiling.identifier_completeness import IdentifierCompletenessProfile
+from engine.quality.identifier_completeness import IdentifierCompletenessColumnProfile
 
 
 class RuleCatalogTests(unittest.TestCase):
@@ -96,6 +98,10 @@ class RuleCatalogTests(unittest.TestCase):
             "QLT-HEADERS-014",
             HeadersSheetProfile("Aba 1", HeadersProfile(4, 1, 0, 0, 0)),
         )
+        idmiss_result = execute_registered_rule(
+            "QLT-IDMISS-015",
+            IdentifierCompletenessColumnProfile("ID", IdentifierCompletenessProfile(True, 20, 1, 19, 1, 2, 0.05, 0.1)),
+        )
         record = get_rule_execution_record("QLT-NUMTEXT-007")
         null_record = get_rule_execution_record("QLT-NULL-001")
         catvar_record = get_rule_execution_record("QLT-CATVAR-008")
@@ -109,7 +115,8 @@ class RuleCatalogTests(unittest.TestCase):
         outlier_record = get_rule_execution_record("QLT-OUTLIER-012")
         formula_record = get_rule_execution_record("QLT-FORMULA-013")
         headers_record = get_rule_execution_record("QLT-HEADERS-014")
-        self.assertEqual(executable_rule_count(), 14)
+        idmiss_record = get_rule_execution_record("QLT-IDMISS-015")
+        self.assertEqual(executable_rule_count(), 15)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
@@ -123,6 +130,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(outlier_result[0]["rule_id"], "QLT-OUTLIER-012")
         self.assertEqual(formula_result[0]["rule_id"], "QLT-FORMULA-013")
         self.assertEqual(headers_result[0]["rule_id"], "QLT-HEADERS-014")
+        self.assertEqual(idmiss_result[0]["rule_id"], "QLT-IDMISS-015")
         self.assertEqual(record.status, "executable_draft")
         self.assertEqual(null_record.status, "executable_draft")
         self.assertEqual(catvar_record.status, "executable_draft")
@@ -136,6 +144,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(outlier_record.status, "executable_draft")
         self.assertEqual(formula_record.status, "executable_draft")
         self.assertEqual(headers_record.status, "executable_draft")
+        self.assertEqual(idmiss_record.status, "executable_draft")
         self.assertEqual(record.title, "Números armazenados como texto")
 
     def test_baseline_reference_and_reserved_official_slots_cannot_execute(self):

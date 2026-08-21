@@ -1,0 +1,38 @@
+{
+  "calibration_id": "CAL-QLT-IDMISS-015-001",
+  "dataset_id": "GD-QLT-IDMISS-015-001",
+  "rule_id": "QLT-IDMISS-015",
+  "scope": "draft_only",
+  "metrics": {
+    "true_positive": 3,
+    "false_positive": 0,
+    "false_negative": 0
+  },
+  "production_release": "blocked",
+  "scenarios": [
+    {
+      "scenario_id": "low_missing",
+      "passed": true
+    },
+    {
+      "scenario_id": "medium_duplicate",
+      "passed": true
+    },
+    {
+      "scenario_id": "high_mixed_signal",
+      "passed": true
+    },
+    {
+      "scenario_id": "no_signal",
+      "passed": true
+    },
+    {
+      "scenario_id": "noneligible_header",
+      "passed": true
+    },
+    {
+      "scenario_id": "insufficient_base",
+      "passed": true
+    }
+  ]
+}
