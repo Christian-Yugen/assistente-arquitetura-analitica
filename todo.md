@@ -230,10 +230,14 @@
 - [x] Elaborar proposta de política e especificação lógica não executável para a GRN-COMP-001 e solicitar nova autorização explícita antes de implementação.
 - [x] Formalizar o gate de reconstrução da GRN-COMP-001 para a Opção A aprovada por Chris.
 - [x] Implementar, testar, calibrar e ativar a GRN-COMP-001 somente no perfil draft, com hipótese de granularidade e confirmação humana obrigatória.
-- [ ] Recuperar metadados oficiais, dependências e lacunas da MDL-FACTPER-001 sem implementar lógica executável.
-- [ ] Elaborar política e especificação lógica não executável para a MDL-FACTPER-001 e solicitar aprovação específica antes de implementação.
-- [ ] Formalizar o gate de reconstrução da MDL-FACTPER-001 conforme a Proposta A aprovada por Chris.
-- [ ] Implementar, testar, calibrar e ativar a MDL-FACTPER-001 exclusivamente no perfil draft, com confirmação humana obrigatória.
+- [x] Recuperar metadados oficiais, dependências e lacunas da MDL-FACTPER-001 sem implementar lógica executável.
+- [x] Elaborar política e especificação lógica não executável para a MDL-FACTPER-001 e solicitar aprovação específica antes de implementação.
+- [x] Recuperar metadados oficiais, dependências e lacunas da MDL-FACTTXN-002 sem implementar lógica executável.
+- [x] Elaborar política e especificação lógica não executável para a MDL-FACTTXN-002 e solicitar aprovação específica antes de implementação.
+- [x] Formalizar o gate de reconstrução da MDL-FACTTXN-002 conforme a Proposta A aprovada por Chris.
+- [x] Implementar, testar, calibrar e ativar a MDL-FACTTXN-002 exclusivamente no perfil draft, com confirmação humana obrigatória.
+- [x] Formalizar o gate de reconstrução da MDL-FACTPER-001 conforme a Proposta A aprovada por Chris.
+- [x] Implementar, testar, calibrar e ativar a MDL-FACTPER-001 exclusivamente no perfil draft, com confirmação humana obrigatória.
 - [x] Recuperar metadados, propor política e obter gate de reconstrução para a próxima regra de tipagem semântica de identificador aprovada na decisão A1.
 - [x] Implementar, testar, calibrar e ativar a tipagem semântica de identificador exclusivamente no perfil draft antes de retomar a GRN-COMP-001.
 - [x] Formalizar o gate de reconstrução da SEM-ID-003 conforme a Proposta A aprovada por Chris.

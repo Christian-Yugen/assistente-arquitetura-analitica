@@ -18,13 +18,13 @@ class RuleIntakeTests(unittest.TestCase):
         self.assertEqual(len(readiness["rules"]), 95)
         self.assertEqual(readiness["counts"], {
             "baseline_reference": 0,
-            "executable_draft": 17,
-            "reference_catalog_draft": 5,
-            "intake_required": 73,
+            "executable_draft": 20,
+            "reference_catalog_draft": 3,
+            "intake_required": 72,
         })
 
         by_id = {rule["rule_id"]: rule for rule in readiness["rules"]}
-        for rule_id in ("QLT-NULL-001", "QLT-DUP-002", "QLT-EMPTYCOL-003", "QLT-EMPTYROW-004", "QLT-MIXTYPE-005", "QLT-BADDATE-006", "QLT-NUMTEXT-007", "QLT-CATVAR-008", "QLT-WHITESPACE-009", "QLT-TOTALROW-010", "QLT-NEGATIVE-011", "QLT-OUTLIER-012", "QLT-FORMULA-013", "QLT-HEADERS-014", "QLT-IDMISS-015", "SEM-DATE-001", "SEM-ID-003"):
+        for rule_id in ("QLT-NULL-001", "QLT-DUP-002", "QLT-EMPTYCOL-003", "QLT-EMPTYROW-004", "QLT-MIXTYPE-005", "QLT-BADDATE-006", "QLT-NUMTEXT-007", "QLT-CATVAR-008", "QLT-WHITESPACE-009", "QLT-TOTALROW-010", "QLT-NEGATIVE-011", "QLT-OUTLIER-012", "QLT-FORMULA-013", "QLT-HEADERS-014", "QLT-IDMISS-015", "SEM-DATE-001", "SEM-ID-003", "GRN-COMP-001", "MDL-FACTPER-001", "MDL-FACTTXN-002"):
             self.assertEqual(by_id[rule_id]["local_readiness"], "executable_draft")
             self.assertTrue(by_id[rule_id]["executable"])
 

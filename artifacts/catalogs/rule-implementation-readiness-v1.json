@@ -9,9 +9,9 @@
   "policy": "A regra só pode ser executada quando local_readiness for executable_draft e houver gate de implementação registrado.",
   "counts": {
     "baseline_reference": 0,
-    "executable_draft": 17,
-    "reference_catalog_draft": 5,
-    "intake_required": 73
+    "executable_draft": 20,
+    "reference_catalog_draft": 3,
+    "intake_required": 72
   },
   "rules": [
     {
@@ -636,8 +636,8 @@
       ],
       "primary_output": "grain",
       "source_implementation_status": "reference_implemented_draft",
-      "local_readiness": "reference_catalog_draft",
-      "executable": false,
+      "local_readiness": "executable_draft",
+      "executable": true,
       "missing_before_execution": []
     },
     {
@@ -886,8 +886,8 @@
       ],
       "primary_output": "classification_or_table",
       "source_implementation_status": "reference_implemented_draft",
-      "local_readiness": "reference_catalog_draft",
-      "executable": false,
+      "local_readiness": "executable_draft",
+      "executable": true,
       "missing_before_execution": []
     },
     {
@@ -902,19 +902,9 @@
       ],
       "primary_output": "classification_or_table",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "MDL-FACTACC-003",

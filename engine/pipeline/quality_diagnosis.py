@@ -28,6 +28,7 @@ from engine.profiling.semantic_date import SemanticDateProfile, profile_semantic
 from engine.profiling.semantic_identifier import SemanticIdentifierProfile, profile_semantic_identifier
 from engine.profiling.composite_grain import CompositeGrainProfile
 from engine.profiling.periodic_fact import PeriodicDateProfile, profile_periodic_date
+from engine.profiling.transactional_fact import TransactionalDateProfile, profile_transactional_date
 from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.catvar import CategoricalVariationColumnProfile
@@ -47,6 +48,7 @@ from engine.semantic.date_generic import SemanticDateColumnProfile
 from engine.semantic.identifier import SemanticIdentifierColumnProfile, classify_identifier
 from engine.granularity.composite import CompositeGrainSheetProfile
 from engine.fact_dimension.periodic import PeriodicFactSheetProfile
+from engine.fact_dimension.transactional import TransactionalFactSheetProfile
 
 
 @dataclass(frozen=True)
@@ -104,6 +106,7 @@ class ColumnAnalysisContext:
     semantic_identifier: SemanticIdentifierProfile = field(default_factory=SemanticIdentifierProfile)
     composite_grain: CompositeGrainProfile = field(default_factory=CompositeGrainProfile)
     periodic_date: PeriodicDateProfile = field(default_factory=PeriodicDateProfile)
+    transactional_date: TransactionalDateProfile = field(default_factory=TransactionalDateProfile)
 
 
 def build_column_analysis_context(
@@ -133,6 +136,7 @@ def build_column_analysis_context(
         semantic_date=profile_semantic_date(materialized_values),
         semantic_identifier=profile_semantic_identifier(column_name, materialized_values),
         periodic_date=profile_periodic_date(materialized_values),
+        transactional_date=profile_transactional_date(materialized_values),
     )
 
 
@@ -253,6 +257,22 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
                 eligible_measure_column_count=sum(
                     1 for column in sheet_columns
                     if column.physical_type == "numeric" and column.formulas.formula_count == 0
+                ),
+            ))
+        if get_rule_execution_record("MDL-FACTTXN-002").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-FACTTXN-002",
+                TransactionalFactSheetProfile(
+                    observed_row_count=max(column.missingness.observed_cell_count for column in sheet_columns),
+                    grain_available=bool(grain_candidates.get(sheet_id)),
+                    transactional_dates=tuple(
+                        column.transactional_date for column in sheet_columns
+                        if column.semantic_date.recognized_date_ratio == 1.0
+                    ),
+                    eligible_measure_column_count=sum(
+                        1 for column in sheet_columns
+                        if column.physical_type == "numeric" and column.formulas.formula_count == 0
+                    ),
                 ),
             ))
 
