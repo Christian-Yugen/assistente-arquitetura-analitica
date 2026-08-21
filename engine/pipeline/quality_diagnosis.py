@@ -22,6 +22,7 @@ from engine.profiling.total_rows import TotalRowsProfile
 from engine.profiling.negative_values import NegativeValuesProfile, profile_negative_values
 from engine.profiling.outliers import OutlierProfile, profile_outliers
 from engine.profiling.formula_consistency import FormulaConsistencyProfile
+from engine.profiling.headers import HeadersProfile
 from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.catvar import CategoricalVariationColumnProfile
@@ -35,6 +36,7 @@ from engine.quality.total_rows import TotalRowsSheetProfile
 from engine.quality.negative_values import NegativeValuesColumnProfile
 from engine.quality.outliers import OutlierColumnProfile
 from engine.quality.formula_consistency import FormulaConsistencyColumnProfile
+from engine.quality.headers import HeadersSheetProfile
 
 
 @dataclass(frozen=True)
@@ -86,6 +88,7 @@ class ColumnAnalysisContext:
     negative_values: NegativeValuesProfile = field(default_factory=NegativeValuesProfile)
     outliers: OutlierProfile = field(default_factory=OutlierProfile)
     formulas: FormulaConsistencyProfile = field(default_factory=FormulaConsistencyProfile)
+    headers: HeadersProfile = field(default_factory=HeadersProfile)
 
 
 def build_column_analysis_context(
@@ -186,6 +189,10 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         total_rows_profile = TotalRowsSheetProfile(name=representative.sheet_name, total_rows=representative.total_rows)
         if get_rule_execution_record("QLT-TOTALROW-010").status == "executable_draft":
             for finding in execute_registered_rule("QLT-TOTALROW-010", total_rows_profile):
+                quality_findings.append((sheet_id, None, finding))
+        headers_profile = HeadersSheetProfile(name=representative.sheet_name, headers=representative.headers)
+        if get_rule_execution_record("QLT-HEADERS-014").status == "executable_draft":
+            for finding in execute_registered_rule("QLT-HEADERS-014", headers_profile):
                 quality_findings.append((sheet_id, None, finding))
 
     findings: list[dict[str, object]] = []

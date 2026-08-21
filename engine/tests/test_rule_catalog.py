@@ -33,6 +33,8 @@ from engine.profiling.outliers import OutlierProfile
 from engine.quality.outliers import OutlierColumnProfile
 from engine.profiling.formula_consistency import FormulaConsistencyProfile
 from engine.quality.formula_consistency import FormulaConsistencyColumnProfile
+from engine.profiling.headers import HeadersProfile
+from engine.quality.headers import HeadersSheetProfile
 
 
 class RuleCatalogTests(unittest.TestCase):
@@ -90,6 +92,10 @@ class RuleCatalogTests(unittest.TestCase):
             "QLT-FORMULA-013",
             FormulaConsistencyColumnProfile("Campo", FormulaConsistencyProfile(True, 20, 18, 2, 0.1)),
         )
+        headers_result = execute_registered_rule(
+            "QLT-HEADERS-014",
+            HeadersSheetProfile("Aba 1", HeadersProfile(4, 1, 0, 0, 0)),
+        )
         record = get_rule_execution_record("QLT-NUMTEXT-007")
         null_record = get_rule_execution_record("QLT-NULL-001")
         catvar_record = get_rule_execution_record("QLT-CATVAR-008")
@@ -102,7 +108,8 @@ class RuleCatalogTests(unittest.TestCase):
         negative_record = get_rule_execution_record("QLT-NEGATIVE-011")
         outlier_record = get_rule_execution_record("QLT-OUTLIER-012")
         formula_record = get_rule_execution_record("QLT-FORMULA-013")
-        self.assertEqual(executable_rule_count(), 13)
+        headers_record = get_rule_execution_record("QLT-HEADERS-014")
+        self.assertEqual(executable_rule_count(), 14)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
@@ -115,6 +122,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(negative_result[0]["rule_id"], "QLT-NEGATIVE-011")
         self.assertEqual(outlier_result[0]["rule_id"], "QLT-OUTLIER-012")
         self.assertEqual(formula_result[0]["rule_id"], "QLT-FORMULA-013")
+        self.assertEqual(headers_result[0]["rule_id"], "QLT-HEADERS-014")
         self.assertEqual(record.status, "executable_draft")
         self.assertEqual(null_record.status, "executable_draft")
         self.assertEqual(catvar_record.status, "executable_draft")
@@ -127,6 +135,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(negative_record.status, "executable_draft")
         self.assertEqual(outlier_record.status, "executable_draft")
         self.assertEqual(formula_record.status, "executable_draft")
+        self.assertEqual(headers_record.status, "executable_draft")
         self.assertEqual(record.title, "Números armazenados como texto")
 
     def test_baseline_reference_and_reserved_official_slots_cannot_execute(self):

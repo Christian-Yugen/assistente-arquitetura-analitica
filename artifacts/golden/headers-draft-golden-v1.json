@@ -1,0 +1,44 @@
+{
+  "dataset_id": "GD-QLT-HEADERS-014-001",
+  "rule_id": "QLT-HEADERS-014",
+  "rule_version": "0.1.0-provisional.1",
+  "privacy": {
+    "contains_raw_cell_values": false,
+    "contains_header_texts": false,
+    "contains_sheet_titles": false,
+    "contains_positions": false,
+    "contains_ranges": false
+  },
+  "scenarios": [
+    {
+      "id": "missing_header",
+      "profile": {"header_column_count": 4, "missing_header_count": 1, "duplicate_normalized_group_count": 0, "duplicate_header_count": 0, "multilevel_candidate_count": 0},
+      "expected_findings": [{"rule_id": "QLT-HEADERS-014", "severity": "medium", "confidence": 0.85, "question": true}]
+    },
+    {
+      "id": "normalized_duplicates",
+      "profile": {"header_column_count": 4, "missing_header_count": 0, "duplicate_normalized_group_count": 1, "duplicate_header_count": 2, "multilevel_candidate_count": 0},
+      "expected_findings": [{"rule_id": "QLT-HEADERS-014", "severity": "medium", "confidence": 0.85, "question": true}]
+    },
+    {
+      "id": "multilevel_candidate",
+      "profile": {"header_column_count": 4, "missing_header_count": 0, "duplicate_normalized_group_count": 0, "duplicate_header_count": 0, "multilevel_candidate_count": 1},
+      "expected_findings": [{"rule_id": "QLT-HEADERS-014", "severity": "high", "confidence": 0.85, "question": true}]
+    },
+    {
+      "id": "no_signals",
+      "profile": {"header_column_count": 4, "missing_header_count": 0, "duplicate_normalized_group_count": 0, "duplicate_header_count": 0, "multilevel_candidate_count": 0},
+      "expected_findings": []
+    },
+    {
+      "id": "inconsistent_duplicate_aggregate",
+      "profile": {"header_column_count": 4, "missing_header_count": 0, "duplicate_normalized_group_count": 1, "duplicate_header_count": 1, "multilevel_candidate_count": 0},
+      "expected_findings": []
+    },
+    {
+      "id": "empty_header_base",
+      "profile": {"header_column_count": 0, "missing_header_count": 0, "duplicate_normalized_group_count": 0, "duplicate_header_count": 0, "multilevel_candidate_count": 0},
+      "expected_findings": []
+    }
+  ]
+}

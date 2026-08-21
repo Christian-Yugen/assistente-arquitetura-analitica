@@ -4,14 +4,17 @@ from __future__ import annotations
 
 import math
 import re
+import xml.etree.ElementTree as element_tree
 from dataclasses import dataclass, field
 from datetime import date, datetime
+from itertools import chain
 from pathlib import Path
 from typing import Literal
 from uuid import uuid4
 
 import pandas as pd
 from openpyxl import load_workbook
+from openpyxl.utils.cell import range_boundaries
 
 from engine.pipeline.quality_diagnosis import ColumnAnalysisContext
 from engine.profiling.missingness import MissingnessProfile, missing_class, row_has_meaningful_value
@@ -24,6 +27,7 @@ from engine.profiling.bad_dates import BadDateAccumulator
 from engine.profiling.whitespace import WhitespaceAccumulator
 from engine.profiling.total_rows import TotalRowsAccumulator
 from engine.profiling.formula_consistency import FormulaConsistencyAccumulator
+from engine.profiling.headers import profile_headers
 
 
 MAX_SHEETS = 10
@@ -155,6 +159,28 @@ def safe_sheet_name(position: int) -> str:
     return f"Aba {position + 1}"
 
 
+def _merged_ranges_for_worksheet(workbook: object, worksheet: object) -> tuple[tuple[int, int, int, int], ...]:
+    """Lê apenas refs de mesclagem do XML; conteúdos e endereços não alcançam o perfil."""
+
+    archive = getattr(workbook, "_archive", None)
+    worksheet_path = getattr(worksheet, "_worksheet_path", None)
+    if archive is None or not isinstance(worksheet_path, str):
+        return ()
+    ranges: list[tuple[int, int, int, int]] = []
+    try:
+        with archive.open(worksheet_path) as source:
+            for _event, element in element_tree.iterparse(source, events=("end",)):
+                if element.tag.endswith("mergeCell"):
+                    reference = element.attrib.get("ref")
+                    if reference:
+                        min_col, min_row, max_col, max_row = range_boundaries(reference)
+                        ranges.append((min_col, min_row, max_col, max_row))
+                element.clear()
+    except (KeyError, ValueError, element_tree.ParseError):
+        return ()
+    return tuple(ranges)
+
+
 def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
     try:
         workbook = load_workbook(path, read_only=True, data_only=False, keep_links=False)
@@ -171,14 +197,21 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
         header_cells = next(rows, None)
         if header_cells is None:
             continue
+        second_row_cells = next(rows, None)
         header = tuple(cell.value for cell in header_cells)
         column_count = len(header)
+        headers_profile = profile_headers(
+            header_cells,
+            second_row_cells,
+            _merged_ranges_for_worksheet(workbook, worksheet),
+        )
         profilers = [StreamingColumnProfiler() for _ in range(column_count)]
         formula_accumulators = [FormulaConsistencyAccumulator() for _ in range(column_count)]
         duplicate_rows_accumulator = DuplicateRowsAccumulator()
         empty_rows_accumulator = EmptyRowsAccumulator()
         total_rows_accumulator = TotalRowsAccumulator()
-        for row in rows:
+        data_rows = chain((second_row_cells,), rows) if second_row_cells is not None else rows
+        for row in data_rows:
             bounded_cells = tuple(row[position] if position < len(row) else None for position in range(column_count))
             bounded_row = tuple(cell.value if cell is not None else None for cell in bounded_cells)
             empty_rows_accumulator.consume(bounded_row)
@@ -220,6 +253,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
                     empty_rows=empty_rows,
                     total_rows=total_rows,
                     formulas=formula_accumulators[column_position].finalize(),
+                    headers=headers_profile,
                 )
             )
     if not contexts:
