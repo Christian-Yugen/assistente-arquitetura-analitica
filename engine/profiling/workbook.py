@@ -30,6 +30,7 @@ from engine.profiling.formula_consistency import FormulaConsistencyAccumulator
 from engine.profiling.headers import profile_headers
 from engine.profiling.semantic_identifier import SemanticIdentifierAccumulator, SemanticIdentifierProfile
 from engine.profiling.semantic_identifier import ELIGIBLE_HEADERS, SENSITIVE_HEADERS, _normalize_header
+from engine.profiling.semantic_currency import SemanticCurrencyAccumulator, has_explicit_currency_format
 from engine.profiling.composite_grain import CompositeGrainAccumulator
 
 
@@ -218,6 +219,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
         candidate_pairs = [(candidate_positions[left], candidate_positions[right]) for left in range(len(candidate_positions)) for right in range(left + 1, len(candidate_positions))]
         composite_grain_accumulator = CompositeGrainAccumulator(candidate_pairs[:10])
         profilers = [StreamingColumnProfiler(semantic_identifier_accumulator=SemanticIdentifierAccumulator(str(header[position] or ""))) for position in range(column_count)]
+        semantic_currency_accumulators = [SemanticCurrencyAccumulator(header=header[position]) for position in range(column_count)]
         formula_accumulators = [FormulaConsistencyAccumulator() for _ in range(column_count)]
         duplicate_rows_accumulator = DuplicateRowsAccumulator()
         empty_rows_accumulator = EmptyRowsAccumulator()
@@ -235,6 +237,10 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
             for position in range(column_count):
                 profilers[position].consume(bounded_row[position])
                 cell = bounded_cells[position]
+                semantic_currency_accumulators[position].consume(
+                    bounded_row[position],
+                    has_currency_format=bool(cell is not None and has_explicit_currency_format(cell.number_format)),
+                )
                 formula_accumulators[position].consume(
                     bounded_row[position],
                     is_formula=bool(cell is not None and cell.data_type == "f"),
@@ -268,6 +274,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
                     total_rows=total_rows,
                     formulas=formula_accumulators[column_position].finalize(),
                     headers=headers_profile,
+                    semantic_currency=semantic_currency_accumulators[column_position].finalize(),
                     semantic_identifier=profiler.semantic_identifier_profile(),
                     composite_grain=composite_grain,
                 )

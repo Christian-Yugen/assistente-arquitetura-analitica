@@ -1,13 +1,13 @@
 {
   "rule_id": "SEM-CURR-006",
   "title": "Valor monetário",
-  "status": "intake_required",
+  "status": "executable_draft",
   "priority": "P1",
   "stage": "semantic_typing",
   "scope": "column",
   "depends_on": ["quality"],
   "primary_output": "semantic_type",
-  "execution_blocked": true,
+  "execution_blocked": false,
   "source_traceability": {
     "catalog": "artifacts/catalogs/rule-implementation-readiness-v1.json",
     "blueprint": "artifacts/catalogs/official-rule-blueprint-95.json",
@@ -18,19 +18,8 @@
     "the official scope is a column and the declared dependency is quality",
     "the canonical output is semantic_type",
     "the official blueprint requests converging evidence for monetary-value classification but does not define an executable condition, vocabulary, exclusions, confidence, evidence, questions, tests or calibration",
-    "the current column context does not yet carry a private aggregate signal for Excel currency or accounting number formats"
+    "the local draft implementation reduces Excel currency-format metadata to aggregate counts and requires a closed header vocabulary plus full format coverage",
+    "the rule remains a candidate requiring human confirmation and is not authorized for production"
   ],
-  "missing_before_execution": [
-    "policy",
-    "logical_specification",
-    "reconstruction_authorization_gate",
-    "private_profile",
-    "classifier",
-    "contract_version",
-    "pipeline_integration",
-    "tests",
-    "golden_dataset",
-    "calibration_gate",
-    "draft_authorization"
-  ]
+  "missing_before_execution": []
 }
