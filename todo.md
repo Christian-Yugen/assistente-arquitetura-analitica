@@ -286,4 +286,8 @@
 - [x] Ativar a SEM-TARGET-013 exclusivamente no perfil draft e sincronizar catálogo, índice de prontidão, Gate MVP e indicador do workspace.
 - [x] Recuperar metadados, dependências e lacunas da SEM-ACTUAL-014 sem implementar lógica executável.
 - [x] Elaborar política e especificação lógica não executáveis para a SEM-ACTUAL-014 e solicitar aprovação específica antes de implementação.
-- [ ] Formalizar o gate de reconstrução, implementar, testar, calibrar e ativar a SEM-ACTUAL-014 exclusivamente após autorização explícita de Chris no perfil draft.
+- [x] Formalizar o gate de reconstrução, implementar, testar, calibrar e ativar a SEM-ACTUAL-014 exclusivamente após autorização explícita de Chris no perfil draft.
+- [x] Formalizar o gate de reconstrução da SEM-ACTUAL-014 conforme a Proposta A aprovada por Chris.
+- [x] Implementar o perfil privado, classificador, registro, contrato e integração canônica da SEM-ACTUAL-014 sob guarda de catálogo.
+- [x] Criar testes unitários, golden dataset assinado, avaliador e calibração reproduzível da SEM-ACTUAL-014.
+- [x] Ativar a SEM-ACTUAL-014 exclusivamente no perfil draft e sincronizar catálogo, índice de prontidão, Gate MVP e indicador do workspace.

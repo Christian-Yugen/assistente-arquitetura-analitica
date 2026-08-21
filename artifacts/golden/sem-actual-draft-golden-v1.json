@@ -1,0 +1,8 @@
+[
+  {"case_id": "actual-realizado-001", "header": "Realizado", "values": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19], "physical_type": "numeric", "formula_count": 0, "expected": true},
+  {"case_id": "actual-executado-002", "header": "Valor executado", "values": [20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "physical_type": "numeric", "formula_count": 0, "expected": true},
+  {"case_id": "actual-observado-003", "header": "Observado", "values": [30, 31, 32, 33, 34, 35, 36, 37, 38, 39], "physical_type": "numeric", "formula_count": 0, "expected": true},
+  {"case_id": "actual-open-header-004", "header": "Resultado", "values": [40, 41, 42, 43, 44, 45, 46, 47, 48, 49], "physical_type": "numeric", "formula_count": 0, "expected": false},
+  {"case_id": "actual-small-base-005", "header": "Realizado", "values": [50, 51, 52, 53, 54, 55, 56, 57, 58], "physical_type": "numeric", "formula_count": 0, "expected": false},
+  {"case_id": "actual-formula-006", "header": "Realizado", "values": [60, 61, 62, 63, 64, 65, 66, 67, 68, 69], "physical_type": "numeric", "formula_count": 1, "expected": false}
+]
