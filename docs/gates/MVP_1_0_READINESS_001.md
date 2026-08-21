@@ -11,7 +11,7 @@ Este gate avalia a prontidão de produção contra os requisitos do produto e n�
 | Entrada XLSX protegida | Extensão, MIME, base64, assinatura ZIP, 25 MB, abertura real com `openpyxl` e máximo de 10 abas antes de `storagePut`. | Aprovado para draft. |
 | Motor no servidor | Runner Python via processo servidor, profiling agregado e descarte de valores brutos. | Aprovado para draft. |
 | Contrato canônico | `PM-MVP-PBI-CON-001` reconstruído, schema e validações cruzadas exercidos pelo motor. | Aprovado para draft. |
-| Regras autorizadas | `QLT-NUMTEXT-007`, `QLT-NULL-001@0.1.0-reconstructed.1`, `QLT-EMPTYCOL-003@0.1.0-reconstructed.1`, `QLT-EMPTYROW-004@0.1.0-reconstructed.1`, `QLT-MIXTYPE-005@0.1.0-provisional.1`, `QLT-BADDATE-006@0.1.0-provisional.1`, `QLT-CATVAR-008@0.1.0-provisional.1`, `QLT-WHITESPACE-009@0.1.0-provisional.1` e `QLT-DUP-002@0.1.0-reconstructed.1` executáveis, com allowlist, gates individuais e golden datasets draft. | Aprovado somente no escopo das nove regras. |
+| Regras autorizadas | `QLT-NUMTEXT-007`, `QLT-NULL-001@0.1.0-reconstructed.1`, `QLT-EMPTYCOL-003@0.1.0-reconstructed.1`, `QLT-EMPTYROW-004@0.1.0-reconstructed.1`, `QLT-MIXTYPE-005@0.1.0-provisional.1`, `QLT-BADDATE-006@0.1.0-provisional.1`, `QLT-CATVAR-008@0.1.0-provisional.1`, `QLT-WHITESPACE-009@0.1.0-provisional.1`, `QLT-DUP-002@0.1.0-reconstructed.1` e `QLT-TOTALROW-010@0.1.0-provisional.1` executáveis, com allowlist, gates individuais e golden datasets draft. | Aprovado somente no escopo das dez regras. |
 | Recomendações | Findings preservam recomendações determinísticas de suas regras; marcadores parciais não simulam modelagem. | Aprovado para draft. |
 | Isolamento | Procedures e operações de persistência filtradas por proprietário, com provas de leitura e escrita. | Aprovado para draft. |
 | Privacidade e retenção | Sanitização, bloqueio de payload sensível, logs seguros e remoção da referência privada. | Controle compensatório; insuficiente para produção. |
@@ -22,15 +22,15 @@ Este gate avalia a prontidão de produção contra os requisitos do produto e n�
 
 | Bloqueio | Evidência do bloqueio | Condição objetiva de remoção |
 |---|---|---|
-| Catálogo incompleto | Somente 9 de 95 regras estão executáveis no perfil draft. | Completar os ciclos governados das regras necessárias ao escopo produtivo, sem pular intake, especificação, testes, golden dataset e gate. |
+| Catálogo incompleto | Somente 10 de 95 regras estão executáveis no perfil draft. | Completar os ciclos governados das regras necessárias ao escopo produtivo, sem pular intake, especificação, testes, golden dataset e gate. |
 | Cobertura analítica incompleta | Não há executor autorizado para tipagem semântica, fatos, dimensões, relacionamentos, métricas, alertas ou granularidade. | Autorizar e validar os módulos correspondentes em ciclos independentes. |
-| Calibração limitada | `GD-QUALITY-DRAFT-001`, `GD-QLT-EMPTYCOL-003-001`, `GD-QLT-EMPTYROW-004-001`, `GD-QLT-MIXTYPE-005-001`, `GD-QLT-BADDATE-006-001`, `GD-QLT-WHITESPACE-009-001`, `GD-QLT-CATVAR-008-001` e `GD-QLT-DUP-002-001` cobrem nove regras em dados de referência draft, não dados reais nem todas as categorias. | Calibrar o motor com conjuntos aprovados para produção e registrar falsos positivos e falsos negativos por regra. |
+| Calibração limitada | `GD-QUALITY-DRAFT-001`, `GD-QLT-EMPTYCOL-003-001`, `GD-QLT-EMPTYROW-004-001`, `GD-QLT-MIXTYPE-005-001`, `GD-QLT-BADDATE-006-001`, `GD-QLT-WHITESPACE-009-001`, `GD-QLT-CATVAR-008-001`, `GD-QLT-DUP-002-001` e `GD-QLT-TOTALROW-010-001` cobrem dez regras em dados de referência draft, não dados reais nem todas as categorias. | Calibrar o motor com conjuntos aprovados para produção e registrar falsos positivos e falsos negativos por regra. |
 | Exclusão física indisponível | O armazenamento não expõe operação oficial de deleção; há apenas `RETENTION-EXCEPTION-001`. | Implementar exclusão física owner-scoped, testá-la e obter gate de retenção produtivo. |
 | LLM e PDF não implementados | Interpretação semântica por LLM e exportação PDF estão explicitamente fora do draft. | Especificar, implementar e validar os dois recursos com controles de segurança próprios, se permanecerem requisitos de lançamento. |
 | Prova E2E produtiva ausente | A regressão automatizada cobre componentes, API, motor e fixtures; não há evidência de cenário E2E produtivo em banco provisionado. | Executar cenário E2E automatizado contra ambiente provisionado, sem dados pessoais e com isolamento comprovado. |
 | Linhagem canônica de nulos | `QLT-NULL-001` é uma reconstrução autorizada, não a recuperação da fonte original. | Recuperar ou substituir formalmente a fonte canônica e aprovar a decisão de promoção correspondente. |
 
-> A aprovação do MVP draft não autoriza produção, não permite anunciar exclusão física, não amplia a cobertura parcial das nove regras e não equivale a aprovação do Gate MVP 1.0.
+> A aprovação do MVP draft não autoriza produção, não permite anunciar exclusão física, não amplia a cobertura parcial das dez regras e não equivale a aprovação do Gate MVP 1.0.
 
 ## Conclusão e próxima reavaliação
 

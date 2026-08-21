@@ -17,6 +17,7 @@ RULE_VERSIONS = {
     "QLT-MIXTYPE-005": "0.1.0-provisional.1",
     "QLT-BADDATE-006": "0.1.0-provisional.1",
     "QLT-WHITESPACE-009": "0.1.0-provisional.1",
+    "QLT-TOTALROW-010": "0.1.0-provisional.1",
 }
 
 

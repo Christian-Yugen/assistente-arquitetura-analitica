@@ -193,3 +193,12 @@
 - [x] Criar testes, golden dataset, manifesto SHA-256 e calibração reprodutível da QLT-WHITESPACE-009.
 - [x] Formalizar o gate individual de calibração da QLT-WHITESPACE-009 antes de sua ativação draft.
 - [x] Ativar a QLT-WHITESPACE-009 somente no perfil draft e sincronizar catálogo, índice, workspace e Gate MVP 1.0.
+- [x] Recuperar os metadados oficiais e os sinais tabulares disponíveis para a QLT-TOTALROW-010 sob a autorização de início de Chris.
+- [x] Propor política conservadora, especificação lógica e gate de reconstrução da QLT-TOTALROW-010 antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a QLT-TOTALROW-010 somente após nova aprovação explícita de Chris para a política proposta.
+- [x] Criar uma branch de segurança para o ciclo da QLT-TOTALROW-010 antes de alterar código executável.
+- [x] Formalizar o gate de reconstrução da QLT-TOTALROW-010 com o aceite de Chris para a Opção A.
+- [x] Implementar o perfil agregado e o avaliador da QLT-TOTALROW-010 sem reter valores, fórmulas, posições ou identificadores brutos.
+- [x] Criar testes, golden dataset, manifesto SHA-256 e calibração reprodutível da QLT-TOTALROW-010.
+- [x] Formalizar o gate individual de calibração da QLT-TOTALROW-010 antes de sua ativação draft.
+- [x] Ativar a QLT-TOTALROW-010 somente no perfil draft e sincronizar catálogo, índice, workspace e Gate MVP 1.0.

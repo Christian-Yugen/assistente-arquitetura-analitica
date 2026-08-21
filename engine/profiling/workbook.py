@@ -22,6 +22,7 @@ from engine.profiling.empty_rows import EmptyRowsAccumulator
 from engine.profiling.mixed_types import MixedTypesAccumulator
 from engine.profiling.bad_dates import BadDateAccumulator
 from engine.profiling.whitespace import WhitespaceAccumulator
+from engine.profiling.total_rows import TotalRowsAccumulator
 
 
 MAX_SHEETS = 10
@@ -173,9 +174,11 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
         profilers = [StreamingColumnProfiler() for _ in range(column_count)]
         duplicate_rows_accumulator = DuplicateRowsAccumulator()
         empty_rows_accumulator = EmptyRowsAccumulator()
+        total_rows_accumulator = TotalRowsAccumulator()
         for row in rows:
             bounded_row = tuple(row[position] if position < len(row) else None for position in range(column_count))
             empty_rows_accumulator.consume(bounded_row)
+            total_rows_accumulator.consume(bounded_row)
             if not row_has_meaningful_value(bounded_row):
                 continue
             duplicate_rows_accumulator.consume(bounded_row)
@@ -183,6 +186,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
                 profilers[position].consume(bounded_row[position])
         duplicate_rows = duplicate_rows_accumulator.finalize()
         empty_rows = empty_rows_accumulator.finalize()
+        total_rows = total_rows_accumulator.finalize()
         sheet_id = str(uuid4())
         for column_position, profiler in enumerate(profilers):
             categorical_variations = profiler.categorical_variation_profile()
@@ -205,6 +209,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
                     whitespace=profiler.whitespace_profile(),
                     duplicate_rows=duplicate_rows,
                     empty_rows=empty_rows,
+                    total_rows=total_rows,
                 )
             )
     if not contexts:

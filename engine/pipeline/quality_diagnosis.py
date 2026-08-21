@@ -18,6 +18,7 @@ from engine.profiling.empty_rows import EmptyRowsProfile
 from engine.profiling.mixed_types import MixedTypesProfile, profile_mixed_types
 from engine.profiling.bad_dates import BadDateProfile, profile_bad_dates
 from engine.profiling.whitespace import WhitespaceProfile, profile_whitespace
+from engine.profiling.total_rows import TotalRowsProfile
 from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.catvar import CategoricalVariationColumnProfile
@@ -27,6 +28,7 @@ from engine.quality.empty_rows import EmptyRowsSheetProfile
 from engine.quality.mixed_types import MixedTypesColumnProfile
 from engine.quality.bad_dates import BadDateColumnProfile
 from engine.quality.whitespace import WhitespaceColumnProfile
+from engine.quality.total_rows import TotalRowsSheetProfile
 
 
 @dataclass(frozen=True)
@@ -74,6 +76,7 @@ class ColumnAnalysisContext:
     mixed_types: MixedTypesProfile = field(default_factory=MixedTypesProfile)
     bad_dates: BadDateProfile = field(default_factory=BadDateProfile)
     whitespace: WhitespaceProfile = field(default_factory=WhitespaceProfile)
+    total_rows: TotalRowsProfile = field(default_factory=TotalRowsProfile)
 
 
 def build_column_analysis_context(
@@ -156,6 +159,10 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         empty_rows_profile = EmptyRowsSheetProfile(name=representative.sheet_name, empty_rows=representative.empty_rows)
         if get_rule_execution_record("QLT-EMPTYROW-004").status == "executable_draft":
             for finding in execute_registered_rule("QLT-EMPTYROW-004", empty_rows_profile):
+                quality_findings.append((sheet_id, None, finding))
+        total_rows_profile = TotalRowsSheetProfile(name=representative.sheet_name, total_rows=representative.total_rows)
+        if get_rule_execution_record("QLT-TOTALROW-010").status == "executable_draft":
+            for finding in execute_registered_rule("QLT-TOTALROW-010", total_rows_profile):
                 quality_findings.append((sheet_id, None, finding))
 
     findings: list[dict[str, object]] = []

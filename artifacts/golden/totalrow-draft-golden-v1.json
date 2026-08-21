@@ -1,0 +1,91 @@
+{
+  "dataset_id": "GD-QLT-TOTALROW-010-001",
+  "rule_id": "QLT-TOTALROW-010",
+  "rule_version": "0.1.0-provisional.1",
+  "scope": "draft_only",
+  "privacy": {
+    "contains_raw_workbook_values": false,
+    "contains_cell_positions": false,
+    "contains_sheet_titles": false
+  },
+  "scenarios": [
+    {
+      "case_id": "totalrow-low-one-candidate",
+      "sheet": {
+        "total_rows": {
+          "non_empty_row_count": 20,
+          "total_row_candidate_count": 1,
+          "total_row_candidate_ratio": 0.05,
+          "normalization_basis": "first_significant_label_exact_ptbr_total_terms_with_physical_numeric_peer_after_three_non_empty_rows"
+        }
+      },
+      "expected_findings": [
+        {"rule_id": "QLT-TOTALROW-010", "severity": "low", "confidence": 0.9, "question": false}
+      ]
+    },
+    {
+      "case_id": "totalrow-medium-one-candidate",
+      "sheet": {
+        "total_rows": {
+          "non_empty_row_count": 10,
+          "total_row_candidate_count": 1,
+          "total_row_candidate_ratio": 0.1,
+          "normalization_basis": "first_significant_label_exact_ptbr_total_terms_with_physical_numeric_peer_after_three_non_empty_rows"
+        }
+      },
+      "expected_findings": [
+        {"rule_id": "QLT-TOTALROW-010", "severity": "medium", "confidence": 0.9, "question": true}
+      ]
+    },
+    {
+      "case_id": "totalrow-high-multiple-candidates",
+      "sheet": {
+        "total_rows": {
+          "non_empty_row_count": 5,
+          "total_row_candidate_count": 2,
+          "total_row_candidate_ratio": 0.4,
+          "normalization_basis": "first_significant_label_exact_ptbr_total_terms_with_physical_numeric_peer_after_three_non_empty_rows"
+        }
+      },
+      "expected_findings": [
+        {"rule_id": "QLT-TOTALROW-010", "severity": "high", "confidence": 0.95, "question": true}
+      ]
+    },
+    {
+      "case_id": "totalrow-no-candidates",
+      "sheet": {
+        "total_rows": {
+          "non_empty_row_count": 8,
+          "total_row_candidate_count": 0,
+          "total_row_candidate_ratio": 0.0,
+          "normalization_basis": "first_significant_label_exact_ptbr_total_terms_with_physical_numeric_peer_after_three_non_empty_rows"
+        }
+      },
+      "expected_findings": []
+    },
+    {
+      "case_id": "totalrow-insufficient-prefix",
+      "sheet": {
+        "total_rows": {
+          "non_empty_row_count": 3,
+          "total_row_candidate_count": 1,
+          "total_row_candidate_ratio": 0.33333333,
+          "normalization_basis": "first_significant_label_exact_ptbr_total_terms_with_physical_numeric_peer_after_three_non_empty_rows"
+        }
+      },
+      "expected_findings": []
+    },
+    {
+      "case_id": "totalrow-unapproved-basis",
+      "sheet": {
+        "total_rows": {
+          "non_empty_row_count": 8,
+          "total_row_candidate_count": 1,
+          "total_row_candidate_ratio": 0.125,
+          "normalization_basis": "unapproved_basis"
+        }
+      },
+      "expected_findings": []
+    }
+  ]
+}
