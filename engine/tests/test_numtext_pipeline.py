@@ -84,6 +84,28 @@ class NumericTextPipelineTests(unittest.TestCase):
         self.assertNotIn("1200", serialized)
         self.assertNotIn("codigo-A", serialized)
 
+    def test_projects_sensitivity_in_its_segregated_collection_without_exposing_input_content(self):
+        context = build_column_analysis_context(
+            sheet_id="00000000-0000-4000-8000-000000000010",
+            column_id="00000000-0000-4000-8000-000000000011",
+            column_name="CPF",
+            values=["__PIPELINE_SYNTHETIC_OBSERVATION__"],
+            sheet_name="Dados",
+            sheet_position=0,
+            sheet_visibility="visible",
+            column_position=0,
+        )
+
+        diagnosis = execute_quality_diagnosis([context], metadata=METADATA)
+        serialized = json.dumps(diagnosis)
+
+        self.assertEqual(len(diagnosis["sensitivity_classifications"]), 1)
+        self.assertEqual(diagnosis["sensitivity_classifications"][0]["sensitivity"], "personal_data_candidate")
+        self.assertNotIn("personal_data_candidate", [item.get("semantic_type") for item in diagnosis["semantic_classifications"]])
+        self.assertTrue(diagnosis["questions"][0]["blocking"])
+        self.assertNotIn("CPF", serialized)
+        self.assertNotIn("__PIPELINE_SYNTHETIC_OBSERVATION__", serialized)
+
     def test_schema_rejects_unknown_root_property_and_preserves_question_lineage_per_sheet(self):
         sales = build_column_analysis_context(
             sheet_id="00000000-0000-4000-8000-000000000010",

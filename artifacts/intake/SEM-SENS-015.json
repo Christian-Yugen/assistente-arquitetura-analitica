@@ -1,13 +1,13 @@
 {
   "rule_id": "SEM-SENS-015",
   "title": "Sensibilidade e dado pessoal",
-  "status": "intake_required",
+  "status": "executable_draft",
   "priority": "P0",
   "stage": "semantic_typing",
   "scope": "column",
   "depends_on": ["quality"],
   "primary_output": "sensitivity",
-  "execution_blocked": true,
+  "execution_blocked": false,
   "source_traceability": {
     "catalog": "artifacts/catalogs/rule-implementation-readiness-v1.json",
     "blueprint": "artifacts/catalogs/official-rule-blueprint-95.json",
@@ -20,17 +20,5 @@
     "the official blueprint requests converging evidence for sensitivity and personal-data classification but does not define an executable condition, vocabulary, exclusions, confidence, evidence, questions, tests or calibration",
     "the engine already has transient sensitive-header signals for CPF, CNPJ, email, name, phone, mobile and address, plus independent workbook masking; the new rule must not weaken, duplicate or expose those controls"
   ],
-  "missing_before_execution": [
-    "policy",
-    "logical_specification",
-    "reconstruction_authorization_gate",
-    "private_profile",
-    "classifier",
-    "contract_version",
-    "pipeline_integration",
-    "tests",
-    "golden_dataset",
-    "calibration_gate",
-    "draft_authorization"
-  ]
+  "missing_before_execution": []
 }

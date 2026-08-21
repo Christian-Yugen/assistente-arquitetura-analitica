@@ -293,4 +293,8 @@
 - [x] Ativar a SEM-ACTUAL-014 exclusivamente no perfil draft e sincronizar catálogo, índice de prontidão, Gate MVP e indicador do workspace.
 - [x] Recuperar metadados, dependências e lacunas da SEM-SENS-015 sem implementar lógica executável.
 - [x] Elaborar política e especificação lógica não executáveis para a SEM-SENS-015 e solicitar aprovação específica antes de implementação.
-- [ ] Formalizar o gate de reconstrução, implementar, testar, calibrar e ativar a SEM-SENS-015 exclusivamente após autorização explícita de Chris no perfil draft.
+- [x] Formalizar o gate de reconstrução, implementar, testar, calibrar e ativar a SEM-SENS-015 exclusivamente após autorização explícita de Chris no perfil draft.
+- [x] Formalizar o gate de reconstrução da SEM-SENS-015 conforme a Proposta A aprovada por Chris.
+- [x] Implementar o perfil privado, classificador, registro, contrato e integração canônica da SEM-SENS-015 sem inspecionar valores pessoais.
+- [x] Criar testes unitários, golden dataset sem dados pessoais, avaliador e calibração reproduzível da SEM-SENS-015.
+- [x] Ativar a SEM-SENS-015 exclusivamente no perfil draft e sincronizar catálogo, índice de prontidão, Gate MVP e indicador do workspace.

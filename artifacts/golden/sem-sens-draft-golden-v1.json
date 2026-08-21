@@ -1,0 +1,8 @@
+[
+  {"case_id": "sensitivity-cpf-001", "header": "CPF", "values": ["__OBSERVACAO_SINTETICA_001__"], "expected": true},
+  {"case_id": "sensitivity-email-002", "header": "E-mail", "values": ["__OBSERVACAO_SINTETICA_002__"], "expected": true},
+  {"case_id": "sensitivity-phone-003", "header": "Telefone", "values": ["__OBSERVACAO_SINTETICA_003__"], "expected": true},
+  {"case_id": "sensitivity-open-header-004", "header": "Observação", "values": ["__OBSERVACAO_SINTETICA_004__"], "expected": false},
+  {"case_id": "sensitivity-empty-name-005", "header": "Nome", "values": [null, "", "   "], "expected": false},
+  {"case_id": "sensitivity-empty-cpf-006", "header": "CPF", "values": [null, "", "   "], "expected": false}
+]

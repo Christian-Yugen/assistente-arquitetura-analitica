@@ -108,6 +108,21 @@ SEMANTIC_CLASSIFICATION_SCHEMA = strict_object(
     ["semantic_type", "confidence", "evidence", "rule_id", "rule_version", "affected_entities"],
 )
 
+SENSITIVITY_CLASSIFICATION_SCHEMA = strict_object(
+    {
+        "sensitivity": {"type": "string"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "evidence": {"type": "object", "additionalProperties": True},
+        "rule_id": {"type": "string"},
+        "rule_version": {"type": "string"},
+        "affected_entities": {
+            "type": "array",
+            "items": strict_object({"entity_type": {"type": "string"}, "entity_id": {"type": "string"}}, ["entity_type", "entity_id"]),
+        },
+    },
+    ["sensitivity", "confidence", "evidence", "rule_id", "rule_version", "affected_entities"],
+)
+
 COLUMN_SCHEMA = strict_object(
     {
         "column_id": UUID,
@@ -222,6 +237,7 @@ DIAGNOSIS_ROOT_SCHEMA = strict_object(
         "questions": {"type": "array", "items": QUESTION_SCHEMA},
         "findings": {"type": "array", "items": FINDING_SCHEMA},
         "semantic_classifications": {"type": "array", "items": SEMANTIC_CLASSIFICATION_SCHEMA},
+        "sensitivity_classifications": {"type": "array", "items": SENSITIVITY_CLASSIFICATION_SCHEMA},
         "execution": strict_object(
             {"correlation_id": UUID, "status": {"type": "string"}, "started_at": TIMESTAMP, "completed_at": {"type": ["string", "null"]}, "duration_ms": {"type": ["integer", "null"], "minimum": 0}, "engine_version": {"type": "string"}, "ruleset_version": {"type": "string"}, "schema_version": {"const": "1.0.0"}, "confidence_methodology_version": {"type": "string"}, "partial_results": {"type": "boolean"}, "modules": {"type": "array", "items": strict_object({"module": {"type": "string"}, "status": {"type": "string"}, "duration_ms": NON_NEGATIVE_INTEGER}, ["module", "status", "duration_ms"])}, "errors": {"type": "array"}, "ai_usage": strict_object({"used": {"type": "boolean"}, "providers": {"type": "array", "items": {"type": "string"}}, "fallback": {"type": "string"}}, ["used", "providers", "fallback"])},
             ["correlation_id", "status", "started_at", "completed_at", "duration_ms", "engine_version", "ruleset_version", "schema_version", "confidence_methodology_version", "partial_results", "modules", "errors", "ai_usage"],

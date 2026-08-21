@@ -44,10 +44,12 @@ from engine.profiling.semantic_percentage import profile_semantic_percentage
 from engine.profiling.semantic_quantity import profile_semantic_quantity
 from engine.profiling.semantic_target import profile_semantic_target
 from engine.profiling.semantic_actual import profile_semantic_actual
+from engine.profiling.semantic_sensitivity import profile_semantic_sensitivity
 from engine.semantic.currency import SemanticCurrencyColumnProfile
 from engine.semantic.percentage import SemanticPercentageColumnProfile
 from engine.semantic.target import SemanticTargetColumnProfile
 from engine.semantic.actual import SemanticActualColumnProfile
+from engine.semantic.sensitivity import SemanticSensitivityColumnProfile
 from engine.profiling.headers import HeadersProfile
 from engine.quality.headers import HeadersSheetProfile
 from engine.profiling.identifier_completeness import IdentifierCompletenessProfile
@@ -200,6 +202,13 @@ class RuleCatalogTests(unittest.TestCase):
             ),
         )
         actual_record = get_rule_execution_record("SEM-ACTUAL-014")
+        sensitivity_result = execute_registered_rule(
+            "SEM-SENS-015",
+            SemanticSensitivityColumnProfile(
+                profile_semantic_sensitivity(profile_semantic_identifier("CPF", ["__CATALOG_SYNTHETIC__"])),
+            ),
+        )
+        sensitivity_record = get_rule_execution_record("SEM-SENS-015")
         transactional_result = execute_registered_rule(
             "MDL-FACTTXN-002",
             TransactionalFactSheetProfile(20, True, (TransactionalDateProfile(20, 18),), 1),
@@ -212,7 +221,7 @@ class RuleCatalogTests(unittest.TestCase):
             "MDL-DIMCAL-006",
             CalendarDimensionSheetProfile(20, True, (CalendarDateProfile(20, 20, 19),), 0),
         )
-        self.assertEqual(executable_rule_count(), 27)
+        self.assertEqual(executable_rule_count(), 28)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
@@ -234,6 +243,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(percentage_result[0]["semantic_type"], "percentage_candidate")
         self.assertEqual(target_result[0]["semantic_type"], "target_or_forecast_candidate")
         self.assertEqual(actual_result[0]["semantic_type"], "actual_candidate")
+        self.assertEqual(sensitivity_result[0]["sensitivity"], "personal_data_candidate")
         self.assertEqual(transactional_result[0]["classification_type"], "fact_transactional_candidate")
         self.assertEqual(dimension_result[0]["classification_type"], "dimension_standard_candidate")
         self.assertEqual(calendar_dimension_result[0]["classification_type"], "dimension_calendar_candidate")
@@ -245,6 +255,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(percentage_record.status, "executable_draft")
         self.assertEqual(target_record.status, "executable_draft")
         self.assertEqual(actual_record.status, "executable_draft")
+        self.assertEqual(sensitivity_record.status, "executable_draft")
         self.assertEqual(catvar_record.status, "executable_draft")
         self.assertEqual(duplicate_record.status, "executable_draft")
         self.assertEqual(emptyrow_record.status, "executable_draft")

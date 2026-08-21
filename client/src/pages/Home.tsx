@@ -149,7 +149,7 @@ export default function Home() {
 
           <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
               {[
-              { label: "Regras executáveis", value: "27", detail: "QLT-001 a QLT-015 + SEM-DATE-001 + SEM-ID-003 + SEM-QTY-005 + SEM-CURR-006 + SEM-PCT-007 + SEM-TARGET-013 + SEM-ACTUAL-014 + GRN-COMP-001 + MDL-FACTPER-001 + MDL-FACTTXN-002 + MDL-DIMSTD-004 + MDL-DIMCAL-006", icon: CheckCircle2, color: "text-[#39825a] bg-[#ebf5eb]" },
+              { label: "Regras executáveis", value: "28", detail: "QLT-001 a QLT-015 + SEM-DATE-001 + SEM-ID-003 + SEM-QTY-005 + SEM-CURR-006 + SEM-PCT-007 + SEM-TARGET-013 + SEM-ACTUAL-014 + SEM-SENS-015 + GRN-COMP-001 + MDL-FACTPER-001 + MDL-FACTTXN-002 + MDL-DIMSTD-004 + MDL-DIMCAL-006", icon: CheckCircle2, color: "text-[#39825a] bg-[#ebf5eb]" },
               { label: "Catálogo governado", value: "95", detail: "slots versionados", icon: Sparkles, color: "text-[#5774a8] bg-[#eef2fb]" },
               { label: "Gate histórico", value: "G7.5", detail: "linhagem canônica pendente", icon: AlertTriangle, color: "text-[#ad7040] bg-[#fcf2e5]" },
             ].map(item => <Card key={item.label} className="rounded-2xl border-[#e0e6df] bg-white"><CardContent className="flex items-center gap-4 p-5"><span className={`grid h-10 w-10 place-items-center rounded-xl ${item.color}`}><item.icon className="h-5 w-5" /></span><div><p className="text-xs text-[#7b8981]">{item.label}</p><p className="mt-0.5 font-serif text-xl text-[#223f35]">{item.value}</p><p className="text-xs text-[#68786f]">{item.detail}</p></div></CardContent></Card>)}
