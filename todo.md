@@ -206,3 +206,7 @@
 - [x] Propor uma política conservadora, especificação e gate de reconstrução da QLT-NEGATIVE-011 para aprovação explícita de Chris.
 - [x] Criar branch de segurança da QLT-NEGATIVE-011 antes de qualquer código executável.
 - [x] Implementar, testar, calibrar e ativar a QLT-NEGATIVE-011 exclusivamente após autorização explícita de Chris para a política proposta.
+- [x] Recuperar os metadados oficiais e os sinais disponíveis para a QLT-OUTLIER-012 sem implementar lógica executável.
+- [x] Propor uma política conservadora, especificação e gate de reconstrução da QLT-OUTLIER-012 para aprovação explícita de Chris.
+- [x] Criar branch de segurança da QLT-OUTLIER-012 antes de qualquer código executável.
+- [x] Implementar, testar, calibrar e ativar a QLT-OUTLIER-012 exclusivamente após autorização explícita de Chris para a política proposta.

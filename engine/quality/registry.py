@@ -11,6 +11,7 @@ from .bad_dates import BadDateColumnProfile, evaluate_bad_dates
 from .whitespace import WhitespaceColumnProfile, evaluate_whitespace
 from .total_rows import TotalRowsSheetProfile, evaluate_total_rows
 from .negative_values import NegativeValuesColumnProfile, evaluate_negative_values
+from .outliers import OutlierColumnProfile, evaluate_outliers
 
 
 QUALITY_RULE_IMPLEMENTATIONS = {
@@ -25,6 +26,7 @@ QUALITY_RULE_IMPLEMENTATIONS = {
     "QLT-WHITESPACE-009": evaluate_whitespace,
     "QLT-TOTALROW-010": evaluate_total_rows,
     "QLT-NEGATIVE-011": evaluate_negative_values,
+    "QLT-OUTLIER-012": evaluate_outliers,
 }
 
-__all__ = ["NumericTextColumnProfile", "NullColumnProfile", "CategoricalVariationColumnProfile", "DuplicateRowsSheetProfile", "EmptyColumnProfile", "EmptyRowsSheetProfile", "MixedTypesColumnProfile", "BadDateColumnProfile", "WhitespaceColumnProfile", "TotalRowsSheetProfile", "NegativeValuesColumnProfile", "QUALITY_RULE_IMPLEMENTATIONS"]
+__all__ = ["NumericTextColumnProfile", "NullColumnProfile", "CategoricalVariationColumnProfile", "DuplicateRowsSheetProfile", "EmptyColumnProfile", "EmptyRowsSheetProfile", "MixedTypesColumnProfile", "BadDateColumnProfile", "WhitespaceColumnProfile", "TotalRowsSheetProfile", "NegativeValuesColumnProfile", "OutlierColumnProfile", "QUALITY_RULE_IMPLEMENTATIONS"]

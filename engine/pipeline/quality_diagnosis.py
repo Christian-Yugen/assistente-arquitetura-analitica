@@ -20,6 +20,7 @@ from engine.profiling.bad_dates import BadDateProfile, profile_bad_dates
 from engine.profiling.whitespace import WhitespaceProfile, profile_whitespace
 from engine.profiling.total_rows import TotalRowsProfile
 from engine.profiling.negative_values import NegativeValuesProfile, profile_negative_values
+from engine.profiling.outliers import OutlierProfile, profile_outliers
 from engine.quality.numtext import NumericTextColumnProfile
 from engine.quality.nulls import NullColumnProfile
 from engine.quality.catvar import CategoricalVariationColumnProfile
@@ -31,6 +32,7 @@ from engine.quality.bad_dates import BadDateColumnProfile
 from engine.quality.whitespace import WhitespaceColumnProfile
 from engine.quality.total_rows import TotalRowsSheetProfile
 from engine.quality.negative_values import NegativeValuesColumnProfile
+from engine.quality.outliers import OutlierColumnProfile
 
 
 @dataclass(frozen=True)
@@ -80,6 +82,7 @@ class ColumnAnalysisContext:
     whitespace: WhitespaceProfile = field(default_factory=WhitespaceProfile)
     total_rows: TotalRowsProfile = field(default_factory=TotalRowsProfile)
     negative_values: NegativeValuesProfile = field(default_factory=NegativeValuesProfile)
+    outliers: OutlierProfile = field(default_factory=OutlierProfile)
 
 
 def build_column_analysis_context(
@@ -104,6 +107,7 @@ def build_column_analysis_context(
         bad_dates=profile_bad_dates(materialized_values),
         whitespace=profile_whitespace(materialized_values),
         negative_values=profile_negative_values(column_name, materialized_values),
+        outliers=profile_outliers(materialized_values),
     )
 
 
@@ -157,6 +161,10 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         negative_values_profile = NegativeValuesColumnProfile(name=column.column_name, negative_values=column.negative_values)
         if get_rule_execution_record("QLT-NEGATIVE-011").status == "executable_draft":
             for finding in execute_registered_rule("QLT-NEGATIVE-011", negative_values_profile):
+                quality_findings.append((column.sheet_id, column.column_id, finding))
+        outlier_profile = OutlierColumnProfile(name=column.column_name, outliers=column.outliers)
+        if get_rule_execution_record("QLT-OUTLIER-012").status == "executable_draft":
+            for finding in execute_registered_rule("QLT-OUTLIER-012", outlier_profile):
                 quality_findings.append((column.sheet_id, column.column_id, finding))
 
     for sheet_id, sheet_columns in grouped_columns.items():
