@@ -26,8 +26,13 @@
   "source_gap": "O blueprint oficial define somente título, propósito, prioridade P1, escopo por par de abas, dependência de classificação de tabela e saída relationship_or_finding. Ele não define cobertura parcial válida, modo de contar órfãos, exclusões, evidências, confiança, severidade, pergunta humana, perfil privado por par, versão contratual, testes ou calibração. A regra não pode revelar ou persistir títulos de abas, cabeçalhos, valores, posições, pares correspondentes, frequências individuais, chaves ou identificadores; não pode remover, corrigir ou criar registros ou relacionamentos no Power BI.",
   "local_readiness": "intake_required",
   "authorization": {
+    "intake_authorized": true,
+    "intake_authorized_by": "Chris",
+    "policy_approved": true,
+    "policy_approved_by": "Chris",
+    "policy_approved_proposal": "A",
     "implementation_authorized": false,
-    "reason": "Chris autorizou a continuidade governada, mas ainda não aprovou uma política para registros órfãos. A regra permanece sem perfil, classificador, registro, contrato, pipeline, catálogo executável, golden dataset, calibração ou allowlist draft.",
+    "reason": "Chris aprovou a Proposta A, mas não autorizou a implementação. A regra permanece sem perfil, classificador, registro, contrato, pipeline, catálogo executável, golden dataset, calibração ou allowlist draft.",
     "required_gate": "REL-ORPHAN-003-RECONSTRUCTION-AUTHORIZATION-001"
   },
   "required_before_implementation": [

@@ -398,3 +398,5 @@
 - [x] Criar branch de segurança e recuperar metadados, dependências e lacunas da REL-ORPHAN-003 sem implementar lógica executável.
 - [x] Elaborar intake, Proposta A e especificação lógica não executáveis para a REL-ORPHAN-003 e solicitar aprovação específica antes de implementação.
 - [x] Criar prova documental que preserve o bloqueio de execução e de produção da REL-ORPHAN-003.
+- [x] Registrar a aprovação explícita de Chris para a Proposta A da REL-ORPHAN-003 nos artefatos governados.
+- [x] Formalizar o gate de reconstrução da REL-ORPHAN-003 sem autorizar implementação.
