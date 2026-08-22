@@ -24,11 +24,11 @@
     ]
   },
   "source_gap": "O blueprint oficial define somente título, propósito, prioridade P1, escopo por coluna, dependência de qualidade e saída semantic_type. Não há vocabulário materializado, unidade física, escala, conversão, tipo de célula, base mínima, exclusões, evidências, precedência, confiança, pergunta, perfil agregado, projeção ou calibração. A regra não pode inferir duração por valores, magnitude, formato visual, título de aba, posição, idioma, domínio, intervalo entre datas, fórmulas, textos livres ou números seriais sem política aprovada.",
-  "local_readiness": "intake_required",
+  "local_readiness": "executable_draft",
   "authorization": {
-    "implementation_authorized": false,
-    "reason": "A classificação de duração pode confundir quantidade, percentual, data, hora, identificador ou medida. Chris deve aprovar vocabulário fechado, sinais agregados, unidade permitida, base mínima, precedência e controles de privacidade antes de qualquer código executável.",
-    "required_gate": "SEM-DUR-008-RECONSTRUCTION-AUTHORIZATION-001"
+    "implementation_authorized": true,
+    "reason": "Chris aprovou a Proposta A e o gate de reconstrução formalizou vocabulário fechado, sinais agregados, base mínima, exclusões, confiança e confirmação humana bloqueante exclusivamente no perfil draft.",
+    "required_gate": "SEM-DUR-008-DRAFT-CALIBRATION-001"
   },
   "required_before_implementation": [
     "Decisão humana sobre vocabulário fechado, saída, unidade permitida, base mínima, exclusões, precedência e confiança",
@@ -49,19 +49,7 @@
     "golden_dataset",
     "authorization_gate"
   ],
-  "status": "intake_required",
-  "execution_blocked": true,
-  "missing_before_execution": [
-    "policy",
-    "logical_specification",
-    "reconstruction_authorization_gate",
-    "private_profile",
-    "classifier",
-    "contract_version",
-    "pipeline_integration",
-    "tests",
-    "golden_dataset",
-    "calibration_gate",
-    "draft_authorization"
-  ]
+  "status": "executable_draft",
+  "execution_blocked": false,
+  "missing_before_execution": []
 }

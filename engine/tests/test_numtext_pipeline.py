@@ -146,6 +146,26 @@ class NumericTextPipelineTests(unittest.TestCase):
         self.assertNotIn("Descrição", serialized)
         self.assertNotIn("rotulo-sintetico-01", serialized)
 
+    def test_projects_duration_as_semantic_type_without_exposing_header_or_numeric_content(self):
+        values = list(range(101, 111))
+        context = build_column_analysis_context(
+            sheet_id="00000000-0000-4000-8000-000000000010",
+            column_id="00000000-0000-4000-8000-000000000011",
+            column_name="Duração (horas)",
+            values=values,
+            sheet_name="Dados",
+            sheet_position=0,
+            sheet_visibility="visible",
+            column_position=0,
+        )
+
+        diagnosis = execute_quality_diagnosis([context], metadata=METADATA)
+        serialized = json.dumps(diagnosis)
+
+        self.assertIn("duration_candidate", [item["semantic_type"] for item in diagnosis["semantic_classifications"]])
+        self.assertNotIn("Duração (horas)", serialized)
+        self.assertNotIn("101", serialized)
+
     def test_schema_rejects_unknown_root_property_and_preserves_question_lineage_per_sheet(self):
         sales = build_column_analysis_context(
             sheet_id="00000000-0000-4000-8000-000000000010",

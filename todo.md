@@ -308,7 +308,7 @@
 - [x] Implementar, testar, calibrar e ativar a SEM-DESC-004 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
 - [x] Recuperar metadados, dependências e lacunas da SEM-DUR-008 sem implementar lógica executável.
 - [x] Elaborar política e especificação lógica não executáveis para a SEM-DUR-008 e solicitar aprovação específica antes de implementação.
-- [ ] Formalizar o gate de reconstrução da SEM-DUR-008 somente após a aprovação explícita de Chris para a proposta selecionada.
-- [ ] Implementar, testar, calibrar e ativar a SEM-DUR-008 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
+- [x] Formalizar o gate de reconstrução da SEM-DUR-008 somente após a aprovação explícita de Chris para a proposta selecionada.
+- [x] Implementar, testar, calibrar e ativar a SEM-DUR-008 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
 - [x] Exportar integralmente o estado versionado atual do projeto para o repositório privado de Chris no GitHub.
 - [x] Auditar o repositório privado no GitHub, as branches exportadas e as pull requests abertas ou concluídas.
