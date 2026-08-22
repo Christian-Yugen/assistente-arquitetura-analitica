@@ -106,6 +106,26 @@ class NumericTextPipelineTests(unittest.TestCase):
         self.assertNotIn("CPF", serialized)
         self.assertNotIn("__PIPELINE_SYNTHETIC_OBSERVATION__", serialized)
 
+    def test_projects_competence_as_semantic_type_without_exposing_header_or_dates(self):
+        values = [f"2026-07-{day:02d}" for day in range(1, 11)]
+        context = build_column_analysis_context(
+            sheet_id="00000000-0000-4000-8000-000000000010",
+            column_id="00000000-0000-4000-8000-000000000011",
+            column_name="Data de competência",
+            values=values,
+            sheet_name="Dados",
+            sheet_position=0,
+            sheet_visibility="visible",
+            column_position=0,
+        )
+
+        diagnosis = execute_quality_diagnosis([context], metadata=METADATA)
+        serialized = json.dumps(diagnosis)
+
+        self.assertIn("competence_date_candidate", [item["semantic_type"] for item in diagnosis["semantic_classifications"]])
+        self.assertNotIn("Data de competência", serialized)
+        self.assertNotIn("2026-07-01", serialized)
+
     def test_schema_rejects_unknown_root_property_and_preserves_question_lineage_per_sheet(self):
         sales = build_column_analysis_context(
             sheet_id="00000000-0000-4000-8000-000000000010",

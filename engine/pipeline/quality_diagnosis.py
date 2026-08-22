@@ -25,6 +25,7 @@ from engine.profiling.formula_consistency import FormulaConsistencyProfile
 from engine.profiling.headers import HeadersProfile
 from engine.profiling.identifier_completeness import IdentifierCompletenessProfile, profile_identifier_completeness
 from engine.profiling.semantic_date import SemanticDateProfile, profile_semantic_date
+from engine.profiling.semantic_competence import SemanticCompetenceProfile, profile_semantic_competence
 from engine.profiling.semantic_actual import SemanticActualProfile, profile_semantic_actual
 from engine.profiling.semantic_currency import SemanticCurrencyProfile, profile_semantic_currency
 from engine.profiling.semantic_identifier import SemanticIdentifierProfile, profile_semantic_identifier
@@ -52,6 +53,7 @@ from engine.quality.formula_consistency import FormulaConsistencyColumnProfile
 from engine.quality.headers import HeadersSheetProfile
 from engine.quality.identifier_completeness import IdentifierCompletenessColumnProfile
 from engine.semantic.date_generic import SemanticDateColumnProfile
+from engine.semantic.competence import SemanticCompetenceColumnProfile
 from engine.semantic.actual import SemanticActualColumnProfile
 from engine.semantic.currency import SemanticCurrencyColumnProfile
 from engine.semantic.identifier import SemanticIdentifierColumnProfile, classify_identifier
@@ -118,6 +120,7 @@ class ColumnAnalysisContext:
     headers: HeadersProfile = field(default_factory=HeadersProfile)
     identifiers: IdentifierCompletenessProfile = field(default_factory=IdentifierCompletenessProfile)
     semantic_date: SemanticDateProfile = field(default_factory=SemanticDateProfile)
+    semantic_competence: SemanticCompetenceProfile = field(default_factory=SemanticCompetenceProfile)
     semantic_actual: SemanticActualProfile = field(default_factory=SemanticActualProfile)
     semantic_currency: SemanticCurrencyProfile = field(default_factory=SemanticCurrencyProfile)
     semantic_identifier: SemanticIdentifierProfile = field(default_factory=SemanticIdentifierProfile)
@@ -157,6 +160,7 @@ def build_column_analysis_context(
         outliers=profile_outliers(materialized_values),
         identifiers=profile_identifier_completeness(safe_column_name, materialized_values),
         semantic_date=profile_semantic_date(materialized_values),
+        semantic_competence=profile_semantic_competence(column_name),
         semantic_actual=profile_semantic_actual(column_name, materialized_values),
         semantic_currency=profile_semantic_currency(column_name, materialized_values),
         semantic_identifier=semantic_identifier,
@@ -239,6 +243,13 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         if get_rule_execution_record("SEM-DATE-001").status == "executable_draft":
             semantic_profile = SemanticDateColumnProfile(name=column.column_name, semantic_date=column.semantic_date)
             semantic_candidates.append((column.sheet_id, column.column_id, execute_registered_rule("SEM-DATE-001", semantic_profile)))
+        if get_rule_execution_record("SEM-COMP-002").status == "executable_draft":
+            competence_semantic_profile = SemanticCompetenceColumnProfile(
+                formulas=column.formulas,
+                semantic_date=column.semantic_date,
+                semantic_competence=column.semantic_competence,
+            )
+            semantic_candidates.append((column.sheet_id, column.column_id, execute_registered_rule("SEM-COMP-002", competence_semantic_profile)))
         if get_rule_execution_record("SEM-ID-003").status == "executable_draft":
             identifier_semantic_profile = SemanticIdentifierColumnProfile(
                 physical_type=column.physical_type, formula_count=column.formulas.formula_count,

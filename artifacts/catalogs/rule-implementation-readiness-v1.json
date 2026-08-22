@@ -9,9 +9,9 @@
   "policy": "A regra só pode ser executada quando local_readiness for executable_draft e houver gate de implementação registrado.",
   "counts": {
     "baseline_reference": 0,
-    "executable_draft": 28,
+    "executable_draft": 29,
     "reference_catalog_draft": 3,
-    "intake_required": 64
+    "intake_required": 63
   },
   "rules": [
     {
@@ -271,30 +271,20 @@
       "missing_before_execution": []
     },
     {
-      "rule_id": "SEM-COMP-002",
-      "title": "Data de competência",
-      "category": "semantic_typing",
-      "priority": "P1",
-      "stage": "semantic_typing",
-      "scope": "column",
-      "depends_on": [
-        "quality"
-      ],
-      "primary_output": "semantic_type",
-      "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+     "rule_id": "SEM-COMP-002",
+     "title": "Data de competência",
+     "category": "semantic_typing",
+     "priority": "P1",
+     "stage": "semantic_typing",
+     "scope": "column",
+     "depends_on": [
+       "quality"
+     ],
+     "primary_output": "semantic_type",
+     "source_implementation_status": "planned",
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "SEM-ID-003",
