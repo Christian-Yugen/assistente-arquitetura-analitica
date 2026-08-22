@@ -72,7 +72,9 @@ from engine.fact_dimension.transactional import TransactionalFactSheetProfile
 from engine.profiling.transactional_fact import TransactionalDateProfile
 from engine.fact_dimension.standard_dimension import StandardDimensionSheetProfile
 from engine.fact_dimension.calendar_dimension import CalendarDimensionSheetProfile
+from engine.granularity.explicit_key import ExplicitKeyColumnProfile, ExplicitKeySheetProfile
 from engine.profiling.calendar_dimension import CalendarDateProfile
+from engine.profiling.explicit_key_grain import profile_explicit_key_header
 
 
 class RuleCatalogTests(unittest.TestCase):
@@ -306,6 +308,14 @@ class RuleCatalogTests(unittest.TestCase):
             ),
         )
         responsible_record = get_rule_execution_record("SEM-RESP-012")
+        explicit_key_result = execute_registered_rule(
+            "GRN-EXPL-002",
+            ExplicitKeySheetProfile(
+                20,
+                (ExplicitKeyColumnProfile(profile_explicit_key_header("ID"), True, False, False, 0, "numeric", 20, 20, 0),),
+            ),
+        )
+        explicit_key_record = get_rule_execution_record("GRN-EXPL-002")
         transactional_result = execute_registered_rule(
             "MDL-FACTTXN-002",
             TransactionalFactSheetProfile(20, True, (TransactionalDateProfile(20, 18),), 1),
@@ -318,7 +328,7 @@ class RuleCatalogTests(unittest.TestCase):
             "MDL-DIMCAL-006",
             CalendarDimensionSheetProfile(20, True, (CalendarDateProfile(20, 20, 19),), 0),
         )
-        self.assertEqual(executable_rule_count(), 35)
+        self.assertEqual(executable_rule_count(), 36)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
@@ -348,6 +358,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(category_result[0]["semantic_type"], "category_candidate")
         self.assertEqual(location_result[0]["semantic_type"], "location_candidate")
         self.assertEqual(responsible_result[0]["semantic_type"], "responsible_candidate")
+        self.assertEqual(explicit_key_result[0]["grain_type"], "explicit_key_candidate")
         self.assertEqual(transactional_result[0]["classification_type"], "fact_transactional_candidate")
         self.assertEqual(dimension_result[0]["classification_type"], "dimension_standard_candidate")
         self.assertEqual(calendar_dimension_result[0]["classification_type"], "dimension_calendar_candidate")
@@ -367,6 +378,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(category_record.status, "executable_draft")
         self.assertEqual(location_record.status, "executable_draft")
         self.assertEqual(responsible_record.status, "executable_draft")
+        self.assertEqual(explicit_key_record.status, "executable_draft")
         self.assertEqual(catvar_record.status, "executable_draft")
         self.assertEqual(duplicate_record.status, "executable_draft")
         self.assertEqual(emptyrow_record.status, "executable_draft")

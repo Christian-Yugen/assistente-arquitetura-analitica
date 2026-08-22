@@ -10,7 +10,7 @@ describe("MVP-1.0-READINESS-001", () => {
 
     expect(gate).toContain("**BLOQUEADO para MVP 1.0 produtivo.**");
     expect(gate).toContain("MVP draft controlado");
-    expect(gate).toContain("Somente 35 de 95 regras");
+    expect(gate).toContain("Somente 36 de 95 regras");
     expect(gate).toContain("SEM-DATE-001@0.1.0-provisional.1");
     expect(gate).toContain("SEM-COMP-002@0.1.0-provisional.1");
     expect(gate).toContain("SEM-DESC-004@0.1.0-provisional.1");
@@ -26,6 +26,7 @@ describe("MVP-1.0-READINESS-001", () => {
     expect(gate).toContain("SEM-TARGET-013@0.1.0-provisional.1");
     expect(gate).toContain("SEM-ACTUAL-014@0.1.0-provisional.1");
     expect(gate).toContain("SEM-SENS-015@0.1.0-provisional.1");
+    expect(gate).toContain("GRN-EXPL-002@0.1.0-provisional.1");
     expect(gate).toContain("MDL-FACTTXN-002@0.1.0-provisional.1");
     expect(gate).toContain("MDL-DIMSTD-004@0.1.0-provisional.1");
     expect(gate).toContain("MDL-DIMCAL-006@0.1.0-provisional.1");

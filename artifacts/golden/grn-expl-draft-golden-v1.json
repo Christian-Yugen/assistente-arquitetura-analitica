@@ -1,0 +1,57 @@
+{
+  "dataset_id": "GD-GRN-EXPL-002-001",
+  "rule_id": "GRN-EXPL-002",
+  "cases": [
+    {
+      "case_id": "id_unique_complete",
+      "observed_row_count": 20,
+      "columns": [{"header": "ID", "identifier_signal": true, "sensitive_header": false, "description_header": false, "recognized_date_count": 0, "physical_type": "numeric", "non_missing_count": 20, "distinct_non_missing_count": 20, "formula_count": 0}],
+      "expected": true
+    },
+    {
+      "case_id": "chave_unique_complete",
+      "observed_row_count": 25,
+      "columns": [{"header": "Chave", "identifier_signal": true, "sensitive_header": false, "description_header": false, "recognized_date_count": 0, "physical_type": "numeric", "non_missing_count": 25, "distinct_non_missing_count": 25, "formula_count": 0}],
+      "expected": true
+    },
+    {
+      "case_id": "key_unique_complete",
+      "observed_row_count": 30,
+      "columns": [{"header": "Key", "identifier_signal": false, "sensitive_header": false, "description_header": false, "recognized_date_count": 0, "physical_type": "text", "non_missing_count": 30, "distinct_non_missing_count": 30, "formula_count": 0}],
+      "expected": true
+    },
+    {
+      "case_id": "open_header",
+      "observed_row_count": 20,
+      "columns": [{"header": "Código", "identifier_signal": true, "sensitive_header": false, "description_header": false, "recognized_date_count": 0, "physical_type": "numeric", "non_missing_count": 20, "distinct_non_missing_count": 20, "formula_count": 0}],
+      "expected": false
+    },
+    {
+      "case_id": "small_base",
+      "observed_row_count": 19,
+      "columns": [{"header": "ID", "identifier_signal": true, "sensitive_header": false, "description_header": false, "recognized_date_count": 0, "physical_type": "numeric", "non_missing_count": 19, "distinct_non_missing_count": 19, "formula_count": 0}],
+      "expected": false
+    },
+    {
+      "case_id": "duplicate_candidate",
+      "observed_row_count": 20,
+      "columns": [{"header": "ID", "identifier_signal": true, "sensitive_header": false, "description_header": false, "recognized_date_count": 0, "physical_type": "numeric", "non_missing_count": 20, "distinct_non_missing_count": 19, "formula_count": 0}],
+      "expected": false
+    },
+    {
+      "case_id": "formula_candidate",
+      "observed_row_count": 20,
+      "columns": [{"header": "ID", "identifier_signal": true, "sensitive_header": false, "description_header": false, "recognized_date_count": 0, "physical_type": "numeric", "non_missing_count": 20, "distinct_non_missing_count": 20, "formula_count": 1}],
+      "expected": false
+    },
+    {
+      "case_id": "ambiguous_candidates",
+      "observed_row_count": 20,
+      "columns": [
+        {"header": "ID", "identifier_signal": true, "sensitive_header": false, "description_header": false, "recognized_date_count": 0, "physical_type": "numeric", "non_missing_count": 20, "distinct_non_missing_count": 20, "formula_count": 0},
+        {"header": "Chave", "identifier_signal": true, "sensitive_header": false, "description_header": false, "recognized_date_count": 0, "physical_type": "numeric", "non_missing_count": 20, "distinct_non_missing_count": 20, "formula_count": 0}
+      ],
+      "expected": false
+    }
+  ]
+}

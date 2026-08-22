@@ -40,6 +40,7 @@ from engine.profiling.semantic_quantity import SemanticQuantityProfile, profile_
 from engine.profiling.semantic_sensitivity import profile_semantic_sensitivity
 from engine.profiling.semantic_target import SemanticTargetProfile, profile_semantic_target
 from engine.profiling.composite_grain import CompositeGrainProfile
+from engine.profiling.explicit_key_grain import ExplicitKeyHeaderProfile, profile_explicit_key_header
 from engine.profiling.periodic_fact import PeriodicDateProfile, profile_periodic_date
 from engine.profiling.transactional_fact import TransactionalDateProfile, profile_transactional_date
 from engine.profiling.calendar_dimension import CalendarDateProfile, profile_calendar_date
@@ -74,6 +75,7 @@ from engine.semantic.quantity import SemanticQuantityColumnProfile
 from engine.semantic.sensitivity import SemanticSensitivityColumnProfile
 from engine.semantic.target import SemanticTargetColumnProfile
 from engine.granularity.composite import CompositeGrainSheetProfile
+from engine.granularity.explicit_key import ExplicitKeyColumnProfile, ExplicitKeySheetProfile
 from engine.fact_dimension.periodic import PeriodicFactSheetProfile
 from engine.fact_dimension.standard_dimension import StandardDimensionSheetProfile
 from engine.fact_dimension.transactional import TransactionalFactSheetProfile
@@ -146,6 +148,7 @@ class ColumnAnalysisContext:
     semantic_quantity: SemanticQuantityProfile = field(default_factory=SemanticQuantityProfile)
     semantic_target: SemanticTargetProfile = field(default_factory=SemanticTargetProfile)
     composite_grain: CompositeGrainProfile = field(default_factory=CompositeGrainProfile)
+    explicit_key_header: ExplicitKeyHeaderProfile = field(default_factory=ExplicitKeyHeaderProfile)
     periodic_date: PeriodicDateProfile = field(default_factory=PeriodicDateProfile)
     transactional_date: TransactionalDateProfile = field(default_factory=TransactionalDateProfile)
     calendar_date: CalendarDateProfile = field(default_factory=CalendarDateProfile)
@@ -162,9 +165,10 @@ def build_column_analysis_context(
     semantic_category = profile_semantic_category(column_name, materialized_values)
     semantic_location = profile_semantic_location(column_name, materialized_values)
     semantic_responsible = profile_semantic_responsible(column_name, materialized_values)
+    explicit_key_header = profile_explicit_key_header(column_name)
     safe_column_name = (
         f"Campo sensível {column_position + 1}"
-        if semantic_identifier.sensitive_header or semantic_status.header_eligible or semantic_category.header_eligible or semantic_location.header_eligible or semantic_responsible.header_eligible
+        if semantic_identifier.sensitive_header or semantic_status.header_eligible or semantic_category.header_eligible or semantic_location.header_eligible or semantic_responsible.header_eligible or explicit_key_header.header_eligible
         else column_name
     )
     return ColumnAnalysisContext(
@@ -199,6 +203,7 @@ def build_column_analysis_context(
         semantic_percentage=profile_semantic_percentage(column_name, materialized_values),
         semantic_quantity=profile_semantic_quantity(column_name, materialized_values),
         semantic_target=profile_semantic_target(column_name, materialized_values),
+        explicit_key_header=explicit_key_header,
         periodic_date=profile_periodic_date(materialized_values),
         transactional_date=profile_transactional_date(materialized_values),
         calendar_date=profile_calendar_date(materialized_values),
@@ -424,6 +429,30 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
                 composite_grain=representative.composite_grain,
                 semantic_identifier_component_positions=identifier_positions,
             ))
+        if get_rule_execution_record("GRN-EXPL-002").status == "executable_draft":
+            observed_row_count = max(column.missingness.observed_cell_count for column in sheet_columns)
+            explicit_key_candidates = execute_registered_rule(
+                "GRN-EXPL-002",
+                ExplicitKeySheetProfile(
+                    observed_row_count=observed_row_count,
+                    columns=tuple(
+                        ExplicitKeyColumnProfile(
+                            header=column.explicit_key_header,
+                            identifier_signal=column.semantic_identifier.header_signal,
+                            sensitive_header=column.semantic_identifier.sensitive_header,
+                            description_header=column.semantic_description.header_eligible,
+                            recognized_date_count=column.semantic_date.recognized_date_count,
+                            physical_type=column.physical_type,
+                            non_missing_count=column.missingness.non_missing_cell_count,
+                            distinct_non_missing_count=column.semantic_identifier.distinct_non_missing_count,
+                            formula_count=column.formulas.formula_count,
+                        )
+                        for column in sheet_columns
+                    ),
+                ),
+            )
+            if explicit_key_candidates:
+                grain_candidates[sheet_id] = explicit_key_candidates + grain_candidates.get(sheet_id, [])
         if get_rule_execution_record("MDL-FACTPER-001").status == "executable_draft":
             table_candidates[sheet_id] = execute_registered_rule("MDL-FACTPER-001", PeriodicFactSheetProfile(
                 observed_row_count=max(column.missingness.observed_cell_count for column in sheet_columns),
