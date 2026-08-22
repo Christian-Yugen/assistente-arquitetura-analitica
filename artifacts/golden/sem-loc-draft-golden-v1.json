@@ -1,0 +1,64 @@
+{
+  "dataset_id": "GD-SEM-LOC-011-001",
+  "rule_id": "SEM-LOC-011",
+  "profile": "draft",
+  "privacy": "Valores sintéticos sem localização real, endereço, CEP, coordenada ou conteúdo pessoal.",
+  "cases": [
+    {
+      "id": "city_header",
+      "header": "Cidade",
+      "values": ["local_sintetico_a", "local_sintetico_b", "local_sintetico_a", "local_sintetico_b", "local_sintetico_a", "local_sintetico_b", "local_sintetico_a", "local_sintetico_b", "local_sintetico_a", "local_sintetico_b"],
+      "formula_count": 0,
+      "expected": true
+    },
+    {
+      "id": "municipality_header",
+      "header": "Município",
+      "values": ["local_sintetico_c", "local_sintetico_d", "local_sintetico_e", "local_sintetico_c", "local_sintetico_d", "local_sintetico_e", "local_sintetico_c", "local_sintetico_d", "local_sintetico_e", "local_sintetico_c", "local_sintetico_d", "local_sintetico_e"],
+      "formula_count": 0,
+      "expected": true
+    },
+    {
+      "id": "region_header",
+      "header": "Região",
+      "values": ["local_sintetico_f", "local_sintetico_g", "local_sintetico_h", "local_sintetico_i", "local_sintetico_f", "local_sintetico_g", "local_sintetico_h", "local_sintetico_i", "local_sintetico_f", "local_sintetico_g", "local_sintetico_h", "local_sintetico_i"],
+      "formula_count": 0,
+      "expected": true
+    },
+    {
+      "id": "ambiguous_state_header",
+      "header": "Estado",
+      "values": ["local_sintetico_a", "local_sintetico_b", "local_sintetico_a", "local_sintetico_b", "local_sintetico_a", "local_sintetico_b", "local_sintetico_a", "local_sintetico_b", "local_sintetico_a", "local_sintetico_b"],
+      "formula_count": 0,
+      "expected": false
+    },
+    {
+      "id": "small_base",
+      "header": "Cidade",
+      "values": ["local_sintetico_a", "local_sintetico_b", "local_sintetico_a", "local_sintetico_b", "local_sintetico_a", "local_sintetico_b", "local_sintetico_a", "local_sintetico_b", "local_sintetico_a"],
+      "formula_count": 0,
+      "expected": false
+    },
+    {
+      "id": "formula_present",
+      "header": "Cidade",
+      "values": ["local_sintetico_a", "local_sintetico_b", "local_sintetico_a", "local_sintetico_b", "local_sintetico_a", "local_sintetico_b", "local_sintetico_a", "local_sintetico_b", "local_sintetico_a", "local_sintetico_b"],
+      "formula_count": 1,
+      "expected": false
+    },
+    {
+      "id": "high_cardinality",
+      "header": "Cidade",
+      "values": ["local_01", "local_02", "local_03", "local_04", "local_05", "local_06", "local_07", "local_08", "local_09", "local_10", "local_11", "local_12", "local_13", "local_14", "local_15", "local_16", "local_17", "local_18", "local_19", "local_20", "local_21", "local_22", "local_23", "local_24", "local_25", "local_26", "local_27", "local_28", "local_29", "local_30", "local_31", "local_32", "local_33", "local_34", "local_35", "local_36", "local_37", "local_38", "local_39", "local_40", "local_41", "local_42", "local_43", "local_44", "local_45", "local_46", "local_47", "local_48", "local_49", "local_50", "local_51"],
+      "formula_count": 0,
+      "expected": false
+    },
+    {
+      "id": "high_distinct_ratio",
+      "header": "Cidade",
+      "values": ["local_01", "local_02", "local_03", "local_04", "local_05", "local_06", "local_07", "local_08", "local_09", "local_10"],
+      "formula_count": 0,
+      "expected": false
+    }
+  ]
+}
