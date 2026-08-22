@@ -45,11 +45,13 @@ from engine.profiling.semantic_quantity import profile_semantic_quantity
 from engine.profiling.semantic_target import profile_semantic_target
 from engine.profiling.semantic_actual import profile_semantic_actual
 from engine.profiling.semantic_sensitivity import profile_semantic_sensitivity
+from engine.profiling.semantic_competence import profile_semantic_competence
 from engine.semantic.currency import SemanticCurrencyColumnProfile
 from engine.semantic.percentage import SemanticPercentageColumnProfile
 from engine.semantic.target import SemanticTargetColumnProfile
 from engine.semantic.actual import SemanticActualColumnProfile
 from engine.semantic.sensitivity import SemanticSensitivityColumnProfile
+from engine.semantic.competence import SemanticCompetenceColumnProfile
 from engine.profiling.headers import HeadersProfile
 from engine.quality.headers import HeadersSheetProfile
 from engine.profiling.identifier_completeness import IdentifierCompletenessProfile
@@ -209,6 +211,16 @@ class RuleCatalogTests(unittest.TestCase):
             ),
         )
         sensitivity_record = get_rule_execution_record("SEM-SENS-015")
+        competence_values = [f"2026-07-{day:02d}" for day in range(1, 11)]
+        competence_result = execute_registered_rule(
+            "SEM-COMP-002",
+            SemanticCompetenceColumnProfile(
+                FormulaConsistencyProfile(formula_count=0),
+                profile_semantic_date(competence_values),
+                profile_semantic_competence("data de competência"),
+            ),
+        )
+        competence_record = get_rule_execution_record("SEM-COMP-002")
         transactional_result = execute_registered_rule(
             "MDL-FACTTXN-002",
             TransactionalFactSheetProfile(20, True, (TransactionalDateProfile(20, 18),), 1),
@@ -221,7 +233,7 @@ class RuleCatalogTests(unittest.TestCase):
             "MDL-DIMCAL-006",
             CalendarDimensionSheetProfile(20, True, (CalendarDateProfile(20, 20, 19),), 0),
         )
-        self.assertEqual(executable_rule_count(), 28)
+        self.assertEqual(executable_rule_count(), 29)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
@@ -244,6 +256,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(target_result[0]["semantic_type"], "target_or_forecast_candidate")
         self.assertEqual(actual_result[0]["semantic_type"], "actual_candidate")
         self.assertEqual(sensitivity_result[0]["sensitivity"], "personal_data_candidate")
+        self.assertEqual(competence_result[0]["semantic_type"], "competence_date_candidate")
         self.assertEqual(transactional_result[0]["classification_type"], "fact_transactional_candidate")
         self.assertEqual(dimension_result[0]["classification_type"], "dimension_standard_candidate")
         self.assertEqual(calendar_dimension_result[0]["classification_type"], "dimension_calendar_candidate")
@@ -256,6 +269,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(target_record.status, "executable_draft")
         self.assertEqual(actual_record.status, "executable_draft")
         self.assertEqual(sensitivity_record.status, "executable_draft")
+        self.assertEqual(competence_record.status, "executable_draft")
         self.assertEqual(catvar_record.status, "executable_draft")
         self.assertEqual(duplicate_record.status, "executable_draft")
         self.assertEqual(emptyrow_record.status, "executable_draft")

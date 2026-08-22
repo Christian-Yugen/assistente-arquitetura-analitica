@@ -24,10 +24,10 @@
     ]
   },
   "source_gap": "O blueprint oficial define somente título, propósito, prioridade P1, escopo por coluna, dependência de qualidade e saída semantic_type. Não há dicionário materializado de cabeçalhos de competência, definição de competência por domínio, limiar, precedência frente à SEM-DATE-001, evidências, confiança, pergunta, perfil agregado ou projeção específica. A regra não pode interpretar datas pelo valor, inferir período, converter dados, usar formato Excel ou assumir sinônimos sem política aprovada.",
-  "local_readiness": "intake_required",
+  "local_readiness": "executable_draft",
   "authorization": {
-    "implementation_authorized": false,
-    "reason": "A distinção entre data genérica e data de competência depende de vocabulário de negócio fechado, precedência explícita e confirmação humana; Chris deve aprovar a política e o gate de reconstrução antes de qualquer código executável.",
+    "implementation_authorized": true,
+    "reason": "Chris aprovou a Proposta A e o Gate de Reconstrução SEM-COMP-002-RECONSTRUCTION-AUTHORIZATION-001. A execução permanece limitada ao perfil draft, à allowlist e ao Gate de Calibração SEM-COMP-002-DRAFT-CALIBRATION-001.",
     "required_gate": "SEM-COMP-002-RECONSTRUCTION-AUTHORIZATION-001"
   },
   "required_before_implementation": [
@@ -49,19 +49,7 @@
     "golden_dataset",
     "authorization_gate"
   ],
-  "status": "intake_required",
-  "execution_blocked": true,
-  "missing_before_execution": [
-    "policy",
-    "logical_specification",
-    "reconstruction_authorization_gate",
-    "private_profile",
-    "classifier",
-    "contract_version",
-    "pipeline_integration",
-    "tests",
-    "golden_dataset",
-    "calibration_gate",
-    "draft_authorization"
-  ]
+  "status": "executable_draft",
+  "execution_blocked": false,
+  "missing_before_execution": []
 }
