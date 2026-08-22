@@ -1,0 +1,17 @@
+{
+  "rule_id": "MDL-FACTNOGRAIN-019",
+  "title": "Fato sem granularidade",
+  "status": "pending_policy_authorization",
+  "priority": "P0",
+  "scope": "sheet",
+  "depends_on": ["grain"],
+  "primary_output": "classification_or_table",
+  "authorization": {
+    "intake_authorized_by": "Chris",
+    "implementation_authorized": false,
+    "policy_approved": false
+  },
+  "execution_blocked": true,
+  "local_readiness": "intake_required",
+  "missing_before_execution": ["policy_authorization", "authorization_gate", "tests", "golden_dataset", "calibration_gate"]
+}
