@@ -7,12 +7,12 @@
     "target_count": 95
   },
   "policy": "A regra só pode ser executada quando local_readiness for executable_draft e houver gate de implementação registrado.",
-  "counts": {
-    "baseline_reference": 0,
-    "executable_draft": 29,
-    "reference_catalog_draft": 3,
-    "intake_required": 63
-  },
+ "counts": {
+   "baseline_reference": 0,
+    "executable_draft": 30,
+   "reference_catalog_draft": 3,
+    "intake_required": 62
+ },
   "rules": [
     {
       "rule_id": "QLT-NULL-001",
@@ -303,30 +303,20 @@
       "missing_before_execution": []
     },
     {
-      "rule_id": "SEM-DESC-004",
-      "title": "Nome ou descrição",
-      "category": "semantic_typing",
-      "priority": "P1",
-      "stage": "semantic_typing",
-      "scope": "column",
-      "depends_on": [
-        "quality"
-      ],
-      "primary_output": "semantic_type",
-      "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+     "rule_id": "SEM-DESC-004",
+     "title": "Nome ou descrição",
+     "category": "semantic_typing",
+     "priority": "P1",
+     "stage": "semantic_typing",
+     "scope": "column",
+     "depends_on": [
+       "quality"
+     ],
+     "primary_output": "semantic_type",
+     "source_implementation_status": "planned",
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "SEM-QTY-005",

@@ -23,10 +23,10 @@
     ]
   },
   "source_gap": "O blueprint oficial define somente título, propósito, prioridade P1, escopo por coluna, dependência de qualidade e saída semantic_type. Não há vocabulário materializado que diferencie nome, descrição, identificador, categoria ou dado pessoal; tampouco existem pré-condições textuais, limiares, exclusões, evidências, precedência, confiança, pergunta, perfil agregado ou projeção específica. A regra não pode ler, reter, comparar, classificar ou expor conteúdo textual, inferir significado por valores, usar títulos de abas, posição, domínio, idioma, formato de célula ou sinônimos sem política aprovada.",
-  "local_readiness": "intake_required",
+  "local_readiness": "executable_draft",
   "authorization": {
-    "implementation_authorized": false,
-    "reason": "A classificação de nome ou descrição pode sobrepor identificadores, categorias e candidatos a dados pessoais. Chris deve aprovar uma política de vocabulário fechado, sinais agregados, precedência e controles de privacidade antes de qualquer código executável.",
+    "implementation_authorized": true,
+    "reason": "Chris aprovou a Proposta A e o gate SEM-DESC-004-RECONSTRUCTION-AUTHORIZATION-001. Perfil privado, classificador determinístico, contrato, integração, testes, golden dataset, calibração e autorização draft foram concluídos; produção continua bloqueada.",
     "required_gate": "SEM-DESC-004-RECONSTRUCTION-AUTHORIZATION-001"
   },
   "required_before_implementation": [
@@ -48,19 +48,7 @@
     "golden_dataset",
     "authorization_gate"
   ],
-  "status": "intake_required",
-  "execution_blocked": true,
-  "missing_before_execution": [
-    "policy",
-    "logical_specification",
-    "reconstruction_authorization_gate",
-    "private_profile",
-    "classifier",
-    "contract_version",
-    "pipeline_integration",
-    "tests",
-    "golden_dataset",
-    "calibration_gate",
-    "draft_authorization"
-  ]
+  "status": "executable_draft",
+  "execution_blocked": false,
+  "missing_before_execution": []
 }
