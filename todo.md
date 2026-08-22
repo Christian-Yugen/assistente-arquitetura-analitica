@@ -366,3 +366,6 @@
 - [x] Integrar a MDL-FACTNOGRAIN-019 ao registro, contrato, pipeline e catálogo draft com pergunta humana bloqueante.
 - [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da MDL-FACTNOGRAIN-019.
 - [x] Sincronizar a ativação draft da MDL-FACTNOGRAIN-019 no índice, intake, Gate MVP, workspace e provas documentais.
+- [ ] Criar branch de segurança e recuperar metadados, dependências e lacunas da MDL-UNDEFINED-020 sem implementar lógica executável.
+- [ ] Elaborar intake, Proposta A e especificação lógica não executáveis para a MDL-UNDEFINED-020 e solicitar aprovação específica antes de implementação.
+- [ ] Criar prova documental que preserve o bloqueio de execução e de produção da MDL-UNDEFINED-020.
