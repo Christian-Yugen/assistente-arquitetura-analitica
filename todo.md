@@ -358,6 +358,7 @@
 - [x] Corrigir a lista explícita do indicador e a prova documental da GRN-ENTITY-003 para refletirem integralmente a ativação draft.
 - [x] Criar branch de segurança e recuperar metadados, dependências e lacunas da MDL-FACTNOGRAIN-019 sem implementar lógica executável.
 - [x] Elaborar política e especificação lógica não executáveis para a MDL-FACTNOGRAIN-019 e solicitar aprovação específica antes de implementação.
-- [ ] Registrar a aprovação explícita de Chris para a proposta selecionada da MDL-FACTNOGRAIN-019 e vinculá-la ao gate de reconstrução.
-- [ ] Formalizar o gate de reconstrução da MDL-FACTNOGRAIN-019 somente após a aprovação explícita de Chris para a proposta selecionada.
+- [x] Registrar a aprovação explícita de Chris para a proposta selecionada da MDL-FACTNOGRAIN-019 e vinculá-la ao gate de reconstrução.
+- [x] Formalizar o gate de reconstrução da MDL-FACTNOGRAIN-019 somente após a aprovação explícita de Chris para a proposta selecionada.
 - [ ] Implementar, testar, calibrar e ativar a MDL-FACTNOGRAIN-019 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
+- [x] Registrar a decisão de Chris nos artefatos da Proposta A da MDL-FACTNOGRAIN-019 antes de construir o gate de reconstrução.

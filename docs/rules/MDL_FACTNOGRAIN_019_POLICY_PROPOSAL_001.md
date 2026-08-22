@@ -10,4 +10,4 @@ A hipótese proposta tem confiança 0,75 e inclui pergunta bloqueante para defin
 
 ## Estado
 
-Esta proposta não é implementação. A execução depende de aprovação explícita de Chris para esta Proposta A e de gate de reconstrução posterior.
+**Proposta A aprovada explicitamente por Chris.** Esta aprovação autoriza exclusivamente a formalização do gate de reconstrução. Não autoriza perfil, classificador, registro, contrato, pipeline, catálogo, teste, dataset golden, calibração ou ativação. A implementação continua dependente do gate de reconstrução e de autorização explícita posterior de Chris.
