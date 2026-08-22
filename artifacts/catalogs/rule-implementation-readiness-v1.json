@@ -7,11 +7,11 @@
     "target_count": 95
   },
   "policy": "A regra só pode ser executada quando local_readiness for executable_draft e houver gate de implementação registrado.",
- "counts": {
-   "baseline_reference": 0,
-    "executable_draft": 36,
-   "reference_catalog_draft": 3,
-    "intake_required": 56
+  "counts": {
+    "baseline_reference": 0,
+    "executable_draft": 37,
+    "reference_catalog_draft": 3,
+    "intake_required": 55
  },
   "rules": [
     {
@@ -564,19 +564,9 @@
       ],
       "primary_output": "grain",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "GRN-PERIOD-005",

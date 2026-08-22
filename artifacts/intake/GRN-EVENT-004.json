@@ -26,17 +26,17 @@
     ]
   },
   "source_gap": "O blueprint oficial define somente título, propósito, prioridade P0, escopo por aba, dependência de tipagem semântica e saída grain. A fonte mestre confirma que granularidade deve apresentar evidências, confiança, riscos e validação humana, mas não materializa vocabulário de cabeçalho, base mínima, combinação de sinais, exclusões, precedência, evidências, confiança, pergunta, perfil agregado, versão contratual, testes ou calibração para evento por linha. A regra não pode afirmar evento de negócio, reter cabeçalho, valores, posição, título de aba, hashes ou usar contexto externo sem política aprovada.",
-  "local_readiness": "intake_required",
+  "local_readiness": "executable_draft",
   "authorization": {
-    "implementation_authorized": false,
-    "reason": "Chris aprovou explicitamente a Proposta A de marcador fechado, hipótese prévia de chave explícita, data não competência, 20 ou mais linhas, ambiguidade zero, confiança 0,80 e confirmação humana bloqueante. Essa aprovação autoriza somente a formalização do gate de reconstrução; a implementação continua bloqueada até autorização explícita posterior.",
+    "implementation_authorized": true,
+    "reason": "Chris autorizou explicitamente a implementação exclusiva em draft após a Proposta A, o gate de reconstrução e a calibração reproduzível. Produção permanece bloqueada.",
     "required_gate": "GRN-EVENT-004-RECONSTRUCTION-AUTHORIZATION-001"
   },
   "policy_approval": {
     "approved_by": "Chris",
     "approved_proposal": "A",
-    "approval_scope": "Aprovação da política não executável e do gate de reconstrução; não autoriza perfil, classificador, registro, contrato, pipeline, catálogo, testes executáveis, calibração ou produção.",
-    "evidence": "Mensagem de Chris: A proposta A."
+    "approval_scope": "Aprovação da política, do gate de reconstrução e da implementação exclusivamente em draft; não autoriza produção.",
+    "evidence": "Mensagens de Chris: A proposta A.; im, continue."
   },
   "required_before_implementation": [
     "Aprovação explícita de Chris para uma política que defina sinais, vocabulário fechado, base mínima, exclusões, evidência, precedência, confiança e pergunta humana",
@@ -58,12 +58,7 @@
     "golden_dataset",
     "authorization_gate"
   ],
-  "status": "intake_required",
-  "execution_blocked": true,
-  "missing_before_execution": [
-    "Gate de reconstrução GRN-EVENT-004-RECONSTRUCTION-AUTHORIZATION-001",
-    "Autorização explícita de Chris para iniciar a implementação draft após o gate de reconstrução",
-    "Perfil privado, classificador, registro, contrato, integração e autorização de catálogo",
-    "Testes, golden dataset, calibração reproduzível e gate individual de calibração"
-  ]
+  "status": "executable_draft",
+  "execution_blocked": false,
+  "missing_before_execution": []
 }

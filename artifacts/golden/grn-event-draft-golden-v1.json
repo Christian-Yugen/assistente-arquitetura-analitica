@@ -1,0 +1,96 @@
+{
+  "dataset_id": "GD-GRN-EVENT-004-001",
+  "rule_id": "GRN-EVENT-004",
+  "profile_basis": "closed_event_marker_explicit_key_non_competence_date_v1",
+  "privacy": "synthetic_aggregate_counts_only",
+  "cases": [
+    {
+      "case_id": "positive_minimum_base",
+      "observed_row_count": 20,
+      "event_header_eligible_count": 1,
+      "explicit_key_candidate_count": 1,
+      "non_competence_date_candidate_count": 1,
+      "excluded_event_marker_count": 0,
+      "event_marker_formula_count": 0,
+      "ambiguity_count": 0,
+      "expected": true
+    },
+    {
+      "case_id": "positive_larger_base",
+      "observed_row_count": 25,
+      "event_header_eligible_count": 1,
+      "explicit_key_candidate_count": 1,
+      "non_competence_date_candidate_count": 1,
+      "excluded_event_marker_count": 0,
+      "event_marker_formula_count": 0,
+      "ambiguity_count": 0,
+      "expected": true
+    },
+    {
+      "case_id": "positive_high_base",
+      "observed_row_count": 30,
+      "event_header_eligible_count": 1,
+      "explicit_key_candidate_count": 1,
+      "non_competence_date_candidate_count": 1,
+      "excluded_event_marker_count": 0,
+      "event_marker_formula_count": 0,
+      "ambiguity_count": 0,
+      "expected": true
+    },
+    {
+      "case_id": "negative_insufficient_base",
+      "observed_row_count": 19,
+      "event_header_eligible_count": 1,
+      "explicit_key_candidate_count": 1,
+      "non_competence_date_candidate_count": 1,
+      "excluded_event_marker_count": 0,
+      "event_marker_formula_count": 0,
+      "ambiguity_count": 0,
+      "expected": false
+    },
+    {
+      "case_id": "negative_competence_only",
+      "observed_row_count": 20,
+      "event_header_eligible_count": 1,
+      "explicit_key_candidate_count": 1,
+      "non_competence_date_candidate_count": 0,
+      "excluded_event_marker_count": 0,
+      "event_marker_formula_count": 0,
+      "ambiguity_count": 0,
+      "expected": false
+    },
+    {
+      "case_id": "negative_ambiguous_markers",
+      "observed_row_count": 20,
+      "event_header_eligible_count": 2,
+      "explicit_key_candidate_count": 1,
+      "non_competence_date_candidate_count": 1,
+      "excluded_event_marker_count": 0,
+      "event_marker_formula_count": 0,
+      "ambiguity_count": 1,
+      "expected": false
+    },
+    {
+      "case_id": "negative_excluded_marker",
+      "observed_row_count": 20,
+      "event_header_eligible_count": 1,
+      "explicit_key_candidate_count": 1,
+      "non_competence_date_candidate_count": 1,
+      "excluded_event_marker_count": 1,
+      "event_marker_formula_count": 0,
+      "ambiguity_count": 0,
+      "expected": false
+    },
+    {
+      "case_id": "negative_formula_marker",
+      "observed_row_count": 20,
+      "event_header_eligible_count": 1,
+      "explicit_key_candidate_count": 1,
+      "non_competence_date_candidate_count": 1,
+      "excluded_event_marker_count": 0,
+      "event_marker_formula_count": 1,
+      "ambiguity_count": 0,
+      "expected": false
+    }
+  ]
+}

@@ -40,6 +40,7 @@ from engine.profiling.semantic_quantity import SemanticQuantityProfile, profile_
 from engine.profiling.semantic_sensitivity import profile_semantic_sensitivity
 from engine.profiling.semantic_target import SemanticTargetProfile, profile_semantic_target
 from engine.profiling.composite_grain import CompositeGrainProfile
+from engine.profiling.event_per_row_grain import EventMarkerHeaderProfile, profile_event_marker_header
 from engine.profiling.explicit_key_grain import ExplicitKeyHeaderProfile, profile_explicit_key_header
 from engine.profiling.periodic_fact import PeriodicDateProfile, profile_periodic_date
 from engine.profiling.transactional_fact import TransactionalDateProfile, profile_transactional_date
@@ -75,6 +76,7 @@ from engine.semantic.quantity import SemanticQuantityColumnProfile
 from engine.semantic.sensitivity import SemanticSensitivityColumnProfile
 from engine.semantic.target import SemanticTargetColumnProfile
 from engine.granularity.composite import CompositeGrainSheetProfile
+from engine.granularity.event_per_row import EventPerRowSheetProfile
 from engine.granularity.explicit_key import ExplicitKeyColumnProfile, ExplicitKeySheetProfile
 from engine.fact_dimension.periodic import PeriodicFactSheetProfile
 from engine.fact_dimension.standard_dimension import StandardDimensionSheetProfile
@@ -148,6 +150,7 @@ class ColumnAnalysisContext:
     semantic_quantity: SemanticQuantityProfile = field(default_factory=SemanticQuantityProfile)
     semantic_target: SemanticTargetProfile = field(default_factory=SemanticTargetProfile)
     composite_grain: CompositeGrainProfile = field(default_factory=CompositeGrainProfile)
+    event_marker_header: EventMarkerHeaderProfile = field(default_factory=EventMarkerHeaderProfile)
     explicit_key_header: ExplicitKeyHeaderProfile = field(default_factory=ExplicitKeyHeaderProfile)
     periodic_date: PeriodicDateProfile = field(default_factory=PeriodicDateProfile)
     transactional_date: TransactionalDateProfile = field(default_factory=TransactionalDateProfile)
@@ -165,10 +168,11 @@ def build_column_analysis_context(
     semantic_category = profile_semantic_category(column_name, materialized_values)
     semantic_location = profile_semantic_location(column_name, materialized_values)
     semantic_responsible = profile_semantic_responsible(column_name, materialized_values)
+    event_marker_header = profile_event_marker_header(column_name)
     explicit_key_header = profile_explicit_key_header(column_name)
     safe_column_name = (
         f"Campo sensível {column_position + 1}"
-        if semantic_identifier.sensitive_header or semantic_status.header_eligible or semantic_category.header_eligible or semantic_location.header_eligible or semantic_responsible.header_eligible or explicit_key_header.header_eligible
+        if semantic_identifier.sensitive_header or semantic_status.header_eligible or semantic_category.header_eligible or semantic_location.header_eligible or semantic_responsible.header_eligible or event_marker_header.header_eligible or explicit_key_header.header_eligible
         else column_name
     )
     return ColumnAnalysisContext(
@@ -203,6 +207,7 @@ def build_column_analysis_context(
         semantic_percentage=profile_semantic_percentage(column_name, materialized_values),
         semantic_quantity=profile_semantic_quantity(column_name, materialized_values),
         semantic_target=profile_semantic_target(column_name, materialized_values),
+        event_marker_header=event_marker_header,
         explicit_key_header=explicit_key_header,
         periodic_date=profile_periodic_date(materialized_values),
         transactional_date=profile_transactional_date(materialized_values),
@@ -453,6 +458,64 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
             )
             if explicit_key_candidates:
                 grain_candidates[sheet_id] = explicit_key_candidates + grain_candidates.get(sheet_id, [])
+        if get_rule_execution_record("GRN-EVENT-004").status == "executable_draft":
+            observed_row_count = max(column.missingness.observed_cell_count for column in sheet_columns)
+            explicit_key_candidate_count = sum(
+                1
+                for candidate in grain_candidates.get(sheet_id, [])
+                if candidate["rule_id"] == "GRN-EXPL-002"
+                and candidate["grain_type"] == "explicit_key_candidate"
+            )
+            event_header_eligible_count = sum(
+                1 for column in sheet_columns if column.event_marker_header.header_eligible
+            )
+            excluded_event_marker_count = sum(
+                1
+                for column in sheet_columns
+                if column.event_marker_header.header_eligible
+                and (
+                    column.physical_type != "text"
+                    or column.semantic_identifier.sensitive_header
+                    or column.semantic_description.header_eligible
+                    or column.semantic_date.recognized_date_count != 0
+                    or column.formulas.formula_count != 0
+                )
+            )
+            event_marker_formula_count = sum(
+                column.formulas.formula_count
+                for column in sheet_columns
+                if column.event_marker_header.header_eligible
+            )
+            non_competence_date_candidate_count = sum(
+                1
+                for column in sheet_columns
+                if (
+                    column.semantic_date.non_missing_count >= 10
+                    and column.semantic_date.recognized_date_ratio == 1.0
+                    and not column.semantic_competence.header_eligible
+                    and column.formulas.formula_count == 0
+                )
+            )
+            ambiguity_count = max(
+                0,
+                event_header_eligible_count - 1,
+                explicit_key_candidate_count - 1,
+                non_competence_date_candidate_count - 1,
+            )
+            event_per_row_candidates = execute_registered_rule(
+                "GRN-EVENT-004",
+                EventPerRowSheetProfile(
+                    observed_row_count=observed_row_count,
+                    event_header_eligible_count=event_header_eligible_count,
+                    explicit_key_candidate_count=explicit_key_candidate_count,
+                    non_competence_date_candidate_count=non_competence_date_candidate_count,
+                    excluded_event_marker_count=excluded_event_marker_count,
+                    event_marker_formula_count=event_marker_formula_count,
+                    ambiguity_count=ambiguity_count,
+                ),
+            )
+            if event_per_row_candidates:
+                grain_candidates[sheet_id] = event_per_row_candidates + grain_candidates.get(sheet_id, [])
         if get_rule_execution_record("MDL-FACTPER-001").status == "executable_draft":
             table_candidates[sheet_id] = execute_registered_rule("MDL-FACTPER-001", PeriodicFactSheetProfile(
                 observed_row_count=max(column.missingness.observed_cell_count for column in sheet_columns),

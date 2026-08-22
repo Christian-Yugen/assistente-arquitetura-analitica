@@ -340,4 +340,8 @@
 - [x] Elaborar política e especificação lógica não executáveis para a GRN-EVENT-004 e solicitar aprovação específica antes de implementação.
 - [x] Registrar a aprovação explícita de Chris para a proposta selecionada da GRN-EVENT-004 e vinculá-la ao gate de reconstrução.
 - [x] Formalizar o gate de reconstrução da GRN-EVENT-004 somente após a aprovação explícita de Chris para a proposta selecionada.
-- [ ] Implementar, testar, calibrar e ativar a GRN-EVENT-004 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
+- [x] Implementar, testar, calibrar e ativar a GRN-EVENT-004 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
+- [x] Implementar o perfil privado e o classificador determinístico da GRN-EVENT-004, sem reter cabeçalhos, valores ou títulos de abas.
+- [x] Integrar a GRN-EVENT-004 ao registro, contrato, pipeline e catálogo draft com pergunta humana bloqueante.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da GRN-EVENT-004.
+- [x] Sincronizar a ativação draft da GRN-EVENT-004 no índice, intake, Gate MVP, workspace e provas documentais.
