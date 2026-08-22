@@ -318,5 +318,6 @@
 - [x] Auditar o repositório privado no GitHub, as branches exportadas e as pull requests abertas ou concluídas.
 - [x] Recuperar metadados, dependências e lacunas da SEM-CAT-010 sem implementar lógica executável.
 - [x] Elaborar política e especificação lógica não executáveis para a SEM-CAT-010 e solicitar aprovação específica antes de implementação.
-- [ ] Formalizar o gate de reconstrução da SEM-CAT-010 somente após a aprovação explícita de Chris para a proposta selecionada.
-- [ ] Implementar, testar, calibrar e ativar a SEM-CAT-010 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
+- [x] Registrar a aprovação explícita de Chris para a Proposta A da SEM-CAT-010 e vinculá-la ao gate de reconstrução.
+- [x] Formalizar o gate de reconstrução da SEM-CAT-010 somente após a aprovação explícita de Chris para a proposta selecionada.
+- [x] Implementar, testar, calibrar e ativar a SEM-CAT-010 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.

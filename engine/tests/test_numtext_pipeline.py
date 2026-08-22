@@ -187,6 +187,27 @@ class NumericTextPipelineTests(unittest.TestCase):
         self.assertNotIn("Status", serialized)
         self.assertNotIn("classe_privada_a", serialized)
 
+    def test_projects_category_as_semantic_type_without_exposing_header_or_label_content(self):
+        values = ["categoria_privada_a"] * 5 + ["categoria_privada_b"] * 5
+        context = build_column_analysis_context(
+            sheet_id="00000000-0000-4000-8000-000000000010",
+            column_id="00000000-0000-4000-8000-000000000011",
+            column_name="Categoria",
+            values=values,
+            sheet_name="Dados",
+            sheet_position=0,
+            sheet_visibility="visible",
+            column_position=0,
+        )
+
+        diagnosis = execute_quality_diagnosis([context], metadata=METADATA)
+        serialized = json.dumps(diagnosis)
+
+        self.assertIn("category_candidate", [item["semantic_type"] for item in diagnosis["semantic_classifications"]])
+        self.assertTrue(any(question["blocking"] for question in diagnosis["questions"]))
+        self.assertNotIn("Categoria", serialized)
+        self.assertNotIn("categoria_privada_a", serialized)
+
     def test_schema_rejects_unknown_root_property_and_preserves_question_lineage_per_sheet(self):
         sales = build_column_analysis_context(
             sheet_id="00000000-0000-4000-8000-000000000010",

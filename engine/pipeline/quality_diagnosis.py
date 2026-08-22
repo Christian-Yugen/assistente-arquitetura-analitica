@@ -29,6 +29,7 @@ from engine.profiling.semantic_competence import SemanticCompetenceProfile, prof
 from engine.profiling.semantic_description import SemanticDescriptionProfile, profile_semantic_description
 from engine.profiling.semantic_duration import SemanticDurationProfile, profile_semantic_duration
 from engine.profiling.semantic_status import SemanticStatusProfile, profile_semantic_status
+from engine.profiling.semantic_category import SemanticCategoryProfile, profile_semantic_category
 from engine.profiling.semantic_actual import SemanticActualProfile, profile_semantic_actual
 from engine.profiling.semantic_currency import SemanticCurrencyProfile, profile_semantic_currency
 from engine.profiling.semantic_identifier import SemanticIdentifierProfile, profile_semantic_identifier
@@ -60,6 +61,7 @@ from engine.semantic.competence import SemanticCompetenceColumnProfile
 from engine.semantic.description import SemanticDescriptionColumnProfile
 from engine.semantic.duration import SemanticDurationColumnProfile
 from engine.semantic.status import SemanticStatusColumnProfile
+from engine.semantic.category import SemanticCategoryColumnProfile
 from engine.semantic.actual import SemanticActualColumnProfile
 from engine.semantic.currency import SemanticCurrencyColumnProfile
 from engine.semantic.identifier import SemanticIdentifierColumnProfile, classify_identifier
@@ -130,6 +132,7 @@ class ColumnAnalysisContext:
     semantic_description: SemanticDescriptionProfile = field(default_factory=SemanticDescriptionProfile)
     semantic_duration: SemanticDurationProfile = field(default_factory=SemanticDurationProfile)
     semantic_status: SemanticStatusProfile = field(default_factory=SemanticStatusProfile)
+    semantic_category: SemanticCategoryProfile = field(default_factory=SemanticCategoryProfile)
     semantic_actual: SemanticActualProfile = field(default_factory=SemanticActualProfile)
     semantic_currency: SemanticCurrencyProfile = field(default_factory=SemanticCurrencyProfile)
     semantic_identifier: SemanticIdentifierProfile = field(default_factory=SemanticIdentifierProfile)
@@ -150,9 +153,10 @@ def build_column_analysis_context(
     materialized_values = list(values)
     semantic_identifier = profile_semantic_identifier(column_name, materialized_values)
     semantic_status = profile_semantic_status(column_name, materialized_values)
+    semantic_category = profile_semantic_category(column_name, materialized_values)
     safe_column_name = (
         f"Campo sensível {column_position + 1}"
-        if semantic_identifier.sensitive_header or semantic_status.header_eligible
+        if semantic_identifier.sensitive_header or semantic_status.header_eligible or semantic_category.header_eligible
         else column_name
     )
     return ColumnAnalysisContext(
@@ -178,6 +182,7 @@ def build_column_analysis_context(
         semantic_description=profile_semantic_description(column_name),
         semantic_duration=profile_semantic_duration(column_name, materialized_values),
         semantic_status=semantic_status,
+        semantic_category=semantic_category,
         semantic_actual=profile_semantic_actual(column_name, materialized_values),
         semantic_currency=profile_semantic_currency(column_name, materialized_values),
         semantic_identifier=semantic_identifier,
@@ -286,6 +291,15 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
                 semantic_status=column.semantic_status,
             )
             semantic_candidates.append((column.sheet_id, column.column_id, execute_registered_rule("SEM-STATUS-009", status_semantic_profile)))
+        if get_rule_execution_record("SEM-CAT-010").status == "executable_draft":
+            category_semantic_profile = SemanticCategoryColumnProfile(
+                physical_type=column.physical_type,
+                formulas=column.formulas,
+                semantic_date=column.semantic_date,
+                semantic_identifier=column.semantic_identifier,
+                semantic_category=column.semantic_category,
+            )
+            semantic_candidates.append((column.sheet_id, column.column_id, execute_registered_rule("SEM-CAT-010", category_semantic_profile)))
         if get_rule_execution_record("SEM-DUR-008").status == "executable_draft":
             duration_semantic_profile = SemanticDurationColumnProfile(
                 physical_type=column.physical_type,
