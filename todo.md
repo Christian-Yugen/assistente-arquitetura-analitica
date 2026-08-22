@@ -347,6 +347,7 @@
 - [x] Sincronizar a ativação draft da GRN-EVENT-004 no índice, intake, Gate MVP, workspace e provas documentais.
 - [x] Criar branch de segurança e recuperar metadados, dependências e lacunas da GRN-ENTITY-003 sem implementar lógica executável.
 - [x] Elaborar política e especificação lógica não executáveis para a GRN-ENTITY-003 e solicitar aprovação específica antes de implementação.
-- [ ] Registrar a aprovação explícita de Chris para a proposta selecionada da GRN-ENTITY-003 e vinculá-la ao gate de reconstrução.
-- [ ] Formalizar o gate de reconstrução da GRN-ENTITY-003 somente após a aprovação explícita de Chris para a proposta selecionada.
+- [x] Registrar a aprovação explícita de Chris para a proposta selecionada da GRN-ENTITY-003 e vinculá-la ao gate de reconstrução.
+- [x] Formalizar o gate de reconstrução da GRN-ENTITY-003 somente após a aprovação explícita de Chris para a proposta selecionada.
 - [ ] Implementar, testar, calibrar e ativar a GRN-ENTITY-003 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
+- [x] Registrar a decisão de Chris nos artefatos da Proposta A da GRN-ENTITY-003 antes de construir o gate de reconstrução.

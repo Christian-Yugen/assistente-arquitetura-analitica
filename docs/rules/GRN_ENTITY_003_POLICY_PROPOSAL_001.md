@@ -2,7 +2,11 @@
 
 ## Estado e finalidade
 
-Esta é uma proposta **não executável** para a `GRN-ENTITY-003`. Chris autorizou somente o intake e a elaboração desta política; essa autorização não permite perfil, classificador, registro, versão contratual, pipeline, allowlist, testes executáveis, calibração ou produção. A fonte oficial define a regra como P1, por aba, dependente de tipagem semântica e com saída de granularidade, mas não determina uma condição operacional.
+Esta é uma proposta **não executável** para a `GRN-ENTITY-003`. Chris aprovou a **Proposta A** e autorizou somente a formalização do gate de reconstrução; essa decisão não permite perfil, classificador, registro, versão contratual, pipeline, allowlist, testes executáveis, calibração ou produção. A fonte oficial define a regra como P1, por aba, dependente de tipagem semântica e com saída de granularidade, mas não determina uma condição operacional.
+
+## Decisão registrada
+
+Chris aprovou a **Proposta A — hipótese conservadora de entidade estável por linha**. A aprovação é limitada à política e ao próximo gate de reconstrução `GRN-ENTITY-003-RECONSTRUCTION-AUTHORIZATION-001`. A implementação draft requer autorização explícita posterior; a produção permanece bloqueada.
 
 ## Proposta A — hipótese conservadora de entidade estável por linha
 

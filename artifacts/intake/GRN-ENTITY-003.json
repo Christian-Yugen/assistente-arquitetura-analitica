@@ -26,9 +26,15 @@
   },
   "source_gap": "O blueprint oficial define somente título, propósito, prioridade P1, escopo por aba, dependência de tipagem semântica e saída grain. A fonte mestre requer evidências, confiança, riscos e validação humana para hipóteses de granularidade, mas não materializa vocabulário de entidade, base mínima, combinação de sinais, exclusões, precedência, evidência, confiança, pergunta, perfil agregado, versão contratual, testes ou calibração para entidade por linha. A regra não pode declarar entidade de negócio, dimensão, chave primária, relacionamento ou SCD sem política aprovada e confirmação humana.",
   "local_readiness": "intake_required",
+  "policy_approval": {
+    "approved_by": "Chris",
+    "approved_proposal": "A",
+    "approval_scope": "Aprova a política não executável GRN_ENTITY_003_POLICY_PROPOSAL_001 e autoriza somente a formalização do gate de reconstrução; não autoriza perfil, classificador, registro, contrato, pipeline, catálogo, testes executáveis, calibração ou produção.",
+    "recorded_from_user_message": "Proposta A"
+  },
   "authorization": {
     "implementation_authorized": false,
-    "reason": "Chris autorizou somente o ciclo não executável de intake, recuperação de lacunas e proposta. Perfil, classificador, integração, catálogo, testes executáveis, calibração e produção continuam bloqueados.",
+    "reason": "Chris aprovou a Proposta A e autorizou a formalização do gate de reconstrução. Perfil, classificador, integração, catálogo, testes executáveis, calibração e produção continuam bloqueados até autorização explícita posterior.",
     "required_gate": "GRN-ENTITY-003-RECONSTRUCTION-AUTHORIZATION-001"
   },
   "required_before_implementation": [
