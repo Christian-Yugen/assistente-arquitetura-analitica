@@ -316,3 +316,7 @@
 - [x] Implementar, testar, calibrar e ativar a SEM-STATUS-009 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
 - [x] Exportar integralmente o estado versionado atual do projeto para o repositório privado de Chris no GitHub.
 - [x] Auditar o repositório privado no GitHub, as branches exportadas e as pull requests abertas ou concluídas.
+- [x] Recuperar metadados, dependências e lacunas da SEM-CAT-010 sem implementar lógica executável.
+- [x] Elaborar política e especificação lógica não executáveis para a SEM-CAT-010 e solicitar aprovação específica antes de implementação.
+- [ ] Formalizar o gate de reconstrução da SEM-CAT-010 somente após a aprovação explícita de Chris para a proposta selecionada.
+- [ ] Implementar, testar, calibrar e ativar a SEM-CAT-010 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
