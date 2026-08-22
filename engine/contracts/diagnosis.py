@@ -27,6 +27,7 @@ RULE_VERSIONS = {
     "SEM-COMP-002": "0.1.0-provisional.1",
     "SEM-DESC-004": "0.1.0-provisional.1",
     "SEM-DUR-008": "0.1.0-provisional.1",
+    "SEM-STATUS-009": "0.1.0-provisional.1",
     "SEM-CURR-006": "0.1.0-provisional.1",
     "SEM-ID-003": "0.1.0-provisional.1",
     "SEM-QTY-005": "0.1.0-provisional.1",
