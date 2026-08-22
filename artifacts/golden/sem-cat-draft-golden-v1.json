@@ -1,0 +1,15 @@
+{
+  "dataset_id": "GD-SEM-CAT-010-001",
+  "rule_id": "SEM-CAT-010",
+  "purpose": "Calibração sintética, privada e reproduzível para a hipótese de categoria.",
+  "cases": [
+    {"id": "categoria_duas_classes", "header": "Categoria", "values": ["grupo_sintetico_a", "grupo_sintetico_b", "grupo_sintetico_a", "grupo_sintetico_b", "grupo_sintetico_a", "grupo_sintetico_b", "grupo_sintetico_a", "grupo_sintetico_b", "grupo_sintetico_a", "grupo_sintetico_b"], "formula_count": 0, "expected": true},
+    {"id": "categoria_quatro_classes", "header": "categoria", "values": ["grupo_sintetico_a", "grupo_sintetico_b", "grupo_sintetico_c", "grupo_sintetico_d", "grupo_sintetico_a", "grupo_sintetico_b", "grupo_sintetico_c", "grupo_sintetico_d", "grupo_sintetico_a", "grupo_sintetico_b", "grupo_sintetico_c", "grupo_sintetico_d"], "formula_count": 0, "expected": true},
+    {"id": "categoria_limite_cardinalidade", "header": "  CATEGORIA  ", "values": ["grupo_01", "grupo_02", "grupo_03", "grupo_04", "grupo_05", "grupo_06", "grupo_07", "grupo_08", "grupo_09", "grupo_10", "grupo_11", "grupo_12", "grupo_13", "grupo_14", "grupo_15", "grupo_16", "grupo_17", "grupo_18", "grupo_19", "grupo_20", "grupo_01", "grupo_02", "grupo_03", "grupo_04", "grupo_05", "grupo_06", "grupo_07", "grupo_08", "grupo_09", "grupo_10", "grupo_11", "grupo_12", "grupo_13", "grupo_14", "grupo_15", "grupo_16", "grupo_17", "grupo_18", "grupo_19", "grupo_20"], "formula_count": 0, "expected": true},
+    {"id": "cabecalho_aberto", "header": "Grupo", "values": ["grupo_a", "grupo_b", "grupo_a", "grupo_b", "grupo_a", "grupo_b", "grupo_a", "grupo_b", "grupo_a", "grupo_b"], "formula_count": 0, "expected": false},
+    {"id": "base_insuficiente", "header": "Categoria", "values": ["grupo_a", "grupo_b", "grupo_a", "grupo_b", "grupo_a", "grupo_b", "grupo_a", "grupo_b", "grupo_a"], "formula_count": 0, "expected": false},
+    {"id": "formula_presente", "header": "Categoria", "values": ["grupo_a", "grupo_b", "grupo_a", "grupo_b", "grupo_a", "grupo_b", "grupo_a", "grupo_b", "grupo_a", "grupo_b"], "formula_count": 1, "expected": false},
+    {"id": "cardinalidade_alta", "header": "Categoria", "values": ["grupo_01", "grupo_02", "grupo_03", "grupo_04", "grupo_05", "grupo_06", "grupo_07", "grupo_08", "grupo_09", "grupo_10", "grupo_11", "grupo_12", "grupo_13", "grupo_14", "grupo_15", "grupo_16", "grupo_17", "grupo_18", "grupo_19", "grupo_20", "grupo_21"], "formula_count": 0, "expected": false},
+    {"id": "razao_distintos_alta", "header": "Categoria", "values": ["grupo_0", "grupo_1", "grupo_2", "grupo_3", "grupo_4", "grupo_5", "grupo_0", "grupo_0", "grupo_0", "grupo_0"], "formula_count": 0, "expected": false}
+  ]
+}
