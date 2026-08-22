@@ -1,0 +1,65 @@
+{
+  "intake_id": "SEM-LOC-011-INTAKE-001",
+  "rule": {
+    "rule_id": "SEM-LOC-011",
+    "title": "Localização",
+    "category": "semantic_typing",
+    "purpose": "Classificar coluna como localização com evidências convergentes.",
+    "priority": "P1",
+    "stage": "semantic_typing",
+    "scope": "column",
+    "depends_on": ["quality"],
+    "primary_output": "semantic_type",
+    "source_implementation_status": "planned"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "artifacts/catalogs/rule-implementation-readiness-v1.json",
+      "Plano_Mestre_MVP_Modelagem_Dimensional_PowerBI_v1.0.docx",
+      "engine/profiling/semantic_status.py",
+      "engine/contracts/diagnosis.py"
+    ]
+  },
+  "source_gap": "O blueprint oficial define somente título, propósito, prioridade P1, escopo por coluna, dependência de qualidade e saída semantic_type. Não há vocabulário de cabeçalho, tipo físico, base mínima, cardinalidade, exclusões, evidências, precedência, confiança, pergunta, perfil agregado, versão contratual ou calibração. A regra não pode consultar geocodificador, dicionário territorial externo, rótulos de valores, endereço, CEP, coordenadas, sinônimos livres, posição, título de aba, formatação, domínio, idioma, outras colunas ou contexto de negócio sem política aprovada.",
+  "local_readiness": "intake_required",
+  "authorization": {
+    "implementation_authorized": false,
+    "reason": "A regra exige proposta de política e especificação lógica aprovadas explicitamente por Chris, seguidas de gate de reconstrução, antes de qualquer perfil, classificador, integração, teste executável, golden dataset, calibração ou ativação draft.",
+    "required_gate": "SEM-LOC-011-RECONSTRUCTION-AUTHORIZATION"
+  },
+  "required_before_implementation": [
+    "Decisão humana sobre vocabulário fechado, tipo físico, base mínima, cardinalidade, exclusões, precedência e confiança",
+    "Perfil agregado que não retenha valores, cabeçalhos, tokens, posições, exemplos, títulos de abas, formatos de célula ou frequências por rótulo",
+    "Classificador determinístico, evidências, pergunta humana, versão contratual e integração canônica guardada por catálogo",
+    "Testes unitários, limítrofes, de privacidade, de contrato e de integração",
+    "Golden dataset sintético sem conteúdo pessoal, manifesto SHA-256, calibração reproduzível e gate individual de calibração"
+  ],
+  "required_policy_elements": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "precedence",
+    "confidence",
+    "questions",
+    "contract_projection",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ],
+  "status": "intake_required",
+  "execution_blocked": true,
+  "missing_before_execution": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "severity",
+    "confidence",
+    "questions",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ]
+}
