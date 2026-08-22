@@ -7,11 +7,11 @@
     "target_count": 95
   },
   "policy": "A regra só pode ser executada quando local_readiness for executable_draft e houver gate de implementação registrado.",
- "counts": {
-   "baseline_reference": 0,
-    "executable_draft": 33,
-   "reference_catalog_draft": 3,
-    "intake_required": 59
+  "counts": {
+    "baseline_reference": 0,
+    "executable_draft": 38,
+    "reference_catalog_draft": 3,
+    "intake_required": 54
  },
   "rules": [
     {
@@ -426,19 +426,9 @@
       ],
       "primary_output": "semantic_type",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "SEM-RESP-012",
@@ -452,19 +442,9 @@
       ],
       "primary_output": "semantic_type",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "SEM-TARGET-013",
@@ -532,30 +512,20 @@
     },
     {
       "rule_id": "GRN-EXPL-002",
-      "title": "Chave explícita",
-      "category": "grain",
-      "priority": "P0",
-      "stage": "grain_inference",
-      "scope": "sheet",
-      "depends_on": [
-        "semantic_typing"
-      ],
-      "primary_output": "grain",
-      "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
-    },
+     "title": "Chave explícita",
+     "category": "grain",
+     "priority": "P0",
+     "stage": "grain_inference",
+     "scope": "sheet",
+     "depends_on": [
+       "semantic_typing"
+     ],
+     "primary_output": "grain",
+     "source_implementation_status": "planned",
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
+   },
     {
       "rule_id": "GRN-ENTITY-003",
       "title": "Entidade por linha",
@@ -568,19 +538,9 @@
       ],
       "primary_output": "grain",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "GRN-EVENT-004",
@@ -594,19 +554,9 @@
       ],
       "primary_output": "grain",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "GRN-PERIOD-005",

@@ -1,0 +1,64 @@
+{
+  "dataset_id": "GD-SEM-RESP-012-001",
+  "rule_id": "SEM-RESP-012",
+  "version": "1.0.0",
+  "privacy": "Dados exclusivamente sintéticos e não pessoais. Não contém nomes, e-mails, identificadores, cargos reais, equipes reais ou rótulos de responsáveis reais.",
+  "cases": [
+    {
+      "id": "responsavel_header",
+      "header": "Responsável",
+      "values": ["papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b"],
+      "formula_count": 0,
+      "expected": true
+    },
+    {
+      "id": "accentless_header",
+      "header": "Responsavel",
+      "values": ["papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b"],
+      "formula_count": 0,
+      "expected": true
+    },
+    {
+      "id": "normalized_header",
+      "header": " RESPONSÁVEL ",
+      "values": ["papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b"],
+      "formula_count": 0,
+      "expected": true
+    },
+    {
+      "id": "plural_header",
+      "header": "Responsáveis",
+      "values": ["papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b"],
+      "formula_count": 0,
+      "expected": false
+    },
+    {
+      "id": "small_base",
+      "header": "Responsável",
+      "values": ["papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a"],
+      "formula_count": 0,
+      "expected": false
+    },
+    {
+      "id": "formula_present",
+      "header": "Responsável",
+      "values": ["papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b", "papel_sintetico_a", "papel_sintetico_b"],
+      "formula_count": 1,
+      "expected": false
+    },
+    {
+      "id": "high_cardinality",
+      "header": "Responsável",
+      "values": ["papel_01", "papel_02", "papel_03", "papel_04", "papel_05", "papel_06", "papel_07", "papel_08", "papel_09", "papel_10", "papel_11", "papel_12", "papel_13", "papel_14", "papel_15", "papel_16", "papel_17", "papel_18", "papel_19", "papel_20", "papel_21", "papel_22", "papel_23", "papel_24", "papel_25", "papel_26", "papel_27", "papel_28", "papel_29", "papel_30", "papel_31", "papel_32", "papel_33", "papel_34", "papel_35", "papel_36", "papel_37", "papel_38", "papel_39", "papel_40", "papel_41", "papel_42", "papel_43", "papel_44", "papel_45", "papel_46", "papel_47", "papel_48", "papel_49", "papel_50", "papel_51"],
+      "formula_count": 0,
+      "expected": false
+    },
+    {
+      "id": "high_distinct_ratio",
+      "header": "Responsável",
+      "values": ["papel_01", "papel_02", "papel_03", "papel_04", "papel_05", "papel_06", "papel_07", "papel_08", "papel_09", "papel_10"],
+      "formula_count": 0,
+      "expected": false
+    }
+  ]
+}

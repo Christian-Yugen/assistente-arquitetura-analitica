@@ -323,5 +323,36 @@
 - [x] Implementar, testar, calibrar e ativar a SEM-CAT-010 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
 - [x] Recuperar metadados, dependências e lacunas da SEM-LOC-011 sem implementar lógica executável.
 - [x] Elaborar política e especificação lógica não executáveis para a SEM-LOC-011 e solicitar aprovação específica antes de implementação.
-- [ ] Formalizar o gate de reconstrução da SEM-LOC-011 somente após a aprovação explícita de Chris para a proposta selecionada.
-- [ ] Implementar, testar, calibrar e ativar a SEM-LOC-011 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
+- [x] Registrar a aprovação explícita de Chris para a Proposta A da SEM-LOC-011 e vinculá-la ao gate de reconstrução.
+- [x] Formalizar o gate de reconstrução da SEM-LOC-011 somente após a aprovação explícita de Chris para a proposta selecionada.
+- [x] Implementar, testar, calibrar e ativar a SEM-LOC-011 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
+- [x] Recuperar metadados, dependências e lacunas da SEM-RESP-012 sem implementar lógica executável.
+- [x] Elaborar política e especificação lógica não executáveis para a SEM-RESP-012 e solicitar aprovação específica antes de implementação.
+- [x] Registrar a aprovação explícita de Chris para a Proposta A da SEM-RESP-012 e vinculá-la ao gate de reconstrução.
+- [x] Formalizar o gate de reconstrução da SEM-RESP-012 somente após a aprovação explícita de Chris para a proposta selecionada.
+- [x] Implementar, testar, calibrar e ativar a SEM-RESP-012 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
+- [x] Recuperar metadados, dependências e lacunas da GRN-EXPL-002 sem implementar lógica executável.
+- [x] Elaborar política e especificação lógica não executáveis para a GRN-EXPL-002 e solicitar aprovação específica antes de implementação.
+- [x] Registrar a aprovação explícita de Chris para a Proposta A da GRN-EXPL-002 e vinculá-la ao gate de reconstrução.
+- [x] Formalizar o gate de reconstrução da GRN-EXPL-002 somente após a aprovação explícita de Chris para a proposta selecionada.
+- [x] Implementar, testar, calibrar e ativar a GRN-EXPL-002 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
+- [x] Criar branch de segurança e recuperar metadados, dependências e lacunas da GRN-EVENT-004 sem implementar lógica executável.
+- [x] Elaborar política e especificação lógica não executáveis para a GRN-EVENT-004 e solicitar aprovação específica antes de implementação.
+- [x] Registrar a aprovação explícita de Chris para a proposta selecionada da GRN-EVENT-004 e vinculá-la ao gate de reconstrução.
+- [x] Formalizar o gate de reconstrução da GRN-EVENT-004 somente após a aprovação explícita de Chris para a proposta selecionada.
+- [x] Implementar, testar, calibrar e ativar a GRN-EVENT-004 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
+- [x] Implementar o perfil privado e o classificador determinístico da GRN-EVENT-004, sem reter cabeçalhos, valores ou títulos de abas.
+- [x] Integrar a GRN-EVENT-004 ao registro, contrato, pipeline e catálogo draft com pergunta humana bloqueante.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da GRN-EVENT-004.
+- [x] Sincronizar a ativação draft da GRN-EVENT-004 no índice, intake, Gate MVP, workspace e provas documentais.
+- [x] Criar branch de segurança e recuperar metadados, dependências e lacunas da GRN-ENTITY-003 sem implementar lógica executável.
+- [x] Elaborar política e especificação lógica não executáveis para a GRN-ENTITY-003 e solicitar aprovação específica antes de implementação.
+- [x] Registrar a aprovação explícita de Chris para a proposta selecionada da GRN-ENTITY-003 e vinculá-la ao gate de reconstrução.
+- [x] Formalizar o gate de reconstrução da GRN-ENTITY-003 somente após a aprovação explícita de Chris para a proposta selecionada.
+- [x] Implementar, testar, calibrar e ativar a GRN-ENTITY-003 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
+- [x] Registrar a decisão de Chris nos artefatos da Proposta A da GRN-ENTITY-003 antes de construir o gate de reconstrução.
+- [x] Implementar o perfil privado e o classificador determinístico da GRN-ENTITY-003 sem reter cabeçalhos, valores ou títulos de abas.
+- [x] Integrar a GRN-ENTITY-003 ao registro, contrato, pipeline e catálogo draft com pergunta humana bloqueante.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da GRN-ENTITY-003.
+- [x] Sincronizar a ativação draft da GRN-ENTITY-003 no índice, intake, Gate MVP, workspace e provas documentais.
+- [x] Corrigir a lista explícita do indicador e a prova documental da GRN-ENTITY-003 para refletirem integralmente a ativação draft.
