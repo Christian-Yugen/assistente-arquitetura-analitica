@@ -1,0 +1,64 @@
+{
+  "intake_id": "MDL-UNDEFINED-020-INTAKE-001",
+  "rule": {
+    "rule_id": "MDL-UNDEFINED-020",
+    "title": "Classificação indefinida",
+    "category": "fact_dimension",
+    "purpose": "Classificar ou propor classificação indefinida.",
+    "priority": "P0",
+    "stage": "table_classification",
+    "scope": "sheet",
+    "depends_on": ["grain"],
+    "primary_output": "classification_or_table",
+    "source_implementation_status": "planned"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "artifacts/catalogs/rule-implementation-readiness-v1.json",
+      "docs/governance/RULE_DEVELOPMENT_LIFECYCLE_001.md",
+      "engine/fact_dimension/registry.py",
+      "docs/rules/MDL_DIMCAL_006_POLICY_PROPOSAL_001.md",
+      "docs/rules/MDL_FACTNOGRAIN_019_POLICY_PROPOSAL_001.md"
+    ]
+  },
+  "source_gap": "O blueprint oficial define somente título, propósito, prioridade P0, escopo por aba, dependência de grain e saída classification_or_table. Não define o que caracteriza classificação indefinida, base mínima, completude de avaliação, precedência entre hipóteses, exclusões, evidências, confiança, pergunta humana, perfil agregado, versão contratual, testes ou calibração. A regra não pode concluir que uma aba é fato, dimensão, erro, irrelevante ou desconhecida com base em ausência de candidato, título de aba, cabeçalhos, valores, posições, formatos, texto livre, contexto de negócio ou dados sensíveis.",
+  "local_readiness": "executable_draft",
+  "authorization": {
+    "intake_authorized": true,
+    "intake_authorized_by": "Chris",
+    "policy_approved": true,
+    "policy_approved_by": "Chris",
+    "policy_approved_proposal": "MDL_UNDEFINED_020_POLICY_PROPOSAL_001",
+    "implementation_authorized": true,
+    "implementation_authorized_by": "Chris",
+    "reconstruction_gate": "MDL-UNDEFINED-020-RECONSTRUCTION-AUTHORIZATION-001",
+    "calibration_gate": "MDL-UNDEFINED-020-DRAFT-CALIBRATION-001"
+  },
+  "required_before_implementation": [
+    "Aprovação explícita de Chris para a Proposta A da MDL-UNDEFINED-020",
+    "Gate de reconstrução que mantenha a implementação bloqueada até nova autorização específica",
+    "Perfil privado com sinais exclusivamente agregados e sem valores, cabeçalhos, posições ou títulos de abas",
+    "Classificador determinístico, versão contratual, integração canônica e allowlist draft protegida por catálogo",
+    "Testes positivos, negativos, limítrofes, de privacidade, contrato e integração",
+    "Golden dataset exclusivamente sintético, manifesto SHA-256, avaliador reprodutível, calibração e gate individual"
+  ],
+  "required_policy_elements": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "precedence",
+    "severity",
+    "confidence",
+    "questions",
+    "contract_projection",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ],
+  "status": "executable_draft",
+  "execution_blocked": false,
+  "missing_before_execution": []
+}

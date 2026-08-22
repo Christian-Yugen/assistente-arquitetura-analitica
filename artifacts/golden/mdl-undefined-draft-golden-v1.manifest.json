@@ -1,0 +1,11 @@
+{
+  "manifest_id": "MANIFEST-GD-MDL-UNDEFINED-020-001",
+  "dataset_id": "GD-MDL-UNDEFINED-020-001",
+  "rule_id": "MDL-UNDEFINED-020",
+  "sha256": "f3c70027a3bdc9b4a2f83255239118b5e0566fe3c7bf9bc140d80a779c2571a1",
+  "synthetic_only": true,
+  "case_count": 11,
+  "expected_positive_count": 3,
+  "expected_negative_count": 8,
+  "evaluator": "engine.calibration.evaluate_mdl_undefined_draft_golden.evaluate"
+}

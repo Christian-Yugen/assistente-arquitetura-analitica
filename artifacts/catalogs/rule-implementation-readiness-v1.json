@@ -7,12 +7,12 @@
     "target_count": 95
   },
   "policy": "A regra só pode ser executada quando local_readiness for executable_draft e houver gate de implementação registrado.",
-  "counts": {
-    "baseline_reference": 0,
-    "executable_draft": 39,
-    "reference_catalog_draft": 3,
-    "intake_required": 53
- },
+ "counts": {
+   "baseline_reference": 0,
+    "executable_draft": 40,
+   "reference_catalog_draft": 3,
+    "intake_required": 52
+  },
   "rules": [
     {
       "rule_id": "QLT-NULL-001",
@@ -1159,30 +1159,20 @@
       "missing_before_execution": []
     },
     {
-      "rule_id": "MDL-UNDEFINED-020",
-      "title": "Classificação indefinida",
-      "category": "fact_dimension",
-      "priority": "P0",
-      "stage": "table_classification",
-      "scope": "sheet",
-      "depends_on": [
-        "grain"
-      ],
-      "primary_output": "classification_or_table",
-      "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+     "rule_id": "MDL-UNDEFINED-020",
+     "title": "Classificação indefinida",
+     "category": "fact_dimension",
+     "priority": "P0",
+     "stage": "table_classification",
+     "scope": "sheet",
+     "depends_on": [
+       "grain"
+     ],
+     "primary_output": "classification_or_table",
+      "source_implementation_status": "reference_implemented_draft",
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "REL-ONEMANY-001",
