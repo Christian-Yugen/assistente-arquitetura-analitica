@@ -1,0 +1,13 @@
+{
+  "dataset_id": "GD-SEM-DUR-008-001",
+  "rule_id": "SEM-DUR-008",
+  "purpose": "Calibração sintética, privada e reproduzível para a hipótese de duração.",
+  "cases": [
+    {"id": "duracao_generica", "header": "Duração", "values": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "formula_count": 0, "expected": true},
+    {"id": "duracao_horas", "header": "Duração (horas)", "values": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "formula_count": 0, "expected": true},
+    {"id": "duracao_minutos", "header": "Duração (minutos)", "values": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100], "formula_count": 0, "expected": true},
+    {"id": "cabecalho_aberto", "header": "Tempo", "values": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "formula_count": 0, "expected": false},
+    {"id": "base_insuficiente", "header": "Duração", "values": [1, 2, 3, 4, 5, 6, 7, 8, 9], "formula_count": 0, "expected": false},
+    {"id": "formula_presente", "header": "Duração", "values": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "formula_count": 1, "expected": false}
+  ]
+}

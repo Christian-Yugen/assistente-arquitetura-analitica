@@ -1,0 +1,15 @@
+{
+  "golden_dataset_id": "GD-SEM-DESC-004-001",
+  "rule_id": "SEM-DESC-004",
+  "privacy": "synthetic_labels_only_no_personal_data",
+  "cases": [
+    {"id": "closed_nome_text", "header": "nome", "values": ["rotulo-01", "rotulo-02", "rotulo-03", "rotulo-04", "rotulo-05", "rotulo-06", "rotulo-07", "rotulo-08", "rotulo-09", "rotulo-10"], "formula_count": 0, "expected": true},
+    {"id": "closed_descricao_text", "header": "descrição", "values": ["texto-01", "texto-02", "texto-03", "texto-04", "texto-05", "texto-06", "texto-07", "texto-08", "texto-09", "texto-10"], "formula_count": 0, "expected": true},
+    {"id": "closed_descricao_unaccented", "header": "descricao", "values": ["item-01", "item-02", "item-03", "item-04", "item-05", "item-06", "item-07", "item-08", "item-09", "item-10"], "formula_count": 0, "expected": true},
+    {"id": "open_header", "header": "categoria", "values": ["rotulo-01", "rotulo-02", "rotulo-03", "rotulo-04", "rotulo-05", "rotulo-06", "rotulo-07", "rotulo-08", "rotulo-09", "rotulo-10"], "formula_count": 0, "expected": false},
+    {"id": "insufficient_base", "header": "nome", "values": ["rotulo-01", "rotulo-02", "rotulo-03", "rotulo-04", "rotulo-05", "rotulo-06", "rotulo-07", "rotulo-08", "rotulo-09"], "formula_count": 0, "expected": false},
+    {"id": "formula_present", "header": "descricao", "values": ["texto-01", "texto-02", "texto-03", "texto-04", "texto-05", "texto-06", "texto-07", "texto-08", "texto-09", "texto-10"], "formula_count": 1, "expected": false},
+    {"id": "recognized_date", "header": "descrição", "values": ["2026-01-01", "2026-01-02", "2026-01-03", "2026-01-04", "2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-10"], "formula_count": 0, "expected": false},
+    {"id": "low_distinction", "header": "nome", "values": ["constante", "constante", "constante", "constante", "constante", "constante", "constante", "constante", "constante", "constante"], "formula_count": 0, "expected": false}
+  ]
+}

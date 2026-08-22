@@ -1,0 +1,55 @@
+{
+  "intake_id": "SEM-STATUS-009-INTAKE-001",
+  "rule": {
+    "rule_id": "SEM-STATUS-009",
+    "title": "Status",
+    "category": "semantic_typing",
+    "purpose": "Classificar coluna como status com evidências convergentes.",
+    "priority": "P1",
+    "stage": "semantic_typing",
+    "scope": "column",
+    "depends_on": ["quality"],
+    "primary_output": "semantic_type",
+    "source_implementation_status": "planned"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "Plano_Mestre_MVP_Modelagem_Dimensional_PowerBI_v1.0.docx",
+      "engine/profiling/semantic_identifier.py",
+      "engine/profiling/semantic_description.py",
+      "engine/contracts/diagnosis.py"
+    ]
+  },
+  "source_gap": "O blueprint oficial define apenas título, propósito, prioridade P1, escopo por coluna, dependência de qualidade e saída semantic_type. Não há dicionário de estados, vocabulário de cabeçalho, cardinalidade, tipo físico, base mínima, exclusões, evidências, precedência, confiança, pergunta, perfil agregado, contrato de projeção ou calibração. A regra não pode inferir status por valores, conteúdo, sinônimos livres, frequência, posição, título de aba, formatação, domínio, idioma ou contexto de outras colunas sem política aprovada.",
+  "local_readiness": "executable_draft",
+  "authorization": {
+    "implementation_authorized": true,
+    "reason": "A Proposta A e o gate de reconstrução foram aprovados por Chris; perfil privado, classificador determinístico, testes, golden dataset, calibração reprodutível e gate individual estão registrados para execução exclusivamente draft.",
+    "required_gate": "SEM-STATUS-009-DRAFT-CALIBRATION-001"
+  },
+  "required_before_implementation": [
+    "Decisão humana sobre vocabulário fechado, tipo físico, base mínima, exclusões, precedência e confiança",
+    "Perfil agregado que não retenha valores, cabeçalhos, tokens, posições, exemplos, títulos de abas ou formatos de célula",
+    "Classificador determinístico, evidências, pergunta humana, versão contratual e integração canônica guardada por catálogo",
+    "Testes unitários, limítrofes, de privacidade, de contrato e de integração",
+    "Golden dataset sintético sem conteúdo pessoal, manifesto SHA-256, calibração reprodutível e gate individual de calibração"
+  ],
+  "required_policy_elements": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "precedence",
+    "confidence",
+    "questions",
+    "contract_projection",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ],
+  "status": "executable_draft",
+  "execution_blocked": false,
+  "missing_before_execution": []
+}

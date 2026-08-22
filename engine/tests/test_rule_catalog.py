@@ -38,7 +38,7 @@ from engine.semantic.date_generic import SemanticDateColumnProfile
 from engine.profiling.semantic_identifier import profile_semantic_identifier
 from engine.semantic.identifier import SemanticIdentifierColumnProfile
 from engine.semantic.quantity import SemanticQuantityColumnProfile
-from engine.profiling.numeric_text import profile_numeric_text
+from engine.profiling.numeric_text import infer_physical_type, profile_numeric_text
 from engine.profiling.semantic_currency import profile_semantic_currency
 from engine.profiling.semantic_percentage import profile_semantic_percentage
 from engine.profiling.semantic_quantity import profile_semantic_quantity
@@ -46,12 +46,18 @@ from engine.profiling.semantic_target import profile_semantic_target
 from engine.profiling.semantic_actual import profile_semantic_actual
 from engine.profiling.semantic_sensitivity import profile_semantic_sensitivity
 from engine.profiling.semantic_competence import profile_semantic_competence
+from engine.profiling.semantic_description import profile_semantic_description
+from engine.profiling.semantic_duration import profile_semantic_duration
+from engine.profiling.semantic_status import profile_semantic_status
 from engine.semantic.currency import SemanticCurrencyColumnProfile
 from engine.semantic.percentage import SemanticPercentageColumnProfile
 from engine.semantic.target import SemanticTargetColumnProfile
 from engine.semantic.actual import SemanticActualColumnProfile
 from engine.semantic.sensitivity import SemanticSensitivityColumnProfile
 from engine.semantic.competence import SemanticCompetenceColumnProfile
+from engine.semantic.duration import SemanticDurationColumnProfile
+from engine.semantic.description import SemanticDescriptionColumnProfile
+from engine.semantic.status import SemanticStatusColumnProfile
 from engine.profiling.headers import HeadersProfile
 from engine.quality.headers import HeadersSheetProfile
 from engine.profiling.identifier_completeness import IdentifierCompletenessProfile
@@ -221,6 +227,43 @@ class RuleCatalogTests(unittest.TestCase):
             ),
         )
         competence_record = get_rule_execution_record("SEM-COMP-002")
+        description_values = [f"rotulo-{index:02d}" for index in range(1, 11)]
+        description_result = execute_registered_rule(
+            "SEM-DESC-004",
+            SemanticDescriptionColumnProfile(
+                infer_physical_type(description_values),
+                FormulaConsistencyProfile(formula_count=0),
+                profile_semantic_date(description_values),
+                profile_semantic_identifier("descricao", description_values),
+                profile_semantic_description("descricao"),
+            ),
+        )
+        description_record = get_rule_execution_record("SEM-DESC-004")
+        duration_values = list(range(1, 11))
+        duration_result = execute_registered_rule(
+            "SEM-DUR-008",
+            SemanticDurationColumnProfile(
+                infer_physical_type(duration_values),
+                FormulaConsistencyProfile(formula_count=0),
+                profile_numeric_text(duration_values),
+                profile_semantic_date(duration_values),
+                profile_semantic_duration("duração (horas)", duration_values),
+            ),
+        )
+        duration_record = get_rule_execution_record("SEM-DUR-008")
+        status_values = ["classe_a"] * 5 + ["classe_b"] * 5
+        status_result = execute_registered_rule(
+            "SEM-STATUS-009",
+            SemanticStatusColumnProfile(
+                infer_physical_type(status_values),
+                FormulaConsistencyProfile(formula_count=0),
+                profile_semantic_date(status_values),
+                profile_semantic_identifier("status", status_values),
+                profile_semantic_description("status"),
+                profile_semantic_status("status", status_values),
+            ),
+        )
+        status_record = get_rule_execution_record("SEM-STATUS-009")
         transactional_result = execute_registered_rule(
             "MDL-FACTTXN-002",
             TransactionalFactSheetProfile(20, True, (TransactionalDateProfile(20, 18),), 1),
@@ -233,7 +276,7 @@ class RuleCatalogTests(unittest.TestCase):
             "MDL-DIMCAL-006",
             CalendarDimensionSheetProfile(20, True, (CalendarDateProfile(20, 20, 19),), 0),
         )
-        self.assertEqual(executable_rule_count(), 29)
+        self.assertEqual(executable_rule_count(), 32)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
@@ -257,6 +300,9 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(actual_result[0]["semantic_type"], "actual_candidate")
         self.assertEqual(sensitivity_result[0]["sensitivity"], "personal_data_candidate")
         self.assertEqual(competence_result[0]["semantic_type"], "competence_date_candidate")
+        self.assertEqual(description_result[0]["semantic_type"], "name_or_description_candidate")
+        self.assertEqual(duration_result[0]["semantic_type"], "duration_candidate")
+        self.assertEqual(status_result[0]["semantic_type"], "status_candidate")
         self.assertEqual(transactional_result[0]["classification_type"], "fact_transactional_candidate")
         self.assertEqual(dimension_result[0]["classification_type"], "dimension_standard_candidate")
         self.assertEqual(calendar_dimension_result[0]["classification_type"], "dimension_calendar_candidate")
@@ -270,6 +316,9 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(actual_record.status, "executable_draft")
         self.assertEqual(sensitivity_record.status, "executable_draft")
         self.assertEqual(competence_record.status, "executable_draft")
+        self.assertEqual(description_record.status, "executable_draft")
+        self.assertEqual(duration_record.status, "executable_draft")
+        self.assertEqual(status_record.status, "executable_draft")
         self.assertEqual(catvar_record.status, "executable_draft")
         self.assertEqual(duplicate_record.status, "executable_draft")
         self.assertEqual(emptyrow_record.status, "executable_draft")

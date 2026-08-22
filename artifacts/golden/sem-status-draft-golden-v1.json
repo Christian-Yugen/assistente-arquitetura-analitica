@@ -1,0 +1,13 @@
+{
+  "dataset_id": "GD-SEM-STATUS-009-001",
+  "rule_id": "SEM-STATUS-009",
+  "purpose": "Calibração sintética, privada e reproduzível para a hipótese de status.",
+  "cases": [
+    {"id": "status_duas_categorias", "header": "Status", "values": ["classe_a", "classe_a", "classe_a", "classe_a", "classe_a", "classe_b", "classe_b", "classe_b", "classe_b", "classe_b"], "formula_count": 0, "expected": true},
+    {"id": "situacao_tres_categorias", "header": "Situação", "values": ["grupo_a", "grupo_a", "grupo_a", "grupo_a", "grupo_b", "grupo_b", "grupo_b", "grupo_c", "grupo_c", "grupo_c"], "formula_count": 0, "expected": true},
+    {"id": "estado_cinco_categorias", "header": "Estado", "values": ["tipo_a", "tipo_a", "tipo_b", "tipo_b", "tipo_c", "tipo_c", "tipo_d", "tipo_d", "tipo_e", "tipo_e"], "formula_count": 0, "expected": true},
+    {"id": "cabecalho_aberto", "header": "Fase", "values": ["classe_a", "classe_a", "classe_a", "classe_a", "classe_a", "classe_b", "classe_b", "classe_b", "classe_b", "classe_b"], "formula_count": 0, "expected": false},
+    {"id": "base_insuficiente", "header": "Status", "values": ["classe_a", "classe_a", "classe_a", "classe_a", "classe_a", "classe_b", "classe_b", "classe_b", "classe_b"], "formula_count": 0, "expected": false},
+    {"id": "formula_presente", "header": "Status", "values": ["classe_a", "classe_a", "classe_a", "classe_a", "classe_a", "classe_b", "classe_b", "classe_b", "classe_b", "classe_b"], "formula_count": 1, "expected": false}
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "intake_id": "SEM-DESC-004-INTAKE-001",
+  "rule": {
+    "rule_id": "SEM-DESC-004",
+    "title": "Nome ou descrição",
+    "category": "semantic_typing",
+    "purpose": "Classificar coluna como nome ou descrição com evidências convergentes.",
+    "priority": "P1",
+    "stage": "semantic_typing",
+    "scope": "column",
+    "depends_on": ["quality"],
+    "primary_output": "semantic_type",
+    "source_implementation_status": "planned"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "Plano_Mestre_MVP_Modelagem_Dimensional_PowerBI_v1.0.docx",
+      "engine/profiling/semantic_identifier.py",
+      "engine/contracts/diagnosis.py"
+    ]
+  },
+  "source_gap": "O blueprint oficial define somente título, propósito, prioridade P1, escopo por coluna, dependência de qualidade e saída semantic_type. Não há vocabulário materializado que diferencie nome, descrição, identificador, categoria ou dado pessoal; tampouco existem pré-condições textuais, limiares, exclusões, evidências, precedência, confiança, pergunta, perfil agregado ou projeção específica. A regra não pode ler, reter, comparar, classificar ou expor conteúdo textual, inferir significado por valores, usar títulos de abas, posição, domínio, idioma, formato de célula ou sinônimos sem política aprovada.",
+  "local_readiness": "executable_draft",
+  "authorization": {
+    "implementation_authorized": true,
+    "reason": "Chris aprovou a Proposta A e o gate SEM-DESC-004-RECONSTRUCTION-AUTHORIZATION-001. Perfil privado, classificador determinístico, contrato, integração, testes, golden dataset, calibração e autorização draft foram concluídos; produção continua bloqueada.",
+    "required_gate": "SEM-DESC-004-RECONSTRUCTION-AUTHORIZATION-001"
+  },
+  "required_before_implementation": [
+    "Decisão humana sobre vocabulário fechado, saída, base mínima e distinção entre nome, descrição, categoria, identificador e candidato a dado pessoal",
+    "Perfil agregado que não retenha valores, cabeçalhos, tokens, tamanhos individuais, posições, exemplos, títulos de abas ou formatos de célula",
+    "Classificador determinístico, exclusões, precedência, confiança, pergunta humana e projeção canônica versionada",
+    "Testes unitários, limítrofes, de privacidade, de contrato e de integração",
+    "Golden dataset sintético sem conteúdo pessoal, manifesto SHA-256, calibração reprodutível e gate individual de calibração"
+  ],
+  "required_policy_elements": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "precedence",
+    "confidence",
+    "questions",
+    "contract_projection",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ],
+  "status": "executable_draft",
+  "execution_blocked": false,
+  "missing_before_execution": []
+}
