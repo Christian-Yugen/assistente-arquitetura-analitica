@@ -68,6 +68,7 @@ from engine.semantic.responsible import SemanticResponsibleColumnProfile
 from engine.profiling.headers import HeadersProfile
 from engine.quality.headers import HeadersSheetProfile
 from engine.profiling.identifier_completeness import IdentifierCompletenessProfile
+from engine.fact_dimension.fact_without_grain import FactWithoutDefinedGrainSheetProfile
 from engine.quality.identifier_completeness import IdentifierCompletenessColumnProfile
 from engine.fact_dimension.transactional import TransactionalFactSheetProfile
 from engine.profiling.transactional_fact import TransactionalDateProfile
@@ -328,6 +329,11 @@ class RuleCatalogTests(unittest.TestCase):
             EntityPerRowSheetProfile(20, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0),
         )
         entity_record = get_rule_execution_record("GRN-ENTITY-003")
+        fact_without_grain_result = execute_registered_rule(
+            "MDL-FACTNOGRAIN-019",
+            FactWithoutDefinedGrainSheetProfile(20, 1, 1, 0, 0, 0, 0, 0, 0),
+        )
+        fact_without_grain_record = get_rule_execution_record("MDL-FACTNOGRAIN-019")
         transactional_result = execute_registered_rule(
             "MDL-FACTTXN-002",
             TransactionalFactSheetProfile(20, True, (TransactionalDateProfile(20, 18),), 1),
@@ -340,7 +346,7 @@ class RuleCatalogTests(unittest.TestCase):
             "MDL-DIMCAL-006",
             CalendarDimensionSheetProfile(20, True, (CalendarDateProfile(20, 20, 19),), 0),
         )
-        self.assertEqual(executable_rule_count(), 38)
+        self.assertEqual(executable_rule_count(), 39)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
@@ -372,6 +378,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(responsible_result[0]["semantic_type"], "responsible_candidate")
         self.assertEqual(explicit_key_result[0]["grain_type"], "explicit_key_candidate")
         self.assertEqual(event_result[0]["grain_type"], "event_per_row_candidate")
+        self.assertEqual(fact_without_grain_result[0]["classification_type"], "fact_without_defined_grain_candidate")
         self.assertEqual(transactional_result[0]["classification_type"], "fact_transactional_candidate")
         self.assertEqual(dimension_result[0]["classification_type"], "dimension_standard_candidate")
         self.assertEqual(calendar_dimension_result[0]["classification_type"], "dimension_calendar_candidate")
@@ -409,6 +416,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(get_rule_execution_record("GRN-COMP-001").status, "executable_draft")
         self.assertEqual(get_rule_execution_record("MDL-FACTPER-001").status, "executable_draft")
         self.assertEqual(get_rule_execution_record("MDL-FACTTXN-002").status, "executable_draft")
+        self.assertEqual(fact_without_grain_record.status, "executable_draft")
         self.assertEqual(get_rule_execution_record("MDL-DIMSTD-004").status, "executable_draft")
         self.assertEqual(get_rule_execution_record("MDL-DIMCAL-006").status, "executable_draft")
         self.assertEqual(record.title, "Números armazenados como texto")

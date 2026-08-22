@@ -1,0 +1,11 @@
+{
+  "manifest_id": "MANIFEST-GD-MDL-FACTNOGRAIN-019-001",
+  "dataset_id": "GD-MDL-FACTNOGRAIN-019-001",
+  "rule_id": "MDL-FACTNOGRAIN-019",
+  "sha256": "3466965e28f9c0227dded94e8d9277667cce7939db778c4c8b255684c9be62fc",
+  "synthetic_only": true,
+  "case_count": 12,
+  "expected_positive_count": 3,
+  "expected_negative_count": 9,
+  "evaluator": "engine.calibration.evaluate_mdl_factnograin_draft_golden.evaluate"
+}
