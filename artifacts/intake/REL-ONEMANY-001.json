@@ -1,0 +1,81 @@
+{
+  "intake_id": "REL-ONEMANY-001-INTAKE-001",
+  "rule": {
+    "rule_id": "REL-ONEMANY-001",
+    "title": "Relacionamento um-para-muitos",
+    "category": "relationship",
+    "purpose": "Detectar ou recomendar relacionamento um-para-muitos.",
+    "priority": "P0",
+    "stage": "relationship_inference",
+    "scope": "sheet_pair",
+    "depends_on": ["table_classification"],
+    "primary_output": "relationship_or_finding",
+    "source_implementation_status": "reference_implemented_draft"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "artifacts/catalogs/rule-implementation-readiness-v1.json",
+      "docs/governance/RULE_DEVELOPMENT_LIFECYCLE_001.md",
+      "engine/fact_dimension/registry.py",
+      "engine/pipeline/quality_diagnosis.py",
+      "docs/rules/MDL_FACTNOGRAIN_019_POLICY_PROPOSAL_001.md"
+    ]
+  },
+  "source_gap": "O blueprint oficial define somente título, propósito, prioridade P0, escopo por par de abas, dependência de classificação de tabela e saída relationship_or_finding. Não define direção, elegibilidade de chaves, teste de cobertura referencial, tratamento de cardinalidade, exclusões, evidências, confiança, pergunta humana, perfil privado por par, versão contratual, testes ou calibração. A regra não pode criar relacionamento, inferir chaves por rótulos livres, expor nomes de abas, cabeçalhos, valores, posições ou pares de valores, nem concluir relacionamento com base em coincidência parcial, dados sensíveis, fórmulas, relacionamento 1:1, muitos-para-muitos ou ambiguidade.",
+  "local_readiness": "intake_required",
+  "authorization": {
+    "intake_authorized": true,
+    "intake_authorized_by": "Chris",
+    "policy_approved": true,
+    "policy_approved_by": "Chris",
+    "policy_approved_proposal": "A",
+    "implementation_authorized": false,
+    "implementation_authorized_by": null,
+    "reconstruction_gate": "REL-ONEMANY-001-RECONSTRUCTION-AUTHORIZATION-001",
+    "calibration_gate": null
+  },
+  "required_before_implementation": [
+    "Aprovação explícita de Chris para uma política de relacionamento conservadora",
+    "Gate de reconstrução que mantenha a implementação bloqueada até nova autorização específica",
+    "Perfil privado por par com sinais exclusivamente agregados e sem valores, cabeçalhos, posições, nomes ou títulos de abas",
+    "Classificador determinístico, versão contratual, integração canônica e allowlist draft protegida por catálogo",
+    "Testes positivos, negativos, limítrofes, de privacidade, contrato e integração",
+    "Golden dataset exclusivamente sintético, manifesto SHA-256, avaliador reprodutível, calibração e gate individual"
+  ],
+  "required_policy_elements": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "precedence",
+    "severity",
+    "confidence",
+    "questions",
+    "contract_projection",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ],
+  "status": "intake_required",
+  "execution_blocked": true,
+  "missing_before_execution": [
+    "reconstruction_authorization",
+    "implementation_authorization",
+    "condition",
+    "exclusions",
+    "evidence",
+    "confidence",
+    "questions",
+    "private_pair_profile",
+    "relationship_classifier",
+    "contract_version",
+    "pipeline_integration",
+    "draft_catalog_authorization",
+    "tests",
+    "golden_dataset",
+    "calibration",
+    "calibration_gate"
+  ]
+}
