@@ -331,3 +331,7 @@
 - [x] Registrar a aprovação explícita de Chris para a Proposta A da SEM-RESP-012 e vinculá-la ao gate de reconstrução.
 - [x] Formalizar o gate de reconstrução da SEM-RESP-012 somente após a aprovação explícita de Chris para a proposta selecionada.
 - [x] Implementar, testar, calibrar e ativar a SEM-RESP-012 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
+- [x] Recuperar metadados, dependências e lacunas da GRN-EXPL-002 sem implementar lógica executável.
+- [x] Elaborar política e especificação lógica não executáveis para a GRN-EXPL-002 e solicitar aprovação específica antes de implementação.
+- [ ] Formalizar o gate de reconstrução da GRN-EXPL-002 somente após a aprovação explícita de Chris para a proposta selecionada.
+- [ ] Implementar, testar, calibrar e ativar a GRN-EXPL-002 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.

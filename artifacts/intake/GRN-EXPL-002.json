@@ -1,0 +1,65 @@
+{
+  "intake_id": "GRN-EXPL-002-INTAKE-001",
+  "rule": {
+    "rule_id": "GRN-EXPL-002",
+    "title": "Chave explícita",
+    "category": "grain",
+    "purpose": "Inferir ou validar chave explícita.",
+    "priority": "P0",
+    "stage": "grain_inference",
+    "scope": "sheet",
+    "depends_on": ["semantic_typing"],
+    "primary_output": "grain",
+    "source_implementation_status": "planned"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "artifacts/catalogs/rule-implementation-readiness-v1.json",
+      "Plano_Mestre_MVP_Modelagem_Dimensional_PowerBI_v1.0.docx",
+      "engine/semantic/identifier.py",
+      "engine/contracts/diagnosis.py"
+    ]
+  },
+  "source_gap": "O blueprint oficial define somente título, propósito, prioridade P0, escopo por aba, dependência de tipagem semântica e saída grain. Não há vocabulário de cabeçalho, tamanho mínimo, regra de completude, unicidade, elegibilidade de coluna, exclusões, evidências, precedência, confiança, pergunta, perfil agregado, versão contratual ou calibração. A regra não pode confirmar chave de negócio, revelar coluna, reter cabeçalho, valores, posição, título de aba, hashes ou usar contexto externo sem política aprovada.",
+  "local_readiness": "intake_required",
+  "authorization": {
+    "implementation_authorized": false,
+    "reason": "A regra exige proposta de política e especificação lógica aprovadas explicitamente por Chris, seguidas de gate de reconstrução, antes de qualquer perfil, classificador, integração, teste executável, golden dataset, calibração ou ativação draft.",
+    "required_gate": "GRN-EXPL-002-RECONSTRUCTION-AUTHORIZATION"
+  },
+  "required_before_implementation": [
+    "Decisão humana sobre vocabulário fechado, tamanho mínimo, unicidade, completude, exclusões, precedência e confiança",
+    "Perfil agregado por aba que não retenha valores, cabeçalhos, tokens, posições, exemplos, títulos de abas, hashes ou frequências por rótulo",
+    "Classificador determinístico, evidências, pergunta humana, versão contratual e integração canônica guardada por catálogo",
+    "Testes unitários, limítrofes, de privacidade, de contrato e de integração",
+    "Golden dataset sintético sem conteúdo pessoal, manifesto SHA-256, calibração reproduzível e gate individual de calibração"
+  ],
+  "required_policy_elements": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "precedence",
+    "confidence",
+    "questions",
+    "contract_projection",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ],
+  "status": "intake_required",
+  "execution_blocked": true,
+  "missing_before_execution": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "severity",
+    "confidence",
+    "questions",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ]
+}
