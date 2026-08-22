@@ -29,12 +29,12 @@
   "authorization": {
     "intake_authorized": true,
     "intake_authorized_by": "Chris",
-    "policy_approved": false,
-    "policy_approved_by": null,
-    "policy_approved_proposal": null,
+    "policy_approved": true,
+    "policy_approved_by": "Chris",
+    "policy_approved_proposal": "A",
     "implementation_authorized": false,
     "implementation_authorized_by": null,
-    "reconstruction_gate": null,
+    "reconstruction_gate": "REL-ONEMANY-001-RECONSTRUCTION-AUTHORIZATION-001",
     "calibration_gate": null
   },
   "required_before_implementation": [
@@ -61,7 +61,6 @@
   "status": "intake_required",
   "execution_blocked": true,
   "missing_before_execution": [
-    "policy_authorization",
     "reconstruction_authorization",
     "implementation_authorization",
     "condition",

@@ -377,5 +377,8 @@
 - [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da MDL-UNDEFINED-020.
 - [x] Sincronizar a ativação draft da MDL-UNDEFINED-020 no índice, intake, Gate MVP, workspace e provas documentais.
 - [x] Criar branch de segurança e recuperar metadados, dependências e lacunas da REL-ONEMANY-001 sem implementar lógica executável.
-- [ ] Elaborar intake, Proposta A e especificação lógica não executáveis para a REL-ONEMANY-001 e solicitar aprovação específica antes de implementação.
+- [x] Elaborar intake, Proposta A e especificação lógica não executáveis para a REL-ONEMANY-001 e solicitar aprovação específica antes de implementação.
 - [x] Criar prova documental que preserve o bloqueio de execução e de produção da REL-ONEMANY-001.
+- [x] Registrar a aprovação explícita de Chris para a Proposta A da REL-ONEMANY-001 nos artefatos governados.
+- [x] Formalizar o gate de reconstrução da REL-ONEMANY-001 sem autorizar implementação.
+- [ ] Validar e sincronizar o gate não executável da REL-ONEMANY-001 antes de solicitar autorização específica de implementação.

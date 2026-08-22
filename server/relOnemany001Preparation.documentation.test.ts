@@ -12,12 +12,13 @@ describe("REL-ONEMANY-001 preparation governance", () => {
     const specification = read("docs/rules/REL_ONEMANY_001_LOGICAL_SPEC_PROPOSAL_001.md");
 
     expect(intake).toContain('"status": "intake_required"');
-    expect(intake).toContain('"policy_approved": false');
+    expect(intake).toContain('"policy_approved": true');
+    expect(intake).toContain('"policy_approved_by": "Chris"');
     expect(intake).toContain('"implementation_authorized": false');
     expect(intake).toContain('"execution_blocked": true');
     expect(intake).toContain('"scope": "sheet_pair"');
     expect(policy).toContain("Proposta A — hipótese conservadora de relacionamento um-para-muitos");
-    expect(policy).toContain("Proposta A pendente de aprovação explícita de Chris");
+    expect(policy).toContain("Proposta A aprovada explicitamente por Chris");
     expect(policy).toContain("Não autoriza perfil, classificador, registro, contrato, pipeline, catálogo, testes, dataset golden, calibração, ativação draft ou produção");
     expect(specification).toContain("não executável");
     expect(specification).toContain("Uma aprovação de política não autoriza a escrita, integração ou execução de código");
@@ -37,5 +38,17 @@ describe("REL-ONEMANY-001 preparation governance", () => {
     expect(registry).not.toContain("REL-ONEMANY-001");
     expect(pipeline).not.toContain("REL-ONEMANY-001");
     expect(catalog).not.toContain("REL-ONEMANY-001");
+  });
+
+  it("records the approved Proposal A and the reconstruction gate without releasing execution", () => {
+    const intake = read("artifacts/intake/REL-ONEMANY-001.json");
+    const policy = read("docs/rules/REL_ONEMANY_001_POLICY_PROPOSAL_001.md");
+    const gate = read("docs/gates/REL_ONEMANY_001_RECONSTRUCTION_AUTHORIZATION_001.md");
+
+    expect(intake).toContain("REL-ONEMANY-001-RECONSTRUCTION-AUTHORIZATION-001");
+    expect(policy).toContain("Proposta A aprovada explicitamente por Chris");
+    expect(gate).toContain("one_to_many_relationship_candidate");
+    expect(gate).toContain("Ele não autoriza escrever, integrar ou executar lógica da regra");
+    expect(gate).toContain("produção permanece bloqueada");
   });
 });

@@ -18,4 +18,4 @@ Como alternativa mais restritiva, a regra não emitiria hipótese de relacioname
 
 ## Estado
 
-**Proposta A pendente de aprovação explícita de Chris.** Este documento é não executável. Não autoriza perfil, classificador, registro, contrato, pipeline, catálogo, testes, dataset golden, calibração, ativação draft ou produção. Mesmo após eventual aprovação da política, a implementação continuará dependente de gate de reconstrução e de autorização explícita posterior de Chris.
+**Proposta A aprovada explicitamente por Chris.** Este documento continua não executável. Não autoriza perfil, classificador, registro, contrato, pipeline, catálogo, testes, dataset golden, calibração, ativação draft ou produção. A implementação continua dependente de gate de reconstrução e de autorização explícita posterior de Chris.
