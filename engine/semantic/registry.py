@@ -7,6 +7,7 @@ from engine.semantic.duration import classify_duration
 from engine.semantic.status import classify_status
 from engine.semantic.category import classify_category
 from engine.semantic.location import classify_location
+from engine.semantic.responsible import classify_responsible
 from engine.semantic.actual import classify_actual
 from engine.semantic.currency import classify_currency
 from engine.semantic.identifier import classify_identifier
@@ -23,6 +24,7 @@ SEMANTIC_RULE_IMPLEMENTATIONS = {
     "SEM-STATUS-009": classify_status,
     "SEM-CAT-010": classify_category,
     "SEM-LOC-011": classify_location,
+    "SEM-RESP-012": classify_responsible,
     "SEM-ACTUAL-014": classify_actual,
     "SEM-CURR-006": classify_currency,
     "SEM-ID-003": classify_identifier,

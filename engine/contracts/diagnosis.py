@@ -30,6 +30,7 @@ RULE_VERSIONS = {
     "SEM-STATUS-009": "0.1.0-provisional.1",
     "SEM-CAT-010": "0.1.0-provisional.1",
     "SEM-LOC-011": "0.1.0-provisional.1",
+    "SEM-RESP-012": "0.1.0-provisional.1",
     "SEM-CURR-006": "0.1.0-provisional.1",
     "SEM-ID-003": "0.1.0-provisional.1",
     "SEM-QTY-005": "0.1.0-provisional.1",

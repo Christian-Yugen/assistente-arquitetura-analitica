@@ -51,6 +51,7 @@ from engine.profiling.semantic_duration import profile_semantic_duration
 from engine.profiling.semantic_status import profile_semantic_status
 from engine.profiling.semantic_category import profile_semantic_category
 from engine.profiling.semantic_location import profile_semantic_location
+from engine.profiling.semantic_responsible import profile_semantic_responsible
 from engine.semantic.currency import SemanticCurrencyColumnProfile
 from engine.semantic.percentage import SemanticPercentageColumnProfile
 from engine.semantic.target import SemanticTargetColumnProfile
@@ -62,6 +63,7 @@ from engine.semantic.description import SemanticDescriptionColumnProfile
 from engine.semantic.status import SemanticStatusColumnProfile
 from engine.semantic.category import SemanticCategoryColumnProfile
 from engine.semantic.location import SemanticLocationColumnProfile
+from engine.semantic.responsible import SemanticResponsibleColumnProfile
 from engine.profiling.headers import HeadersProfile
 from engine.quality.headers import HeadersSheetProfile
 from engine.profiling.identifier_completeness import IdentifierCompletenessProfile
@@ -292,6 +294,18 @@ class RuleCatalogTests(unittest.TestCase):
             ),
         )
         location_record = get_rule_execution_record("SEM-LOC-011")
+        responsible_values = ["responsavel_privado_a"] * 5 + ["responsavel_privado_b"] * 5
+        responsible_result = execute_registered_rule(
+            "SEM-RESP-012",
+            SemanticResponsibleColumnProfile(
+                infer_physical_type(responsible_values),
+                FormulaConsistencyProfile(formula_count=0),
+                profile_semantic_date(responsible_values),
+                profile_semantic_identifier("responsavel", responsible_values),
+                profile_semantic_responsible("responsavel", responsible_values),
+            ),
+        )
+        responsible_record = get_rule_execution_record("SEM-RESP-012")
         transactional_result = execute_registered_rule(
             "MDL-FACTTXN-002",
             TransactionalFactSheetProfile(20, True, (TransactionalDateProfile(20, 18),), 1),
@@ -304,7 +318,7 @@ class RuleCatalogTests(unittest.TestCase):
             "MDL-DIMCAL-006",
             CalendarDimensionSheetProfile(20, True, (CalendarDateProfile(20, 20, 19),), 0),
         )
-        self.assertEqual(executable_rule_count(), 34)
+        self.assertEqual(executable_rule_count(), 35)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
@@ -333,6 +347,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(status_result[0]["semantic_type"], "status_candidate")
         self.assertEqual(category_result[0]["semantic_type"], "category_candidate")
         self.assertEqual(location_result[0]["semantic_type"], "location_candidate")
+        self.assertEqual(responsible_result[0]["semantic_type"], "responsible_candidate")
         self.assertEqual(transactional_result[0]["classification_type"], "fact_transactional_candidate")
         self.assertEqual(dimension_result[0]["classification_type"], "dimension_standard_candidate")
         self.assertEqual(calendar_dimension_result[0]["classification_type"], "dimension_calendar_candidate")
@@ -351,6 +366,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(status_record.status, "executable_draft")
         self.assertEqual(category_record.status, "executable_draft")
         self.assertEqual(location_record.status, "executable_draft")
+        self.assertEqual(responsible_record.status, "executable_draft")
         self.assertEqual(catvar_record.status, "executable_draft")
         self.assertEqual(duplicate_record.status, "executable_draft")
         self.assertEqual(emptyrow_record.status, "executable_draft")

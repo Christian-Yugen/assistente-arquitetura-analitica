@@ -24,11 +24,11 @@
     ]
   },
   "source_gap": "O blueprint oficial define somente título, propósito, prioridade P1, escopo por coluna, dependência de qualidade e saída semantic_type. Não há vocabulário de cabeçalho, tipo físico, base mínima, cardinalidade, exclusões, evidências, precedência, confiança, pergunta, perfil agregado, versão contratual ou calibração. A regra não pode identificar pessoas, equipes, áreas, cargos, rótulos de valores, sinônimos livres, posição, título de aba, formatação, domínio, idioma, outras colunas ou contexto de negócio sem política aprovada.",
-  "local_readiness": "intake_required",
+  "local_readiness": "executable_draft",
   "authorization": {
-    "implementation_authorized": false,
-    "reason": "A regra exige proposta de política e especificação lógica aprovadas explicitamente por Chris, seguidas de gate de reconstrução, antes de qualquer perfil, classificador, integração, teste executável, golden dataset, calibração ou ativação draft.",
-    "required_gate": "SEM-RESP-012-RECONSTRUCTION-AUTHORIZATION"
+    "implementation_authorized": true,
+    "reason": "A Proposta A foi aprovada explicitamente por Chris e o gate de reconstrução SEM-RESP-012-RECONSTRUCTION-AUTHORIZATION-001 permite somente a implementação provisória controlada, os testes e a calibração; a execução no catálogo e a produção continuam bloqueadas até as evidências finais.",
+    "required_gate": "SEM-RESP-012-RECONSTRUCTION-AUTHORIZATION-001"
   },
   "required_before_implementation": [
     "Decisão humana sobre vocabulário fechado, tipo físico, base mínima, cardinalidade, exclusões, precedência e confiança",
@@ -49,17 +49,7 @@
     "golden_dataset",
     "authorization_gate"
   ],
-  "status": "intake_required",
-  "execution_blocked": true,
-  "missing_before_execution": [
-    "condition",
-    "exclusions",
-    "evidence",
-    "severity",
-    "confidence",
-    "questions",
-    "tests",
-    "golden_dataset",
-    "authorization_gate"
-  ]
+  "status": "executable_draft",
+  "execution_blocked": false,
+  "missing_before_execution": []
 }
