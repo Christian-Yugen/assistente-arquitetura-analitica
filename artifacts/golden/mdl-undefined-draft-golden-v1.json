@@ -1,0 +1,19 @@
+{
+  "dataset_id": "GD-MDL-UNDEFINED-020-001",
+  "rule_id": "MDL-UNDEFINED-020",
+  "version": "1.0",
+  "synthetic_only": true,
+  "cases": [
+    {"case_id": "minimum_residual_review", "observed_row_count": 20, "physical_column_count": 2, "evaluated_table_classifier_count": 5, "positive_table_classification_count": 0, "classification_conflict_count": 0, "formula_column_count": 0, "sensitive_candidate_count": 0, "classification_ambiguity_count": 0, "expected": true},
+    {"case_id": "larger_residual_review", "observed_row_count": 48, "physical_column_count": 4, "evaluated_table_classifier_count": 5, "positive_table_classification_count": 0, "classification_conflict_count": 0, "formula_column_count": 0, "sensitive_candidate_count": 0, "classification_ambiguity_count": 0, "expected": true},
+    {"case_id": "wide_residual_review", "observed_row_count": 125, "physical_column_count": 9, "evaluated_table_classifier_count": 5, "positive_table_classification_count": 0, "classification_conflict_count": 0, "formula_column_count": 0, "sensitive_candidate_count": 0, "classification_ambiguity_count": 0, "expected": true},
+    {"case_id": "insufficient_rows", "observed_row_count": 19, "physical_column_count": 2, "evaluated_table_classifier_count": 5, "positive_table_classification_count": 0, "classification_conflict_count": 0, "formula_column_count": 0, "sensitive_candidate_count": 0, "classification_ambiguity_count": 0, "expected": false},
+    {"case_id": "single_column_blocks", "observed_row_count": 20, "physical_column_count": 1, "evaluated_table_classifier_count": 5, "positive_table_classification_count": 0, "classification_conflict_count": 0, "formula_column_count": 0, "sensitive_candidate_count": 0, "classification_ambiguity_count": 0, "expected": false},
+    {"case_id": "incomplete_closed_evaluation_blocks", "observed_row_count": 20, "physical_column_count": 2, "evaluated_table_classifier_count": 4, "positive_table_classification_count": 0, "classification_conflict_count": 0, "formula_column_count": 0, "sensitive_candidate_count": 0, "classification_ambiguity_count": 0, "expected": false},
+    {"case_id": "positive_classification_blocks", "observed_row_count": 20, "physical_column_count": 2, "evaluated_table_classifier_count": 5, "positive_table_classification_count": 1, "classification_conflict_count": 0, "formula_column_count": 0, "sensitive_candidate_count": 0, "classification_ambiguity_count": 0, "expected": false},
+    {"case_id": "conflict_blocks", "observed_row_count": 20, "physical_column_count": 2, "evaluated_table_classifier_count": 5, "positive_table_classification_count": 2, "classification_conflict_count": 1, "formula_column_count": 0, "sensitive_candidate_count": 0, "classification_ambiguity_count": 1, "expected": false},
+    {"case_id": "formula_blocks", "observed_row_count": 20, "physical_column_count": 2, "evaluated_table_classifier_count": 5, "positive_table_classification_count": 0, "classification_conflict_count": 0, "formula_column_count": 1, "sensitive_candidate_count": 0, "classification_ambiguity_count": 0, "expected": false},
+    {"case_id": "sensitivity_blocks", "observed_row_count": 20, "physical_column_count": 2, "evaluated_table_classifier_count": 5, "positive_table_classification_count": 0, "classification_conflict_count": 0, "formula_column_count": 0, "sensitive_candidate_count": 1, "classification_ambiguity_count": 0, "expected": false},
+    {"case_id": "ambiguity_blocks", "observed_row_count": 20, "physical_column_count": 2, "evaluated_table_classifier_count": 5, "positive_table_classification_count": 0, "classification_conflict_count": 0, "formula_column_count": 0, "sensitive_candidate_count": 0, "classification_ambiguity_count": 1, "expected": false}
+  ]
+}

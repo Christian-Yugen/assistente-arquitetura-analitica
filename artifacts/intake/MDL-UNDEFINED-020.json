@@ -25,16 +25,17 @@
     ]
   },
   "source_gap": "O blueprint oficial define somente título, propósito, prioridade P0, escopo por aba, dependência de grain e saída classification_or_table. Não define o que caracteriza classificação indefinida, base mínima, completude de avaliação, precedência entre hipóteses, exclusões, evidências, confiança, pergunta humana, perfil agregado, versão contratual, testes ou calibração. A regra não pode concluir que uma aba é fato, dimensão, erro, irrelevante ou desconhecida com base em ausência de candidato, título de aba, cabeçalhos, valores, posições, formatos, texto livre, contexto de negócio ou dados sensíveis.",
-  "local_readiness": "reconstruction_gate_recorded",
+  "local_readiness": "executable_draft",
   "authorization": {
     "intake_authorized": true,
     "intake_authorized_by": "Chris",
     "policy_approved": true,
     "policy_approved_by": "Chris",
     "policy_approved_proposal": "MDL_UNDEFINED_020_POLICY_PROPOSAL_001",
-    "implementation_authorized": false,
+    "implementation_authorized": true,
+    "implementation_authorized_by": "Chris",
     "reconstruction_gate": "MDL-UNDEFINED-020-RECONSTRUCTION-AUTHORIZATION-001",
-    "calibration_gate": null
+    "calibration_gate": "MDL-UNDEFINED-020-DRAFT-CALIBRATION-001"
   },
   "required_before_implementation": [
     "Aprovação explícita de Chris para a Proposta A da MDL-UNDEFINED-020",
@@ -57,18 +58,7 @@
     "golden_dataset",
     "authorization_gate"
   ],
-  "status": "reconstruction_gate_recorded",
-  "execution_blocked": true,
-  "missing_before_execution": [
-    "implementation_authorization",
-    "private_profile",
-    "deterministic_classifier",
-    "contract_version",
-    "pipeline_integration",
-    "tests",
-    "golden_dataset",
-    "calibration",
-    "calibration_gate",
-    "draft_catalog_authorization"
-  ]
+  "status": "executable_draft",
+  "execution_blocked": false,
+  "missing_before_execution": []
 }

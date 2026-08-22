@@ -47,6 +47,7 @@ RULE_VERSIONS = {
     "MDL-FACTNOGRAIN-019": "0.1.0-provisional.1",
     "MDL-DIMSTD-004": "0.1.0-provisional.1",
     "MDL-DIMCAL-006": "0.1.0-provisional.1",
+    "MDL-UNDEFINED-020": "0.1.0-provisional.1",
 }
 
 

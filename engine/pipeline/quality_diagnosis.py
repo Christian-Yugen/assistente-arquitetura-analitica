@@ -85,6 +85,7 @@ from engine.fact_dimension.standard_dimension import StandardDimensionSheetProfi
 from engine.fact_dimension.transactional import TransactionalFactSheetProfile
 from engine.fact_dimension.calendar_dimension import CalendarDimensionSheetProfile
 from engine.fact_dimension.fact_without_grain import FactWithoutDefinedGrainSheetProfile
+from engine.fact_dimension.undefined_classification import UndefinedTableClassificationSheetProfile
 
 
 @dataclass(frozen=True)
@@ -757,6 +758,46 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
                     sensitive_candidate_count=sensitive_candidate_count,
                     incompatible_temporal_signal_count=incompatible_temporal_signal_count,
                     ambiguity_count=fact_signal_ambiguity_count,
+                ),
+            ))
+        if get_rule_execution_record("MDL-UNDEFINED-020").status == "executable_draft":
+            closed_table_classifier_ids = (
+                "MDL-FACTPER-001",
+                "MDL-FACTTXN-002",
+                "MDL-DIMSTD-004",
+                "MDL-DIMCAL-006",
+                "MDL-FACTNOGRAIN-019",
+            )
+            positive_classification_types = frozenset(
+                str(candidate.get("classification_type", ""))
+                for candidate in table_candidates.get(sheet_id, [])
+                if candidate.get("classification_type")
+            )
+            residual_sensitive_candidate_count = sum(
+                1
+                for candidate_sheet_id, _, candidates in sensitivity_candidates
+                if candidate_sheet_id == sheet_id
+                for candidate in candidates
+                if candidate.get("sensitivity") == "personal_data_candidate"
+            ) + sum(
+                1 for column in sheet_columns if column.semantic_identifier.sensitive_header
+            )
+            classification_conflict_count = max(0, len(positive_classification_types) - 1)
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-UNDEFINED-020",
+                UndefinedTableClassificationSheetProfile(
+                    observed_row_count=max(column.missingness.observed_cell_count for column in sheet_columns),
+                    physical_column_count=len(sheet_columns),
+                    evaluated_table_classifier_count=sum(
+                        1
+                        for rule_id in closed_table_classifier_ids
+                        if get_rule_execution_record(rule_id).status == "executable_draft"
+                    ),
+                    positive_table_classification_count=len(positive_classification_types),
+                    classification_conflict_count=classification_conflict_count,
+                    formula_column_count=sum(column.formulas.formula_count for column in sheet_columns),
+                    sensitive_candidate_count=residual_sensitive_candidate_count,
+                    classification_ambiguity_count=classification_conflict_count,
                 ),
             ))
 
