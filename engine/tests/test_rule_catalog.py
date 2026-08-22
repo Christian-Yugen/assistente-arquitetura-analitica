@@ -10,6 +10,7 @@ from engine.catalog import (
     get_rule_execution_record,
     load_official_catalog,
 )
+from engine.granularity.entity_per_row import EntityPerRowSheetProfile
 from engine.quality.numtext import CANONICAL_NUMERIC_TEXT_BASIS, NumericTextColumnProfile
 from engine.profiling.missingness import MissingnessProfile
 from engine.profiling.categorical_variations import profile_categorical_variations
@@ -322,6 +323,11 @@ class RuleCatalogTests(unittest.TestCase):
             EventPerRowSheetProfile(20, 1, 1, 1, 0, 0, 0),
         )
         event_record = get_rule_execution_record("GRN-EVENT-004")
+        entity_result = execute_registered_rule(
+            "GRN-ENTITY-003",
+            EntityPerRowSheetProfile(20, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0),
+        )
+        entity_record = get_rule_execution_record("GRN-ENTITY-003")
         transactional_result = execute_registered_rule(
             "MDL-FACTTXN-002",
             TransactionalFactSheetProfile(20, True, (TransactionalDateProfile(20, 18),), 1),
@@ -334,7 +340,7 @@ class RuleCatalogTests(unittest.TestCase):
             "MDL-DIMCAL-006",
             CalendarDimensionSheetProfile(20, True, (CalendarDateProfile(20, 20, 19),), 0),
         )
-        self.assertEqual(executable_rule_count(), 37)
+        self.assertEqual(executable_rule_count(), 38)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")

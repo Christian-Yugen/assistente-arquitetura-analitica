@@ -40,6 +40,7 @@ from engine.profiling.semantic_quantity import SemanticQuantityProfile, profile_
 from engine.profiling.semantic_sensitivity import profile_semantic_sensitivity
 from engine.profiling.semantic_target import SemanticTargetProfile, profile_semantic_target
 from engine.profiling.composite_grain import CompositeGrainProfile
+from engine.profiling.entity_per_row_grain import EntityMarkerHeaderProfile, profile_entity_marker_header
 from engine.profiling.event_per_row_grain import EventMarkerHeaderProfile, profile_event_marker_header
 from engine.profiling.explicit_key_grain import ExplicitKeyHeaderProfile, profile_explicit_key_header
 from engine.profiling.periodic_fact import PeriodicDateProfile, profile_periodic_date
@@ -76,6 +77,7 @@ from engine.semantic.quantity import SemanticQuantityColumnProfile
 from engine.semantic.sensitivity import SemanticSensitivityColumnProfile
 from engine.semantic.target import SemanticTargetColumnProfile
 from engine.granularity.composite import CompositeGrainSheetProfile
+from engine.granularity.entity_per_row import EntityPerRowSheetProfile
 from engine.granularity.event_per_row import EventPerRowSheetProfile
 from engine.granularity.explicit_key import ExplicitKeyColumnProfile, ExplicitKeySheetProfile
 from engine.fact_dimension.periodic import PeriodicFactSheetProfile
@@ -150,6 +152,7 @@ class ColumnAnalysisContext:
     semantic_quantity: SemanticQuantityProfile = field(default_factory=SemanticQuantityProfile)
     semantic_target: SemanticTargetProfile = field(default_factory=SemanticTargetProfile)
     composite_grain: CompositeGrainProfile = field(default_factory=CompositeGrainProfile)
+    entity_marker_header: EntityMarkerHeaderProfile = field(default_factory=EntityMarkerHeaderProfile)
     event_marker_header: EventMarkerHeaderProfile = field(default_factory=EventMarkerHeaderProfile)
     explicit_key_header: ExplicitKeyHeaderProfile = field(default_factory=ExplicitKeyHeaderProfile)
     periodic_date: PeriodicDateProfile = field(default_factory=PeriodicDateProfile)
@@ -168,11 +171,12 @@ def build_column_analysis_context(
     semantic_category = profile_semantic_category(column_name, materialized_values)
     semantic_location = profile_semantic_location(column_name, materialized_values)
     semantic_responsible = profile_semantic_responsible(column_name, materialized_values)
+    entity_marker_header = profile_entity_marker_header(column_name)
     event_marker_header = profile_event_marker_header(column_name)
     explicit_key_header = profile_explicit_key_header(column_name)
     safe_column_name = (
         f"Campo sensível {column_position + 1}"
-        if semantic_identifier.sensitive_header or semantic_status.header_eligible or semantic_category.header_eligible or semantic_location.header_eligible or semantic_responsible.header_eligible or event_marker_header.header_eligible or explicit_key_header.header_eligible
+        if semantic_identifier.sensitive_header or semantic_status.header_eligible or semantic_category.header_eligible or semantic_location.header_eligible or semantic_responsible.header_eligible or entity_marker_header.header_eligible or event_marker_header.header_eligible or explicit_key_header.header_eligible
         else column_name
     )
     return ColumnAnalysisContext(
@@ -207,6 +211,7 @@ def build_column_analysis_context(
         semantic_percentage=profile_semantic_percentage(column_name, materialized_values),
         semantic_quantity=profile_semantic_quantity(column_name, materialized_values),
         semantic_target=profile_semantic_target(column_name, materialized_values),
+        entity_marker_header=entity_marker_header,
         event_marker_header=event_marker_header,
         explicit_key_header=explicit_key_header,
         periodic_date=profile_periodic_date(materialized_values),
@@ -516,6 +521,100 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
             )
             if event_per_row_candidates:
                 grain_candidates[sheet_id] = event_per_row_candidates + grain_candidates.get(sheet_id, [])
+        if get_rule_execution_record("GRN-ENTITY-003").status == "executable_draft":
+            observed_row_count = max(column.missingness.observed_cell_count for column in sheet_columns)
+            explicit_key_candidate_count = sum(
+                1
+                for candidate in grain_candidates.get(sheet_id, [])
+                if candidate["rule_id"] == "GRN-EXPL-002"
+                and candidate["grain_type"] == "explicit_key_candidate"
+            )
+            entity_header_eligible_count = sum(
+                1 for column in sheet_columns if column.entity_marker_header.header_eligible
+            )
+            descriptive_attribute_candidate_count = sum(
+                1
+                for candidate_sheet_id, _, candidates in semantic_candidates
+                if candidate_sheet_id == sheet_id
+                for candidate in candidates
+                if candidate.get("semantic_type") in {
+                    "name_or_description_candidate",
+                    "category_candidate",
+                    "location_candidate",
+                    "status_candidate",
+                }
+            )
+            non_competence_date_candidate_count = sum(
+                1
+                for candidate_sheet_id, _, candidates in semantic_candidates
+                if candidate_sheet_id == sheet_id
+                for candidate in candidates
+                if candidate.get("semantic_type") == "date_generic"
+            )
+            event_candidate_count = sum(
+                1
+                for candidate in grain_candidates.get(sheet_id, [])
+                if candidate["rule_id"] == "GRN-EVENT-004"
+                and candidate["grain_type"] == "event_per_row_candidate"
+            )
+            measure_candidate_count = sum(
+                1
+                for candidate_sheet_id, _, candidates in semantic_candidates
+                if candidate_sheet_id == sheet_id
+                for candidate in candidates
+                if candidate.get("semantic_type") in {
+                    "actual_candidate",
+                    "currency_candidate",
+                    "percentage_candidate",
+                    "quantity_candidate",
+                    "target_or_forecast_candidate",
+                }
+            )
+            sensitive_candidate_count = sum(
+                1
+                for candidate_sheet_id, _, candidates in sensitivity_candidates
+                if candidate_sheet_id == sheet_id
+                for candidate in candidates
+                if candidate.get("sensitivity") == "personal_data_candidate"
+            )
+            excluded_entity_marker_count = sum(
+                1
+                for column in sheet_columns
+                if column.entity_marker_header.header_eligible
+                and (
+                    column.physical_type != "text"
+                    or column.formulas.formula_count != 0
+                    or column.semantic_identifier.sensitive_header
+                )
+            )
+            entity_marker_formula_count = sum(
+                column.formulas.formula_count
+                for column in sheet_columns
+                if column.entity_marker_header.header_eligible
+            )
+            ambiguity_count = max(
+                0,
+                entity_header_eligible_count - 1,
+                explicit_key_candidate_count - 1,
+            )
+            entity_per_row_candidates = execute_registered_rule(
+                "GRN-ENTITY-003",
+                EntityPerRowSheetProfile(
+                    observed_row_count=observed_row_count,
+                    entity_header_eligible_count=entity_header_eligible_count,
+                    explicit_key_candidate_count=explicit_key_candidate_count,
+                    descriptive_attribute_candidate_count=descriptive_attribute_candidate_count,
+                    non_competence_date_candidate_count=non_competence_date_candidate_count,
+                    event_candidate_count=event_candidate_count,
+                    measure_candidate_count=measure_candidate_count,
+                    sensitive_candidate_count=sensitive_candidate_count,
+                    excluded_entity_marker_count=excluded_entity_marker_count,
+                    entity_marker_formula_count=entity_marker_formula_count,
+                    ambiguity_count=ambiguity_count,
+                ),
+            )
+            if entity_per_row_candidates:
+                grain_candidates[sheet_id] = entity_per_row_candidates + grain_candidates.get(sheet_id, [])
         if get_rule_execution_record("MDL-FACTPER-001").status == "executable_draft":
             table_candidates[sheet_id] = execute_registered_rule("MDL-FACTPER-001", PeriodicFactSheetProfile(
                 observed_row_count=max(column.missingness.observed_cell_count for column in sheet_columns),

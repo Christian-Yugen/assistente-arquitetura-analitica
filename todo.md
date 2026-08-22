@@ -349,5 +349,10 @@
 - [x] Elaborar política e especificação lógica não executáveis para a GRN-ENTITY-003 e solicitar aprovação específica antes de implementação.
 - [x] Registrar a aprovação explícita de Chris para a proposta selecionada da GRN-ENTITY-003 e vinculá-la ao gate de reconstrução.
 - [x] Formalizar o gate de reconstrução da GRN-ENTITY-003 somente após a aprovação explícita de Chris para a proposta selecionada.
-- [ ] Implementar, testar, calibrar e ativar a GRN-ENTITY-003 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
+- [x] Implementar, testar, calibrar e ativar a GRN-ENTITY-003 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
 - [x] Registrar a decisão de Chris nos artefatos da Proposta A da GRN-ENTITY-003 antes de construir o gate de reconstrução.
+- [x] Implementar o perfil privado e o classificador determinístico da GRN-ENTITY-003 sem reter cabeçalhos, valores ou títulos de abas.
+- [x] Integrar a GRN-ENTITY-003 ao registro, contrato, pipeline e catálogo draft com pergunta humana bloqueante.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da GRN-ENTITY-003.
+- [x] Sincronizar a ativação draft da GRN-ENTITY-003 no índice, intake, Gate MVP, workspace e provas documentais.
+- [x] Corrigir a lista explícita do indicador e a prova documental da GRN-ENTITY-003 para refletirem integralmente a ativação draft.

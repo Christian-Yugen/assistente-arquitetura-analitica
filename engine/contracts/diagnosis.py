@@ -39,6 +39,7 @@ RULE_VERSIONS = {
     "SEM-ACTUAL-014": "0.1.0-provisional.1",
     "SEM-SENS-015": "0.1.0-provisional.1",
     "GRN-COMP-001": "0.1.0-provisional.1",
+    "GRN-ENTITY-003": "0.1.0-provisional.1",
     "GRN-EVENT-004": "0.1.0-provisional.1",
     "GRN-EXPL-002": "0.1.0-provisional.1",
     "MDL-FACTPER-001": "0.1.0-provisional.1",
