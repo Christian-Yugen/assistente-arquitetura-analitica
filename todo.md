@@ -389,3 +389,5 @@
 - [x] Criar branch de segurança e recuperar metadados, dependências e lacunas da REL-NONUNIQ-002 sem implementar lógica executável.
 - [x] Elaborar intake, Proposta A e especificação lógica não executáveis para a REL-NONUNIQ-002 e solicitar aprovação específica antes de implementação.
 - [x] Criar prova documental que preserve o bloqueio de execução e de produção da REL-NONUNIQ-002.
+- [x] Registrar a aprovação explícita de Chris para a Proposta A da REL-NONUNIQ-002 nos artefatos governados.
+- [x] Formalizar o gate de reconstrução da REL-NONUNIQ-002 sem autorizar implementação.
