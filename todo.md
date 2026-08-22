@@ -360,5 +360,9 @@
 - [x] Elaborar política e especificação lógica não executáveis para a MDL-FACTNOGRAIN-019 e solicitar aprovação específica antes de implementação.
 - [x] Registrar a aprovação explícita de Chris para a proposta selecionada da MDL-FACTNOGRAIN-019 e vinculá-la ao gate de reconstrução.
 - [x] Formalizar o gate de reconstrução da MDL-FACTNOGRAIN-019 somente após a aprovação explícita de Chris para a proposta selecionada.
-- [ ] Implementar, testar, calibrar e ativar a MDL-FACTNOGRAIN-019 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
+- [x] Implementar, testar, calibrar e ativar a MDL-FACTNOGRAIN-019 exclusivamente no perfil draft após gate de reconstrução, autorização e evidências completas.
 - [x] Registrar a decisão de Chris nos artefatos da Proposta A da MDL-FACTNOGRAIN-019 antes de construir o gate de reconstrução.
+- [x] Implementar o profiler privado e o classificador determinístico da MDL-FACTNOGRAIN-019 sem reter cabeçalhos, valores ou títulos de abas.
+- [x] Integrar a MDL-FACTNOGRAIN-019 ao registro, contrato, pipeline e catálogo draft com pergunta humana bloqueante.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da MDL-FACTNOGRAIN-019.
+- [x] Sincronizar a ativação draft da MDL-FACTNOGRAIN-019 no índice, intake, Gate MVP, workspace e provas documentais.

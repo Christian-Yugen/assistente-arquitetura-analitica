@@ -84,6 +84,7 @@ from engine.fact_dimension.periodic import PeriodicFactSheetProfile
 from engine.fact_dimension.standard_dimension import StandardDimensionSheetProfile
 from engine.fact_dimension.transactional import TransactionalFactSheetProfile
 from engine.fact_dimension.calendar_dimension import CalendarDimensionSheetProfile
+from engine.fact_dimension.fact_without_grain import FactWithoutDefinedGrainSheetProfile
 
 
 @dataclass(frozen=True)
@@ -697,6 +698,65 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
                         1 for column in sheet_columns
                         if column.physical_type == "numeric" and column.formulas.formula_count == 0
                     ),
+                ),
+            ))
+        if get_rule_execution_record("MDL-FACTNOGRAIN-019").status == "executable_draft":
+            fact_signal_types = {
+                "actual_candidate",
+                "currency_candidate",
+                "percentage_candidate",
+                "quantity_candidate",
+                "target_or_forecast_candidate",
+            }
+            fact_signal_sets = tuple(
+                frozenset(
+                    str(candidate["semantic_type"])
+                    for candidate in candidates
+                    if candidate.get("semantic_type") in fact_signal_types
+                )
+                for candidate_sheet_id, _, candidates in semantic_candidates
+                if candidate_sheet_id == sheet_id
+            )
+            fact_signal_count = sum(len(signal_set) for signal_set in fact_signal_sets)
+            fact_signal_ambiguity_count = sum(
+                1 for signal_set in fact_signal_sets if len(signal_set) > 1
+            )
+            dimensional_candidate_count = sum(
+                1
+                for candidate in table_candidates.get(sheet_id, [])
+                if str(candidate.get("classification_type", "")).startswith("dimension_")
+            )
+            sensitive_candidate_count = sum(
+                1
+                for candidate_sheet_id, _, candidates in sensitivity_candidates
+                if candidate_sheet_id == sheet_id
+                for candidate in candidates
+                if candidate.get("sensitivity") == "personal_data_candidate"
+            ) + sum(
+                1 for column in sheet_columns if column.semantic_identifier.sensitive_header
+            )
+            incompatible_temporal_signal_count = sum(
+                1
+                for column in sheet_columns
+                if 0.0 < column.semantic_date.recognized_date_ratio < 1.0
+            )
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-FACTNOGRAIN-019",
+                FactWithoutDefinedGrainSheetProfile(
+                    observed_row_count=max(column.missingness.observed_cell_count for column in sheet_columns),
+                    eligible_numeric_measure_count=sum(
+                        1 for column in sheet_columns
+                        if column.physical_type == "numeric" and column.formulas.formula_count == 0
+                    ),
+                    fact_signal_count=fact_signal_count,
+                    active_grain_hypothesis_count=len(grain_candidates.get(sheet_id, [])),
+                    dimensional_candidate_count=dimensional_candidate_count,
+                    formula_column_count=sum(
+                        column.formulas.formula_count for column in sheet_columns
+                    ),
+                    sensitive_candidate_count=sensitive_candidate_count,
+                    incompatible_temporal_signal_count=incompatible_temporal_signal_count,
+                    ambiguity_count=fact_signal_ambiguity_count,
                 ),
             ))
 

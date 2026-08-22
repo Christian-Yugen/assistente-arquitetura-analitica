@@ -1,19 +1,22 @@
 {
   "rule_id": "MDL-FACTNOGRAIN-019",
   "title": "Fato sem granularidade",
-  "status": "policy_authorized_pending_reconstruction_gate",
+  "status": "executable_draft",
   "priority": "P0",
   "scope": "sheet",
   "depends_on": ["grain"],
   "primary_output": "classification_or_table",
   "authorization": {
     "intake_authorized_by": "Chris",
-    "implementation_authorized": false,
+    "implementation_authorized": true,
+    "implementation_authorized_by": "Chris",
     "policy_approved": true,
     "policy_approved_by": "Chris",
-    "policy_approved_proposal": "MDL_FACTNOGRAIN_019_POLICY_PROPOSAL_001"
+    "policy_approved_proposal": "MDL_FACTNOGRAIN_019_POLICY_PROPOSAL_001",
+    "reconstruction_gate": "MDL-FACTNOGRAIN-019-RECONSTRUCTION-AUTHORIZATION-001",
+    "calibration_gate": "MDL-FACTNOGRAIN-019-DRAFT-CALIBRATION-001"
   },
-  "execution_blocked": true,
-  "local_readiness": "intake_required",
-  "missing_before_execution": ["authorization_gate", "tests", "golden_dataset", "calibration_gate"]
+  "execution_blocked": false,
+  "local_readiness": "executable_draft",
+  "missing_before_execution": []
 }

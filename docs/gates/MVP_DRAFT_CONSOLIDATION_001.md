@@ -8,7 +8,7 @@ O fluxo implementado recebe um workbook `.xlsx` autenticado, executa validaçõe
 | Dimensão | Evidência | Resultado |
 |---|---|---|
 | Contrato | PM-MVP-PBI-CON-001 reconstruído e validado contra schema/modelos. | Aprovado para draft. |
-| Catálogo | Blueprint oficial de 95 regras sincronizado; somente QLT-NUMTEXT-007 executável no draft. | Aprovado com execução limitada. |
+| Catálogo | Blueprint oficial de 95 regras sincronizado; 39 regras possuem implementação local, allowlist e gates individuais no draft. | Aprovado com execução limitada. |
 | Motor | Runner Python, profiling agregado sem valores brutos e teste de workbook real temporário. | Aprovado para draft. |
 | Acesso | Procedures autenticados, helpers owner-scoped e provas estruturadas de leitura e escrita. | Aprovado para draft. |
 | Retenção | Referência privada removida com auditoria; exclusão física indisponível. | Aprovado apenas como controle compensatório. |
