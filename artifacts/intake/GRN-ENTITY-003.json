@@ -1,0 +1,67 @@
+{
+  "intake_id": "GRN-ENTITY-003-INTAKE-001",
+  "rule": {
+    "rule_id": "GRN-ENTITY-003",
+    "title": "Entidade por linha",
+    "category": "grain",
+    "purpose": "Inferir ou validar entidade por linha.",
+    "priority": "P1",
+    "stage": "grain_inference",
+    "scope": "sheet",
+    "depends_on": ["semantic_typing"],
+    "primary_output": "grain",
+    "source_implementation_status": "planned"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "artifacts/catalogs/rule-implementation-readiness-v1.json",
+      "Plano_Mestre_MVP_Modelagem_Dimensional_PowerBI_v1.0.docx",
+      "engine/contracts/diagnosis.py",
+      "engine/granularity/explicit_key.py",
+      "engine/granularity/event_per_row.py"
+    ]
+  },
+  "source_gap": "O blueprint oficial define somente título, propósito, prioridade P1, escopo por aba, dependência de tipagem semântica e saída grain. A fonte mestre requer evidências, confiança, riscos e validação humana para hipóteses de granularidade, mas não materializa vocabulário de entidade, base mínima, combinação de sinais, exclusões, precedência, evidência, confiança, pergunta, perfil agregado, versão contratual, testes ou calibração para entidade por linha. A regra não pode declarar entidade de negócio, dimensão, chave primária, relacionamento ou SCD sem política aprovada e confirmação humana.",
+  "local_readiness": "intake_required",
+  "authorization": {
+    "implementation_authorized": false,
+    "reason": "Chris autorizou somente o ciclo não executável de intake, recuperação de lacunas e proposta. Perfil, classificador, integração, catálogo, testes executáveis, calibração e produção continuam bloqueados.",
+    "required_gate": "GRN-ENTITY-003-RECONSTRUCTION-AUTHORIZATION-001"
+  },
+  "required_before_implementation": [
+    "Aprovação explícita de Chris para uma política que defina sinais, vocabulário fechado, base mínima, exclusões, evidência, precedência, confiança e pergunta humana",
+    "Gate de reconstrução que conecte a política aprovada à implementação draft",
+    "Perfil agregado por aba que não retenha valores, cabeçalhos, tokens, posições, exemplos, títulos de abas, hashes ou frequências por rótulo",
+    "Classificador determinístico, evidências, pergunta humana, versão contratual e integração canônica protegida por catálogo",
+    "Testes unitários, limítrofes, de privacidade, de contrato e de integração",
+    "Golden dataset sintético sem conteúdo pessoal, manifesto SHA-256, calibração reproduzível e gate individual de calibração"
+  ],
+  "required_policy_elements": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "precedence",
+    "confidence",
+    "questions",
+    "contract_projection",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ],
+  "status": "intake_required",
+  "execution_blocked": true,
+  "missing_before_execution": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "severity",
+    "confidence",
+    "questions",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ]
+}
