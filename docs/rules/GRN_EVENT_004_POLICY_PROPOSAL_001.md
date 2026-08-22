@@ -2,7 +2,7 @@
 
 ## Estado e finalidade
 
-Esta é uma proposta **não executável** para a `GRN-EVENT-004`. Ela não autoriza perfil, classificador, registro, versão contratual, integração no pipeline, allowlist, testes executáveis, calibração ou produção. A fonte oficial recuperada define a regra como P0, por aba, dependente de tipagem semântica e com saída de granularidade, mas não prescreve sua condição operacional. Portanto, esta proposta cria uma alternativa draft conservadora, ainda sujeita à aprovação explícita de Chris.
+Esta é uma proposta **não executável** para a `GRN-EVENT-004`. Chris aprovou explicitamente a **Proposta A**. A aprovação permite formalizar o gate de reconstrução, mas não autoriza perfil, classificador, registro, versão contratual, integração no pipeline, allowlist, testes executáveis, calibração ou produção. A fonte oficial recuperada define a regra como P0, por aba, dependente de tipagem semântica e com saída de granularidade, mas não prescreve sua condição operacional.
 
 ## Proposta A — hipótese de evento por linha com marcador, chave e tempo
 
@@ -39,7 +39,7 @@ O cabeçalho será avaliado somente de modo transitório para derivar `header_el
 
 ## Pré-condições de ativação
 
-Esta proposta exige escolha explícita de Chris entre as alternativas A e B. Depois da escolha, serão necessários gate de reconstrução, perfil privado imutável, classificador determinístico, registro de granularidade, integração canônica protegida por catálogo, testes unitários e de pipeline, golden dataset sintético, SHA-256, calibração reproduzível e gate individual de calibração. A produção permanece bloqueada.
+A Proposta A foi escolhida explicitamente por Chris. Antes de qualquer implementação, exige-se o gate de reconstrução `GRN-EVENT-004-RECONSTRUCTION-AUTHORIZATION-001` e uma autorização explícita posterior para iniciar a execução draft. Após ambos os controles, ainda serão necessários perfil privado imutável, classificador determinístico, registro de granularidade, integração canônica protegida por catálogo, testes unitários e de pipeline, golden dataset sintético, SHA-256, calibração reproduzível e gate individual de calibração. A produção permanece bloqueada.
 
 ## Referências internas
 

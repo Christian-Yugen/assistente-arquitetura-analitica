@@ -9,12 +9,17 @@ const specificationPath = resolve(
   projectRoot,
   "docs/rules/GRN_EVENT_004_LOGICAL_SPEC_PROPOSAL_001.md"
 );
+const reconstructionGatePath = resolve(
+  projectRoot,
+  "docs/gates/GRN_EVENT_004_RECONSTRUCTION_AUTHORIZATION_001.md"
+);
 
 describe("GRN-EVENT-004 — preparação governada", () => {
-  it("preserva o intake, a política não executável e o bloqueio de implementação", () => {
+  it("preserva a Proposta A aprovada, o gate não executável e o bloqueio de implementação", () => {
     const intake = JSON.parse(readFileSync(intakePath, "utf8"));
     const policy = readFileSync(policyPath, "utf8");
     const specification = readFileSync(specificationPath, "utf8");
+    const reconstructionGate = readFileSync(reconstructionGatePath, "utf8");
 
     expect(intake.rule.rule_id).toBe("GRN-EVENT-004");
     expect(intake.rule.priority).toBe("P0");
@@ -23,8 +28,10 @@ describe("GRN-EVENT-004 — preparação governada", () => {
     expect(intake.status).toBe("intake_required");
     expect(intake.authorization.implementation_authorized).toBe(false);
     expect(intake.execution_blocked).toBe(true);
+    expect(intake.policy_approval.approved_by).toBe("Chris");
+    expect(intake.policy_approval.approved_proposal).toBe("A");
     expect(intake.missing_before_execution).toContain(
-      "Aprovação explícita de Chris para uma política de inferência de evento por linha"
+      "Autorização explícita de Chris para iniciar a implementação draft após o gate de reconstrução"
     );
 
     expect(policy).toContain("Proposta A — hipótese de evento por linha com marcador, chave e tempo");
@@ -37,5 +44,10 @@ describe("GRN-EVENT-004 — preparação governada", () => {
     expect(specification).toContain("explicit_key_candidate_count == 1");
     expect(specification).toContain("não classifica tabela como fato");
     expect(specification).toContain('`{"tp": 3, "fp": 0, "fn": 0}`');
+
+    expect(reconstructionGate).toContain("GRN-EVENT-004 — Gate de Reconstrução e Autorização 001");
+    expect(reconstructionGate).toContain("Ele não autoriza escrever, integrar ou executar lógica da regra.");
+    expect(reconstructionGate).toContain("`event_per_row_candidate`");
+    expect(reconstructionGate).toContain("A produção permanece bloqueada.");
   });
 });
