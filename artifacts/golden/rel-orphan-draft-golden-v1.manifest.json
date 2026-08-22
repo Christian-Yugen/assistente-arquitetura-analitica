@@ -1,0 +1,14 @@
+{
+  "dataset_id": "GD-REL-ORPHAN-003-001",
+  "rule_id": "REL-ORPHAN-003",
+  "dataset_path": "artifacts/golden/rel-orphan-draft-golden-v1.json",
+  "sha256": "28b9f3b5ede8505018f494f8ce75e8bd8dedd7aca7889a3b7c92c350aa2a3641",
+  "synthetic_only": true,
+  "evaluation": {
+    "evaluator": "engine/calibration/evaluate_rel_orphan_draft_golden.py",
+    "true_positives": 3,
+    "false_positives": 0,
+    "false_negatives": 0
+  },
+  "production_authorized": false
+}

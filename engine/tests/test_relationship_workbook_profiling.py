@@ -46,6 +46,7 @@ class RelationshipWorkbookProfilingTests(unittest.TestCase):
         self.assertEqual(positive_direction.source_distinct_count, 3)
         self.assertEqual(positive_direction.target_distinct_count, 2)
         self.assertEqual(positive_direction.referential_coverage_ratio, 1.0)
+        self.assertEqual(positive_direction.uncovered_reference_distinct_count, 0)
 
         rendered = repr(profile.relationship_pair_signals)
         for prohibited in (
@@ -57,3 +58,27 @@ class RelationshipWorkbookProfilingTests(unittest.TestCase):
             "Cliente reservado um",
         ):
             self.assertNotIn(prohibited, rendered)
+
+    def test_reduces_partial_coverage_to_an_opaque_uncovered_count(self):
+        path = self.create_workbook()
+        workbook = Workbook()
+        dimension = workbook.active
+        dimension.title = "Dimensão interna"
+        dimension.append(["codigo"])
+        dimension.append(["A"])
+        dimension.append(["B"])
+        fact = workbook.create_sheet("Fato interno")
+        fact.append(["cod"])
+        fact.append(["A"])
+        fact.append(["A"])
+        fact.append(["NAO_COBERTO"])
+        fact.append(["NAO_COBERTO"])
+        workbook.save(path)
+        try:
+            profile = profile_workbook_with_relationship_pairs(path)
+        finally:
+            path.unlink(missing_ok=True)
+
+        partial_direction = next(signal for signal in profile.relationship_pair_signals if signal.referential_coverage_ratio == 0.5)
+        self.assertEqual(partial_direction.uncovered_reference_distinct_count, 1)
+        self.assertNotIn("NAO_COBERTO", repr(partial_direction))

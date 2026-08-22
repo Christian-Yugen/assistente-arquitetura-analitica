@@ -33,6 +33,7 @@ class RelationshipPairSignal:
     target_complete: bool
     target_unique: bool
     referential_coverage_ratio: float
+    uncovered_reference_distinct_count: int
     source_or_target_sensitive: bool
     source_or_target_has_formula: bool
 
@@ -89,6 +90,11 @@ class RelationshipColumnAccumulator:
         if not self._signatures:
             return 0.0
         return round(len(self._signatures.intersection(reference._signatures)) / len(self._signatures), 8)
+
+    def uncovered_distinct_count_from(self, reference: "RelationshipColumnAccumulator") -> int:
+        """Retorna somente a contagem agregada de assinaturas sem cobertura."""
+
+        return len(self._signatures.difference(reference._signatures))
 
     def clear(self) -> None:
         self._signatures.clear()
