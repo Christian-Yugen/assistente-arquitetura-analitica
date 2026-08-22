@@ -25,13 +25,15 @@
     ]
   },
   "source_gap": "O blueprint oficial define somente título, propósito, prioridade P0, escopo por aba, dependência de grain e saída classification_or_table. Não define o que caracteriza classificação indefinida, base mínima, completude de avaliação, precedência entre hipóteses, exclusões, evidências, confiança, pergunta humana, perfil agregado, versão contratual, testes ou calibração. A regra não pode concluir que uma aba é fato, dimensão, erro, irrelevante ou desconhecida com base em ausência de candidato, título de aba, cabeçalhos, valores, posições, formatos, texto livre, contexto de negócio ou dados sensíveis.",
-  "local_readiness": "policy_proposed_non_executable",
+  "local_readiness": "reconstruction_gate_recorded",
   "authorization": {
     "intake_authorized": true,
     "intake_authorized_by": "Chris",
-    "policy_approved": false,
+    "policy_approved": true,
+    "policy_approved_by": "Chris",
+    "policy_approved_proposal": "MDL_UNDEFINED_020_POLICY_PROPOSAL_001",
     "implementation_authorized": false,
-    "reconstruction_gate": null,
+    "reconstruction_gate": "MDL-UNDEFINED-020-RECONSTRUCTION-AUTHORIZATION-001",
     "calibration_gate": null
   },
   "required_before_implementation": [
@@ -55,11 +57,9 @@
     "golden_dataset",
     "authorization_gate"
   ],
-  "status": "policy_proposed_non_executable",
+  "status": "reconstruction_gate_recorded",
   "execution_blocked": true,
   "missing_before_execution": [
-    "policy_approval",
-    "reconstruction_authorization",
     "implementation_authorization",
     "private_profile",
     "deterministic_classifier",

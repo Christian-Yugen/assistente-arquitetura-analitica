@@ -42,6 +42,10 @@ Uma alternativa seria não emitir qualquer classificação e apenas solicitar co
 
 Esta política não autoriza perfil, classificador, registro, versão de contrato, integração de pipeline, catálogo, testes executáveis, golden dataset, calibração ou produção. O avanço exige aprovação explícita de Chris para a Proposta A, gate de reconstrução, nova autorização específica de implementação, testes e calibração reprodutíveis, gate individual e ativação exclusivamente draft.[2]
 
+## Estado da aprovação
+
+**Proposta A aprovada explicitamente por Chris.** Esta decisão autoriza exclusivamente a formalização do gate de reconstrução. Não autoriza perfil, classificador, registro, contrato, pipeline, catálogo, testes executáveis, golden dataset, calibração ou ativação. A implementação continua dependente do gate de reconstrução e de autorização explícita posterior de Chris.
+
 ## Referências internas
 
 [1] `artifacts/catalogs/official-rule-blueprint-95.json`, sequência 60, `MDL-UNDEFINED-020`.
