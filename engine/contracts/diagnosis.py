@@ -48,6 +48,7 @@ RULE_VERSIONS = {
     "MDL-DIMSTD-004": "0.1.0-provisional.1",
     "MDL-DIMCAL-006": "0.1.0-provisional.1",
     "MDL-UNDEFINED-020": "0.1.0-provisional.1",
+    "REL-ONEMANY-001": "0.1.0-provisional.1",
 }
 
 
@@ -225,3 +226,55 @@ def to_table_classification_fragment(candidates: list[dict[str, object]], *, she
             "answer": None, "created_at": created_at,
         } for item in candidates for candidate_question in [item["question"]]],
     }
+
+
+def to_relationship_fragment(
+    candidates: list[dict[str, object]],
+    *,
+    source_sheet_id: str,
+    target_sheet_id: str,
+) -> dict[str, object]:
+    """Projeta hipótese REL por IDs opacos de abas, com confirmação humana bloqueante."""
+
+    relationships: list[dict[str, object]] = []
+    questions: list[dict[str, object]] = []
+    created_at = _timestamp()
+    for candidate in candidates:
+        rule_id = str(candidate["rule_id"])
+        rule_version = RULE_VERSIONS.get(rule_id)
+        if not rule_version:
+            raise ValueError(f"Versão de regra não registrada para {rule_id}.")
+        relationships.append(
+            {
+                "source": {"entity_type": "sheet", "entity_id": source_sheet_id},
+                "target": {"entity_type": "sheet", "entity_id": target_sheet_id},
+                "relationship_type": candidate["relationship_type"],
+                "confidence": candidate["confidence"],
+                "severity": candidate["severity"],
+                "evidence": candidate["evidence"],
+                "rule_id": rule_id,
+                "rule_version": rule_version,
+                "status": "hypothesis",
+            }
+        )
+        question = candidate["question"]
+        questions.append(
+            {
+                "question_id": str(uuid4()),
+                "text": question["text"],
+                "reason": question["reason"],
+                "question_type": question["question_type"],
+                "priority": question["priority"],
+                "blocking": question["blocking"],
+                "status": "pending",
+                "options": question["options"],
+                "impact": {
+                    "affected_modules": ["relationships"],
+                    "affected_rule_ids": [rule_id],
+                    "affected_recommendation_ids": [],
+                },
+                "answer": None,
+                "created_at": created_at,
+            }
+        )
+    return {"relationships": relationships, "questions": questions}

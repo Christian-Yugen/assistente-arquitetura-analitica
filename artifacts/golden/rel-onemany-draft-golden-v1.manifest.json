@@ -1,0 +1,11 @@
+{
+  "manifest_id": "MANIFEST-GD-REL-ONEMANY-001-001",
+  "dataset_id": "GD-REL-ONEMANY-001-001",
+  "rule_id": "REL-ONEMANY-001",
+  "sha256": "f76403acdc27339f2195ee9f043e8a74ff5e1938972c71a52bb5b01ef4dbd5a2",
+  "synthetic_only": true,
+  "case_count": 22,
+  "expected_positive_count": 3,
+  "expected_negative_count": 19,
+  "evaluator": "engine.calibration.evaluate_rel_onemany_draft_golden.evaluate"
+}

@@ -32,6 +32,7 @@ from engine.profiling.semantic_identifier import SemanticIdentifierAccumulator, 
 from engine.profiling.semantic_identifier import ELIGIBLE_HEADERS, SENSITIVE_HEADERS, _normalize_header
 from engine.profiling.semantic_currency import SemanticCurrencyAccumulator, has_explicit_currency_format
 from engine.profiling.composite_grain import CompositeGrainAccumulator
+from engine.profiling.relationship_pairs import RelationshipColumnAccumulator, RelationshipPairSignal
 
 
 MAX_SHEETS = 10
@@ -40,6 +41,21 @@ SENSITIVE_HEADER = re.compile(r"\b(cpf|e-?mail|nome|telefone|celular|endereco|en
 
 class WorkbookValidationError(ValueError):
     pass
+
+
+@dataclass(frozen=True)
+class WorkbookProfile:
+    """Perfil de workbook sem dados de célula; sinais REL vivem somente no request."""
+
+    columns: tuple[ColumnAnalysisContext, ...]
+    relationship_pair_signals: tuple[RelationshipPairSignal, ...]
+
+
+@dataclass
+class _RelationshipColumnTransient:
+    sheet_id: str
+    column_id: str
+    accumulator: RelationshipColumnAccumulator = field(repr=False)
 
 
 @dataclass
@@ -191,7 +207,7 @@ def _merged_ranges_for_worksheet(workbook: object, worksheet: object) -> tuple[t
     return tuple(ranges)
 
 
-def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
+def profile_workbook_with_relationship_pairs(path: Path) -> WorkbookProfile:
     try:
         workbook = load_workbook(path, read_only=True, data_only=False, keep_links=False)
     except Exception as error:
@@ -202,6 +218,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
         raise WorkbookValidationError(f"O workbook excede o limite de {MAX_SHEETS} abas.")
 
     contexts: list[ColumnAnalysisContext] = []
+    relationship_columns: list[_RelationshipColumnTransient] = []
     for sheet_position, worksheet in enumerate(workbook.worksheets):
         rows = worksheet.iter_rows()
         header_cells = next(rows, None)
@@ -210,12 +227,15 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
         second_row_cells = next(rows, None)
         header = tuple(cell.value for cell in header_cells)
         column_count = len(header)
+        sheet_id = str(uuid4())
+        column_ids = [str(uuid4()) for _ in range(column_count)]
         headers_profile = profile_headers(
             header_cells,
             second_row_cells,
             _merged_ranges_for_worksheet(workbook, worksheet),
         )
         candidate_positions = [position for position, value in enumerate(header) if _normalize_header(str(value or "")) in ELIGIBLE_HEADERS and _normalize_header(str(value or "")) not in SENSITIVE_HEADERS]
+        relationship_accumulators = {position: RelationshipColumnAccumulator() for position in candidate_positions}
         candidate_pairs = [(candidate_positions[left], candidate_positions[right]) for left in range(len(candidate_positions)) for right in range(left + 1, len(candidate_positions))]
         composite_grain_accumulator = CompositeGrainAccumulator(candidate_pairs[:10])
         profilers = [StreamingColumnProfiler(semantic_identifier_accumulator=SemanticIdentifierAccumulator(str(header[position] or ""))) for position in range(column_count)]
@@ -245,11 +265,15 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
                     bounded_row[position],
                     is_formula=bool(cell is not None and cell.data_type == "f"),
                 )
+                if position in relationship_accumulators:
+                    relationship_accumulators[position].consume(
+                        bounded_row[position],
+                        is_formula=bool(cell is not None and cell.data_type == "f"),
+                    )
         duplicate_rows = duplicate_rows_accumulator.finalize()
         empty_rows = empty_rows_accumulator.finalize()
         total_rows = total_rows_accumulator.finalize()
         composite_grain = composite_grain_accumulator.finalize(eligible_pair_count=len(candidate_pairs))
-        sheet_id = str(uuid4())
         for column_position, profiler in enumerate(profilers):
             categorical_variations = profiler.categorical_variation_profile()
             profiler.categorical_text_values.clear()
@@ -259,7 +283,7 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
                     sheet_name=safe_sheet_name(sheet_position),
                     sheet_position=sheet_position,
                     sheet_visibility=worksheet_visibility(worksheet.sheet_state),
-                    column_id=str(uuid4()),
+                    column_id=column_ids[column_position],
                     column_name=safe_column_name(header[column_position], column_position),
                     column_position=column_position,
                     physical_type=profiler.physical_type(),
@@ -279,6 +303,50 @@ def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
                     composite_grain=composite_grain,
                 )
             )
+        relationship_columns.extend(
+            _RelationshipColumnTransient(
+                sheet_id=sheet_id,
+                column_id=column_ids[position],
+                accumulator=accumulator,
+            )
+            for position, accumulator in relationship_accumulators.items()
+        )
     if not contexts:
         raise WorkbookValidationError("O workbook não possui colunas analisáveis após a linha de cabeçalho.")
-    return contexts
+    relationship_pair_signals: list[RelationshipPairSignal] = []
+    try:
+        for source in relationship_columns:
+            for target in relationship_columns:
+                if source.sheet_id == target.sheet_id:
+                    continue
+                relationship_pair_signals.append(
+                    RelationshipPairSignal(
+                        source_sheet_id=source.sheet_id,
+                        source_column_id=source.column_id,
+                        target_sheet_id=target.sheet_id,
+                        target_column_id=target.column_id,
+                        source_observed_count=source.accumulator.observed_count,
+                        source_non_missing_count=source.accumulator.non_missing_count,
+                        source_distinct_count=source.accumulator.distinct_count,
+                        target_observed_count=target.accumulator.observed_count,
+                        target_non_missing_count=target.accumulator.non_missing_count,
+                        target_distinct_count=target.accumulator.distinct_count,
+                        source_complete=source.accumulator.complete,
+                        source_unique=source.accumulator.unique,
+                        target_complete=target.accumulator.complete,
+                        target_unique=target.accumulator.unique,
+                        referential_coverage_ratio=target.accumulator.coverage_from(source.accumulator),
+                        source_or_target_sensitive=False,
+                        source_or_target_has_formula=source.accumulator.has_formula or target.accumulator.has_formula,
+                    )
+                )
+    finally:
+        for column in relationship_columns:
+            column.accumulator.clear()
+    return WorkbookProfile(columns=tuple(contexts), relationship_pair_signals=tuple(relationship_pair_signals))
+
+
+def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:
+    """Compatibilidade para chamadores que não participam do fluxo relacional."""
+
+    return list(profile_workbook_with_relationship_pairs(path).columns)

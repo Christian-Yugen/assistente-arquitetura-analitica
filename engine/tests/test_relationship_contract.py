@@ -1,0 +1,62 @@
+import unittest
+
+from engine.catalog import execute_registered_rule, get_rule_execution_record
+from engine.contracts.diagnosis import RULE_VERSIONS, to_relationship_fragment
+from engine.relationships.one_to_many import OneToManyRelationshipPairProfile, classify_one_to_many_relationship
+
+
+class RelationshipContractTests(unittest.TestCase):
+    def test_projects_only_opaque_sheet_entities_and_aggregated_evidence(self):
+        candidate = classify_one_to_many_relationship(
+            OneToManyRelationshipPairProfile(
+                source_standard_dimension_candidate=True,
+                target_fact_candidate=True,
+                eligible_dimension_key_count=1,
+                eligible_fact_reference_count=1,
+                dimension_key_complete=True,
+                dimension_key_unique=True,
+                fact_reference_complete=True,
+                fact_reference_unique=False,
+                referential_coverage_ratio=1.0,
+                eligible_direction_count=1,
+            )
+        )
+        assert candidate is not None
+
+        fragment = to_relationship_fragment(
+            [candidate],
+            source_sheet_id="opaque-sheet-source",
+            target_sheet_id="opaque-sheet-target",
+        )
+
+        relationship = fragment["relationships"][0]
+        self.assertEqual(relationship["source"], {"entity_type": "sheet", "entity_id": "opaque-sheet-source"})
+        self.assertEqual(relationship["target"], {"entity_type": "sheet", "entity_id": "opaque-sheet-target"})
+        self.assertEqual(relationship["rule_version"], "0.1.0-provisional.1")
+        self.assertEqual(relationship["status"], "hypothesis")
+        self.assertTrue(fragment["questions"][0]["blocking"])
+        self.assertEqual(fragment["questions"][0]["impact"]["affected_modules"], ["relationships"])
+        prohibited = {"source_column_id", "target_column_id", "header", "value", "example", "frequency"}
+        self.assertTrue(prohibited.isdisjoint(relationship))
+
+    def test_catalog_executes_registered_rule_only_in_the_draft_profile(self):
+        record = get_rule_execution_record("REL-ONEMANY-001")
+
+        self.assertEqual(RULE_VERSIONS["REL-ONEMANY-001"], "0.1.0-provisional.1")
+        self.assertEqual(record.status, "executable_draft")
+        result = execute_registered_rule(
+            "REL-ONEMANY-001",
+            OneToManyRelationshipPairProfile(
+                source_standard_dimension_candidate=True,
+                target_fact_candidate=True,
+                eligible_dimension_key_count=1,
+                eligible_fact_reference_count=1,
+                dimension_key_complete=True,
+                dimension_key_unique=True,
+                fact_reference_complete=True,
+                fact_reference_unique=False,
+                referential_coverage_ratio=1.0,
+                eligible_direction_count=1,
+            ),
+        )
+        self.assertIsNotNone(result)
