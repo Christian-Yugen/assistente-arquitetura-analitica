@@ -18,13 +18,13 @@ class RuleIntakeTests(unittest.TestCase):
         self.assertEqual(len(readiness["rules"]), 95)
         self.assertEqual(readiness["counts"], {
             "baseline_reference": 0,
-            "executable_draft": 41,
+            "executable_draft": 42,
             "reference_catalog_draft": 2,
-            "intake_required": 52,
+            "intake_required": 51,
         })
 
         by_id = {rule["rule_id"]: rule for rule in readiness["rules"]}
-        for rule_id in ("QLT-NULL-001", "QLT-DUP-002", "QLT-EMPTYCOL-003", "QLT-EMPTYROW-004", "QLT-MIXTYPE-005", "QLT-BADDATE-006", "QLT-NUMTEXT-007", "QLT-CATVAR-008", "QLT-WHITESPACE-009", "QLT-TOTALROW-010", "QLT-NEGATIVE-011", "QLT-OUTLIER-012", "QLT-FORMULA-013", "QLT-HEADERS-014", "QLT-IDMISS-015", "SEM-DATE-001", "SEM-COMP-002", "SEM-DESC-004", "SEM-DUR-008", "SEM-STATUS-009", "SEM-CAT-010", "SEM-LOC-011", "SEM-RESP-012", "SEM-ID-003", "SEM-QTY-005", "SEM-CURR-006", "SEM-PCT-007", "SEM-TARGET-013", "SEM-ACTUAL-014", "SEM-SENS-015", "GRN-COMP-001", "GRN-EXPL-002", "GRN-EVENT-004", "GRN-ENTITY-003", "MDL-FACTPER-001", "MDL-FACTTXN-002", "MDL-FACTNOGRAIN-019", "MDL-UNDEFINED-020", "MDL-DIMSTD-004", "MDL-DIMCAL-006", "REL-ONEMANY-001"):
+        for rule_id in ("QLT-NULL-001", "QLT-DUP-002", "QLT-EMPTYCOL-003", "QLT-EMPTYROW-004", "QLT-MIXTYPE-005", "QLT-BADDATE-006", "QLT-NUMTEXT-007", "QLT-CATVAR-008", "QLT-WHITESPACE-009", "QLT-TOTALROW-010", "QLT-NEGATIVE-011", "QLT-OUTLIER-012", "QLT-FORMULA-013", "QLT-HEADERS-014", "QLT-IDMISS-015", "SEM-DATE-001", "SEM-COMP-002", "SEM-DESC-004", "SEM-DUR-008", "SEM-STATUS-009", "SEM-CAT-010", "SEM-LOC-011", "SEM-RESP-012", "SEM-ID-003", "SEM-QTY-005", "SEM-CURR-006", "SEM-PCT-007", "SEM-TARGET-013", "SEM-ACTUAL-014", "SEM-SENS-015", "GRN-COMP-001", "GRN-EXPL-002", "GRN-EVENT-004", "GRN-ENTITY-003", "MDL-FACTPER-001", "MDL-FACTTXN-002", "MDL-FACTNOGRAIN-019", "MDL-UNDEFINED-020", "MDL-DIMSTD-004", "MDL-DIMCAL-006", "REL-ONEMANY-001", "REL-NONUNIQ-002"):
             self.assertEqual(by_id[rule_id]["local_readiness"], "executable_draft")
             self.assertTrue(by_id[rule_id]["executable"])
 

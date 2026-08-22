@@ -1,0 +1,14 @@
+{
+  "dataset_id": "GD-REL-NONUNIQ-002-001",
+  "rule_id": "REL-NONUNIQ-002",
+  "dataset_path": "artifacts/golden/rel-nonuniq-draft-golden-v1.json",
+  "sha256": "95bcbca0b7e9a180d13abb1f77fa4c66d638bf481a4933007b710ce4c7f36929",
+  "synthetic_only": true,
+  "evaluation": {
+    "evaluator": "engine/calibration/evaluate_rel_nonuniq_draft_golden.py",
+    "true_positives": 3,
+    "false_positives": 0,
+    "false_negatives": 0
+  },
+  "production_authorized": false
+}

@@ -49,6 +49,7 @@ RULE_VERSIONS = {
     "MDL-DIMCAL-006": "0.1.0-provisional.1",
     "MDL-UNDEFINED-020": "0.1.0-provisional.1",
     "REL-ONEMANY-001": "0.1.0-provisional.1",
+    "REL-NONUNIQ-002": "0.1.0-provisional.1",
 }
 
 

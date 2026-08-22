@@ -391,3 +391,7 @@
 - [x] Criar prova documental que preserve o bloqueio de execução e de produção da REL-NONUNIQ-002.
 - [x] Registrar a aprovação explícita de Chris para a Proposta A da REL-NONUNIQ-002 nos artefatos governados.
 - [x] Formalizar o gate de reconstrução da REL-NONUNIQ-002 sem autorizar implementação.
+- [x] Implementar o perfil privado e o classificador determinístico da REL-NONUNIQ-002 sem reter títulos, cabeçalhos, valores ou pares correspondentes.
+- [x] Integrar a REL-NONUNIQ-002 ao registro, contrato, pipeline e catálogo draft com pergunta humana bloqueante.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-NONUNIQ-002.
+- [x] Sincronizar a ativação draft da REL-NONUNIQ-002 no índice, intake, Gate MVP, workspace e provas documentais.
