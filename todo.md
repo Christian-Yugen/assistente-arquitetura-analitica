@@ -376,3 +376,6 @@
 - [x] Integrar a MDL-UNDEFINED-020 ao registro, contrato, pipeline e catálogo draft com pergunta humana bloqueante.
 - [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da MDL-UNDEFINED-020.
 - [x] Sincronizar a ativação draft da MDL-UNDEFINED-020 no índice, intake, Gate MVP, workspace e provas documentais.
+- [x] Criar branch de segurança e recuperar metadados, dependências e lacunas da REL-ONEMANY-001 sem implementar lógica executável.
+- [ ] Elaborar intake, Proposta A e especificação lógica não executáveis para a REL-ONEMANY-001 e solicitar aprovação específica antes de implementação.
+- [x] Criar prova documental que preserve o bloqueio de execução e de produção da REL-ONEMANY-001.
