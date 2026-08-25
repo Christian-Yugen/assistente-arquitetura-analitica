@@ -494,7 +494,7 @@
 - [x] Obter autorização explícita de Chris antes de implementar a MET-DCOUNT-004 em draft.
 - [x] Implementar, calibrar e ativar a MET-DCOUNT-004 somente após autorização específica, mantendo produção bloqueada.
 - [x] Registrar no intake a autorização específica de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração e gate individual da MET-DCOUNT-004.
-- [ ] Registrar intake, política conceitual e gate não executável da MET-AVG-005.
-- [ ] Obter autorização explícita de Chris antes de implementar a MET-AVG-005 em draft.
-- [ ] Implementar, calibrar e ativar a MET-AVG-005 somente após autorização específica, mantendo produção bloqueada.
-- [ ] Registrar no intake a autorização específica de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração e gate individual da MET-AVG-005.
+- [x] Registrar intake, política conceitual e gate não executável da MET-AVG-005.
+- [x] Obter autorização explícita de Chris antes de implementar a MET-AVG-005 em draft.
+- [x] Implementar, calibrar e ativar a MET-AVG-005 somente após autorização específica, mantendo produção bloqueada.
+- [x] Registrar no intake a autorização específica de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração e gate individual da MET-AVG-005.
