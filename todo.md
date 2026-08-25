@@ -408,3 +408,4 @@
 - [x] Confirmar e documentar o escopo final de diagnóstico de planilhas, recomendações de Power Query e sugestões de DAX antes de prometer sua cobertura produtiva.
 - [x] Adotar e validar a REL-ORPHAN-003 autorizada da branch remota, preservando seus testes, calibração e bloqueio de produção.
 - [ ] Priorizar e concluir os ciclos governados remanescentes do catálogo de 95 regras, sem ativar regra sem evidência, calibração e gate individual.
+- [x] Adotar e validar a preparação não executável da REL-MANYMANY-004, mantendo execução draft e produção bloqueadas até aprovação posterior.

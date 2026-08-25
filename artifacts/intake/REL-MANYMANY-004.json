@@ -1,0 +1,43 @@
+{
+  "intake_id": "REL-MANYMANY-004-INTAKE-001",
+  "rule": {
+    "rule_id": "REL-MANYMANY-004",
+    "title": "Muitos-para-muitos",
+    "category": "relationship",
+    "purpose": "Detectar relacionamento muitos-para-muitos.",
+    "priority": "P0",
+    "stage": "relationship_inference",
+    "scope": "sheet_pair",
+    "depends_on": ["table_classification"],
+    "primary_output": "relationship_or_finding",
+    "source_implementation_status": "planned"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "artifacts/catalogs/rule-implementation-readiness-v1.json",
+      "docs/governance/RULE_DEVELOPMENT_LIFECYCLE_001.md",
+      "docs/rules/REL_ONEMANY_001_POLICY_PROPOSAL_001.md"
+    ]
+  },
+  "source_gap": "O blueprint oficial define somente título, propósito, prioridade P0, escopo por par de abas, dependência de classificação de tabela e saída relationship_or_finding. Ele não define critérios de muitos-para-muitos, cobertura referencial, exclusões, evidências, confiança, severidade, pergunta humana, perfil privado, versão contratual, testes ou calibração. A regra não pode revelar ou persistir títulos de abas, cabeçalhos, valores, posições, pares correspondentes, frequências individuais, chaves ou identificadores; não pode criar, alterar ou recomendar automaticamente uma relação no Power BI.",
+  "local_readiness": "intake_required",
+  "authorization": {
+    "implementation_authorized": false,
+    "reason": "Chris autorizou a continuidade governada, mas ainda não aprovou uma política para muitos-para-muitos. A regra permanece sem perfil, classificador, registro, contrato, pipeline, catálogo executável, golden dataset, calibração ou allowlist draft.",
+    "required_gate": "REL-MANYMANY-004-RECONSTRUCTION-AUTHORIZATION-001"
+  },
+  "required_before_implementation": [
+    "Aprovação explícita de Chris para uma política conservadora de muitos-para-muitos",
+    "Gate de reconstrução que mantenha a execução bloqueada até nova autorização específica",
+    "Perfil privado por par composto apenas de contagens e indicadores agregados, sem valores, nomes, cabeçalhos, posições ou pares correspondentes",
+    "Guardas contra fórmulas, sensibilidade, cobertura parcial, autorreferência, classificações incompatíveis, conflito e ambiguidade",
+    "Classificador determinístico, versão contratual, pergunta humana bloqueante e integração protegida por catálogo",
+    "Testes, golden dataset exclusivamente sintético, manifesto SHA-256, avaliador reproduzível, calibração e gate individual"
+  ],
+  "status": "pending_policy_authorization",
+  "execution_blocked": true,
+  "missing_before_execution": ["condition", "exclusions", "evidence", "severity", "confidence", "questions", "tests", "golden_dataset", "authorization_gate"]
+}
