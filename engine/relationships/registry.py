@@ -4,6 +4,7 @@ from engine.relationships.one_to_many import classify_one_to_many_relationship
 from engine.relationships.non_unique_one_side import classify_non_unique_one_side_relationship
 from engine.relationships.orphan_reference import classify_orphan_reference_relationship
 from engine.relationships.many_to_many import classify_many_to_many_relationship
+from engine.relationships.direct_fact import classify_direct_fact_relationship
 
 
 RELATIONSHIP_RULE_IMPLEMENTATIONS = {
@@ -11,4 +12,5 @@ RELATIONSHIP_RULE_IMPLEMENTATIONS = {
     "REL-NONUNIQ-002": classify_non_unique_one_side_relationship,
     "REL-ORPHAN-003": classify_orphan_reference_relationship,
     "REL-MANYMANY-004": classify_many_to_many_relationship,
+    "REL-FACTFACT-006": classify_direct_fact_relationship,
 }

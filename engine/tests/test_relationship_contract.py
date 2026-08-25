@@ -6,6 +6,7 @@ from engine.relationships.one_to_many import OneToManyRelationshipPairProfile, c
 from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshipPairProfile
 from engine.relationships.orphan_reference import OrphanReferenceRelationshipPairProfile
 from engine.relationships.many_to_many import ManyToManyRelationshipPairProfile
+from engine.relationships.direct_fact import DirectFactRelationshipPairProfile
 
 
 class RelationshipContractTests(unittest.TestCase):
@@ -121,6 +122,28 @@ class RelationshipContractTests(unittest.TestCase):
                 eligible_fact_reference_count=1,
                 dimension_key_complete=True,
                 fact_reference_complete=True,
+                referential_coverage_ratio=1.0,
+                eligible_direction_count=1,
+            ),
+        )
+        self.assertIsNotNone(result)
+
+    def test_direct_fact_rule_is_versioned_and_executes_only_in_the_draft_profile(self):
+        record = get_rule_execution_record("REL-FACTFACT-006")
+
+        self.assertEqual(RULE_VERSIONS["REL-FACTFACT-006"], "0.1.0-provisional.1")
+        self.assertEqual(record.status, "executable_draft")
+        result = execute_registered_rule(
+            "REL-FACTFACT-006",
+            DirectFactRelationshipPairProfile(
+                source_fact_candidate=True,
+                target_fact_candidate=True,
+                eligible_source_key_count=1,
+                eligible_target_reference_count=1,
+                source_key_complete=True,
+                source_key_unique=True,
+                target_reference_complete=True,
+                target_reference_unique=False,
                 referential_coverage_ratio=1.0,
                 eligible_direction_count=1,
             ),

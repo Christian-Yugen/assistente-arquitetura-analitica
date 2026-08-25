@@ -91,6 +91,7 @@ from engine.relationships.one_to_many import OneToManyRelationshipPairProfile
 from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshipPairProfile
 from engine.relationships.orphan_reference import OrphanReferenceRelationshipPairProfile
 from engine.relationships.many_to_many import ManyToManyRelationshipPairProfile
+from engine.relationships.direct_fact import DirectFactRelationshipPairProfile
 
 
 @dataclass(frozen=True)
@@ -818,6 +819,7 @@ def execute_quality_diagnosis(
         "REL-NONUNIQ-002": get_rule_execution_record("REL-NONUNIQ-002").status,
         "REL-ORPHAN-003": get_rule_execution_record("REL-ORPHAN-003").status,
         "REL-MANYMANY-004": get_rule_execution_record("REL-MANYMANY-004").status,
+        "REL-FACTFACT-006": get_rule_execution_record("REL-FACTFACT-006").status,
     }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
@@ -1037,6 +1039,34 @@ def execute_quality_diagnosis(
                     eligible_direction_count=many_to_many_direction_counts[(signal.source_sheet_id, signal.target_sheet_id)],
                 )
                 candidate = execute_registered_rule("REL-MANYMANY-004", many_to_many_profile)
+                if candidate:
+                    relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
+            if relationship_rule_statuses["REL-FACTFACT-006"] == "executable_draft":
+                direct_fact_profile = DirectFactRelationshipPairProfile(
+                    source_fact_candidate=bool({"fact_transactional_candidate", "fact_periodic_candidate"} & source_types),
+                    target_fact_candidate=bool({"fact_transactional_candidate", "fact_periodic_candidate"} & target_types),
+                    source_or_target_dimension_candidate=bool(
+                        {"dimension_standard_candidate", "dimension_calendar_candidate"} & (source_types | target_types)
+                    ),
+                    source_or_target_undefined_candidate=common_profile["source_or_target_undefined_candidate"],
+                    source_or_target_fact_without_grain_candidate=common_profile["source_or_target_fact_without_grain_candidate"],
+                    source_or_target_classification_conflict=common_profile["source_or_target_classification_conflict"],
+                    source_or_target_sensitive=common_profile["source_or_target_sensitive"],
+                    source_or_target_has_formula=common_profile["source_or_target_has_formula"],
+                    self_reference=common_profile["self_reference"],
+                    eligible_source_key_count=source_key_counts[signal.source_sheet_id],
+                    eligible_target_reference_count=target_reference_counts[signal.target_sheet_id],
+                    source_key_complete=signal.source_complete,
+                    source_key_unique=signal.source_unique,
+                    target_reference_complete=signal.target_complete,
+                    target_reference_unique=signal.target_unique,
+                    referential_coverage_ratio=signal.referential_coverage_ratio,
+                    eligible_direction_count=eligible_direction_counts[(signal.source_sheet_id, signal.target_sheet_id)],
+                    has_one_to_one_pattern=common_profile["has_one_to_one_pattern"],
+                    has_many_to_many_pattern=common_profile["has_many_to_many_pattern"],
+                    ambiguity_count=common_profile["ambiguity_count"],
+                )
+                candidate = execute_registered_rule("REL-FACTFACT-006", direct_fact_profile)
                 if candidate:
                     relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
 

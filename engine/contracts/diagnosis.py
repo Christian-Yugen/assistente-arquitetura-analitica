@@ -52,6 +52,7 @@ RULE_VERSIONS = {
     "REL-NONUNIQ-002": "0.1.0-provisional.1",
     "REL-ORPHAN-003": "0.1.0-provisional.1",
     "REL-MANYMANY-004": "0.1.0-provisional.1",
+    "REL-FACTFACT-006": "0.1.0-provisional.1",
 }
 
 

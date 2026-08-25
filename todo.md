@@ -420,4 +420,9 @@
 - [x] Propor política conservadora e especificação lógica não executável da REL-FACTFACT-006 antes de qualquer código executável.
 - [x] Obter aprovação explícita de Chris para a Proposta A da REL-FACTFACT-006.
 - [x] Formalizar o gate de reconstrução da REL-FACTFACT-006 sem autorizar implementação.
-- [ ] Implementar, testar, calibrar e ativar a REL-FACTFACT-006 exclusivamente após autorização específica de Chris no perfil draft.
+- [x] Implementar, testar, calibrar e ativar a REL-FACTFACT-006 exclusivamente após autorização específica de Chris no perfil draft.
+- [x] Registrar a autorização explícita de Chris para implementar a REL-FACTFACT-006 exclusivamente em draft.
+- [x] Implementar o perfil privado e o classificador determinístico da REL-FACTFACT-006 sem reter conteúdo identificável.
+- [x] Integrar a REL-FACTFACT-006 ao registro, contrato e pipeline mantendo a allowlist bloqueada até calibração.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-FACTFACT-006.
+- [x] Ativar a REL-FACTFACT-006 somente em draft e sincronizar catálogo, intake, prontidão, interface e provas documentais.
