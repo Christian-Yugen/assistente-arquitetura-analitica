@@ -1,0 +1,3 @@
+# MET-WAVG-011 — Gate Individual de Calibração Draft 001
+
+Chris autorizou a implementação exclusivamente em draft por chat: “sim”. O golden exclusivamente sintético produz `TP=1`, `FP=0` e `FN=0`. A regra emite somente `weighted_average_conceptual_metric_candidate` com a fórmula textual `weighted_sum(eligible_measure, eligible_weight) / total(eligible_weight)` e pergunta humana bloqueante. Ela não calcula média ponderada, seleciona campos, atribui papéis, define unidade/população/período/filtros/tratamento de peso/arredondamento ou gera DAX/M. Sensibilidade, fórmulas, classificação/grão indefinidos, fato sem grão, conflito, ambiguidade, peso não positivo, componente ausente e zero/múltiplos candidatos bloqueiam. **Produção permanece bloqueada.**

@@ -9,9 +9,9 @@
   "policy": "A regra só pode ser executada quando local_readiness for executable_draft e houver gate de implementação registrado.",
  "counts": {
    "baseline_reference": 0,
-    "executable_draft": 59,
+    "executable_draft": 60,
    "reference_catalog_draft": 0,
-    "intake_required": 36
+    "intake_required": 35
  },
   "rules": [
     {
@@ -1526,20 +1526,10 @@
         "grain_inference"
       ],
       "primary_output": "metric_or_finding",
-      "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "source_implementation_status": "draft",
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "MET-SEMIADD-012",
