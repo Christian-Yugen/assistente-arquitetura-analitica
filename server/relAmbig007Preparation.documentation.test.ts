@@ -10,10 +10,12 @@ describe("REL-AMBIG-007 preparation governance", () => {
     const intake = read("artifacts/intake/REL-AMBIG-007.json");
     const policy = read("docs/rules/REL_AMBIG_007_POLICY_PROPOSAL_001.md");
     const specification = read("docs/rules/REL_AMBIG_007_LOGICAL_SPEC_PROPOSAL_001.md");
+    const gate = read("docs/gates/REL_AMBIG_007_RECONSTRUCTION_AUTHORIZATION_001.md");
 
     expect(intake).toContain('"rule_id": "REL-AMBIG-007"');
     expect(intake).toContain('"priority": "P0"');
     expect(intake).toContain('"status": "intake_required"');
+    expect(intake).toContain('"policy_approved": true');
     expect(intake).toContain('"implementation_authorized": false');
     expect(intake).toContain('"execution_blocked": true');
     expect(intake).toContain("REL-AMBIG-007-RECONSTRUCTION-AUTHORIZATION-001");
@@ -21,6 +23,10 @@ describe("REL-AMBIG-007 preparation governance", () => {
     expect(policy).toContain("não detecta caminhos existentes em um modelo Power BI");
     expect(specification).toContain("não executável");
     expect(specification).toContain("ambiguous_relationship_path_review_candidate");
+    expect(gate).toContain("PROPOSAL-A-APPROVAL-DELEGATION-001");
+    expect(gate).toContain("não autoriza escrever, integrar ou executar lógica da regra");
+    expect(gate).toContain("Uma autorização explícita posterior de Chris");
+    expect(gate).toContain("A produção permanece bloqueada");
   });
 
   it("preserves opaque-pair privacy, human review and the production block", () => {
