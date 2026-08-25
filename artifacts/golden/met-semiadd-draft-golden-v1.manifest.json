@@ -1,0 +1,1 @@
+{"rule_id":"MET-SEMIADD-012","gate_id":"MET-SEMIADD-012-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/met-semiadd-draft-golden-v1.json","sha256":"a770405c450c4fec2a7a008d462473cc11c5d758052f028a7f263b037c96f5a7","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}

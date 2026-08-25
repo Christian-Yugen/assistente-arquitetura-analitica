@@ -9,6 +9,7 @@ from engine.metrics.absolute_delta import classify_absolute_delta_concept
 from engine.metrics.percentage_delta import classify_percentage_delta_concept
 from engine.metrics.running_total import classify_running_total_concept
 from engine.metrics.weighted_average import classify_weighted_average_concept
+from engine.metrics.semiadditive import classify_semiadditive_concept
 
 
 METRIC_RULE_IMPLEMENTATIONS = {
@@ -23,4 +24,5 @@ METRIC_RULE_IMPLEMENTATIONS = {
     "MET-PCTDELTA-009": classify_percentage_delta_concept,
     "MET-RUNNING-010": classify_running_total_concept,
     "MET-WAVG-011": classify_weighted_average_concept,
+    "MET-SEMIADD-012": classify_semiadditive_concept,
 }

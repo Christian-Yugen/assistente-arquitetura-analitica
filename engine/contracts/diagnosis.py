@@ -68,6 +68,7 @@ RULE_VERSIONS = {
     "MET-PCTDELTA-009": "0.1.0-provisional.1",
     "MET-RUNNING-010": "0.1.0-provisional.1",
     "MET-WAVG-011": "0.1.0-provisional.1",
+    "MET-SEMIADD-012": "0.1.0-provisional.1",
 }
 
 
