@@ -436,3 +436,8 @@
 - [x] Integrar a REL-AMBIG-007 ao registro, contrato e pipeline mantendo a allowlist bloqueada até calibração.
 - [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-AMBIG-007.
 - [x] Ativar a REL-AMBIG-007 somente em draft e sincronizar catálogo, intake, prontidão, interface e provas documentais.
+- [x] Criar branch de segurança e registrar o intake da REL-BIDIR-008, mantendo-a não executável.
+- [x] Elaborar e aprovar sob a diretriz de Proposta A a política conservadora e a especificação não executável da REL-BIDIR-008.
+- [x] Formalizar o gate de reconstrução da REL-BIDIR-008 sem autorizar implementação.
+- [ ] Obter autorização explícita de Chris para implementar a REL-BIDIR-008 exclusivamente no perfil draft.
+- [ ] Implementar, testar, calibrar e ativar a REL-BIDIR-008 exclusivamente após autorização específica de Chris no perfil draft.
