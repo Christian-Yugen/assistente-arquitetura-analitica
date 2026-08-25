@@ -537,3 +537,6 @@
 - [x] Registrar a autorização de escopo da Opção B e elaborar intake, Proposta A e gate específicos da MET-DAX-015, sem código executável.
 - [x] Obter autorização explícita adicional de Chris antes de implementar qualquer geração de DAX na MET-DAX-015.
 - [x] Registrar a aprovação de Chris e concluir perfil agregado, template abstrato, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MET-DAX-015.
+- [x] Criar branch de segurança e registrar o intake da ALT-SENS-001, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da ALT-SENS-001, mantendo a produção bloqueada.
+- [ ] Obter autorização explícita de Chris antes de implementar a ALT-SENS-001 exclusivamente em draft.
