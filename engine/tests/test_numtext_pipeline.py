@@ -147,7 +147,7 @@ class NumericTextPipelineTests(unittest.TestCase):
         self.assertNotIn("rotulo-sintetico-01", serialized)
 
     def test_projects_duration_as_semantic_type_without_exposing_header_or_numeric_content(self):
-        values = list(range(101, 111))
+        values = list(range(101001, 101011))
         context = build_column_analysis_context(
             sheet_id="00000000-0000-4000-8000-000000000010",
             column_id="00000000-0000-4000-8000-000000000011",
@@ -164,7 +164,7 @@ class NumericTextPipelineTests(unittest.TestCase):
 
         self.assertIn("duration_candidate", [item["semantic_type"] for item in diagnosis["semantic_classifications"]])
         self.assertNotIn("Duração (horas)", serialized)
-        self.assertNotIn("101", serialized)
+        self.assertNotIn("101001", serialized)
 
     def test_projects_status_as_semantic_type_without_exposing_header_or_label_content(self):
         values = ["classe_privada_a"] * 5 + ["classe_privada_b"] * 5

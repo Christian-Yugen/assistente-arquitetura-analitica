@@ -450,3 +450,9 @@
 - [x] Integrar a REL-BIDIR-008 ao registro, contrato e pipeline mantendo a allowlist bloqueada até calibração.
 - [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-BIDIR-008.
 - [x] Ativar a REL-BIDIR-008 somente em draft e sincronizar catálogo, intake, prontidão, interface e provas documentais.
+
+- [x] Criar branch de segurança e registrar o intake da REL-COMPKEY-009, mantendo-a não executável.
+- [x] Elaborar e aprovar sob a diretriz de Proposta A a política conservadora e a especificação não executável da REL-COMPKEY-009.
+- [x] Formalizar o gate de reconstrução da REL-COMPKEY-009 sem autorizar implementação.
+- [ ] Obter autorização explícita de Chris para implementar a REL-COMPKEY-009 exclusivamente no perfil draft.
+- [ ] Implementar, testar, calibrar e ativar a REL-COMPKEY-009 exclusivamente após autorização específica de Chris no perfil draft.
