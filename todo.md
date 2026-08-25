@@ -461,3 +461,8 @@
 - [x] Integrar a REL-COMPKEY-009 ao registro, contrato e pipeline mantendo a allowlist bloqueada até calibração.
 - [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-COMPKEY-009.
 - [x] Ativar a REL-COMPKEY-009 somente em draft e sincronizar catálogo, intake, prontidão, interface e provas documentais.
+- [x] Criar branch de segurança e registrar o intake da REL-CONFORMED-010, mantendo-a não executável.
+- [x] Elaborar e aprovar sob a diretriz de Proposta A a política conservadora e a especificação não executável da REL-CONFORMED-010.
+- [x] Formalizar o gate de reconstrução da REL-CONFORMED-010 sem autorizar implementação.
+- [ ] Obter autorização explícita de Chris para implementar a REL-CONFORMED-010 exclusivamente no perfil draft.
+- [ ] Implementar, testar, calibrar e ativar a REL-CONFORMED-010 exclusivamente após autorização específica de Chris no perfil draft.
