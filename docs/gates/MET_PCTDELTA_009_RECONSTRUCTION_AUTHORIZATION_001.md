@@ -1,0 +1,3 @@
+# MET-PCTDELTA-009 — Gate de Reconstrução 001
+
+Aplicado sob `PROPOSAL-A-APPROVAL-DELEGATION-001`, este gate autorizou inicialmente somente intake, política e especificação não executáveis da `MET-PCTDELTA-009`. Chris registrou autorização específica de implementação por chat: **“sim”**. A implementação permanece limitada ao perfil draft, ao intake `MET-PCTDELTA-009-INTAKE-001` e ao gate individual `MET-PCTDELTA-009-DRAFT-CALIBRATION-001`; não autoriza cálculo de variação percentual, seleção de medida/referência, decisão de período/unidade/população/filtros, convenção de sinal ou arredondamento, exposição de conteúdo de workbook, DAX/M ou modificação de arquivos. **Produção permanece bloqueada.**

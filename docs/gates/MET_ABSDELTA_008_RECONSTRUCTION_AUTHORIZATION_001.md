@@ -1,0 +1,3 @@
+# MET-ABSDELTA-008 — Gate de Reconstrução 001
+
+Aplicado sob `PROPOSAL-A-APPROVAL-DELEGATION-001`, este gate autorizou inicialmente apenas intake, política e especificação não executáveis da `MET-ABSDELTA-008`. Chris registrou autorização específica de implementação por chat: **“sim”**. A implementação permanece limitada ao perfil draft, ao intake `MET-ABSDELTA-008-INTAKE-001` e ao gate individual `MET-ABSDELTA-008-DRAFT-CALIBRATION-001`; não autoriza cálculo de variação, seleção de medida/referência, decisão de período/unidade/população/filtros, exposição de conteúdo do workbook, DAX/M ou modificação de arquivos. **Produção permanece bloqueada.**

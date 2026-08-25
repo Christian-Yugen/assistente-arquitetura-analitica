@@ -1,0 +1,3 @@
+# MET-WAVG-011 — Gate de Reconstrução 001
+
+Aplicado sob `PROPOSAL-A-APPROVAL-DELEGATION-001`, este gate autorizou inicialmente somente intake, política e especificação não executáveis da `MET-WAVG-011`. Chris registrou autorização específica de implementação por chat: **“sim”**. A implementação permanece limitada ao perfil draft, ao intake `MET-WAVG-011-INTAKE-001` e ao gate individual `MET-WAVG-011-DRAFT-CALIBRATION-001`; não autoriza calcular média ponderada, escolher medida/peso, decidir unidade/população/período/filtros/tratamento de peso/arredondamento/partições, expor conteúdo de workbook, gerar DAX/M ou modificar arquivos. **Produção permanece bloqueada.**

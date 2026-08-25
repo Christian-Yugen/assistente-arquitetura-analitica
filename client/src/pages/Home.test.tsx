@@ -66,11 +66,11 @@ describe("Home workspace flow", () => {
     expect(renderHome()).toContain("Tentar login novamente");
   });
 
-  it("shows the fifty-five rules authorized for the current draft profile", () => {
+  it("shows the sixty-one rules authorized for the current draft profile", () => {
     const workspace = renderHome();
     expect(workspace).toContain("Regras executáveis");
-    expect(workspace).toContain(">55<");
-    expect(workspace).toContain("MET-AVG-005 + MET-MINMAX-006");
+    expect(workspace).toContain(">61<");
+    expect(workspace).toContain("MET-AVG-005 + MET-MINMAX-006 + MET-RATE-007 + MET-ABSDELTA-008 + MET-PCTDELTA-009 + MET-RUNNING-010 + MET-WAVG-011 + MET-SEMIADD-012");
   });
 
   it("renders the pending processing panel and blocks all workbook edits during the real mutation state", () => {

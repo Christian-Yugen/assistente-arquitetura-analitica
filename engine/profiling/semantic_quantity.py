@@ -18,6 +18,7 @@ AUTHORIZED_HEADERS = frozenset({"quantidade", "qtd", "qtde"})
 class SemanticQuantityProfile:
     header_eligible: bool = False
     physical_numeric_count: int = 0
+    nonpositive_value_count: int = 0
     basis: str = NORMALIZATION_BASIS
 
 
@@ -42,8 +43,11 @@ def _is_physical_finite_number(value: object) -> bool:
 def profile_semantic_quantity(header: object, values: Iterable[object]) -> SemanticQuantityProfile:
     """Retém somente a elegibilidade fechada do cabeçalho e a contagem física agregada."""
 
-    physical_numeric_count = sum(1 for value in values if _is_physical_finite_number(value))
+    materialized_values = tuple(values)
+    physical_numeric_count = sum(1 for value in materialized_values if _is_physical_finite_number(value))
+    nonpositive_value_count = sum(1 for value in materialized_values if _is_physical_finite_number(value) and float(value) <= 0.0)
     return SemanticQuantityProfile(
         header_eligible=_normalize_header(header) in AUTHORIZED_HEADERS,
         physical_numeric_count=physical_numeric_count,
+        nonpositive_value_count=nonpositive_value_count,
     )

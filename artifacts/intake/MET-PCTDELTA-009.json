@@ -1,0 +1,34 @@
+{
+  "intake_id": "MET-PCTDELTA-009-INTAKE-001",
+  "rule": {
+    "rule_id": "MET-PCTDELTA-009",
+    "title": "Variação percentual",
+    "category": "metric",
+    "purpose": "Sugerir ou validar variação percentual.",
+    "priority": "P1",
+    "stage": "metric_suggestion",
+    "scope": "sheet",
+    "depends_on": ["semantic_typing", "grain_inference"],
+    "primary_output": "metric_or_finding",
+    "source_implementation_status": "draft"
+  },
+  "local_readiness": "executable_draft",
+  "authorization": {
+    "intake_authorized": true,
+    "intake_authorized_by": "Chris",
+    "policy_approved": true,
+    "policy_approved_by": "Chris",
+    "policy_approved_proposal": "A",
+    "policy_approval_basis": "PROPOSAL-A-APPROVAL-DELEGATION-001",
+    "implementation_authorized": true,
+    "implementation_authorized_by": "Chris",
+    "implementation_authorization_record": "Chat: sim",
+    "required_gate": "MET-PCTDELTA-009-DRAFT-CALIBRATION-001",
+    "production_authorized": false
+  },
+  "status": "executable_draft",
+  "execution_blocked": false,
+  "execution_profile": "draft",
+  "missing_before_execution": [],
+  "production_blocked": true
+}

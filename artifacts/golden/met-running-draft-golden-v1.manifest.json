@@ -1,0 +1,1 @@
+{"rule_id":"MET-RUNNING-010","gate_id":"MET-RUNNING-010-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/met-running-draft-golden-v1.json","sha256":"a0909f91176f67f41e3390c029c6a70ba2e3195abd5e0f479c2e2581ce467796","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}

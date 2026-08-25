@@ -13,6 +13,12 @@ from engine.metrics.count import CountConceptProfile
 from engine.metrics.distinct_count import DistinctCountConceptProfile
 from engine.metrics.average import AverageConceptProfile
 from engine.metrics.minmax import MinMaxConceptProfile
+from engine.metrics.rate import RateConceptProfile
+from engine.metrics.absolute_delta import AbsoluteDeltaConceptProfile
+from engine.metrics.percentage_delta import PercentageDeltaConceptProfile
+from engine.metrics.running_total import RunningTotalConceptProfile
+from engine.metrics.weighted_average import WeightedAverageConceptProfile
+from engine.metrics.semiadditive import SemiadditiveConceptProfile
 from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_metric_fragment, to_relationship_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
@@ -845,6 +851,12 @@ def execute_quality_diagnosis(
         "MET-DCOUNT-004": get_rule_execution_record("MET-DCOUNT-004").status,
         "MET-AVG-005": get_rule_execution_record("MET-AVG-005").status,
         "MET-MINMAX-006": get_rule_execution_record("MET-MINMAX-006").status,
+        "MET-RATE-007": get_rule_execution_record("MET-RATE-007").status,
+        "MET-ABSDELTA-008": get_rule_execution_record("MET-ABSDELTA-008").status,
+        "MET-PCTDELTA-009": get_rule_execution_record("MET-PCTDELTA-009").status,
+        "MET-RUNNING-010": get_rule_execution_record("MET-RUNNING-010").status,
+        "MET-WAVG-011": get_rule_execution_record("MET-WAVG-011").status,
+        "MET-SEMIADD-012": get_rule_execution_record("MET-SEMIADD-012").status,
     }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
@@ -1303,6 +1315,42 @@ def execute_quality_diagnosis(
                 summable_candidate_count = sum(1 for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates if candidate.get("semantic_type") in {"quantity_candidate", "currency_candidate"})
                 minmax_profile = MinMaxConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), summable_candidate_count=summable_candidate_count, has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
                 candidate = execute_registered_rule("MET-MINMAX-006", minmax_profile)
+                if candidate:
+                    metric_candidates.append((sheet_id, [candidate]))
+            if metric_rule_statuses["MET-RATE-007"] == "executable_draft":
+                semantic_types = [candidate.get("semantic_type") for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates]
+                rate_profile = RateConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), numerator_candidate_count=semantic_types.count("quantity_candidate"), denominator_candidate_count=semantic_types.count("target_or_forecast_candidate"), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                candidate = execute_registered_rule("MET-RATE-007", rate_profile)
+                if candidate:
+                    metric_candidates.append((sheet_id, [candidate]))
+            if metric_rule_statuses["MET-ABSDELTA-008"] == "executable_draft":
+                semantic_types = [candidate.get("semantic_type") for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates]
+                absolute_delta_profile = AbsoluteDeltaConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), actual_candidate_count=semantic_types.count("actual_candidate"), baseline_candidate_count=semantic_types.count("target_or_forecast_candidate"), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                candidate = execute_registered_rule("MET-ABSDELTA-008", absolute_delta_profile)
+                if candidate:
+                    metric_candidates.append((sheet_id, [candidate]))
+            if metric_rule_statuses["MET-PCTDELTA-009"] == "executable_draft":
+                semantic_types = [candidate.get("semantic_type") for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates]
+                percentage_delta_profile = PercentageDeltaConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), actual_candidate_count=semantic_types.count("actual_candidate"), baseline_candidate_count=semantic_types.count("target_or_forecast_candidate"), baseline_zero_value_count=sum(column.semantic_target.zero_value_count for column in sheet_columns if column.semantic_target.header_eligible), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                candidate = execute_registered_rule("MET-PCTDELTA-009", percentage_delta_profile)
+                if candidate:
+                    metric_candidates.append((sheet_id, [candidate]))
+            if metric_rule_statuses["MET-RUNNING-010"] == "executable_draft":
+                semantic_types = [candidate.get("semantic_type") for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates]
+                running_total_profile = RunningTotalConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), measure_candidate_count=semantic_types.count("quantity_candidate") + semantic_types.count("currency_candidate"), temporal_order_candidate_count=semantic_types.count("date_generic"), temporal_order_duplicate_count=sum(max(0, column.semantic_date.recognized_date_count - column.semantic_date.distinct_recognized_date_count) for column in sheet_columns if column.semantic_date.non_missing_count >= 10 and column.semantic_date.recognized_date_ratio == 1.0), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                candidate = execute_registered_rule("MET-RUNNING-010", running_total_profile)
+                if candidate:
+                    metric_candidates.append((sheet_id, [candidate]))
+            if metric_rule_statuses["MET-WAVG-011"] == "executable_draft":
+                semantic_types = [candidate.get("semantic_type") for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates]
+                weighted_average_profile = WeightedAverageConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), measure_candidate_count=semantic_types.count("currency_candidate"), weight_candidate_count=semantic_types.count("quantity_candidate"), nonpositive_weight_count=sum(column.semantic_quantity.nonpositive_value_count for column in sheet_columns if column.semantic_quantity.header_eligible), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                candidate = execute_registered_rule("MET-WAVG-011", weighted_average_profile)
+                if candidate:
+                    metric_candidates.append((sheet_id, [candidate]))
+            if metric_rule_statuses["MET-SEMIADD-012"] == "executable_draft":
+                semantic_types = [candidate.get("semantic_type") for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates]
+                semiadditive_profile = SemiadditiveConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), potential_balance_candidate_count=semantic_types.count("currency_candidate") + semantic_types.count("quantity_candidate"), temporal_order_candidate_count=semantic_types.count("date_generic"), temporal_order_duplicate_count=sum(max(0, column.semantic_date.recognized_date_count - column.semantic_date.distinct_recognized_date_count) for column in sheet_columns if column.semantic_date.non_missing_count >= 10 and column.semantic_date.recognized_date_ratio == 1.0), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                candidate = execute_registered_rule("MET-SEMIADD-012", semiadditive_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
 

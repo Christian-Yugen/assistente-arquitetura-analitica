@@ -1,0 +1,3 @@
+# MET-RUNNING-010 — Gate Individual de Calibração Draft 001
+
+Chris autorizou a implementação exclusivamente em draft por chat: “sim. continue”. O golden exclusivamente sintético produz `TP=1`, `FP=0` e `FN=0`. A regra emite somente `running_total_conceptual_metric_candidate` com a fórmula textual `cumulative eligible_measure ordered by eligible_time` e pergunta humana bloqueante. Ela não calcula acumulado, seleciona campos, decide ordem/partição/reinício, define período/unidade/população/filtros ou gera DAX/M. Sensibilidade, fórmulas, classificação/grão temporais indefinidos, fato sem grão, conflito, ambiguidade, ordem temporal duplicada, componente ausente e zero/múltiplos candidatos bloqueiam. **Produção permanece bloqueada.**

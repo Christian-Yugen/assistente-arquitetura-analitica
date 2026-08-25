@@ -1,0 +1,3 @@
+# MET-PCTDELTA-009 — Gate Individual de Calibração Draft 001
+
+Chris autorizou a implementação exclusivamente em draft por chat: “sim”. O golden exclusivamente sintético produz `TP=1`, `FP=0` e `FN=0`. A regra emite somente `percentage_delta_conceptual_metric_candidate` com a fórmula textual `((eligible_actual - eligible_baseline) / eligible_baseline) * 100` e pergunta humana bloqueante. Ela não calcula percentual, seleciona campos, decide convenção de sinal/arredondamento, define período/unidade/população/filtros ou gera DAX/M. Sensibilidade, fórmulas, classificação/grão indefinidos, fato sem grão, conflito, ambiguidade, referência zero, componente ausente e zero/múltiplos candidatos bloqueiam. **Produção permanece bloqueada.**

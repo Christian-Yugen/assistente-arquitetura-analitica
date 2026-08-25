@@ -502,3 +502,30 @@
 - [x] Obter autorização explícita de Chris antes de implementar a MET-MINMAX-006 em draft.
 - [x] Implementar, calibrar e ativar a MET-MINMAX-006 somente após autorização específica, mantendo produção bloqueada.
 - [x] Registrar no intake a autorização específica de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração e gate individual da MET-MINMAX-006.
+- [x] Registrar intake, política conceitual e gate não executável da MET-RATE-007.
+- [x] Obter autorização explícita de Chris antes de implementar a MET-RATE-007 em draft.
+- [x] Implementar, calibrar e ativar a MET-RATE-007 somente após autorização específica, mantendo produção bloqueada.
+- [x] Registrar no intake a autorização específica de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração e gate individual da MET-RATE-007.
+- [x] Criar branch de segurança e registrar o intake da MET-ABSDELTA-008, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MET-ABSDELTA-008, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a MET-ABSDELTA-008 exclusivamente em draft.
+- [x] Registrar no intake a autorização específica de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MET-ABSDELTA-008.
+- [x] Criar branch de segurança e registrar o intake da MET-PCTDELTA-009, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MET-PCTDELTA-009, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a MET-PCTDELTA-009 exclusivamente em draft.
+- [x] Registrar no intake a autorização específica de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MET-PCTDELTA-009.
+- [x] Criar branch de segurança e registrar o intake da MET-RUNNING-010, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MET-RUNNING-010, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a MET-RUNNING-010 exclusivamente em draft.
+- [x] Registrar no intake a autorização específica de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MET-RUNNING-010.
+- [x] Criar branch de segurança e registrar o intake da MET-WAVG-011, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MET-WAVG-011, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a MET-WAVG-011 exclusivamente em draft.
+- [x] Registrar no intake a autorização específica de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MET-WAVG-011.
+- [x] Criar branch de segurança e registrar o intake da MET-SEMIADD-012, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MET-SEMIADD-012, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a MET-SEMIADD-012 exclusivamente em draft.
+- [x] Registrar no intake a autorização integral de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MET-SEMIADD-012.
+- [x] Criar branch de segurança e registrar o intake da MET-DOMAIN-013, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MET-DOMAIN-013, mantendo a produção bloqueada.
+- [ ] Obter autorização explícita de Chris antes de implementar a MET-DOMAIN-013 exclusivamente em draft.

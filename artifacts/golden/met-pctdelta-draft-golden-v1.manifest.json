@@ -1,0 +1,1 @@
+{"rule_id":"MET-PCTDELTA-009","gate_id":"MET-PCTDELTA-009-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/met-pctdelta-draft-golden-v1.json","sha256":"ca06810219ea4dc574e13a043fc6ddee1920c8302cc125b3987e6eea5ceb9b5d","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}

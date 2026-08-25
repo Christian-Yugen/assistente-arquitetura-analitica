@@ -1,0 +1,1 @@
+{"rule_id":"MET-ABSDELTA-008","gate_id":"MET-ABSDELTA-008-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/met-absdelta-draft-golden-v1.json","sha256":"750831311cd6d52813b4a729d331a5009037094f3721ed1bd31073c35445c440","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}

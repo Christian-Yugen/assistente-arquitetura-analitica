@@ -1,0 +1,1 @@
+{"rule_id":"MET-WAVG-011","gate_id":"MET-WAVG-011-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/met-wavg-draft-golden-v1.json","sha256":"9f5a32824eacceaca8cb29f6f7d11be1919a7b9e98abb96a6064914b876dbabc","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}

@@ -1,0 +1,3 @@
+# MET-RUNNING-010 — Gate de Reconstrução 001
+
+Aplicado sob `PROPOSAL-A-APPROVAL-DELEGATION-001`, este gate autorizou inicialmente somente intake, política e especificação não executáveis da `MET-RUNNING-010`. Chris registrou autorização específica de implementação por chat: **“sim. continue”**. A implementação permanece limitada ao perfil draft, ao intake `MET-RUNNING-010-INTAKE-001` e ao gate individual `MET-RUNNING-010-DRAFT-CALIBRATION-001`; não autoriza calcular acumulado, escolher medida/ordem/partição, decidir período/unidade/população/filtros/reinício/arredondamento, expor conteúdo de workbook, gerar DAX/M ou modificar arquivos. **Produção permanece bloqueada.**
