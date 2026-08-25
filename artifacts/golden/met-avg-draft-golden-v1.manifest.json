@@ -1,0 +1,1 @@
+{"rule_id":"MET-AVG-005","gate_id":"MET-AVG-005-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/met-avg-draft-golden-v1.json","sha256":"f21ed69cc91c5dedff6bc7199441671e3c15279d3a6f2ffe8335c132f124defc","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}
