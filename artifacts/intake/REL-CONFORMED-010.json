@@ -1,0 +1,58 @@
+{
+  "intake_id": "REL-CONFORMED-010-INTAKE-001",
+  "rule": {
+    "rule_id": "REL-CONFORMED-010",
+    "title": "Dimensão compartilhada",
+    "category": "relationship",
+    "purpose": "Detectar ou recomendar dimensão compartilhada.",
+    "priority": "P1",
+    "stage": "relationship_inference",
+    "scope": "sheet_pair",
+    "depends_on": ["table_classification"],
+    "primary_output": "relationship_or_finding",
+    "source_implementation_status": "planned"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "artifacts/catalogs/rule-implementation-readiness-v1.json",
+      "docs/governance/RULE_DEVELOPMENT_LIFECYCLE_001.md",
+      "docs/governance/PROPOSAL_A_APPROVAL_DELEGATION_001.md"
+    ]
+  },
+  "source_gap": "O blueprint oficial define somente título, propósito, prioridade P1, escopo por par de abas, dependência de classificação de tabela e saída relationship_or_finding. Ele não define a semântica de dimensão conformada, os fatos conectados, critérios de elegibilidade, exclusões, evidências, confiança, severidade, pergunta humana, perfil privado, contrato, testes ou calibração. Uma futura implementação poderá resumir, para um par dimensão–fato, a contagem de outros fatos com direção candidata completa a partir de sinais opacos já transitórios; não poderá expor identidades de abas, colunas, valores, posições, pares correspondentes ou frequências. A regra não pode criar, alterar ou recomendar automaticamente dimensão compartilhada, relacionamento, filtro ou modelo Power BI.",
+  "local_readiness": "intake_required",
+  "authorization": {
+    "intake_authorized": true,
+    "intake_authorized_by": "Chris",
+    "policy_approved": true,
+    "policy_approved_by": "Chris",
+    "policy_approved_proposal": "A",
+    "policy_approval_basis": "PROPOSAL-A-APPROVAL-DELEGATION-001",
+    "implementation_authorized": false,
+    "reason": "A Proposta A foi aprovada sob a diretriz de delegação de Chris. O gate autoriza somente preparação controlada; implementação e produção continuam bloqueadas.",
+    "required_gate": "REL-CONFORMED-010-RECONSTRUCTION-AUTHORIZATION-001"
+  },
+  "required_before_implementation": [
+    "Autorização explícita de Chris para implementação draft, separada da aprovação delegada da Proposta A",
+    "Perfil privado que contenha somente contagem agregada de fatos candidatos conectados, sem identificadores de pares ou abas",
+    "Guardas contra fórmulas, sensibilidade, incompletude, cobertura parcial, autorreferência, classificações incompatíveis, conflito e ambiguidade",
+    "Classificador determinístico, versão contratual, pergunta humana bloqueante e integração protegida por catálogo",
+    "Testes, golden dataset exclusivamente sintético, manifesto SHA-256, avaliador reproduzível, calibração e gate individual"
+  ],
+  "status": "intake_required",
+  "execution_blocked": true,
+  "missing_before_execution": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "severity",
+    "confidence",
+    "questions",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ]
+}

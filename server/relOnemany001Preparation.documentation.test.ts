@@ -5,50 +5,33 @@ import path from "node:path";
 const root = process.cwd();
 const read = (relativePath: string) => fs.readFileSync(path.join(root, relativePath), "utf8");
 
-describe("REL-ONEMANY-001 preparation governance", () => {
-  it("keeps the policy proposal, implementation, and production blocked", () => {
+describe("REL-ONEMANY-001 draft activation governance", () => {
+  it("records Chris's authorization, calibration evidence, and controlled draft status", () => {
     const intake = read("artifacts/intake/REL-ONEMANY-001.json");
-    const policy = read("docs/rules/REL_ONEMANY_001_POLICY_PROPOSAL_001.md");
-    const specification = read("docs/rules/REL_ONEMANY_001_LOGICAL_SPEC_PROPOSAL_001.md");
+    const manifest = read("artifacts/golden/rel-onemany-draft-golden-v1.manifest.json");
+    const calibrationGate = read("docs/gates/REL_ONEMANY_001_DRAFT_CALIBRATION_001.md");
 
-    expect(intake).toContain('"status": "intake_required"');
-    expect(intake).toContain('"policy_approved": true');
-    expect(intake).toContain('"policy_approved_by": "Chris"');
-    expect(intake).toContain('"implementation_authorized": false');
-    expect(intake).toContain('"execution_blocked": true');
-    expect(intake).toContain('"scope": "sheet_pair"');
-    expect(policy).toContain("Proposta A — hipótese conservadora de relacionamento um-para-muitos");
-    expect(policy).toContain("Proposta A aprovada explicitamente por Chris");
-    expect(policy).toContain("Não autoriza perfil, classificador, registro, contrato, pipeline, catálogo, testes, dataset golden, calibração, ativação draft ou produção");
-    expect(specification).toContain("não executável");
-    expect(specification).toContain("Uma aprovação de política não autoriza a escrita, integração ou execução de código");
+    expect(intake).toContain('"status": "executable_draft"');
+    expect(intake).toContain('"implementation_authorized": true');
+    expect(intake).toContain('"implementation_authorized_by": "Chris"');
+    expect(intake).toContain('"calibration_gate": "REL-ONEMANY-001-DRAFT-CALIBRATION-001"');
+    expect(manifest).toContain('"synthetic_only": true');
+    expect(manifest).toContain('"expected_positive_count": 3');
+    expect(calibrationGate).toContain("3 verdadeiros positivos, 0 falsos positivos e 0 falsos negativos");
+    expect(calibrationGate).toContain("produção permanece bloqueada");
   });
 
-  it("preserves the approved privacy and non-overlap boundaries without adding executable integration", () => {
+  it("preserves opacity, independent privacy controls, and human confirmation", () => {
     const policy = read("docs/rules/REL_ONEMANY_001_POLICY_PROPOSAL_001.md");
-    const specification = read("docs/rules/REL_ONEMANY_001_LOGICAL_SPEC_PROPOSAL_001.md");
-    const registry = read("engine/fact_dimension/registry.py");
-    const pipeline = read("engine/pipeline/quality_diagnosis.py");
+    const calibrationGate = read("docs/gates/REL_ONEMANY_001_DRAFT_CALIBRATION_001.md");
     const catalog = read("engine/catalog.py");
+    const pipeline = read("engine/pipeline/quality_diagnosis.py");
 
     expect(policy).toContain("títulos de abas, cabeçalhos, valores, posições, pares correspondentes");
     expect(policy).toContain("cardinalidade 1:1, muitos-para-muitos");
-    expect(specification).toContain("referential_coverage_ratio = 1.0");
-    expect(specification).toContain("dimensão calendário, fato sem granularidade definida, classificação indefinida");
-    expect(registry).not.toContain("REL-ONEMANY-001");
-    expect(pipeline).not.toContain("REL-ONEMANY-001");
-    expect(catalog).not.toContain("REL-ONEMANY-001");
-  });
-
-  it("records the approved Proposal A and the reconstruction gate without releasing execution", () => {
-    const intake = read("artifacts/intake/REL-ONEMANY-001.json");
-    const policy = read("docs/rules/REL_ONEMANY_001_POLICY_PROPOSAL_001.md");
-    const gate = read("docs/gates/REL_ONEMANY_001_RECONSTRUCTION_AUTHORIZATION_001.md");
-
-    expect(intake).toContain("REL-ONEMANY-001-RECONSTRUCTION-AUTHORIZATION-001");
-    expect(policy).toContain("Proposta A aprovada explicitamente por Chris");
-    expect(gate).toContain("one_to_many_relationship_candidate");
-    expect(gate).toContain("Ele não autoriza escrever, integrar ou executar lógica da regra");
-    expect(gate).toContain("produção permanece bloqueada");
+    expect(calibrationGate).toContain("SEM-SENS-015");
+    expect(calibrationGate).toContain("confirmação humana continua obrigatória");
+    expect(catalog).toContain('"REL-ONEMANY-001": "REL-ONEMANY-001-DRAFT-CALIBRATION-001"');
+    expect(pipeline).toContain("REL-ONEMANY-001");
   });
 });

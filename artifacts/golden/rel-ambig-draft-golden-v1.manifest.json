@@ -1,0 +1,14 @@
+{
+  "dataset_id": "GD-REL-AMBIG-007-001",
+  "rule_id": "REL-AMBIG-007",
+  "dataset_path": "artifacts/golden/rel-ambig-draft-golden-v1.json",
+  "sha256": "d644b59fac63c147c4a15adbd3978fc7f74abec7126308f7d6cc47acd6f8a817",
+  "synthetic_only": true,
+  "evaluation": {
+    "evaluator": "engine/calibration/evaluate_rel_ambig_draft_golden.py",
+    "true_positives": 3,
+    "false_positives": 0,
+    "false_negatives": 0
+  },
+  "production_authorized": false
+}

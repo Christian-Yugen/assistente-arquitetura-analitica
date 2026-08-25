@@ -352,7 +352,7 @@ class RuleCatalogTests(unittest.TestCase):
             "MDL-DIMCAL-006",
             CalendarDimensionSheetProfile(20, True, (CalendarDateProfile(20, 20, 19),), 0),
         )
-        self.assertEqual(executable_rule_count(), 40)
+        self.assertEqual(executable_rule_count(), 48)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
@@ -427,11 +427,18 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(undefined_record.status, "executable_draft")
         self.assertEqual(get_rule_execution_record("MDL-DIMSTD-004").status, "executable_draft")
         self.assertEqual(get_rule_execution_record("MDL-DIMCAL-006").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("REL-ONEMANY-001").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("REL-NONUNIQ-002").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("REL-ORPHAN-003").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("REL-MANYMANY-004").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("REL-FACTFACT-006").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("REL-AMBIG-007").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("REL-BIDIR-008").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("REL-COMPKEY-009").status, "executable_draft")
         self.assertEqual(record.title, "Números armazenados como texto")
 
     def test_baseline_reference_and_reserved_official_slots_cannot_execute(self):
         expected_statuses = {
-            "REL-ONEMANY-001": "reference_catalog_draft",
             "MET-COMPL-001": "reference_catalog_draft",
             "ALT-SENS-001": "reference_catalog_draft",
             "MET-DAX-015": "reserved_definition",

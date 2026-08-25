@@ -8,7 +8,7 @@ from pathlib import Path
 
 from engine.contracts.execution_profile import load_authorized_draft_profile
 from engine.pipeline.quality_diagnosis import DiagnosisMetadata, execute_quality_diagnosis
-from engine.profiling.workbook import profile_workbook
+from engine.profiling.workbook import profile_workbook_with_relationship_pairs
 
 
 def run(input_path: Path, metadata_path: Path) -> dict[str, object]:
@@ -19,8 +19,13 @@ def run(input_path: Path, metadata_path: Path) -> dict[str, object]:
         business_questions=business_questions,
         execution_profile=load_authorized_draft_profile(),
     )
-    columns = profile_workbook(input_path)
-    return execute_quality_diagnosis(columns, metadata=metadata)
+    workbook_profile = profile_workbook_with_relationship_pairs(input_path)
+    return execute_quality_diagnosis(
+        workbook_profile.columns,
+        metadata=metadata,
+        relationship_pair_signals=workbook_profile.relationship_pair_signals,
+        composite_relationship_pair_signals=workbook_profile.composite_relationship_pair_signals,
+    )
 
 
 def main() -> None:

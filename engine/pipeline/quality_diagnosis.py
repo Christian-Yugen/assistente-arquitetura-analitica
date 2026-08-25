@@ -7,7 +7,7 @@ from time import perf_counter
 from typing import Iterable, Literal
 
 from engine.catalog import executable_rule_count, execute_registered_rule, get_rule_execution_record
-from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
+from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_relationship_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
 from engine.profiling.numeric_text import NumericTextProfile, infer_physical_type, profile_numeric_text
@@ -86,6 +86,15 @@ from engine.fact_dimension.transactional import TransactionalFactSheetProfile
 from engine.fact_dimension.calendar_dimension import CalendarDimensionSheetProfile
 from engine.fact_dimension.fact_without_grain import FactWithoutDefinedGrainSheetProfile
 from engine.fact_dimension.undefined_classification import UndefinedTableClassificationSheetProfile
+from engine.profiling.relationship_pairs import CompositeRelationshipPairSignal, RelationshipPairSignal
+from engine.relationships.one_to_many import OneToManyRelationshipPairProfile
+from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshipPairProfile
+from engine.relationships.orphan_reference import OrphanReferenceRelationshipPairProfile
+from engine.relationships.many_to_many import ManyToManyRelationshipPairProfile
+from engine.relationships.direct_fact import DirectFactRelationshipPairProfile
+from engine.relationships.ambiguous_path import AmbiguousRelationshipPathPairProfile
+from engine.relationships.bidirectional_filter import BidirectionalFilterReviewPairProfile
+from engine.relationships.composite_key import CompositeRelationshipKeyPairProfile
 
 
 @dataclass(frozen=True)
@@ -222,10 +231,18 @@ def build_column_analysis_context(
     )
 
 
-def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metadata: DiagnosisMetadata) -> dict[str, object]:
+def execute_quality_diagnosis(
+    columns: Iterable[ColumnAnalysisContext],
+    *,
+    metadata: DiagnosisMetadata,
+    relationship_pair_signals: Iterable[RelationshipPairSignal] = (),
+    composite_relationship_pair_signals: Iterable[CompositeRelationshipPairSignal] = (),
+) -> dict[str, object]:
     """Monta todos os blocos do contrato em estado partial sem fabricar recomendações de modelo."""
 
     profile = metadata.execution_profile
+    relationship_pair_signals = tuple(relationship_pair_signals)
+    composite_relationship_pair_signals = tuple(composite_relationship_pair_signals)
     started_at = _timestamp()
     started_clock = perf_counter()
     quality_findings: list[tuple[str, str | None, dict[str, object]]] = []
@@ -801,10 +818,364 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
                 ),
             ))
 
+    relationship_candidates: list[tuple[str, str, list[dict[str, object]]]] = []
+    relationship_rule_statuses = {
+        "REL-ONEMANY-001": get_rule_execution_record("REL-ONEMANY-001").status,
+        "REL-NONUNIQ-002": get_rule_execution_record("REL-NONUNIQ-002").status,
+        "REL-ORPHAN-003": get_rule_execution_record("REL-ORPHAN-003").status,
+        "REL-MANYMANY-004": get_rule_execution_record("REL-MANYMANY-004").status,
+        "REL-FACTFACT-006": get_rule_execution_record("REL-FACTFACT-006").status,
+        "REL-AMBIG-007": get_rule_execution_record("REL-AMBIG-007").status,
+        "REL-BIDIR-008": get_rule_execution_record("REL-BIDIR-008").status,
+        "REL-COMPKEY-009": get_rule_execution_record("REL-COMPKEY-009").status,
+    }
+    if "executable_draft" in relationship_rule_statuses.values():
+        classification_types_by_sheet = {
+            sheet_id: frozenset(
+                str(candidate.get("classification_type", ""))
+                for candidate in candidates
+                if candidate.get("classification_type")
+            )
+            for sheet_id, candidates in table_candidates.items()
+        }
+        sensitive_sheet_ids = {
+            sheet_id
+            for sheet_id, _, candidates in sensitivity_candidates
+            if any(candidate.get("sensitivity") == "personal_data_candidate" for candidate in candidates)
+        } | {
+            sheet_id
+            for sheet_id, sheet_columns in grouped_columns.items()
+            if any(column.semantic_identifier.sensitive_header for column in sheet_columns)
+        }
+        source_key_counts = {
+            sheet_id: len(
+                {
+                    signal.source_column_id
+                    for signal in relationship_pair_signals
+                    if signal.source_sheet_id == sheet_id
+                    and signal.source_complete
+                    and signal.source_unique
+                    and not signal.source_or_target_sensitive
+                    and not signal.source_or_target_has_formula
+                }
+            )
+            for sheet_id in grouped_columns
+        }
+        target_reference_counts = {
+            sheet_id: len(
+                {
+                    signal.target_column_id
+                    for signal in relationship_pair_signals
+                    if signal.target_sheet_id == sheet_id
+                    and signal.target_complete
+                    and not signal.target_unique
+                    and not signal.source_or_target_sensitive
+                    and not signal.source_or_target_has_formula
+                }
+            )
+            for sheet_id in grouped_columns
+        }
+        non_unique_source_key_counts = {
+            sheet_id: len(
+                {
+                    signal.source_column_id
+                    for signal in relationship_pair_signals
+                    if signal.source_sheet_id == sheet_id
+                    and signal.source_complete
+                    and not signal.source_unique
+                    and signal.source_distinct_count < signal.source_non_missing_count
+                    and not signal.source_or_target_sensitive
+                    and not signal.source_or_target_has_formula
+                }
+            )
+            for sheet_id in grouped_columns
+        }
+        complete_target_reference_counts = {
+            sheet_id: len(
+                {
+                    signal.target_column_id
+                    for signal in relationship_pair_signals
+                    if signal.target_sheet_id == sheet_id
+                    and signal.target_complete
+                    and not signal.source_or_target_sensitive
+                    and not signal.source_or_target_has_formula
+                }
+            )
+            for sheet_id in grouped_columns
+        }
+        eligible_direction_counts = {
+            (source_sheet_id, target_sheet_id): sum(
+                1
+                for signal in relationship_pair_signals
+                if signal.source_sheet_id == source_sheet_id
+                and signal.target_sheet_id == target_sheet_id
+                and signal.source_complete
+                and signal.source_unique
+                and signal.target_complete
+                and not signal.target_unique
+                and signal.referential_coverage_ratio == 1.0
+                and not signal.source_or_target_sensitive
+                and not signal.source_or_target_has_formula
+            )
+            for source_sheet_id in grouped_columns
+            for target_sheet_id in grouped_columns
+            if source_sheet_id != target_sheet_id
+        }
+        non_unique_direction_counts = {
+            (source_sheet_id, target_sheet_id): sum(
+                1
+                for signal in relationship_pair_signals
+                if signal.source_sheet_id == source_sheet_id
+                and signal.target_sheet_id == target_sheet_id
+                and signal.source_complete
+                and not signal.source_unique
+                and signal.source_distinct_count < signal.source_non_missing_count
+                and signal.target_complete
+                and signal.referential_coverage_ratio == 1.0
+                and not signal.source_or_target_sensitive
+                and not signal.source_or_target_has_formula
+            )
+            for source_sheet_id in grouped_columns
+            for target_sheet_id in grouped_columns
+            if source_sheet_id != target_sheet_id
+        }
+        orphan_direction_counts = {
+            (source_sheet_id, target_sheet_id): sum(
+                1
+                for signal in relationship_pair_signals
+                if signal.source_sheet_id == source_sheet_id
+                and signal.target_sheet_id == target_sheet_id
+                and signal.source_complete
+                and signal.source_unique
+                and signal.target_complete
+                and not signal.target_unique
+                and 0.0 < signal.referential_coverage_ratio < 1.0
+                and signal.uncovered_reference_distinct_count > 0
+                and not signal.source_or_target_sensitive
+                and not signal.source_or_target_has_formula
+            )
+            for source_sheet_id in grouped_columns
+            for target_sheet_id in grouped_columns
+            if source_sheet_id != target_sheet_id
+        }
+        many_to_many_direction_counts = {
+            (source_sheet_id, target_sheet_id): sum(
+                1
+                for signal in relationship_pair_signals
+                if signal.source_sheet_id == source_sheet_id
+                and signal.target_sheet_id == target_sheet_id
+                and signal.source_complete
+                and not signal.source_unique
+                and signal.source_distinct_count < signal.source_non_missing_count
+                and signal.target_complete
+                and not signal.target_unique
+                and signal.target_distinct_count < signal.target_non_missing_count
+                and signal.referential_coverage_ratio == 1.0
+                and not signal.source_or_target_sensitive
+                and not signal.source_or_target_has_formula
+            )
+            for source_sheet_id in grouped_columns
+            for target_sheet_id in grouped_columns
+            if source_sheet_id != target_sheet_id
+        }
+        simple_key_pair_directions = {
+            (signal.source_sheet_id, signal.target_sheet_id)
+            for signal in relationship_pair_signals
+            if signal.source_complete
+            and signal.source_unique
+            and signal.target_complete
+            and not signal.target_unique
+            and signal.referential_coverage_ratio == 1.0
+            and not signal.source_or_target_sensitive
+            and not signal.source_or_target_has_formula
+        }
+        emitted_ambiguous_relationship_pairs: set[tuple[str, str]] = set()
+        for signal in relationship_pair_signals:
+            source_types = classification_types_by_sheet.get(signal.source_sheet_id, frozenset())
+            target_types = classification_types_by_sheet.get(signal.target_sheet_id, frozenset())
+            source_conflict_count = max(0, len(source_types) - 1)
+            target_conflict_count = max(0, len(target_types) - 1)
+            common_profile = {
+                "source_standard_dimension_candidate": "dimension_standard_candidate" in source_types,
+                "target_fact_candidate": bool({"fact_transactional_candidate", "fact_periodic_candidate"} & target_types),
+                "source_calendar_dimension_candidate": "dimension_calendar_candidate" in source_types,
+                "source_or_target_undefined_candidate": "table_classification_undefined_candidate" in source_types | target_types,
+                "source_or_target_fact_without_grain_candidate": "fact_without_defined_grain_candidate" in source_types | target_types,
+                "source_or_target_classification_conflict": source_conflict_count > 0 or target_conflict_count > 0,
+                "source_or_target_sensitive": signal.source_or_target_sensitive or signal.source_sheet_id in sensitive_sheet_ids or signal.target_sheet_id in sensitive_sheet_ids,
+                "source_or_target_has_formula": signal.source_or_target_has_formula,
+                "self_reference": signal.source_sheet_id == signal.target_sheet_id,
+                "dimension_key_complete": signal.source_complete,
+                "fact_reference_complete": signal.target_complete,
+                "referential_coverage_ratio": signal.referential_coverage_ratio,
+                "has_one_to_one_pattern": signal.source_complete and signal.source_unique and signal.target_complete and signal.target_unique and signal.referential_coverage_ratio == 1.0,
+                "has_many_to_many_pattern": not signal.source_unique and not signal.target_unique,
+                "ambiguity_count": source_conflict_count + target_conflict_count,
+            }
+            if relationship_rule_statuses["REL-ONEMANY-001"] == "executable_draft":
+                one_to_many_profile = OneToManyRelationshipPairProfile(
+                    **common_profile,
+                    eligible_dimension_key_count=source_key_counts[signal.source_sheet_id],
+                    eligible_fact_reference_count=target_reference_counts[signal.target_sheet_id],
+                    dimension_key_unique=signal.source_unique,
+                    fact_reference_unique=signal.target_unique,
+                    eligible_direction_count=eligible_direction_counts[(signal.source_sheet_id, signal.target_sheet_id)],
+                )
+                candidate = execute_registered_rule("REL-ONEMANY-001", one_to_many_profile)
+                if candidate:
+                    relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
+            if relationship_rule_statuses["REL-NONUNIQ-002"] == "executable_draft":
+                non_unique_profile = NonUniqueOneSideRelationshipPairProfile(
+                    **common_profile,
+                    eligible_dimension_key_count=non_unique_source_key_counts[signal.source_sheet_id],
+                    eligible_fact_reference_count=complete_target_reference_counts[signal.target_sheet_id],
+                    dimension_key_unique=signal.source_unique,
+                    dimension_key_duplicate_count=max(0, signal.source_non_missing_count - signal.source_distinct_count),
+                    eligible_direction_count=non_unique_direction_counts[(signal.source_sheet_id, signal.target_sheet_id)],
+                )
+                candidate = execute_registered_rule("REL-NONUNIQ-002", non_unique_profile)
+                if candidate:
+                    relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
+            if relationship_rule_statuses["REL-ORPHAN-003"] == "executable_draft":
+                orphan_profile = OrphanReferenceRelationshipPairProfile(
+                    **common_profile,
+                    eligible_dimension_key_count=source_key_counts[signal.source_sheet_id],
+                    eligible_fact_reference_count=target_reference_counts[signal.target_sheet_id],
+                    dimension_key_unique=signal.source_unique,
+                    fact_reference_unique=signal.target_unique,
+                    uncovered_reference_distinct_count=signal.uncovered_reference_distinct_count,
+                    eligible_direction_count=orphan_direction_counts[(signal.source_sheet_id, signal.target_sheet_id)],
+                )
+                candidate = execute_registered_rule("REL-ORPHAN-003", orphan_profile)
+                if candidate:
+                    relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
+            if relationship_rule_statuses["REL-MANYMANY-004"] == "executable_draft":
+                many_to_many_profile = ManyToManyRelationshipPairProfile(
+                    **common_profile,
+                    eligible_dimension_key_count=non_unique_source_key_counts[signal.source_sheet_id],
+                    eligible_fact_reference_count=target_reference_counts[signal.target_sheet_id],
+                    dimension_key_unique=signal.source_unique,
+                    fact_reference_unique=signal.target_unique,
+                    eligible_direction_count=many_to_many_direction_counts[(signal.source_sheet_id, signal.target_sheet_id)],
+                )
+                candidate = execute_registered_rule("REL-MANYMANY-004", many_to_many_profile)
+                if candidate:
+                    relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
+            if relationship_rule_statuses["REL-FACTFACT-006"] == "executable_draft":
+                direct_fact_profile = DirectFactRelationshipPairProfile(
+                    source_fact_candidate=bool({"fact_transactional_candidate", "fact_periodic_candidate"} & source_types),
+                    target_fact_candidate=bool({"fact_transactional_candidate", "fact_periodic_candidate"} & target_types),
+                    source_or_target_dimension_candidate=bool(
+                        {"dimension_standard_candidate", "dimension_calendar_candidate"} & (source_types | target_types)
+                    ),
+                    source_or_target_undefined_candidate=common_profile["source_or_target_undefined_candidate"],
+                    source_or_target_fact_without_grain_candidate=common_profile["source_or_target_fact_without_grain_candidate"],
+                    source_or_target_classification_conflict=common_profile["source_or_target_classification_conflict"],
+                    source_or_target_sensitive=common_profile["source_or_target_sensitive"],
+                    source_or_target_has_formula=common_profile["source_or_target_has_formula"],
+                    self_reference=common_profile["self_reference"],
+                    eligible_source_key_count=source_key_counts[signal.source_sheet_id],
+                    eligible_target_reference_count=target_reference_counts[signal.target_sheet_id],
+                    source_key_complete=signal.source_complete,
+                    source_key_unique=signal.source_unique,
+                    target_reference_complete=signal.target_complete,
+                    target_reference_unique=signal.target_unique,
+                    referential_coverage_ratio=signal.referential_coverage_ratio,
+                    eligible_direction_count=eligible_direction_counts[(signal.source_sheet_id, signal.target_sheet_id)],
+                    has_one_to_one_pattern=common_profile["has_one_to_one_pattern"],
+                    has_many_to_many_pattern=common_profile["has_many_to_many_pattern"],
+                    ambiguity_count=common_profile["ambiguity_count"],
+                )
+                candidate = execute_registered_rule("REL-FACTFACT-006", direct_fact_profile)
+                if candidate:
+                    relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
+            pair_key = (signal.source_sheet_id, signal.target_sheet_id)
+            if (
+                relationship_rule_statuses["REL-AMBIG-007"] == "executable_draft"
+                and pair_key not in emitted_ambiguous_relationship_pairs
+            ):
+                ambiguous_profile = AmbiguousRelationshipPathPairProfile(
+                    source_standard_dimension_candidate=common_profile["source_standard_dimension_candidate"],
+                    target_fact_candidate=common_profile["target_fact_candidate"],
+                    source_or_target_calendar_dimension_candidate=bool(
+                        "dimension_calendar_candidate" in source_types | target_types
+                    ),
+                    source_or_target_undefined_candidate=common_profile["source_or_target_undefined_candidate"],
+                    source_or_target_fact_without_grain_candidate=common_profile["source_or_target_fact_without_grain_candidate"],
+                    source_or_target_classification_conflict=common_profile["source_or_target_classification_conflict"],
+                    source_or_target_sensitive=common_profile["source_or_target_sensitive"],
+                    source_or_target_has_formula=common_profile["source_or_target_has_formula"],
+                    self_reference=common_profile["self_reference"],
+                    eligible_source_key_count=source_key_counts[signal.source_sheet_id],
+                    eligible_target_reference_count=target_reference_counts[signal.target_sheet_id],
+                    source_key_complete=signal.source_complete,
+                    source_key_unique=signal.source_unique,
+                    target_reference_complete=signal.target_complete,
+                    target_reference_unique=signal.target_unique,
+                    referential_coverage_ratio=signal.referential_coverage_ratio,
+                    eligible_direction_count=eligible_direction_counts[pair_key],
+                    has_one_to_one_pattern=common_profile["has_one_to_one_pattern"],
+                    has_many_to_many_pattern=common_profile["has_many_to_many_pattern"],
+                    ambiguity_count=common_profile["ambiguity_count"],
+                )
+                candidate = execute_registered_rule("REL-AMBIG-007", ambiguous_profile)
+                if candidate:
+                    relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
+                    emitted_ambiguous_relationship_pairs.add(pair_key)
+            if relationship_rule_statuses["REL-BIDIR-008"] == "executable_draft":
+                bidirectional_filter_profile = BidirectionalFilterReviewPairProfile(
+                    **common_profile,
+                    eligible_dimension_key_count=source_key_counts[signal.source_sheet_id],
+                    eligible_fact_reference_count=target_reference_counts[signal.target_sheet_id],
+                    dimension_key_unique=signal.source_unique,
+                    fact_reference_unique=signal.target_unique,
+                    eligible_direction_count=eligible_direction_counts[pair_key],
+                )
+                candidate = execute_registered_rule("REL-BIDIR-008", bidirectional_filter_profile)
+                if candidate:
+                    relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
+        if relationship_rule_statuses["REL-COMPKEY-009"] == "executable_draft":
+            for signal in composite_relationship_pair_signals:
+                source_types = classification_types_by_sheet.get(signal.source_sheet_id, frozenset())
+                target_types = classification_types_by_sheet.get(signal.target_sheet_id, frozenset())
+                source_conflict_count = max(0, len(source_types) - 1)
+                target_conflict_count = max(0, len(target_types) - 1)
+                composite_profile = CompositeRelationshipKeyPairProfile(
+                    source_standard_dimension_candidate="dimension_standard_candidate" in source_types,
+                    target_fact_candidate=bool({"fact_transactional_candidate", "fact_periodic_candidate"} & target_types),
+                    source_calendar_dimension_candidate="dimension_calendar_candidate" in source_types,
+                    source_or_target_undefined_candidate="table_classification_undefined_candidate" in source_types | target_types,
+                    source_or_target_fact_without_grain_candidate="fact_without_defined_grain_candidate" in source_types | target_types,
+                    source_or_target_classification_conflict=source_conflict_count > 0 or target_conflict_count > 0,
+                    source_or_target_sensitive=(
+                        signal.source_or_target_sensitive
+                        or signal.source_sheet_id in sensitive_sheet_ids
+                        or signal.target_sheet_id in sensitive_sheet_ids
+                    ),
+                    source_or_target_has_formula=signal.source_or_target_has_formula,
+                    self_reference=signal.source_sheet_id == signal.target_sheet_id,
+                    eligible_composite_key_pair_count=signal.eligible_composite_key_pair_count,
+                    eligible_composite_reference_pair_count=signal.eligible_composite_reference_pair_count,
+                    has_eligible_simple_key=(signal.source_sheet_id, signal.target_sheet_id) in simple_key_pair_directions,
+                    composite_key_complete=signal.composite_key_complete,
+                    composite_key_unique=signal.composite_key_unique,
+                    composite_reference_complete=signal.composite_reference_complete,
+                    composite_reference_unique=signal.composite_reference_unique,
+                    referential_coverage_ratio=signal.referential_coverage_ratio,
+                    eligible_direction_count=signal.eligible_direction_count,
+                    has_one_to_one_pattern=signal.has_one_to_one_pattern,
+                    has_many_to_many_pattern=signal.has_many_to_many_pattern,
+                    ambiguity_count=source_conflict_count + target_conflict_count,
+                )
+                candidate = execute_registered_rule("REL-COMPKEY-009", composite_profile)
+                if candidate:
+                    relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
+
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []
     semantic_classifications: list[dict[str, object]] = []
     sensitivity_classifications: list[dict[str, object]] = []
+    relationships: list[dict[str, object]] = []
     grains_by_sheet: dict[str, dict[str, object] | None] = {sheet_id: None for sheet_id in grouped_columns}
     classifications_by_sheet: dict[str, dict[str, object] | None] = {sheet_id: None for sheet_id in grouped_columns}
     question_ids_by_sheet: dict[str, list[str]] = {sheet_id: [] for sheet_id in grouped_columns}
@@ -838,6 +1209,18 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         table_questions = fragment["questions"]  # type: ignore[assignment]
         questions.extend(table_questions)  # type: ignore[arg-type]
         question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in table_questions)  # type: ignore[index,union-attr]
+    for source_sheet_id, target_sheet_id, candidates in relationship_candidates:
+        fragment = to_relationship_fragment(
+            candidates,
+            source_sheet_id=source_sheet_id,
+            target_sheet_id=target_sheet_id,
+        )
+        relationships.extend(fragment["relationships"])  # type: ignore[arg-type]
+        relationship_questions = fragment["questions"]  # type: ignore[assignment]
+        questions.extend(relationship_questions)  # type: ignore[arg-type]
+        for question in relationship_questions:  # type: ignore[union-attr]
+            question_ids_by_sheet[source_sheet_id].append(question["question_id"])
+            question_ids_by_sheet[target_sheet_id].append(question["question_id"])
 
     finding_ids_by_sheet: dict[str, list[str]] = {sheet_id: [] for sheet_id in grouped_columns}
     for finding in findings:
@@ -928,14 +1311,14 @@ def execute_quality_diagnosis(columns: Iterable[ColumnAnalysisContext], *, metad
         "summary": {
             "quality_score": None,
             "completeness_ratio": round(executable_rule_count() / profile.catalog_target_rule_count, 8),
-            "counts": {"sheets": len(sheet_objects), "columns": sum(sheet["column_count"] for sheet in sheet_objects), "facts": 0, "dimensions": 0, "relationships": 0, "metrics": 0, "risks": len(findings)},
+            "counts": {"sheets": len(sheet_objects), "columns": sum(sheet["column_count"] for sheet in sheet_objects), "facts": 0, "dimensions": 0, "relationships": len(relationships), "metrics": 0, "risks": len(findings)},
             "top_risk_finding_ids": [finding["finding_id"] for finding in findings[:10]],
             "executive_summary": profile.summary_template.format(sheet_count=len(sheet_objects), column_count=sum(sheet["column_count"] for sheet in sheet_objects), finding_count=len(findings)),
             "next_recommended_action": profile.next_action_with_questions if questions else profile.next_action_without_questions,
         },
         "sheets": sheet_objects,
         "proposed_model": {"status": profile.proposed_model_status, "tables": [], "implementation_steps": [], "assumptions": [], "limitations": [profile.proposed_model_limitation], "confidence": None},
-        "relationships": [],
+        "relationships": relationships,
         "metrics": [],
         "questions": questions,
         "findings": findings,

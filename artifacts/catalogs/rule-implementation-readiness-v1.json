@@ -9,9 +9,9 @@
   "policy": "A regra só pode ser executada quando local_readiness for executable_draft e houver gate de implementação registrado.",
  "counts": {
    "baseline_reference": 0,
-    "executable_draft": 40,
-   "reference_catalog_draft": 3,
-    "intake_required": 52
+    "executable_draft": 48,
+   "reference_catalog_draft": 2,
+    "intake_required": 45
   },
   "rules": [
     {
@@ -1186,8 +1186,8 @@
       ],
       "primary_output": "relationship_or_finding",
       "source_implementation_status": "reference_implemented_draft",
-      "local_readiness": "reference_catalog_draft",
-      "executable": false,
+      "local_readiness": "executable_draft",
+      "executable": true,
       "missing_before_execution": []
     },
     {
@@ -1202,19 +1202,9 @@
       ],
       "primary_output": "relationship_or_finding",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "REL-ORPHAN-003",
@@ -1228,19 +1218,9 @@
       ],
       "primary_output": "relationship_or_finding",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "REL-MANYMANY-004",
@@ -1254,19 +1234,9 @@
       ],
       "primary_output": "relationship_or_finding",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "REL-BRIDGE-005",
@@ -1306,19 +1276,9 @@
       ],
       "primary_output": "relationship_or_finding",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "REL-AMBIG-007",
@@ -1332,19 +1292,9 @@
       ],
       "primary_output": "relationship_or_finding",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "REL-BIDIR-008",
@@ -1358,19 +1308,9 @@
       ],
       "primary_output": "relationship_or_finding",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "REL-COMPKEY-009",
@@ -1384,19 +1324,9 @@
       ],
       "primary_output": "relationship_or_finding",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "REL-CONFORMED-010",

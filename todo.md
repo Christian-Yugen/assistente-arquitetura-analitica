@@ -381,4 +381,88 @@
 - [x] Criar prova documental que preserve o bloqueio de execução e de produção da REL-ONEMANY-001.
 - [x] Registrar a aprovação explícita de Chris para a Proposta A da REL-ONEMANY-001 nos artefatos governados.
 - [x] Formalizar o gate de reconstrução da REL-ONEMANY-001 sem autorizar implementação.
-- [ ] Validar e sincronizar o gate não executável da REL-ONEMANY-001 antes de solicitar autorização específica de implementação.
+- [x] Validar e sincronizar o gate não executável da REL-ONEMANY-001 antes de solicitar autorização específica de implementação.
+- [x] Implementar o profiler privado por par e o classificador determinístico da REL-ONEMANY-001 sem reter títulos, cabeçalhos, valores ou pares correspondentes.
+- [x] Integrar a REL-ONEMANY-001 ao registro, contrato, pipeline e catálogo draft com pergunta humana bloqueante.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-ONEMANY-001.
+- [x] Sincronizar a ativação draft da REL-ONEMANY-001 no índice, intake, Gate MVP, workspace e provas documentais.
+- [x] Criar branch de segurança e recuperar metadados, dependências e lacunas da REL-NONUNIQ-002 sem implementar lógica executável.
+- [x] Elaborar intake, Proposta A e especificação lógica não executáveis para a REL-NONUNIQ-002 e solicitar aprovação específica antes de implementação.
+- [x] Criar prova documental que preserve o bloqueio de execução e de produção da REL-NONUNIQ-002.
+- [x] Registrar a aprovação explícita de Chris para a Proposta A da REL-NONUNIQ-002 nos artefatos governados.
+- [x] Formalizar o gate de reconstrução da REL-NONUNIQ-002 sem autorizar implementação.
+- [x] Implementar o perfil privado e o classificador determinístico da REL-NONUNIQ-002 sem reter títulos, cabeçalhos, valores ou pares correspondentes.
+- [x] Integrar a REL-NONUNIQ-002 ao registro, contrato, pipeline e catálogo draft com pergunta humana bloqueante.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-NONUNIQ-002.
+- [x] Sincronizar a ativação draft da REL-NONUNIQ-002 no índice, intake, Gate MVP, workspace e provas documentais.
+- [x] Criar branch de segurança e recuperar metadados, dependências e lacunas da REL-ORPHAN-003 sem implementar lógica executável.
+- [x] Elaborar intake, Proposta A e especificação lógica não executáveis para a REL-ORPHAN-003 e solicitar aprovação específica antes de implementação.
+- [x] Criar prova documental que preserve o bloqueio de execução e de produção da REL-ORPHAN-003.
+- [x] Registrar a aprovação explícita de Chris para a Proposta A da REL-ORPHAN-003 nos artefatos governados.
+- [x] Formalizar o gate de reconstrução da REL-ORPHAN-003 sem autorizar implementação.
+- [x] Implementar o perfil privado e o classificador determinístico da REL-ORPHAN-003 sem reter títulos, cabeçalhos, valores ou pares correspondentes.
+- [x] Integrar a REL-ORPHAN-003 ao registro, contrato, pipeline e catálogo draft com pergunta humana bloqueante.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-ORPHAN-003.
+- [x] Sincronizar a ativação draft da REL-ORPHAN-003 no índice, intake, Gate MVP, workspace e provas documentais.
+- [x] Explicar a Chris o objetivo, os fluxos, as salvaguardas e o estágio atual do MVP antes de retomar a expansão do catálogo.
+- [x] Confirmar e documentar o escopo final de diagnóstico de planilhas, recomendações de Power Query e sugestões de DAX antes de prometer sua cobertura produtiva.
+- [x] Adotar e validar a REL-ORPHAN-003 autorizada da branch remota, preservando seus testes, calibração e bloqueio de produção.
+- [ ] Priorizar e concluir os ciclos governados remanescentes do catálogo de 95 regras, sem ativar regra sem evidência, calibração e gate individual.
+- [x] Adotar e validar a preparação não executável da REL-MANYMANY-004, mantendo execução draft e produção bloqueadas até aprovação posterior.
+- [x] Registrar a aprovação explícita de Chris para a Proposta A da REL-MANYMANY-004 nos artefatos governados.
+- [x] Formalizar o gate de reconstrução da REL-MANYMANY-004 sem autorizar implementação.
+- [x] Registrar a autorização explícita de Chris para implementar a REL-MANYMANY-004 exclusivamente em draft.
+- [x] Implementar o classificador privado da REL-MANYMANY-004 e seus testes executáveis.
+- [x] Integrar a REL-MANYMANY-004 ao registro, contrato e pipeline mantendo a allowlist bloqueada até calibração.
+- [x] Criar golden dataset, manifesto, avaliador e gate de calibração da REL-MANYMANY-004.
+- [x] Ativar a REL-MANYMANY-004 somente em draft e sincronizar catálogo, intake, prontidão, interface e provas documentais.
+- [x] Criar branch de segurança e registrar o intake da REL-FACTFACT-006, mantendo-a não executável.
+- [x] Propor política conservadora e especificação lógica não executável da REL-FACTFACT-006 antes de qualquer código executável.
+- [x] Obter aprovação explícita de Chris para a Proposta A da REL-FACTFACT-006.
+- [x] Formalizar o gate de reconstrução da REL-FACTFACT-006 sem autorizar implementação.
+- [x] Implementar, testar, calibrar e ativar a REL-FACTFACT-006 exclusivamente após autorização específica de Chris no perfil draft.
+- [x] Registrar a autorização explícita de Chris para implementar a REL-FACTFACT-006 exclusivamente em draft.
+- [x] Implementar o perfil privado e o classificador determinístico da REL-FACTFACT-006 sem reter conteúdo identificável.
+- [x] Integrar a REL-FACTFACT-006 ao registro, contrato e pipeline mantendo a allowlist bloqueada até calibração.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-FACTFACT-006.
+- [x] Ativar a REL-FACTFACT-006 somente em draft e sincronizar catálogo, intake, prontidão, interface e provas documentais.
+- [x] Criar branch de segurança e registrar o intake da REL-AMBIG-007, mantendo-a não executável.
+- [x] Propor política conservadora e especificação lógica não executável da REL-AMBIG-007 antes de qualquer código executável.
+- [x] Obter aprovação explícita de Chris para a Proposta A e formalizar o gate de reconstrução da REL-AMBIG-007.
+- [x] Implementar, testar, calibrar e ativar a REL-AMBIG-007 exclusivamente após autorização específica de Chris no perfil draft.
+- [x] Registrar a diretriz geral de Chris para aplicar automaticamente somente Propostas A já aprovadas e escalar qualquer desvio material.
+- [x] Registrar a autorização explícita de Chris para implementar a REL-AMBIG-007 exclusivamente em draft.
+- [x] Implementar o perfil privado e o classificador determinístico da REL-AMBIG-007 sem reter conteúdo identificável.
+- [x] Integrar a REL-AMBIG-007 ao registro, contrato e pipeline mantendo a allowlist bloqueada até calibração.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-AMBIG-007.
+- [x] Ativar a REL-AMBIG-007 somente em draft e sincronizar catálogo, intake, prontidão, interface e provas documentais.
+- [x] Criar branch de segurança e registrar o intake da REL-BIDIR-008, mantendo-a não executável.
+- [x] Elaborar e aprovar sob a diretriz de Proposta A a política conservadora e a especificação não executável da REL-BIDIR-008.
+- [x] Formalizar o gate de reconstrução da REL-BIDIR-008 sem autorizar implementação.
+- [x] Obter autorização explícita de Chris para implementar a REL-BIDIR-008 exclusivamente no perfil draft.
+- [x] Implementar, testar, calibrar e ativar a REL-BIDIR-008 exclusivamente após autorização específica de Chris no perfil draft.
+- [x] Registrar a autorização explícita de Chris para implementar a REL-BIDIR-008 exclusivamente em draft.
+- [x] Implementar o perfil privado e o classificador determinístico da REL-BIDIR-008 sem reter conteúdo identificável.
+- [x] Integrar a REL-BIDIR-008 ao registro, contrato e pipeline mantendo a allowlist bloqueada até calibração.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-BIDIR-008.
+- [x] Ativar a REL-BIDIR-008 somente em draft e sincronizar catálogo, intake, prontidão, interface e provas documentais.
+- [x] Implementar o perfil privado e o classificador determinístico da REL-BIDIR-008 sem reter conteúdo identificável.
+- [x] Integrar a REL-BIDIR-008 ao registro, contrato e pipeline mantendo a allowlist bloqueada até calibração.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-BIDIR-008.
+- [x] Ativar a REL-BIDIR-008 somente em draft e sincronizar catálogo, intake, prontidão, interface e provas documentais.
+
+- [x] Criar branch de segurança e registrar o intake da REL-COMPKEY-009, mantendo-a não executável.
+- [x] Elaborar e aprovar sob a diretriz de Proposta A a política conservadora e a especificação não executável da REL-COMPKEY-009.
+- [x] Formalizar o gate de reconstrução da REL-COMPKEY-009 sem autorizar implementação.
+- [x] Obter autorização explícita de Chris para implementar a REL-COMPKEY-009 exclusivamente no perfil draft.
+- [x] Implementar, testar, calibrar e ativar a REL-COMPKEY-009 exclusivamente após autorização específica de Chris no perfil draft.
+- [x] Registrar a autorização explícita de Chris para implementar a REL-COMPKEY-009 exclusivamente em draft.
+- [x] Implementar o profiler transitório privado, perfil e classificador determinístico da REL-COMPKEY-009 sem reter tuplas ou conteúdo identificável.
+- [x] Integrar a REL-COMPKEY-009 ao registro, contrato e pipeline mantendo a allowlist bloqueada até calibração.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-COMPKEY-009.
+- [x] Ativar a REL-COMPKEY-009 somente em draft e sincronizar catálogo, intake, prontidão, interface e provas documentais.
+- [x] Criar branch de segurança e registrar o intake da REL-CONFORMED-010, mantendo-a não executável.
+- [x] Elaborar e aprovar sob a diretriz de Proposta A a política conservadora e a especificação não executável da REL-CONFORMED-010.
+- [x] Formalizar o gate de reconstrução da REL-CONFORMED-010 sem autorizar implementação.
+- [ ] Obter autorização explícita de Chris para implementar a REL-CONFORMED-010 exclusivamente no perfil draft.
+- [ ] Implementar, testar, calibrar e ativar a REL-CONFORMED-010 exclusivamente após autorização específica de Chris no perfil draft.
