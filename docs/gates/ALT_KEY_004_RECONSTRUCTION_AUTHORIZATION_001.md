@@ -1,0 +1,3 @@
+# ALT-KEY-004 — Gate de Reconstrução 001
+
+Aplicado sob `PROPOSAL-A-APPROVAL-DELEGATION-001`, este gate registra somente o intake e a Proposta A não executáveis da `ALT-KEY-004`. Uma eventual regra poderá consolidar somente sinal independente, opaco e agregado de chave inválida em bloqueio de modelagem. Ela não pode detectar, revelar ou selecionar chaves por conteúdo privado, expor aba, tabela, campo, valor, posição, frequência, exemplos, pares ou candidatos, nem alterar, excluir, reter ou exportar dados; não gera DAX/M. Perfil, classificador, registro, contrato, pipeline, allowlist, testes executáveis, golden, calibração e produção continuam não autorizados. **Produção permanece bloqueada.**
