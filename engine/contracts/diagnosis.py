@@ -74,6 +74,7 @@ RULE_VERSIONS = {
     "MET-DAX-015": "0.1.0-provisional.1",
     "ALT-SENS-001": "0.1.0-provisional.1",
     "ALT-QUALITY-002": "0.1.0-provisional.1",
+    "ALT-GRAIN-003": "0.1.0-provisional.1",
 }
 
 

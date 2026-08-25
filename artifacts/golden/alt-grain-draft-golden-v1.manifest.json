@@ -1,0 +1,1 @@
+{"rule_id":"ALT-GRAIN-003","gate_id":"ALT-GRAIN-003-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/alt-grain-draft-golden-v1.json","sha256":"e897da4b72bbea203d57d35a7af61235c9c63e82e557b23612dac0857f0624c5","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}
