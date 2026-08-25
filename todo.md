@@ -543,4 +543,5 @@
 - [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da ALT-SENS-001.
 - [x] Criar branch de segurança e registrar o intake da ALT-QUALITY-002, mantendo-a não executável.
 - [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da ALT-QUALITY-002, mantendo a produção bloqueada.
-- [ ] Obter autorização explícita de Chris antes de implementar a ALT-QUALITY-002 exclusivamente em draft.
+- [x] Obter autorização explícita de Chris antes de implementar a ALT-QUALITY-002 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da ALT-QUALITY-002.

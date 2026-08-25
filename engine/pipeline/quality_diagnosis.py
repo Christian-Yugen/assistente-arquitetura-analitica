@@ -23,6 +23,7 @@ from engine.metrics.domain import DomainMetricConceptProfile
 from engine.metrics.impossible import InsufficientMetricConceptProfile
 from engine.metrics.dax import DaxTemplateConceptProfile
 from engine.alerts.sensitivity import SensitiveDataRestrictionProfile
+from engine.alerts.quality import CriticalQualityRiskProfile
 from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_metric_fragment, to_relationship_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
@@ -867,6 +868,7 @@ def execute_quality_diagnosis(
     }
     alert_rule_statuses = {
         "ALT-SENS-001": get_rule_execution_record("ALT-SENS-001").status,
+        "ALT-QUALITY-002": get_rule_execution_record("ALT-QUALITY-002").status,
     }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
@@ -1392,6 +1394,23 @@ def execute_quality_diagnosis(
             )
             if alert_candidate:
                 quality_findings.append((sheet_id, column_id, alert_candidate))
+
+    if alert_rule_statuses["ALT-QUALITY-002"] == "executable_draft":
+        quality_rule_findings = [
+            finding
+            for _, _, finding in quality_findings
+            if str(finding.get("rule_id", "")).startswith("QLT-")
+        ]
+        quality_alert_candidate = execute_registered_rule(
+            "ALT-QUALITY-002",
+            CriticalQualityRiskProfile(
+                high_quality_finding_count=sum(finding.get("severity") == "high" for finding in quality_rule_findings),
+                distinct_quality_rule_count=len({str(finding.get("rule_id")) for finding in quality_rule_findings}),
+                analyzed_sheet_count=len(grouped_columns),
+            ),
+        )
+        if quality_alert_candidate:
+            quality_findings.append(("model", "model", quality_alert_candidate))
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []

@@ -1,0 +1,1 @@
+{"rule_id":"ALT-QUALITY-002","gate_id":"ALT-QUALITY-002-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/alt-quality-draft-golden-v1.json","sha256":"e6778758cb84eaf13ff40b14eb7dc780f4fc43d468364b46857719c547261264","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}
