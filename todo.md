@@ -391,3 +391,4 @@
 - [x] Criar prova documental que preserve o bloqueio de execução e de produção da REL-NONUNIQ-002.
 - [x] Registrar a aprovação explícita de Chris para a Proposta A da REL-NONUNIQ-002 nos artefatos governados.
 - [x] Formalizar o gate de reconstrução da REL-NONUNIQ-002 sem autorizar implementação.
+- [x] Corrigir a falha de validação estrutural de workbook XLSX no fluxo de upload e cobrir o cenário com teste de regressão.
