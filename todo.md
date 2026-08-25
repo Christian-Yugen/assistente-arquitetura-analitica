@@ -486,3 +486,7 @@
 - [x] Formalizar o gate de reconstrução da MET-SUM-002 sem autorizar implementação.
 - [x] Obter autorização explícita de Chris para implementar a MET-SUM-002 exclusivamente no perfil draft.
 - [x] Implementar, testar, calibrar e ativar a MET-SUM-002 exclusivamente após autorização específica de Chris no perfil draft.
+- [ ] Registrar intake, política conceitual e gate não executável da MET-COUNT-003.
+- [ ] Obter autorização explícita de Chris antes de implementar a MET-COUNT-003 em draft.
+- [ ] Implementar, calibrar e ativar a MET-COUNT-003 somente após autorização específica, mantendo produção bloqueada.
+- [ ] Registrar no intake a autorização específica de Chris para a MET-COUNT-003 e concluir perfil agregado, contrato, pipeline, golden sintético, calibração e gate individual.
