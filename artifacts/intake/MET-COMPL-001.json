@@ -1,0 +1,59 @@
+{
+  "intake_id": "MET-COMPL-001-INTAKE-001",
+  "rule": {
+    "rule_id": "MET-COMPL-001",
+    "title": "Percentual de conclusão",
+    "category": "metric",
+    "purpose": "Sugerir percentual de conclusão.",
+    "priority": "P0",
+    "stage": "metric_suggestion",
+    "scope": "sheet",
+    "depends_on": ["semantic_typing", "grain_inference"],
+    "primary_output": "metric_or_finding",
+    "source_implementation_status": "reference_implemented_draft"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "artifacts/catalogs/rule-implementation-readiness-v1.json",
+      "docs/governance/RULE_DEVELOPMENT_LIFECYCLE_001.md",
+      "docs/governance/POWER_QUERY_DAX_RECOMMENDATION_SCOPE_001.md",
+      "docs/governance/PROPOSAL_A_APPROVAL_DELEGATION_001.md"
+    ]
+  },
+  "source_gap": "O índice local marca a MET-COMPL-001 como referência de catálogo draft, mas não existe implementação executável, contrato, perfil, pipeline, golden dataset, calibração ou allowlist local. O blueprint não define quais estados representam conclusão, denominador elegível, tratamento de estados nulos/cancelados, fórmula conceitual, DAX, privacidade, confiança, perguntas humanas ou exclusões. A regra não pode ler, expor ou persistir valores de status; não pode calcular o percentual, inferir os estados concluídos, gerar DAX/M, alterar o workbook ou o modelo Power BI. Qualquer sugestão é conceitual e exige confirmação humana dos estados e do denominador.",
+  "local_readiness": "intake_required",
+  "authorization": {
+    "intake_authorized": true,
+    "intake_authorized_by": "Chris",
+    "policy_approved": true,
+    "policy_approved_by": "Chris",
+    "policy_approved_proposal": "A",
+    "policy_approval_basis": "PROPOSAL-A-APPROVAL-DELEGATION-001",
+    "implementation_authorized": false,
+    "reason": "A Proposta A foi aprovada sob a diretriz de delegação de Chris. O gate autoriza somente preparação controlada; implementação e produção continuam bloqueadas.",
+    "required_gate": "MET-COMPL-001-RECONSTRUCTION-AUTHORIZATION-001"
+  },
+  "required_before_implementation": [
+    "Autorização explícita de Chris para implementação draft, separada da aprovação delegada da Proposta A",
+    "Perfil privado por aba composto somente por contagens e flags agregadas, sem valores, rótulos de status, cabeçalhos, posições ou identificadores",
+    "Guardas contra sensibilidade, fórmulas, classificação/granularidade indefinida, ambiguidade e múltiplos candidatos de status",
+    "Classificador determinístico, versão contratual, pergunta humana bloqueante e integração protegida por catálogo",
+    "Testes, golden dataset exclusivamente sintético, manifesto SHA-256, avaliador reproduzível, calibração e gate individual"
+  ],
+  "status": "intake_required",
+  "execution_blocked": true,
+  "missing_before_execution": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "severity",
+    "confidence",
+    "questions",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ]
+}
