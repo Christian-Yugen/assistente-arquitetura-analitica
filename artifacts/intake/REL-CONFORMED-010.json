@@ -23,7 +23,7 @@
     ]
   },
   "source_gap": "O blueprint oficial define somente título, propósito, prioridade P1, escopo por par de abas, dependência de classificação de tabela e saída relationship_or_finding. Ele não define a semântica de dimensão conformada, os fatos conectados, critérios de elegibilidade, exclusões, evidências, confiança, severidade, pergunta humana, perfil privado, contrato, testes ou calibração. Uma futura implementação poderá resumir, para um par dimensão–fato, a contagem de outros fatos com direção candidata completa a partir de sinais opacos já transitórios; não poderá expor identidades de abas, colunas, valores, posições, pares correspondentes ou frequências. A regra não pode criar, alterar ou recomendar automaticamente dimensão compartilhada, relacionamento, filtro ou modelo Power BI.",
-  "local_readiness": "intake_required",
+  "local_readiness": "executable_draft",
   "authorization": {
     "intake_authorized": true,
     "intake_authorized_by": "Chris",
@@ -31,9 +31,11 @@
     "policy_approved_by": "Chris",
     "policy_approved_proposal": "A",
     "policy_approval_basis": "PROPOSAL-A-APPROVAL-DELEGATION-001",
-    "implementation_authorized": false,
-    "reason": "A Proposta A foi aprovada sob a diretriz de delegação de Chris. O gate autoriza somente preparação controlada; implementação e produção continuam bloqueadas.",
-    "required_gate": "REL-CONFORMED-010-RECONSTRUCTION-AUTHORIZATION-001"
+    "implementation_authorized": true,
+    "implementation_authorized_by": "Chris",
+    "reason": "Chris autorizou explicitamente a implementação exclusivamente em perfil draft após o gate de reconstrução. Produção continua bloqueada.",
+    "required_gate": "REL-CONFORMED-010-RECONSTRUCTION-AUTHORIZATION-001",
+    "calibration_gate": "REL-CONFORMED-010-DRAFT-CALIBRATION-001"
   },
   "required_before_implementation": [
     "Autorização explícita de Chris para implementação draft, separada da aprovação delegada da Proposta A",
@@ -42,17 +44,7 @@
     "Classificador determinístico, versão contratual, pergunta humana bloqueante e integração protegida por catálogo",
     "Testes, golden dataset exclusivamente sintético, manifesto SHA-256, avaliador reproduzível, calibração e gate individual"
   ],
-  "status": "intake_required",
-  "execution_blocked": true,
-  "missing_before_execution": [
-    "condition",
-    "exclusions",
-    "evidence",
-    "severity",
-    "confidence",
-    "questions",
-    "tests",
-    "golden_dataset",
-    "authorization_gate"
-  ]
+  "status": "executable_draft",
+  "execution_blocked": false,
+  "missing_before_execution": []
 }

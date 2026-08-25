@@ -1,0 +1,14 @@
+{
+  "dataset_id": "GD-REL-CONFORMED-010-001",
+  "rule_id": "REL-CONFORMED-010",
+  "dataset_path": "artifacts/golden/rel-conformed-draft-golden-v1.json",
+  "sha256": "716c20ca0e5760a80e83e2859b09cfe9702305c743d6ada05611de51841cc851",
+  "synthetic_only": true,
+  "evaluation": {
+    "evaluator": "engine/calibration/evaluate_rel_conformed_draft_golden.py",
+    "true_positives": 3,
+    "false_positives": 0,
+    "false_negatives": 0
+  },
+  "production_authorized": false
+}

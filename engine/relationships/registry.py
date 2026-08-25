@@ -8,6 +8,7 @@ from engine.relationships.direct_fact import classify_direct_fact_relationship
 from engine.relationships.ambiguous_path import classify_ambiguous_relationship_path
 from engine.relationships.bidirectional_filter import classify_bidirectional_filter_review
 from engine.relationships.composite_key import classify_composite_relationship_key
+from engine.relationships.conformed_dimension import classify_conformed_dimension
 
 
 RELATIONSHIP_RULE_IMPLEMENTATIONS = {
@@ -19,4 +20,5 @@ RELATIONSHIP_RULE_IMPLEMENTATIONS = {
     "REL-AMBIG-007": classify_ambiguous_relationship_path,
     "REL-BIDIR-008": classify_bidirectional_filter_review,
     "REL-COMPKEY-009": classify_composite_relationship_key,
+    "REL-CONFORMED-010": classify_conformed_dimension,
 }
