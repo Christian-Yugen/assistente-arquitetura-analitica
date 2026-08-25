@@ -1,0 +1,3 @@
+# ALT-SENS-001 — Gate de Reconstrução 001
+
+Aplicado sob `PROPOSAL-A-APPROVAL-DELEGATION-001`, este gate registra somente o intake e a Proposta A não executáveis da `ALT-SENS-001`. Uma eventual regra limitar-se-á a consolidar um único sinal de sensibilidade já existente, opaco e agregado em orientação de restrição de processamento. Ela não pode reclassificar conteúdo privado, revelar a categoria de dado, campo, cabeçalho, valor, posição ou frequência, nem alterar dados, exportar, gerar DAX/M ou autorizar processamento. Perfil, classificador, registro, contrato, pipeline, allowlist, testes executáveis, golden, calibração e produção continuam não autorizados. **Produção permanece bloqueada.**
