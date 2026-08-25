@@ -23,10 +23,10 @@
     ]
   },
   "source_gap": "O blueprint oficial define somente título, propósito, prioridade P0, escopo por par de abas, dependência de classificação de tabela e saída relationship_or_finding. Ele não define critérios de muitos-para-muitos, cobertura referencial, exclusões, evidências, confiança, severidade, pergunta humana, perfil privado, versão contratual, testes ou calibração. A regra não pode revelar ou persistir títulos de abas, cabeçalhos, valores, posições, pares correspondentes, frequências individuais, chaves ou identificadores; não pode criar, alterar ou recomendar automaticamente uma relação no Power BI.",
-  "local_readiness": "intake_required",
+  "local_readiness": "policy_approved_pending_reconstruction_gate",
   "authorization": {
     "implementation_authorized": false,
-    "reason": "Chris autorizou a continuidade governada, mas ainda não aprovou uma política para muitos-para-muitos. A regra permanece sem perfil, classificador, registro, contrato, pipeline, catálogo executável, golden dataset, calibração ou allowlist draft.",
+    "reason": "Chris aprovou explicitamente a Proposta A em 2026-08-25. A regra permanece sem perfil, classificador, registro, contrato, pipeline, catálogo executável, golden dataset, calibração ou allowlist draft até a formalização do gate e uma autorização específica posterior de implementação.",
     "required_gate": "REL-MANYMANY-004-RECONSTRUCTION-AUTHORIZATION-001"
   },
   "required_before_implementation": [
@@ -37,7 +37,7 @@
     "Classificador determinístico, versão contratual, pergunta humana bloqueante e integração protegida por catálogo",
     "Testes, golden dataset exclusivamente sintético, manifesto SHA-256, avaliador reproduzível, calibração e gate individual"
   ],
-  "status": "pending_policy_authorization",
+  "status": "policy_approved_pending_reconstruction_gate",
   "execution_blocked": true,
   "missing_before_execution": ["condition", "exclusions", "evidence", "severity", "confidence", "questions", "tests", "golden_dataset", "authorization_gate"]
 }
