@@ -534,3 +534,5 @@
 - [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MET-IMPOSS-014, mantendo a produção bloqueada.
 - [x] Obter autorização explícita de Chris antes de implementar a MET-IMPOSS-014 exclusivamente em draft.
 - [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MET-IMPOSS-014.
+- [x] Registrar a autorização de escopo da Opção B e elaborar intake, Proposta A e gate específicos da MET-DAX-015, sem código executável.
+- [ ] Obter autorização explícita adicional de Chris antes de implementar qualquer geração de DAX na MET-DAX-015.

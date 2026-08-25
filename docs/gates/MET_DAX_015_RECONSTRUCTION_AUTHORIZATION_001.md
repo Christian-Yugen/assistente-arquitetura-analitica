@@ -1,0 +1,3 @@
+# MET-DAX-015 — Gate de Reconstrução 001
+
+Este gate registra a autorização de escopo da Opção B concedida por Chris: “Continue, esta aprovado a opção B”. Ele autoriza somente intake, Proposta A e prova documental não executáveis para a `MET-DAX-015`. Se houver aprovação posterior da Proposta A e de implementação, a regra ficará restrita a templates DAX abstratos com tokens humanos, sem dados de workbook, sem seleção automática de campos, sem execução ou validação em modelo e sem geração de Power Query/M. Perfil, classificador, contrato, pipeline, allowlist, testes executáveis, golden, calibração e produção continuam bloqueados. **Produção permanece bloqueada.**
