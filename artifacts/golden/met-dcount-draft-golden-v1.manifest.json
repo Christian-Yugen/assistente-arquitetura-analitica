@@ -1,0 +1,1 @@
+{"rule_id":"MET-DCOUNT-004","gate_id":"MET-DCOUNT-004-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/met-dcount-draft-golden-v1.json","sha256":"0fec07066faeabf362d4a6bfdbbd7b5a9fac85674c790c8a22830e30f1b0fa10","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}

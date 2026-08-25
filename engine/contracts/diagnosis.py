@@ -60,6 +60,7 @@ RULE_VERSIONS = {
     "MET-COMPL-001": "0.1.0-provisional.1",
     "MET-SUM-002": "0.1.0-provisional.1",
     "MET-COUNT-003": "0.1.0-provisional.1",
+    "MET-DCOUNT-004": "0.1.0-provisional.1",
 }
 
 

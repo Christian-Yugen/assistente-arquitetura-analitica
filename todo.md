@@ -490,3 +490,7 @@
 - [x] Obter autorização explícita de Chris antes de implementar a MET-COUNT-003 em draft.
 - [x] Implementar, calibrar e ativar a MET-COUNT-003 somente após autorização específica, mantendo produção bloqueada.
 - [x] Registrar no intake a autorização específica de Chris para a MET-COUNT-003 e concluir perfil agregado, contrato, pipeline, golden sintético, calibração e gate individual.
+- [x] Registrar intake, política conceitual e gate não executável da MET-DCOUNT-004.
+- [x] Obter autorização explícita de Chris antes de implementar a MET-DCOUNT-004 em draft.
+- [x] Implementar, calibrar e ativar a MET-DCOUNT-004 somente após autorização específica, mantendo produção bloqueada.
+- [x] Registrar no intake a autorização específica de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração e gate individual da MET-DCOUNT-004.
