@@ -9,10 +9,10 @@
   "policy": "A regra só pode ser executada quando local_readiness for executable_draft e houver gate de implementação registrado.",
  "counts": {
    "baseline_reference": 0,
-    "executable_draft": 55,
-    "reference_catalog_draft": 0,
-    "intake_required": 40
-  },
+    "executable_draft": 56,
+   "reference_catalog_draft": 0,
+    "intake_required": 39
+ },
   "rules": [
     {
       "rule_id": "QLT-NULL-001",
@@ -1458,20 +1458,10 @@
         "grain_inference"
       ],
       "primary_output": "metric_or_finding",
-      "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "source_implementation_status": "draft",
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "MET-ABSDELTA-008",

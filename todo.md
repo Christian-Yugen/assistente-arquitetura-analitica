@@ -502,3 +502,7 @@
 - [x] Obter autorização explícita de Chris antes de implementar a MET-MINMAX-006 em draft.
 - [x] Implementar, calibrar e ativar a MET-MINMAX-006 somente após autorização específica, mantendo produção bloqueada.
 - [x] Registrar no intake a autorização específica de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração e gate individual da MET-MINMAX-006.
+- [x] Registrar intake, política conceitual e gate não executável da MET-RATE-007.
+- [x] Obter autorização explícita de Chris antes de implementar a MET-RATE-007 em draft.
+- [x] Implementar, calibrar e ativar a MET-RATE-007 somente após autorização específica, mantendo produção bloqueada.
+- [x] Registrar no intake a autorização específica de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração e gate individual da MET-RATE-007.

@@ -63,6 +63,7 @@ RULE_VERSIONS = {
     "MET-DCOUNT-004": "0.1.0-provisional.1",
     "MET-AVG-005": "0.1.0-provisional.1",
     "MET-MINMAX-006": "0.1.0-provisional.1",
+    "MET-RATE-007": "0.1.0-provisional.1",
 }
 
 

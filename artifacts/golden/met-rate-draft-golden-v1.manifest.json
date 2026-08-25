@@ -1,0 +1,1 @@
+{"rule_id":"MET-RATE-007","gate_id":"MET-RATE-007-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/met-rate-draft-golden-v1.json","sha256":"54f5929c1b06be9eeaa0796aea8efc4acfecc929ace3c1dec4483a72a7ffeb8f","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}
