@@ -1,0 +1,1 @@
+{"rule_id":"MET-MINMAX-006","gate_id":"MET-MINMAX-006-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/met-minmax-draft-golden-v1.json","sha256":"f21ed69cc91c5dedff6bc7199441671e3c15279d3a6f2ffe8335c132f124defc","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}
