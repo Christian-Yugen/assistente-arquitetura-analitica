@@ -1,0 +1,1 @@
+{"rule_id":"MET-SUM-002","gate_id":"MET-SUM-002-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/met-sum-draft-golden-v1.json","sha256":"fb8cec8546145a940c36bb49df4877129fe08ab8311169cb463aed5d6ad2a2f6","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}

@@ -13,6 +13,7 @@ from engine.semantic.registry import SEMANTIC_RULE_IMPLEMENTATIONS
 from engine.granularity.registry import GRANULARITY_RULE_IMPLEMENTATIONS
 from engine.fact_dimension.registry import FACT_DIMENSION_RULE_IMPLEMENTATIONS
 from engine.relationships.registry import RELATIONSHIP_RULE_IMPLEMENTATIONS
+from engine.metrics.registry import METRIC_RULE_IMPLEMENTATIONS
 
 
 OFFICIAL_BLUEPRINT_PATH = Path(__file__).resolve().parents[1] / "artifacts/catalogs/official-rule-blueprint-95.json"
@@ -67,6 +68,8 @@ DRAFT_RULE_AUTHORIZATIONS = {
     "REL-BIDIR-008": "REL-BIDIR-008-DRAFT-CALIBRATION-001",
     "REL-COMPKEY-009": "REL-COMPKEY-009-DRAFT-CALIBRATION-001",
     "REL-CONFORMED-010": "REL-CONFORMED-010-DRAFT-CALIBRATION-001",
+    "MET-COMPL-001": "MET-COMPL-001-DRAFT-CALIBRATION-001",
+    "MET-SUM-002": "MET-SUM-002-DRAFT-CALIBRATION-001",
 }
 RULE_IMPLEMENTATIONS = {
     **QUALITY_RULE_IMPLEMENTATIONS,
@@ -74,6 +77,7 @@ RULE_IMPLEMENTATIONS = {
     **GRANULARITY_RULE_IMPLEMENTATIONS,
     **FACT_DIMENSION_RULE_IMPLEMENTATIONS,
     **RELATIONSHIP_RULE_IMPLEMENTATIONS,
+    **METRIC_RULE_IMPLEMENTATIONS,
 }
 RuleExecutionStatus = Literal["executable_draft", "baseline_reference", "reference_catalog_draft", "reserved_definition", "unknown"]
 
