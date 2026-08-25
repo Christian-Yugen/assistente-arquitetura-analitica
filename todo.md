@@ -429,5 +429,10 @@
 - [x] Criar branch de segurança e registrar o intake da REL-AMBIG-007, mantendo-a não executável.
 - [x] Propor política conservadora e especificação lógica não executável da REL-AMBIG-007 antes de qualquer código executável.
 - [x] Obter aprovação explícita de Chris para a Proposta A e formalizar o gate de reconstrução da REL-AMBIG-007.
-- [ ] Implementar, testar, calibrar e ativar a REL-AMBIG-007 exclusivamente após autorização específica de Chris no perfil draft.
+- [x] Implementar, testar, calibrar e ativar a REL-AMBIG-007 exclusivamente após autorização específica de Chris no perfil draft.
 - [x] Registrar a diretriz geral de Chris para aplicar automaticamente somente Propostas A já aprovadas e escalar qualquer desvio material.
+- [x] Registrar a autorização explícita de Chris para implementar a REL-AMBIG-007 exclusivamente em draft.
+- [x] Implementar o perfil privado e o classificador determinístico da REL-AMBIG-007 sem reter conteúdo identificável.
+- [x] Integrar a REL-AMBIG-007 ao registro, contrato e pipeline mantendo a allowlist bloqueada até calibração.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-AMBIG-007.
+- [x] Ativar a REL-AMBIG-007 somente em draft e sincronizar catálogo, intake, prontidão, interface e provas documentais.

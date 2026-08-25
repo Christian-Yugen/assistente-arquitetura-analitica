@@ -7,6 +7,7 @@ from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshi
 from engine.relationships.orphan_reference import OrphanReferenceRelationshipPairProfile
 from engine.relationships.many_to_many import ManyToManyRelationshipPairProfile
 from engine.relationships.direct_fact import DirectFactRelationshipPairProfile
+from engine.relationships.ambiguous_path import AmbiguousRelationshipPathPairProfile
 
 
 class RelationshipContractTests(unittest.TestCase):
@@ -146,6 +147,28 @@ class RelationshipContractTests(unittest.TestCase):
                 target_reference_unique=False,
                 referential_coverage_ratio=1.0,
                 eligible_direction_count=1,
+            ),
+        )
+        self.assertIsNotNone(result)
+
+    def test_ambiguous_path_rule_is_versioned_and_executes_only_in_the_draft_profile(self):
+        record = get_rule_execution_record("REL-AMBIG-007")
+
+        self.assertEqual(RULE_VERSIONS["REL-AMBIG-007"], "0.1.0-provisional.1")
+        self.assertEqual(record.status, "executable_draft")
+        result = execute_registered_rule(
+            "REL-AMBIG-007",
+            AmbiguousRelationshipPathPairProfile(
+                source_standard_dimension_candidate=True,
+                target_fact_candidate=True,
+                eligible_source_key_count=1,
+                eligible_target_reference_count=1,
+                source_key_complete=True,
+                source_key_unique=True,
+                target_reference_complete=True,
+                target_reference_unique=False,
+                referential_coverage_ratio=1.0,
+                eligible_direction_count=2,
             ),
         )
         self.assertIsNotNone(result)

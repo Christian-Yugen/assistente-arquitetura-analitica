@@ -92,6 +92,7 @@ from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshi
 from engine.relationships.orphan_reference import OrphanReferenceRelationshipPairProfile
 from engine.relationships.many_to_many import ManyToManyRelationshipPairProfile
 from engine.relationships.direct_fact import DirectFactRelationshipPairProfile
+from engine.relationships.ambiguous_path import AmbiguousRelationshipPathPairProfile
 
 
 @dataclass(frozen=True)
@@ -820,6 +821,7 @@ def execute_quality_diagnosis(
         "REL-ORPHAN-003": get_rule_execution_record("REL-ORPHAN-003").status,
         "REL-MANYMANY-004": get_rule_execution_record("REL-MANYMANY-004").status,
         "REL-FACTFACT-006": get_rule_execution_record("REL-FACTFACT-006").status,
+        "REL-AMBIG-007": get_rule_execution_record("REL-AMBIG-007").status,
     }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
@@ -970,6 +972,7 @@ def execute_quality_diagnosis(
             for target_sheet_id in grouped_columns
             if source_sheet_id != target_sheet_id
         }
+        emitted_ambiguous_relationship_pairs: set[tuple[str, str]] = set()
         for signal in relationship_pair_signals:
             source_types = classification_types_by_sheet.get(signal.source_sheet_id, frozenset())
             target_types = classification_types_by_sheet.get(signal.target_sheet_id, frozenset())
@@ -1069,6 +1072,39 @@ def execute_quality_diagnosis(
                 candidate = execute_registered_rule("REL-FACTFACT-006", direct_fact_profile)
                 if candidate:
                     relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
+            pair_key = (signal.source_sheet_id, signal.target_sheet_id)
+            if (
+                relationship_rule_statuses["REL-AMBIG-007"] == "executable_draft"
+                and pair_key not in emitted_ambiguous_relationship_pairs
+            ):
+                ambiguous_profile = AmbiguousRelationshipPathPairProfile(
+                    source_standard_dimension_candidate=common_profile["source_standard_dimension_candidate"],
+                    target_fact_candidate=common_profile["target_fact_candidate"],
+                    source_or_target_calendar_dimension_candidate=bool(
+                        "dimension_calendar_candidate" in source_types | target_types
+                    ),
+                    source_or_target_undefined_candidate=common_profile["source_or_target_undefined_candidate"],
+                    source_or_target_fact_without_grain_candidate=common_profile["source_or_target_fact_without_grain_candidate"],
+                    source_or_target_classification_conflict=common_profile["source_or_target_classification_conflict"],
+                    source_or_target_sensitive=common_profile["source_or_target_sensitive"],
+                    source_or_target_has_formula=common_profile["source_or_target_has_formula"],
+                    self_reference=common_profile["self_reference"],
+                    eligible_source_key_count=source_key_counts[signal.source_sheet_id],
+                    eligible_target_reference_count=target_reference_counts[signal.target_sheet_id],
+                    source_key_complete=signal.source_complete,
+                    source_key_unique=signal.source_unique,
+                    target_reference_complete=signal.target_complete,
+                    target_reference_unique=signal.target_unique,
+                    referential_coverage_ratio=signal.referential_coverage_ratio,
+                    eligible_direction_count=eligible_direction_counts[pair_key],
+                    has_one_to_one_pattern=common_profile["has_one_to_one_pattern"],
+                    has_many_to_many_pattern=common_profile["has_many_to_many_pattern"],
+                    ambiguity_count=common_profile["ambiguity_count"],
+                )
+                candidate = execute_registered_rule("REL-AMBIG-007", ambiguous_profile)
+                if candidate:
+                    relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
+                    emitted_ambiguous_relationship_pairs.add(pair_key)
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []
