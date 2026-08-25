@@ -70,6 +70,7 @@ RULE_VERSIONS = {
     "MET-WAVG-011": "0.1.0-provisional.1",
     "MET-SEMIADD-012": "0.1.0-provisional.1",
     "MET-DOMAIN-013": "0.1.0-provisional.1",
+    "MET-IMPOSS-014": "0.1.0-provisional.1",
 }
 
 
