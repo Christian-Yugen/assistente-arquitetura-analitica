@@ -464,5 +464,10 @@
 - [x] Criar branch de segurança e registrar o intake da REL-CONFORMED-010, mantendo-a não executável.
 - [x] Elaborar e aprovar sob a diretriz de Proposta A a política conservadora e a especificação não executável da REL-CONFORMED-010.
 - [x] Formalizar o gate de reconstrução da REL-CONFORMED-010 sem autorizar implementação.
-- [ ] Obter autorização explícita de Chris para implementar a REL-CONFORMED-010 exclusivamente no perfil draft.
-- [ ] Implementar, testar, calibrar e ativar a REL-CONFORMED-010 exclusivamente após autorização específica de Chris no perfil draft.
+- [x] Obter autorização explícita de Chris para implementar a REL-CONFORMED-010 exclusivamente no perfil draft.
+- [x] Implementar, testar, calibrar e ativar a REL-CONFORMED-010 exclusivamente após autorização específica de Chris no perfil draft.
+- [x] Registrar a autorização explícita de Chris para implementar a REL-CONFORMED-010 exclusivamente em draft.
+- [x] Implementar o perfil privado e o classificador determinístico da REL-CONFORMED-010 sem reter a lista de fatos ou conteúdo identificável.
+- [x] Integrar a REL-CONFORMED-010 ao registro, contrato e pipeline mantendo a allowlist bloqueada até calibração.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-CONFORMED-010.
+- [x] Ativar a REL-CONFORMED-010 somente em draft e sincronizar catálogo, intake, prontidão, interface e provas documentais.

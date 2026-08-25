@@ -95,6 +95,7 @@ from engine.relationships.direct_fact import DirectFactRelationshipPairProfile
 from engine.relationships.ambiguous_path import AmbiguousRelationshipPathPairProfile
 from engine.relationships.bidirectional_filter import BidirectionalFilterReviewPairProfile
 from engine.relationships.composite_key import CompositeRelationshipKeyPairProfile
+from engine.relationships.conformed_dimension import ConformedDimensionPairProfile
 
 
 @dataclass(frozen=True)
@@ -828,6 +829,7 @@ def execute_quality_diagnosis(
         "REL-AMBIG-007": get_rule_execution_record("REL-AMBIG-007").status,
         "REL-BIDIR-008": get_rule_execution_record("REL-BIDIR-008").status,
         "REL-COMPKEY-009": get_rule_execution_record("REL-COMPKEY-009").status,
+        "REL-CONFORMED-010": get_rule_execution_record("REL-CONFORMED-010").status,
     }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
@@ -989,6 +991,24 @@ def execute_quality_diagnosis(
             and not signal.source_or_target_sensitive
             and not signal.source_or_target_has_formula
         }
+        connected_fact_counts_by_dimension = {
+            source_sheet_id: len({
+                signal.target_sheet_id
+                for signal in relationship_pair_signals
+                if signal.source_sheet_id == source_sheet_id
+                and signal.source_complete
+                and signal.source_unique
+                and signal.target_complete
+                and not signal.target_unique
+                and signal.referential_coverage_ratio == 1.0
+                and eligible_direction_counts[(signal.source_sheet_id, signal.target_sheet_id)] == 1
+                and not signal.source_or_target_sensitive
+                and not signal.source_or_target_has_formula
+                and "dimension_standard_candidate" in classification_types_by_sheet.get(signal.source_sheet_id, frozenset())
+                and bool({"fact_transactional_candidate", "fact_periodic_candidate"} & classification_types_by_sheet.get(signal.target_sheet_id, frozenset()))
+            })
+            for source_sheet_id in grouped_columns
+        }
         emitted_ambiguous_relationship_pairs: set[tuple[str, str]] = set()
         for signal in relationship_pair_signals:
             source_types = classification_types_by_sheet.get(signal.source_sheet_id, frozenset())
@@ -1132,6 +1152,19 @@ def execute_quality_diagnosis(
                     eligible_direction_count=eligible_direction_counts[pair_key],
                 )
                 candidate = execute_registered_rule("REL-BIDIR-008", bidirectional_filter_profile)
+                if candidate:
+                    relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
+            if relationship_rule_statuses["REL-CONFORMED-010"] == "executable_draft":
+                conformed_profile = ConformedDimensionPairProfile(
+                    **common_profile,
+                    eligible_dimension_key_count=source_key_counts[signal.source_sheet_id],
+                    eligible_fact_reference_count=target_reference_counts[signal.target_sheet_id],
+                    dimension_key_unique=signal.source_unique,
+                    fact_reference_unique=signal.target_unique,
+                    eligible_direction_count=eligible_direction_counts[pair_key],
+                    connected_fact_count=connected_fact_counts_by_dimension[signal.source_sheet_id],
+                )
+                candidate = execute_registered_rule("REL-CONFORMED-010", conformed_profile)
                 if candidate:
                     relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
         if relationship_rule_statuses["REL-COMPKEY-009"] == "executable_draft":

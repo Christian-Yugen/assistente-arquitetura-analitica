@@ -10,6 +10,7 @@ from engine.relationships.direct_fact import DirectFactRelationshipPairProfile
 from engine.relationships.ambiguous_path import AmbiguousRelationshipPathPairProfile
 from engine.relationships.bidirectional_filter import BidirectionalFilterReviewPairProfile
 from engine.relationships.composite_key import CompositeRelationshipKeyPairProfile
+from engine.relationships.conformed_dimension import ConformedDimensionPairProfile
 
 
 class RelationshipContractTests(unittest.TestCase):
@@ -215,6 +216,29 @@ class RelationshipContractTests(unittest.TestCase):
                 composite_reference_unique=False,
                 referential_coverage_ratio=1.0,
                 eligible_direction_count=1,
+            ),
+        )
+        self.assertIsNotNone(result)
+
+    def test_conformed_dimension_rule_is_versioned_and_executes_only_in_the_draft_profile(self):
+        record = get_rule_execution_record("REL-CONFORMED-010")
+
+        self.assertEqual(RULE_VERSIONS["REL-CONFORMED-010"], "0.1.0-provisional.1")
+        self.assertEqual(record.status, "executable_draft")
+        result = execute_registered_rule(
+            "REL-CONFORMED-010",
+            ConformedDimensionPairProfile(
+                source_standard_dimension_candidate=True,
+                target_fact_candidate=True,
+                eligible_dimension_key_count=1,
+                eligible_fact_reference_count=1,
+                dimension_key_complete=True,
+                dimension_key_unique=True,
+                fact_reference_complete=True,
+                fact_reference_unique=False,
+                referential_coverage_ratio=1.0,
+                eligible_direction_count=1,
+                connected_fact_count=2,
             ),
         )
         self.assertIsNotNone(result)
