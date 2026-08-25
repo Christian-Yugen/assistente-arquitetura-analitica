@@ -1,0 +1,3 @@
+# MET-IMPOSS-014 — Gate de Reconstrução 001
+
+Aplicado sob `PROPOSAL-A-APPROVAL-DELEGATION-001`, este gate registra somente o intake e a Proposta A não executáveis da `MET-IMPOSS-014`. A eventual regra será estritamente conservadora: poderá alertar que não há base agregada suficiente para sugestão conceitual, sem inferir conteúdo privado nem alegar ausência de medida de negócio. Ela não poderá calcular, criar métrica, escolher campos, entidade, unidade, população, período, filtros, agregação ou limiares, expor conteúdo de workbook, gerar DAX/M ou modificar arquivos. Perfil, classificador, registro, contrato, pipeline, allowlist, testes executáveis, golden, calibração e produção continuam não autorizados. **Produção permanece bloqueada.**
