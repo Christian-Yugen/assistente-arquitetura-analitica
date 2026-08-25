@@ -512,4 +512,5 @@
 - [x] Registrar no intake a autorização específica de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MET-ABSDELTA-008.
 - [x] Criar branch de segurança e registrar o intake da MET-PCTDELTA-009, mantendo-a não executável.
 - [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MET-PCTDELTA-009, mantendo a produção bloqueada.
-- [ ] Obter autorização explícita de Chris antes de implementar a MET-PCTDELTA-009 exclusivamente em draft.
+- [x] Obter autorização explícita de Chris antes de implementar a MET-PCTDELTA-009 exclusivamente em draft.
+- [x] Registrar no intake a autorização específica de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MET-PCTDELTA-009.

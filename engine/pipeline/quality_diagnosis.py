@@ -15,6 +15,7 @@ from engine.metrics.average import AverageConceptProfile
 from engine.metrics.minmax import MinMaxConceptProfile
 from engine.metrics.rate import RateConceptProfile
 from engine.metrics.absolute_delta import AbsoluteDeltaConceptProfile
+from engine.metrics.percentage_delta import PercentageDeltaConceptProfile
 from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_metric_fragment, to_relationship_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
@@ -849,6 +850,7 @@ def execute_quality_diagnosis(
         "MET-MINMAX-006": get_rule_execution_record("MET-MINMAX-006").status,
         "MET-RATE-007": get_rule_execution_record("MET-RATE-007").status,
         "MET-ABSDELTA-008": get_rule_execution_record("MET-ABSDELTA-008").status,
+        "MET-PCTDELTA-009": get_rule_execution_record("MET-PCTDELTA-009").status,
     }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
@@ -1319,6 +1321,12 @@ def execute_quality_diagnosis(
                 semantic_types = [candidate.get("semantic_type") for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates]
                 absolute_delta_profile = AbsoluteDeltaConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), actual_candidate_count=semantic_types.count("actual_candidate"), baseline_candidate_count=semantic_types.count("target_or_forecast_candidate"), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
                 candidate = execute_registered_rule("MET-ABSDELTA-008", absolute_delta_profile)
+                if candidate:
+                    metric_candidates.append((sheet_id, [candidate]))
+            if metric_rule_statuses["MET-PCTDELTA-009"] == "executable_draft":
+                semantic_types = [candidate.get("semantic_type") for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates]
+                percentage_delta_profile = PercentageDeltaConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), actual_candidate_count=semantic_types.count("actual_candidate"), baseline_candidate_count=semantic_types.count("target_or_forecast_candidate"), baseline_zero_value_count=sum(column.semantic_target.zero_value_count for column in sheet_columns if column.semantic_target.header_eligible), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                candidate = execute_registered_rule("MET-PCTDELTA-009", percentage_delta_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
 
