@@ -19,6 +19,7 @@ class SemanticDateProfile:
     br_hyphen_text_count: int = 0
     br_slash_text_count: int = 0
     recognized_date_count: int = 0
+    distinct_recognized_date_count: int = 0
     recognized_date_ratio: float = 0.0
     basis: str = SEMANTIC_DATE_BASIS
 
@@ -42,6 +43,7 @@ def _valid_text_date(value: str) -> str | None:
 def profile_semantic_date(values: list[object]) -> SemanticDateProfile:
     """Reconhece apenas datas físicas e três gramáticas textuais válidas, sem reter valores."""
     non_missing = physical = iso = hyphen = slash = recognized = 0
+    distinct_recognized_dates: set[str] = set()
     for value in values:
         if value is None or (isinstance(value, str) and not value.strip()):
             continue
@@ -49,11 +51,14 @@ def profile_semantic_date(values: list[object]) -> SemanticDateProfile:
         if isinstance(value, (date, datetime)) and not isinstance(value, bool):
             physical += 1
             recognized += 1
+            distinct_recognized_dates.add(value.date().isoformat() if isinstance(value, datetime) else value.isoformat())
             continue
         if isinstance(value, str):
             kind = _valid_text_date(value.strip())
             if kind:
                 recognized += 1
+                format_by_kind = {"iso": "%Y-%m-%d", "br_hyphen": "%d-%m-%Y", "br_slash": "%d/%m/%Y"}
+                distinct_recognized_dates.add(datetime.strptime(value.strip(), format_by_kind[kind]).date().isoformat())
                 if kind == "iso":
                     iso += 1
                 elif kind == "br_hyphen":
@@ -63,5 +68,6 @@ def profile_semantic_date(values: list[object]) -> SemanticDateProfile:
     return SemanticDateProfile(
         non_missing_count=non_missing, physical_date_count=physical, iso_text_count=iso,
         br_hyphen_text_count=hyphen, br_slash_text_count=slash, recognized_date_count=recognized,
+        distinct_recognized_date_count=len(distinct_recognized_dates),
         recognized_date_ratio=(recognized / non_missing if non_missing else 0.0),
     )

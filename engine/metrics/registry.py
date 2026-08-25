@@ -7,6 +7,7 @@ from engine.metrics.minmax import classify_minmax_concept
 from engine.metrics.rate import classify_rate_concept
 from engine.metrics.absolute_delta import classify_absolute_delta_concept
 from engine.metrics.percentage_delta import classify_percentage_delta_concept
+from engine.metrics.running_total import classify_running_total_concept
 
 
 METRIC_RULE_IMPLEMENTATIONS = {
@@ -19,4 +20,5 @@ METRIC_RULE_IMPLEMENTATIONS = {
     "MET-RATE-007": classify_rate_concept,
     "MET-ABSDELTA-008": classify_absolute_delta_concept,
     "MET-PCTDELTA-009": classify_percentage_delta_concept,
+    "MET-RUNNING-010": classify_running_total_concept,
 }

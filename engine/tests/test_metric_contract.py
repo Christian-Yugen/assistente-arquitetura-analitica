@@ -6,6 +6,7 @@ from engine.metrics.completion import CompletionRateConceptProfile
 from engine.metrics.rate import RateConceptProfile
 from engine.metrics.absolute_delta import AbsoluteDeltaConceptProfile
 from engine.metrics.percentage_delta import PercentageDeltaConceptProfile
+from engine.metrics.running_total import RunningTotalConceptProfile
 
 
 class MetricContractTests(unittest.TestCase):
@@ -104,6 +105,27 @@ class MetricContractTests(unittest.TestCase):
         )
         self.assertEqual(RULE_VERSIONS["MET-PCTDELTA-009"], "0.1.0-provisional.1")
         self.assertEqual(candidate["conceptual_formula"], "((eligible_actual - eligible_baseline) / eligible_baseline) * 100")
+        metric = to_metric_fragment([candidate], sheet_id="opaque-sheet")["metrics"][0]
+        self.assertEqual(metric["status"], "conceptual_review")
+        self.assertNotIn("dax", metric)
+        self.assertNotIn("power_query", metric)
+        self.assertNotIn("column_id", metric["evidence"])
+        self.assertNotIn("value", metric["evidence"])
+
+    def test_running_total_metric_is_versioned_and_projects_without_calculation_or_field_identity(self):
+        candidate = execute_registered_rule(
+            "MET-RUNNING-010",
+            RunningTotalConceptProfile(
+                row_count=20,
+                physical_column_count=2,
+                measure_candidate_count=1,
+                temporal_order_candidate_count=1,
+                temporal_order_duplicate_count=0,
+                has_defined_grain=True,
+            ),
+        )
+        self.assertEqual(RULE_VERSIONS["MET-RUNNING-010"], "0.1.0-provisional.1")
+        self.assertEqual(candidate["conceptual_formula"], "cumulative eligible_measure ordered by eligible_time")
         metric = to_metric_fragment([candidate], sheet_id="opaque-sheet")["metrics"][0]
         self.assertEqual(metric["status"], "conceptual_review")
         self.assertNotIn("dax", metric)
