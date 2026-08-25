@@ -397,3 +397,4 @@
 - [x] Sincronizar a ativação draft da REL-NONUNIQ-002 no índice, intake, Gate MVP, workspace e provas documentais.
 - [x] Corrigir a falha de validação estrutural de workbook XLSX no fluxo de upload e cobrir o cenário com teste de regressão.
 - [x] Adotar e validar a ativação draft autorizada da REL-NONUNIQ-002 já registrada na branch remota, sem sobrescrever commits.
+- [x] Explicar a Chris o objetivo, os fluxos, as salvaguardas e o estágio atual do MVP antes de retomar a expansão do catálogo.
