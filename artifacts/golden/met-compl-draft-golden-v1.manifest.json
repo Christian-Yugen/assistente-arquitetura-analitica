@@ -1,0 +1,14 @@
+{
+  "dataset_id": "GD-MET-COMPL-001-001",
+  "rule_id": "MET-COMPL-001",
+  "dataset_path": "artifacts/golden/met-compl-draft-golden-v1.json",
+  "sha256": "f6eb5dfe943b9e428dda692eee431b93850a1474e4cbec19a3e8c1863e4baaaf",
+  "synthetic_only": true,
+  "evaluation": {
+    "evaluator": "engine/calibration/evaluate_met_compl_draft_golden.py",
+    "true_positives": 3,
+    "false_positives": 0,
+    "false_negatives": 0
+  },
+  "production_authorized": false
+}

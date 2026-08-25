@@ -5,25 +5,35 @@ import path from "node:path";
 const root = process.cwd();
 const read = (relativePath: string) => fs.readFileSync(path.join(root, relativePath), "utf8");
 
-describe("MET-COMPL-001 preparation governance", () => {
-  it("reconciles the reference catalog entry and keeps local execution blocked", () => {
+describe("MET-COMPL-001 draft governance", () => {
+  it("records the controlled conceptual draft activation", () => {
     const intake = read("artifacts/intake/MET-COMPL-001.json");
     const policy = read("docs/rules/MET_COMPL_001_POLICY_PROPOSAL_001.md");
     const specification = read("docs/rules/MET_COMPL_001_LOGICAL_SPEC_PROPOSAL_001.md");
     const gate = read("docs/gates/MET_COMPL_001_RECONSTRUCTION_AUTHORIZATION_001.md");
+    const calibration = read("docs/gates/MET_COMPL_001_DRAFT_CALIBRATION_001.md");
 
     expect(intake).toContain('"source_implementation_status": "reference_implemented_draft"');
-    expect(intake).toContain('"local_readiness": "intake_required"');
+    const catalog = read("engine/catalog.py");
+    const pipeline = read("engine/pipeline/quality_diagnosis.py");
+
+    expect(intake).toContain('"local_readiness": "executable_draft"');
     expect(intake).toContain('"policy_approved": true');
     expect(intake).toContain("PROPOSAL-A-APPROVAL-DELEGATION-001");
-    expect(intake).toContain('"implementation_authorized": false');
-    expect(intake).toContain('"execution_blocked": true');
+    expect(intake).toContain('"implementation_authorized": true');
+    expect(intake).toContain('"status": "executable_draft"');
+    expect(intake).toContain('"execution_blocked": false');
+    expect(intake).toContain("MET-COMPL-001-DRAFT-CALIBRATION-001");
     expect(policy).toContain("não calcula percentual");
     expect(policy).toContain("não produz DAX");
     expect(specification).toContain("não executável");
     expect(specification).toContain("completion_rate_conceptual_metric_candidate");
     expect(gate).toContain("não autoriza escrever, integrar ou executar lógica da regra");
     expect(gate).toContain("Uma autorização explícita posterior de Chris");
+    expect(catalog).toContain('"MET-COMPL-001": "MET-COMPL-001-DRAFT-CALIBRATION-001"');
+    expect(pipeline).toContain('"MET-COMPL-001": get_rule_execution_record("MET-COMPL-001").status');
+    expect(calibration).toContain("3 verdadeiros positivos, 0 falsos positivos e 0 falsos negativos");
+    expect(calibration).toContain("a produção permanece bloqueada");
   });
 
   it("preserves human definition, privacy and the production block", () => {

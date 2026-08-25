@@ -24,7 +24,7 @@
     ]
   },
   "source_gap": "O índice local marca a MET-COMPL-001 como referência de catálogo draft, mas não existe implementação executável, contrato, perfil, pipeline, golden dataset, calibração ou allowlist local. O blueprint não define quais estados representam conclusão, denominador elegível, tratamento de estados nulos/cancelados, fórmula conceitual, DAX, privacidade, confiança, perguntas humanas ou exclusões. A regra não pode ler, expor ou persistir valores de status; não pode calcular o percentual, inferir os estados concluídos, gerar DAX/M, alterar o workbook ou o modelo Power BI. Qualquer sugestão é conceitual e exige confirmação humana dos estados e do denominador.",
-  "local_readiness": "intake_required",
+  "local_readiness": "executable_draft",
   "authorization": {
     "intake_authorized": true,
     "intake_authorized_by": "Chris",
@@ -32,9 +32,11 @@
     "policy_approved_by": "Chris",
     "policy_approved_proposal": "A",
     "policy_approval_basis": "PROPOSAL-A-APPROVAL-DELEGATION-001",
-    "implementation_authorized": false,
-    "reason": "A Proposta A foi aprovada sob a diretriz de delegação de Chris. O gate autoriza somente preparação controlada; implementação e produção continuam bloqueadas.",
-    "required_gate": "MET-COMPL-001-RECONSTRUCTION-AUTHORIZATION-001"
+    "implementation_authorized": true,
+    "implementation_authorized_by": "Chris",
+    "reason": "Chris autorizou explicitamente a implementação exclusivamente em perfil draft após o gate de reconstrução. Produção continua bloqueada.",
+    "required_gate": "MET-COMPL-001-RECONSTRUCTION-AUTHORIZATION-001",
+    "calibration_gate": "MET-COMPL-001-DRAFT-CALIBRATION-001"
   },
   "required_before_implementation": [
     "Autorização explícita de Chris para implementação draft, separada da aprovação delegada da Proposta A",
@@ -43,17 +45,7 @@
     "Classificador determinístico, versão contratual, pergunta humana bloqueante e integração protegida por catálogo",
     "Testes, golden dataset exclusivamente sintético, manifesto SHA-256, avaliador reproduzível, calibração e gate individual"
   ],
-  "status": "intake_required",
-  "execution_blocked": true,
-  "missing_before_execution": [
-    "condition",
-    "exclusions",
-    "evidence",
-    "severity",
-    "confidence",
-    "questions",
-    "tests",
-    "golden_dataset",
-    "authorization_gate"
-  ]
+  "status": "executable_draft",
+  "execution_blocked": false,
+  "missing_before_execution": []
 }

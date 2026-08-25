@@ -7,7 +7,7 @@ from time import perf_counter
 from typing import Iterable, Literal
 
 from engine.catalog import executable_rule_count, execute_registered_rule, get_rule_execution_record
-from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_relationship_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
+from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_metric_fragment, to_relationship_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
 from engine.profiling.numeric_text import NumericTextProfile, infer_physical_type, profile_numeric_text
@@ -96,6 +96,7 @@ from engine.relationships.ambiguous_path import AmbiguousRelationshipPathPairPro
 from engine.relationships.bidirectional_filter import BidirectionalFilterReviewPairProfile
 from engine.relationships.composite_key import CompositeRelationshipKeyPairProfile
 from engine.relationships.conformed_dimension import ConformedDimensionPairProfile
+from engine.metrics.completion import CompletionRateConceptProfile
 
 
 @dataclass(frozen=True)
@@ -831,6 +832,9 @@ def execute_quality_diagnosis(
         "REL-COMPKEY-009": get_rule_execution_record("REL-COMPKEY-009").status,
         "REL-CONFORMED-010": get_rule_execution_record("REL-CONFORMED-010").status,
     }
+    metric_rule_statuses = {
+        "MET-COMPL-001": get_rule_execution_record("MET-COMPL-001").status,
+    }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
             sheet_id: frozenset(
@@ -1204,11 +1208,53 @@ def execute_quality_diagnosis(
                 if candidate:
                     relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
 
+    metric_candidates: list[tuple[str, list[dict[str, object]]]] = []
+    if metric_rule_statuses["MET-COMPL-001"] == "executable_draft":
+        for sheet_id, sheet_columns in grouped_columns.items():
+            status_candidate_count = sum(
+                1
+                for candidate_sheet_id, _, candidates in semantic_candidates
+                if candidate_sheet_id == sheet_id
+                for candidate in candidates
+                if candidate.get("semantic_type") == "status_candidate"
+            )
+            grain_rule_ids = {
+                str(candidate["rule_id"])
+                for candidate in grain_candidates.get(sheet_id, [])
+                if candidate.get("rule_id") in {"GRN-COMP-001", "GRN-EVENT-004", "GRN-ENTITY-003", "GRN-EXPL-002"}
+            }
+            classification_types = {
+                str(candidate["classification_type"])
+                for candidate in table_candidates.get(sheet_id, [])
+                if candidate.get("classification_type")
+            }
+            metric_profile = CompletionRateConceptProfile(
+                row_count=max(column.missingness.observed_cell_count for column in sheet_columns),
+                physical_column_count=len(sheet_columns),
+                status_candidate_count=status_candidate_count,
+                has_defined_grain=bool(grain_rule_ids),
+                grain_ambiguity_count=max(0, len(grain_rule_ids) - 1),
+                has_undefined_classification="table_classification_undefined_candidate" in classification_types,
+                has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types,
+                classification_conflict_count=max(0, len(classification_types) - 1),
+                has_sensitive_signal=any(
+                    candidate.get("sensitivity") == "personal_data_candidate"
+                    for candidate_sheet_id, _, candidates in sensitivity_candidates
+                    if candidate_sheet_id == sheet_id
+                    for candidate in candidates
+                ),
+                has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns),
+            )
+            candidate = execute_registered_rule("MET-COMPL-001", metric_profile)
+            if candidate:
+                metric_candidates.append((sheet_id, [candidate]))
+
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []
     semantic_classifications: list[dict[str, object]] = []
     sensitivity_classifications: list[dict[str, object]] = []
     relationships: list[dict[str, object]] = []
+    metrics: list[dict[str, object]] = []
     grains_by_sheet: dict[str, dict[str, object] | None] = {sheet_id: None for sheet_id in grouped_columns}
     classifications_by_sheet: dict[str, dict[str, object] | None] = {sheet_id: None for sheet_id in grouped_columns}
     question_ids_by_sheet: dict[str, list[str]] = {sheet_id: [] for sheet_id in grouped_columns}
@@ -1254,6 +1300,12 @@ def execute_quality_diagnosis(
         for question in relationship_questions:  # type: ignore[union-attr]
             question_ids_by_sheet[source_sheet_id].append(question["question_id"])
             question_ids_by_sheet[target_sheet_id].append(question["question_id"])
+    for sheet_id, candidates in metric_candidates:
+        fragment = to_metric_fragment(candidates, sheet_id=sheet_id)
+        metrics.extend(fragment["metrics"])  # type: ignore[arg-type]
+        metric_questions = fragment["questions"]  # type: ignore[assignment]
+        questions.extend(metric_questions)  # type: ignore[arg-type]
+        question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in metric_questions)  # type: ignore[index,union-attr]
 
     finding_ids_by_sheet: dict[str, list[str]] = {sheet_id: [] for sheet_id in grouped_columns}
     for finding in findings:
@@ -1344,7 +1396,7 @@ def execute_quality_diagnosis(
         "summary": {
             "quality_score": None,
             "completeness_ratio": round(executable_rule_count() / profile.catalog_target_rule_count, 8),
-            "counts": {"sheets": len(sheet_objects), "columns": sum(sheet["column_count"] for sheet in sheet_objects), "facts": 0, "dimensions": 0, "relationships": len(relationships), "metrics": 0, "risks": len(findings)},
+            "counts": {"sheets": len(sheet_objects), "columns": sum(sheet["column_count"] for sheet in sheet_objects), "facts": 0, "dimensions": 0, "relationships": len(relationships), "metrics": len(metrics), "risks": len(findings)},
             "top_risk_finding_ids": [finding["finding_id"] for finding in findings[:10]],
             "executive_summary": profile.summary_template.format(sheet_count=len(sheet_objects), column_count=sum(sheet["column_count"] for sheet in sheet_objects), finding_count=len(findings)),
             "next_recommended_action": profile.next_action_with_questions if questions else profile.next_action_without_questions,
@@ -1352,7 +1404,7 @@ def execute_quality_diagnosis(
         "sheets": sheet_objects,
         "proposed_model": {"status": profile.proposed_model_status, "tables": [], "implementation_steps": [], "assumptions": [], "limitations": [profile.proposed_model_limitation], "confidence": None},
         "relationships": relationships,
-        "metrics": [],
+        "metrics": metrics,
         "questions": questions,
         "findings": findings,
         "semantic_classifications": semantic_classifications,

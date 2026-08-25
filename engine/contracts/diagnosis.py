@@ -57,6 +57,7 @@ RULE_VERSIONS = {
     "REL-BIDIR-008": "0.1.0-provisional.1",
     "REL-COMPKEY-009": "0.1.0-provisional.1",
     "REL-CONFORMED-010": "0.1.0-provisional.1",
+    "MET-COMPL-001": "0.1.0-provisional.1",
 }
 
 
@@ -286,3 +287,46 @@ def to_relationship_fragment(
             }
         )
     return {"relationships": relationships, "questions": questions}
+
+
+def to_metric_fragment(candidates: list[dict[str, object]], *, sheet_id: str) -> dict[str, object]:
+    """Projeta métricas conceituais por ID opaco de aba, sem valores, cabeçalhos ou DAX."""
+
+    metrics: list[dict[str, object]] = []
+    questions: list[dict[str, object]] = []
+    created_at = _timestamp()
+    for candidate in candidates:
+        rule_id = str(candidate["rule_id"])
+        rule_version = RULE_VERSIONS.get(rule_id)
+        if not rule_version:
+            raise ValueError(f"Versão de regra não registrada para {rule_id}.")
+        metrics.append(
+            {
+                "scope": {"entity_type": "sheet", "entity_id": sheet_id},
+                "metric_type": candidate["metric_type"],
+                "confidence": candidate["confidence"],
+                "severity": candidate["severity"],
+                "conceptual_formula": candidate["conceptual_formula"],
+                "evidence": candidate["evidence"],
+                "rule_id": rule_id,
+                "rule_version": rule_version,
+                "status": "conceptual_review",
+            }
+        )
+        question = candidate["question"]
+        questions.append(
+            {
+                "question_id": str(uuid4()),
+                "text": question["text"],
+                "reason": question["reason"],
+                "question_type": question["question_type"],
+                "priority": question["priority"],
+                "blocking": question["blocking"],
+                "status": "pending",
+                "options": question["options"],
+                "impact": {"affected_modules": ["metric_suggestion"], "affected_rule_ids": [rule_id], "affected_recommendation_ids": []},
+                "answer": None,
+                "created_at": created_at,
+            }
+        )
+    return {"metrics": metrics, "questions": questions}

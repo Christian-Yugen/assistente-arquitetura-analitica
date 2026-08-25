@@ -1,0 +1,48 @@
+import unittest
+
+from engine.catalog import RuleExecutionUnavailableError, execute_registered_rule, get_rule_execution_record
+from engine.contracts.diagnosis import RULE_VERSIONS, to_metric_fragment
+from engine.metrics.completion import CompletionRateConceptProfile
+
+
+class MetricContractTests(unittest.TestCase):
+    def test_completion_metric_is_versioned_and_executes_only_in_the_draft_profile(self):
+        record = get_rule_execution_record("MET-COMPL-001")
+
+        self.assertEqual(RULE_VERSIONS["MET-COMPL-001"], "0.1.0-provisional.1")
+        self.assertEqual(record.status, "executable_draft")
+        candidate = execute_registered_rule(
+            "MET-COMPL-001",
+            CompletionRateConceptProfile(
+                row_count=20,
+                physical_column_count=2,
+                status_candidate_count=1,
+                has_defined_grain=True,
+            ),
+        )
+        self.assertIsNotNone(candidate)
+
+    def test_metric_projection_keeps_formula_conceptual_and_values_private(self):
+        candidate = {
+            "rule_id": "MET-COMPL-001",
+            "metric_type": "completion_rate_conceptual_metric_candidate",
+            "confidence": 0.60,
+            "severity": "review_required",
+            "conceptual_formula": "completed_items / eligible_items",
+            "evidence": {"row_count": 20, "status_candidate_count": 1},
+            "question": {
+                "text": "Defina estados e denominador.",
+                "reason": "Sem cálculo automático.",
+                "question_type": "single_choice",
+                "priority": "high",
+                "blocking": True,
+                "options": ["Definir", "Não recomendar"],
+            },
+        }
+        fragment = to_metric_fragment([candidate], sheet_id="opaque-sheet")
+        metric = fragment["metrics"][0]
+
+        self.assertEqual(metric["status"], "conceptual_review")
+        self.assertEqual(metric["conceptual_formula"], "completed_items / eligible_items")
+        self.assertNotIn("dax", metric)
+        self.assertNotIn("status_values", metric["evidence"])
