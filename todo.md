@@ -522,3 +522,6 @@
 - [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MET-WAVG-011, mantendo a produção bloqueada.
 - [x] Obter autorização explícita de Chris antes de implementar a MET-WAVG-011 exclusivamente em draft.
 - [x] Registrar no intake a autorização específica de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MET-WAVG-011.
+- [x] Criar branch de segurança e registrar o intake da MET-SEMIADD-012, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MET-SEMIADD-012, mantendo a produção bloqueada.
+- [ ] Obter autorização explícita de Chris antes de implementar a MET-SEMIADD-012 exclusivamente em draft.
