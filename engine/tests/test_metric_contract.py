@@ -9,6 +9,7 @@ from engine.metrics.percentage_delta import PercentageDeltaConceptProfile
 from engine.metrics.running_total import RunningTotalConceptProfile
 from engine.metrics.weighted_average import WeightedAverageConceptProfile
 from engine.metrics.semiadditive import SemiadditiveConceptProfile
+from engine.metrics.domain import DomainMetricConceptProfile
 
 
 class MetricContractTests(unittest.TestCase):
@@ -175,4 +176,23 @@ class MetricContractTests(unittest.TestCase):
         self.assertNotIn("dax", metric)
         self.assertNotIn("power_query", metric)
         self.assertNotIn("column_id", metric["evidence"])
+        self.assertNotIn("value", metric["evidence"])
+
+    def test_domain_metric_is_versioned_and_projects_without_domain_identity_or_calculation(self):
+        candidate = execute_registered_rule(
+            "MET-DOMAIN-013",
+            DomainMetricConceptProfile(
+                row_count=20,
+                physical_column_count=2,
+                domain_signal_candidate_count=1,
+                has_defined_grain=True,
+            ),
+        )
+        self.assertEqual(RULE_VERSIONS["MET-DOMAIN-013"], "0.1.0-provisional.1")
+        self.assertEqual(candidate["conceptual_formula"], "confirmed_domain_metric")
+        metric = to_metric_fragment([candidate], sheet_id="opaque-sheet")["metrics"][0]
+        self.assertEqual(metric["status"], "conceptual_review")
+        self.assertNotIn("dax", metric)
+        self.assertNotIn("power_query", metric)
+        self.assertNotIn("domain_name", metric["evidence"])
         self.assertNotIn("value", metric["evidence"])

@@ -1,0 +1,1 @@
+{"rule_id":"MET-DOMAIN-013","gate_id":"MET-DOMAIN-013-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/met-domain-draft-golden-v1.json","sha256":"f10ae89cfeed4a93e5873c48b22e954edee4f805bab2a8b00e6ba409e9faff88","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}
