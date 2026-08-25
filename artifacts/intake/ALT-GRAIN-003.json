@@ -1,0 +1,32 @@
+{
+  "intake_id": "ALT-GRAIN-003-INTAKE-001",
+  "rule": {
+    "rule_id": "ALT-GRAIN-003",
+    "title": "Granularidade indefinida",
+    "category": "alert",
+    "purpose": "Consolidar alerta de granularidade indefinida.",
+    "priority": "P0",
+    "stage": "alert_consolidation",
+    "scope": "model",
+    "depends_on": ["quality", "semantic_typing", "grain_inference", "table_classification", "relationship_inference", "metric_suggestion"],
+    "primary_output": "finding_or_suppression",
+    "source_implementation_status": "planned"
+  },
+  "local_readiness": "intake_required",
+  "authorization": {
+    "intake_authorized": true,
+    "intake_authorized_by": "Chris",
+    "policy_approved": true,
+    "policy_approved_by": "Chris",
+    "policy_approved_proposal": "A",
+    "policy_approval_basis": "PROPOSAL-A-APPROVAL-DELEGATION-001",
+    "implementation_authorized": false,
+    "required_gate": "ALT-GRAIN-003-DRAFT-CALIBRATION-001",
+    "production_authorized": false
+  },
+  "status": "intake_required",
+  "execution_blocked": true,
+  "execution_profile": "none",
+  "missing_before_execution": ["condition", "exclusions", "evidence", "severity", "confidence", "questions", "tests", "golden_dataset", "authorization_gate"],
+  "production_blocked": true
+}

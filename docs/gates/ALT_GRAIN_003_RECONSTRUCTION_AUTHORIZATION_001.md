@@ -1,0 +1,3 @@
+# ALT-GRAIN-003 — Gate de Reconstrução 001
+
+Aplicado sob `PROPOSAL-A-APPROVAL-DELEGATION-001`, este gate registra somente o intake e a Proposta A não executáveis da `ALT-GRAIN-003`. Uma eventual regra poderá consolidar somente sinal de granularidade previamente inferido, opaco e agregado em um bloqueio de modelagem. Ela não pode inferir grão de conteúdo privado, revelar aba, campo, valor, posição, frequência, pares ou candidatos, selecionar elementos do modelo, nem alterar, excluir, reter ou exportar dados; não gera DAX/M. Perfil, classificador, registro, contrato, pipeline, allowlist, testes executáveis, golden, calibração e produção continuam não autorizados. **Produção permanece bloqueada.**
