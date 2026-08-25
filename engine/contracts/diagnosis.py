@@ -64,6 +64,7 @@ RULE_VERSIONS = {
     "MET-AVG-005": "0.1.0-provisional.1",
     "MET-MINMAX-006": "0.1.0-provisional.1",
     "MET-RATE-007": "0.1.0-provisional.1",
+    "MET-ABSDELTA-008": "0.1.0-provisional.1",
 }
 
 

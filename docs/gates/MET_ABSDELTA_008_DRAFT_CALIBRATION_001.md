@@ -1,0 +1,3 @@
+# MET-ABSDELTA-008 — Gate Individual de Calibração Draft 001
+
+Chris autorizou a implementação exclusivamente em draft por chat: “sim”. O golden exclusivamente sintético produz `TP=1`, `FP=0` e `FN=0`. A regra emite somente `absolute_delta_conceptual_metric_candidate` com a fórmula textual `eligible_actual - eligible_baseline` e uma pergunta humana bloqueante. Ela não calcula variação, seleciona campos, define período/unidade/população/filtros ou gera DAX/M. Sensibilidade, fórmulas, classificação/grão indefinidos, fato sem grão, conflito, ambiguidade, ausência de componente e zero/múltiplos candidatos bloqueiam. **Produção permanece bloqueada.**

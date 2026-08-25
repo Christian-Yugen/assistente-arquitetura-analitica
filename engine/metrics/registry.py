@@ -5,6 +5,7 @@ from engine.metrics.distinct_count import classify_distinct_count_concept
 from engine.metrics.average import classify_average_concept
 from engine.metrics.minmax import classify_minmax_concept
 from engine.metrics.rate import classify_rate_concept
+from engine.metrics.absolute_delta import classify_absolute_delta_concept
 
 
 METRIC_RULE_IMPLEMENTATIONS = {
@@ -15,4 +16,5 @@ METRIC_RULE_IMPLEMENTATIONS = {
     "MET-AVG-005": classify_average_concept,
     "MET-MINMAX-006": classify_minmax_concept,
     "MET-RATE-007": classify_rate_concept,
+    "MET-ABSDELTA-008": classify_absolute_delta_concept,
 }
