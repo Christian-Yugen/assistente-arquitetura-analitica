@@ -10,6 +10,7 @@ from engine.metrics.running_total import RunningTotalConceptProfile
 from engine.metrics.weighted_average import WeightedAverageConceptProfile
 from engine.metrics.semiadditive import SemiadditiveConceptProfile
 from engine.metrics.domain import DomainMetricConceptProfile
+from engine.metrics.impossible import InsufficientMetricConceptProfile
 
 
 class MetricContractTests(unittest.TestCase):
@@ -195,4 +196,23 @@ class MetricContractTests(unittest.TestCase):
         self.assertNotIn("dax", metric)
         self.assertNotIn("power_query", metric)
         self.assertNotIn("domain_name", metric["evidence"])
+        self.assertNotIn("value", metric["evidence"])
+
+    def test_insufficient_metric_is_versioned_and_projects_without_measure_identity_or_calculation(self):
+        candidate = execute_registered_rule(
+            "MET-IMPOSS-014",
+            InsufficientMetricConceptProfile(
+                row_count=20,
+                physical_column_count=2,
+                eligible_measure_candidate_count=0,
+                has_defined_grain=True,
+            ),
+        )
+        self.assertEqual(RULE_VERSIONS["MET-IMPOSS-014"], "0.1.0-provisional.1")
+        self.assertEqual(candidate["conceptual_formula"], "no_conceptual_metric_without_confirmed_measure")
+        metric = to_metric_fragment([candidate], sheet_id="opaque-sheet")["metrics"][0]
+        self.assertEqual(metric["status"], "conceptual_review")
+        self.assertNotIn("dax", metric)
+        self.assertNotIn("power_query", metric)
+        self.assertNotIn("column_id", metric["evidence"])
         self.assertNotIn("value", metric["evidence"])

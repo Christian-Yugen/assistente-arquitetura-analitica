@@ -1,0 +1,1 @@
+{"rule_id":"MET-IMPOSS-014","gate_id":"MET-IMPOSS-014-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/met-imposs-draft-golden-v1.json","sha256":"7c465cf1d2af527d7ff6743b0ac9f918d6bbcdecb715b2b7d32d533984a235a7","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}
