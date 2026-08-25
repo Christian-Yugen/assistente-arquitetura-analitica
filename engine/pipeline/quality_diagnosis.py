@@ -89,6 +89,7 @@ from engine.fact_dimension.undefined_classification import UndefinedTableClassif
 from engine.profiling.relationship_pairs import RelationshipPairSignal
 from engine.relationships.one_to_many import OneToManyRelationshipPairProfile
 from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshipPairProfile
+from engine.relationships.orphan_reference import OrphanReferenceRelationshipPairProfile
 
 
 @dataclass(frozen=True)
@@ -814,6 +815,7 @@ def execute_quality_diagnosis(
     relationship_rule_statuses = {
         "REL-ONEMANY-001": get_rule_execution_record("REL-ONEMANY-001").status,
         "REL-NONUNIQ-002": get_rule_execution_record("REL-NONUNIQ-002").status,
+        "REL-ORPHAN-003": get_rule_execution_record("REL-ORPHAN-003").status,
     }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
@@ -925,6 +927,25 @@ def execute_quality_diagnosis(
             for target_sheet_id in grouped_columns
             if source_sheet_id != target_sheet_id
         }
+        orphan_direction_counts = {
+            (source_sheet_id, target_sheet_id): sum(
+                1
+                for signal in relationship_pair_signals
+                if signal.source_sheet_id == source_sheet_id
+                and signal.target_sheet_id == target_sheet_id
+                and signal.source_complete
+                and signal.source_unique
+                and signal.target_complete
+                and not signal.target_unique
+                and 0.0 < signal.referential_coverage_ratio < 1.0
+                and signal.uncovered_reference_distinct_count > 0
+                and not signal.source_or_target_sensitive
+                and not signal.source_or_target_has_formula
+            )
+            for source_sheet_id in grouped_columns
+            for target_sheet_id in grouped_columns
+            if source_sheet_id != target_sheet_id
+        }
         for signal in relationship_pair_signals:
             source_types = classification_types_by_sheet.get(signal.source_sheet_id, frozenset())
             target_types = classification_types_by_sheet.get(signal.target_sheet_id, frozenset())
@@ -969,6 +990,19 @@ def execute_quality_diagnosis(
                     eligible_direction_count=non_unique_direction_counts[(signal.source_sheet_id, signal.target_sheet_id)],
                 )
                 candidate = execute_registered_rule("REL-NONUNIQ-002", non_unique_profile)
+                if candidate:
+                    relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
+            if relationship_rule_statuses["REL-ORPHAN-003"] == "executable_draft":
+                orphan_profile = OrphanReferenceRelationshipPairProfile(
+                    **common_profile,
+                    eligible_dimension_key_count=source_key_counts[signal.source_sheet_id],
+                    eligible_fact_reference_count=target_reference_counts[signal.target_sheet_id],
+                    dimension_key_unique=signal.source_unique,
+                    fact_reference_unique=signal.target_unique,
+                    uncovered_reference_distinct_count=signal.uncovered_reference_distinct_count,
+                    eligible_direction_count=orphan_direction_counts[(signal.source_sheet_id, signal.target_sheet_id)],
+                )
+                candidate = execute_registered_rule("REL-ORPHAN-003", orphan_profile)
                 if candidate:
                     relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
 

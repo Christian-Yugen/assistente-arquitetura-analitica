@@ -34,6 +34,7 @@ class RelationshipPairAccumulatorTests(unittest.TestCase):
             target_complete=fact.complete,
             target_unique=fact.unique,
             referential_coverage_ratio=fact.coverage_from(dimension),
+            uncovered_reference_distinct_count=fact.uncovered_distinct_count_from(dimension),
             source_or_target_sensitive=False,
             source_or_target_has_formula=False,
         )
@@ -44,6 +45,19 @@ class RelationshipPairAccumulatorTests(unittest.TestCase):
         fact.clear()
         self.assertEqual(dimension.distinct_count, 0)
         self.assertEqual(fact.distinct_count, 0)
+
+    def test_reduces_uncovered_references_to_a_count_without_retaining_values(self):
+        dimension = RelationshipColumnAccumulator()
+        fact = RelationshipColumnAccumulator()
+        for value in ("A", "B", "C"):
+            dimension.consume(value, is_formula=False)
+        for value in ("A", "A", "UNMATCHED", "UNMATCHED"):
+            fact.consume(value, is_formula=False)
+
+        self.assertEqual(fact.coverage_from(dimension), 0.5)
+        self.assertEqual(fact.uncovered_distinct_count_from(dimension), 1)
+        dimension.clear()
+        fact.clear()
 
     def test_formula_blocks_and_is_not_converted_to_a_signature(self):
         accumulator = RelationshipColumnAccumulator()

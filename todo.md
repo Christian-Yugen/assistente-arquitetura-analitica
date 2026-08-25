@@ -395,6 +395,16 @@
 - [x] Integrar a REL-NONUNIQ-002 ao registro, contrato, pipeline e catálogo draft com pergunta humana bloqueante.
 - [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-NONUNIQ-002.
 - [x] Sincronizar a ativação draft da REL-NONUNIQ-002 no índice, intake, Gate MVP, workspace e provas documentais.
-- [x] Corrigir a falha de validação estrutural de workbook XLSX no fluxo de upload e cobrir o cenário com teste de regressão.
-- [x] Adotar e validar a ativação draft autorizada da REL-NONUNIQ-002 já registrada na branch remota, sem sobrescrever commits.
+- [x] Criar branch de segurança e recuperar metadados, dependências e lacunas da REL-ORPHAN-003 sem implementar lógica executável.
+- [x] Elaborar intake, Proposta A e especificação lógica não executáveis para a REL-ORPHAN-003 e solicitar aprovação específica antes de implementação.
+- [x] Criar prova documental que preserve o bloqueio de execução e de produção da REL-ORPHAN-003.
+- [x] Registrar a aprovação explícita de Chris para a Proposta A da REL-ORPHAN-003 nos artefatos governados.
+- [x] Formalizar o gate de reconstrução da REL-ORPHAN-003 sem autorizar implementação.
+- [x] Implementar o perfil privado e o classificador determinístico da REL-ORPHAN-003 sem reter títulos, cabeçalhos, valores ou pares correspondentes.
+- [x] Integrar a REL-ORPHAN-003 ao registro, contrato, pipeline e catálogo draft com pergunta humana bloqueante.
+- [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-ORPHAN-003.
+- [x] Sincronizar a ativação draft da REL-ORPHAN-003 no índice, intake, Gate MVP, workspace e provas documentais.
 - [x] Explicar a Chris o objetivo, os fluxos, as salvaguardas e o estágio atual do MVP antes de retomar a expansão do catálogo.
+- [x] Confirmar e documentar o escopo final de diagnóstico de planilhas, recomendações de Power Query e sugestões de DAX antes de prometer sua cobertura produtiva.
+- [x] Adotar e validar a REL-ORPHAN-003 autorizada da branch remota, preservando seus testes, calibração e bloqueio de produção.
+- [ ] Priorizar e concluir os ciclos governados remanescentes do catálogo de 95 regras, sem ativar regra sem evidência, calibração e gate individual.

@@ -4,6 +4,7 @@ from engine.catalog import RuleExecutionUnavailableError, execute_registered_rul
 from engine.contracts.diagnosis import RULE_VERSIONS, to_relationship_fragment
 from engine.relationships.one_to_many import OneToManyRelationshipPairProfile, classify_one_to_many_relationship
 from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshipPairProfile
+from engine.relationships.orphan_reference import OrphanReferenceRelationshipPairProfile
 
 
 class RelationshipContractTests(unittest.TestCase):
@@ -78,6 +79,28 @@ class RelationshipContractTests(unittest.TestCase):
                 dimension_key_duplicate_count=1,
                 fact_reference_complete=True,
                 referential_coverage_ratio=1.0,
+                eligible_direction_count=1,
+            ),
+        )
+        self.assertIsNotNone(result)
+
+    def test_orphan_rule_is_versioned_and_executes_only_in_the_draft_profile(self):
+        record = get_rule_execution_record("REL-ORPHAN-003")
+
+        self.assertEqual(RULE_VERSIONS["REL-ORPHAN-003"], "0.1.0-provisional.1")
+        self.assertEqual(record.status, "executable_draft")
+        result = execute_registered_rule(
+            "REL-ORPHAN-003",
+            OrphanReferenceRelationshipPairProfile(
+                source_standard_dimension_candidate=True,
+                target_fact_candidate=True,
+                eligible_dimension_key_count=1,
+                eligible_fact_reference_count=1,
+                dimension_key_complete=True,
+                dimension_key_unique=True,
+                fact_reference_complete=True,
+                referential_coverage_ratio=0.5,
+                uncovered_reference_distinct_count=1,
                 eligible_direction_count=1,
             ),
         )

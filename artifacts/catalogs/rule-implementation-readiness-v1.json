@@ -9,9 +9,9 @@
   "policy": "A regra só pode ser executada quando local_readiness for executable_draft e houver gate de implementação registrado.",
  "counts": {
    "baseline_reference": 0,
-    "executable_draft": 42,
+    "executable_draft": 43,
    "reference_catalog_draft": 2,
-    "intake_required": 51
+    "intake_required": 50
   },
   "rules": [
     {
@@ -1218,19 +1218,9 @@
       ],
       "primary_output": "relationship_or_finding",
       "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "REL-MANYMANY-004",

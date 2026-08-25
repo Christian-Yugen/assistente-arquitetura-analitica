@@ -43,18 +43,6 @@ export function validateWorkbookInspection(input: { sheet_count: unknown }): Wor
   return { sheetCount: input.sheet_count as number };
 }
 
-function validationErrorFromValidatorOutput(output: string): UploadValidationError | undefined {
-  try {
-    const parsed = JSON.parse(output) as { error?: unknown; message?: unknown };
-    if (parsed.error === "workbook_validation_error" && typeof parsed.message === "string") {
-      return new UploadValidationError(parsed.message);
-    }
-  } catch {
-    // The subprocess can fail before the validator emits its structured safe error.
-  }
-  return undefined;
-}
-
 export async function inspectWorkbookBeforePersistence(workbook: ValidatedWorkbook): Promise<WorkbookInspection> {
   const workDir = await mkdtemp(join(tmpdir(), "analytical-workbook-inspection-"));
   const inputPath = join(workDir, "input.xlsx");
@@ -74,7 +62,7 @@ export async function inspectWorkbookBeforePersistence(workbook: ValidatedWorkbo
       child.once("close", code => {
         clearTimeout(timer);
         if (code === 0) resolve(output);
-        else reject(validationErrorFromValidatorOutput(output) ?? new UploadValidationError("Não foi possível validar a estrutura do workbook."));
+        else reject(new UploadValidationError("Não foi possível validar a estrutura do workbook."));
       });
     });
     return validateWorkbookInspection(JSON.parse(stdout) as { sheet_count: unknown });

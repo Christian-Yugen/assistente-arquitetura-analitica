@@ -50,6 +50,7 @@ RULE_VERSIONS = {
     "MDL-UNDEFINED-020": "0.1.0-provisional.1",
     "REL-ONEMANY-001": "0.1.0-provisional.1",
     "REL-NONUNIQ-002": "0.1.0-provisional.1",
+    "REL-ORPHAN-003": "0.1.0-provisional.1",
 }
 
 

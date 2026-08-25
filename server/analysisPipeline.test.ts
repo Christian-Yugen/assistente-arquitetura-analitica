@@ -33,14 +33,14 @@ describe("validateWorkbookUpload", () => {
     expect(() => validateWorkbookInspection({ sheet_count: "2" })).toThrow(UploadValidationError);
   });
 
-  it("surfaces a safe structural reason when a ZIP-shaped payload is not a readable XLSX", async () => {
+  it("rejects a ZIP-shaped payload that is not a readable XLSX before persistence", async () => {
     const zipButNotWorkbook = validateWorkbookUpload({
       fileName: "arquivo.xlsx",
       mimeType: xlsxMime,
       dataBase64: zipHeader.toString("base64"),
     });
 
-    await expect(inspectWorkbookBeforePersistence(zipButNotWorkbook)).rejects.toThrow("Arquivo XLSX inválido, criptografado ou não legível.");
+    await expect(inspectWorkbookBeforePersistence(zipButNotWorkbook)).rejects.toThrow("Não foi possível validar a estrutura do workbook.");
   });
 
   it("builds deterministic pseudonymous metadata that separates owners", () => {

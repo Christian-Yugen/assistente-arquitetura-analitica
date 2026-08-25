@@ -336,6 +336,7 @@ def profile_workbook_with_relationship_pairs(path: Path) -> WorkbookProfile:
                         target_complete=target.accumulator.complete,
                         target_unique=target.accumulator.unique,
                         referential_coverage_ratio=target.accumulator.coverage_from(source.accumulator),
+                        uncovered_reference_distinct_count=target.accumulator.uncovered_distinct_count_from(source.accumulator),
                         source_or_target_sensitive=False,
                         source_or_target_has_formula=source.accumulator.has_formula or target.accumulator.has_formula,
                     )

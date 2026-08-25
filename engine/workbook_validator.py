@@ -8,12 +8,7 @@ from pathlib import Path
 
 from openpyxl import load_workbook
 
-
-MAX_SHEETS = 10
-
-
-class WorkbookValidationError(ValueError):
-    """Erro seguro para validação estrutural prévia à persistência."""
+from engine.profiling.workbook import MAX_SHEETS, WorkbookValidationError
 
 
 def inspect_workbook(path: Path) -> dict[str, int]:
@@ -27,17 +22,12 @@ def inspect_workbook(path: Path) -> dict[str, int]:
     return {"sheet_count": sheet_count}
 
 
-def main() -> int:
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", required=True)
     args = parser.parse_args()
-    try:
-        print(json.dumps(inspect_workbook(Path(args.input))))
-        return 0
-    except WorkbookValidationError as error:
-        print(json.dumps({"error": "workbook_validation_error", "message": str(error)}))
-        return 2
+    print(json.dumps(inspect_workbook(Path(args.input))))
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main()
