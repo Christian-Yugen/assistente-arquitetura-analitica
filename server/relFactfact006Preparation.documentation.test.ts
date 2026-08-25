@@ -10,10 +10,12 @@ describe("REL-FACTFACT-006 preparation governance", () => {
     const intake = read("artifacts/intake/REL-FACTFACT-006.json");
     const policy = read("docs/rules/REL_FACTFACT_006_POLICY_PROPOSAL_001.md");
     const specification = read("docs/rules/REL_FACTFACT_006_LOGICAL_SPEC_PROPOSAL_001.md");
+    const gate = read("docs/gates/REL_FACTFACT_006_RECONSTRUCTION_AUTHORIZATION_001.md");
 
     expect(intake).toContain('"rule_id": "REL-FACTFACT-006"');
     expect(intake).toContain('"priority": "P0"');
     expect(intake).toContain('"status": "intake_required"');
+    expect(intake).toContain('"policy_approved": true');
     expect(intake).toContain('"implementation_authorized": false');
     expect(intake).toContain('"execution_blocked": true');
     expect(intake).toContain("REL-FACTFACT-006-RECONSTRUCTION-AUTHORIZATION-001");
@@ -21,6 +23,10 @@ describe("REL-FACTFACT-006 preparation governance", () => {
     expect(policy).toContain("não recomenda a criação de uma relação direta");
     expect(specification).toContain("não executável");
     expect(specification).toContain("direct_fact_to_fact_relationship_review_candidate");
+    expect(gate).toContain("Chris aprovou explicitamente a **Proposta A**");
+    expect(gate).toContain("não autoriza escrever, integrar ou executar lógica da regra");
+    expect(gate).toContain("Uma autorização explícita posterior de Chris");
+    expect(gate).toContain("A produção permanece bloqueada");
   });
 
   it("preserves opaque-pair privacy, human review and the production block", () => {

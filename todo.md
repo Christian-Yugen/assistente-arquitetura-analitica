@@ -418,5 +418,6 @@
 - [x] Ativar a REL-MANYMANY-004 somente em draft e sincronizar catálogo, intake, prontidão, interface e provas documentais.
 - [x] Criar branch de segurança e registrar o intake da REL-FACTFACT-006, mantendo-a não executável.
 - [x] Propor política conservadora e especificação lógica não executável da REL-FACTFACT-006 antes de qualquer código executável.
-- [ ] Obter aprovação explícita de Chris para a Proposta A e formalizar o gate de reconstrução da REL-FACTFACT-006.
+- [x] Obter aprovação explícita de Chris para a Proposta A da REL-FACTFACT-006.
+- [x] Formalizar o gate de reconstrução da REL-FACTFACT-006 sem autorizar implementação.
 - [ ] Implementar, testar, calibrar e ativar a REL-FACTFACT-006 exclusivamente após autorização específica de Chris no perfil draft.

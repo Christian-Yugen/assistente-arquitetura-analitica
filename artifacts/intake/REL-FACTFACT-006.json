@@ -26,8 +26,11 @@
   "authorization": {
     "intake_authorized": true,
     "intake_authorized_by": "Chris",
-    "policy_approved": false,
+    "policy_approved": true,
+    "policy_approved_by": "Chris",
+    "policy_approved_proposal": "A",
     "implementation_authorized": false,
+    "reason": "Chris aprovou explicitamente a Proposta A. Este gate autoriza somente preparação controlada; implementação e produção continuam bloqueadas.",
     "required_gate": "REL-FACTFACT-006-RECONSTRUCTION-AUTHORIZATION-001"
   },
   "required_before_implementation": [
