@@ -19,6 +19,7 @@ from engine.metrics.percentage_delta import PercentageDeltaConceptProfile
 from engine.metrics.running_total import RunningTotalConceptProfile
 from engine.metrics.weighted_average import WeightedAverageConceptProfile
 from engine.metrics.semiadditive import SemiadditiveConceptProfile
+from engine.metrics.domain import DomainMetricConceptProfile
 from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_metric_fragment, to_relationship_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
@@ -857,6 +858,7 @@ def execute_quality_diagnosis(
         "MET-RUNNING-010": get_rule_execution_record("MET-RUNNING-010").status,
         "MET-WAVG-011": get_rule_execution_record("MET-WAVG-011").status,
         "MET-SEMIADD-012": get_rule_execution_record("MET-SEMIADD-012").status,
+        "MET-DOMAIN-013": get_rule_execution_record("MET-DOMAIN-013").status,
     }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
@@ -1351,6 +1353,11 @@ def execute_quality_diagnosis(
                 semantic_types = [candidate.get("semantic_type") for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates]
                 semiadditive_profile = SemiadditiveConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), potential_balance_candidate_count=semantic_types.count("currency_candidate") + semantic_types.count("quantity_candidate"), temporal_order_candidate_count=semantic_types.count("date_generic"), temporal_order_duplicate_count=sum(max(0, column.semantic_date.recognized_date_count - column.semantic_date.distinct_recognized_date_count) for column in sheet_columns if column.semantic_date.non_missing_count >= 10 and column.semantic_date.recognized_date_ratio == 1.0), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
                 candidate = execute_registered_rule("MET-SEMIADD-012", semiadditive_profile)
+                if candidate:
+                    metric_candidates.append((sheet_id, [candidate]))
+            if metric_rule_statuses["MET-DOMAIN-013"] == "executable_draft":
+                domain_metric_profile = DomainMetricConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), domain_signal_candidate_count=0, has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                candidate = execute_registered_rule("MET-DOMAIN-013", domain_metric_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
 

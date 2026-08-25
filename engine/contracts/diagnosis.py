@@ -69,6 +69,7 @@ RULE_VERSIONS = {
     "MET-RUNNING-010": "0.1.0-provisional.1",
     "MET-WAVG-011": "0.1.0-provisional.1",
     "MET-SEMIADD-012": "0.1.0-provisional.1",
+    "MET-DOMAIN-013": "0.1.0-provisional.1",
 }
 
 
