@@ -1,0 +1,3 @@
+# ALT-SENS-001 — Gate Individual de Calibração Draft 001
+
+Chris autorizou a implementação por chat: “autorizado continue”. O golden exclusivamente sintético produz `TP=1`, `FP=0` e `FN=0`. A regra emite apenas um finding de restrição de processamento quando recebe exatamente um sinal de sensibilidade pré-classificado, independente, opaco e agregado. A evidência limita-se à contagem agregada `1`; ela não usa ou revela categoria de dado, campo, cabeçalho, título, valor, posição, frequência, exemplos ou pares. Sinal ausente/múltiplo, conflito ou falha de contrato bloqueiam. A regra não reclassifica, altera, mascara, exclui, exporta, envia ou autoriza processamento de dados, nem gera DAX/M. **Produção permanece bloqueada.**

@@ -1,0 +1,1 @@
+{"rule_id":"ALT-SENS-001","gate_id":"ALT-SENS-001-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/alt-sens-draft-golden-v1.json","sha256":"b51365c870fa85147206d8aea56a7b9e734941f3a7f3fd6fa9f03729a04bb8ca","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}

@@ -72,6 +72,7 @@ RULE_VERSIONS = {
     "MET-DOMAIN-013": "0.1.0-provisional.1",
     "MET-IMPOSS-014": "0.1.0-provisional.1",
     "MET-DAX-015": "0.1.0-provisional.1",
+    "ALT-SENS-001": "0.1.0-provisional.1",
 }
 
 

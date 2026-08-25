@@ -22,6 +22,7 @@ from engine.metrics.semiadditive import SemiadditiveConceptProfile
 from engine.metrics.domain import DomainMetricConceptProfile
 from engine.metrics.impossible import InsufficientMetricConceptProfile
 from engine.metrics.dax import DaxTemplateConceptProfile
+from engine.alerts.sensitivity import SensitiveDataRestrictionProfile
 from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_metric_fragment, to_relationship_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
@@ -864,6 +865,9 @@ def execute_quality_diagnosis(
         "MET-IMPOSS-014": get_rule_execution_record("MET-IMPOSS-014").status,
         "MET-DAX-015": get_rule_execution_record("MET-DAX-015").status,
     }
+    alert_rule_statuses = {
+        "ALT-SENS-001": get_rule_execution_record("ALT-SENS-001").status,
+    }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
             sheet_id: frozenset(
@@ -1375,6 +1379,19 @@ def execute_quality_diagnosis(
                 candidate = execute_registered_rule("MET-DAX-015", dax_template_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
+
+    if alert_rule_statuses["ALT-SENS-001"] == "executable_draft":
+        for sheet_id, column_id, candidates in sensitivity_candidates:
+            sensitivity_signal_candidate_count = sum(candidate.get("sensitivity") == "personal_data_candidate" for candidate in candidates)
+            alert_candidate = execute_registered_rule(
+                "ALT-SENS-001",
+                SensitiveDataRestrictionProfile(
+                    sensitivity_signal_candidate_count=sensitivity_signal_candidate_count,
+                    sensitivity_conflict_count=max(0, sensitivity_signal_candidate_count - 1),
+                ),
+            )
+            if alert_candidate:
+                quality_findings.append((sheet_id, column_id, alert_candidate))
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []

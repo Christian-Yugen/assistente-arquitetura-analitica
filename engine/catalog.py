@@ -14,6 +14,7 @@ from engine.granularity.registry import GRANULARITY_RULE_IMPLEMENTATIONS
 from engine.fact_dimension.registry import FACT_DIMENSION_RULE_IMPLEMENTATIONS
 from engine.relationships.registry import RELATIONSHIP_RULE_IMPLEMENTATIONS
 from engine.metrics.registry import METRIC_RULE_IMPLEMENTATIONS
+from engine.alerts.registry import ALERT_RULE_IMPLEMENTATIONS
 
 
 OFFICIAL_BLUEPRINT_PATH = Path(__file__).resolve().parents[1] / "artifacts/catalogs/official-rule-blueprint-95.json"
@@ -83,6 +84,7 @@ DRAFT_RULE_AUTHORIZATIONS = {
     "MET-DOMAIN-013": "MET-DOMAIN-013-DRAFT-CALIBRATION-001",
     "MET-IMPOSS-014": "MET-IMPOSS-014-DRAFT-CALIBRATION-001",
     "MET-DAX-015": "MET-DAX-015-DRAFT-CALIBRATION-001",
+    "ALT-SENS-001": "ALT-SENS-001-DRAFT-CALIBRATION-001",
 }
 RULE_IMPLEMENTATIONS = {
     **QUALITY_RULE_IMPLEMENTATIONS,
@@ -91,6 +93,7 @@ RULE_IMPLEMENTATIONS = {
     **FACT_DIMENSION_RULE_IMPLEMENTATIONS,
     **RELATIONSHIP_RULE_IMPLEMENTATIONS,
     **METRIC_RULE_IMPLEMENTATIONS,
+    **ALERT_RULE_IMPLEMENTATIONS,
 }
 RuleExecutionStatus = Literal["executable_draft", "baseline_reference", "reference_catalog_draft", "reserved_definition", "unknown"]
 

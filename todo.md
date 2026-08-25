@@ -539,4 +539,5 @@
 - [x] Registrar a aprovação de Chris e concluir perfil agregado, template abstrato, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MET-DAX-015.
 - [x] Criar branch de segurança e registrar o intake da ALT-SENS-001, mantendo-a não executável.
 - [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da ALT-SENS-001, mantendo a produção bloqueada.
-- [ ] Obter autorização explícita de Chris antes de implementar a ALT-SENS-001 exclusivamente em draft.
+- [x] Obter autorização explícita de Chris antes de implementar a ALT-SENS-001 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da ALT-SENS-001.
