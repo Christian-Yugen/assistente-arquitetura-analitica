@@ -12,6 +12,7 @@ from engine.metrics.weighted_average import classify_weighted_average_concept
 from engine.metrics.semiadditive import classify_semiadditive_concept
 from engine.metrics.domain import classify_domain_metric_concept
 from engine.metrics.impossible import classify_insufficient_metric_concept
+from engine.metrics.dax import classify_dax_template_concept
 
 
 METRIC_RULE_IMPLEMENTATIONS = {
@@ -29,4 +30,5 @@ METRIC_RULE_IMPLEMENTATIONS = {
     "MET-SEMIADD-012": classify_semiadditive_concept,
     "MET-DOMAIN-013": classify_domain_metric_concept,
     "MET-IMPOSS-014": classify_insufficient_metric_concept,
+    "MET-DAX-015": classify_dax_template_concept,
 }
