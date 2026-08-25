@@ -66,11 +66,11 @@ describe("Home workspace flow", () => {
     expect(renderHome()).toContain("Tentar login novamente");
   });
 
-  it("shows the forty-three rules authorized for the current draft profile", () => {
+  it("shows the forty-four rules authorized for the current draft profile", () => {
     const workspace = renderHome();
     expect(workspace).toContain("Regras executáveis");
-    expect(workspace).toContain(">43<");
-    expect(workspace).toContain("QLT-001 a QLT-015 + SEM-DATE-001 + SEM-COMP-002 + SEM-DESC-004 + SEM-DUR-008 + SEM-STATUS-009 + SEM-CAT-010 + SEM-LOC-011 + SEM-RESP-012 + SEM-ID-003 + SEM-QTY-005 + SEM-CURR-006 + SEM-PCT-007 + SEM-TARGET-013 + SEM-ACTUAL-014 + SEM-SENS-015 + GRN-COMP-001 + GRN-EXPL-002 + GRN-EVENT-004 + GRN-ENTITY-003 + MDL-FACTPER-001 + MDL-FACTTXN-002 + MDL-FACTNOGRAIN-019 + MDL-UNDEFINED-020 + MDL-DIMSTD-004 + MDL-DIMCAL-006 + REL-ONEMANY-001 + REL-NONUNIQ-002 + REL-ORPHAN-003");
+    expect(workspace).toContain(">44<");
+    expect(workspace).toContain("QLT-001 a QLT-015 + SEM-DATE-001 + SEM-COMP-002 + SEM-DESC-004 + SEM-DUR-008 + SEM-STATUS-009 + SEM-CAT-010 + SEM-LOC-011 + SEM-RESP-012 + SEM-ID-003 + SEM-QTY-005 + SEM-CURR-006 + SEM-PCT-007 + SEM-TARGET-013 + SEM-ACTUAL-014 + SEM-SENS-015 + GRN-COMP-001 + GRN-EXPL-002 + GRN-EVENT-004 + GRN-ENTITY-003 + MDL-FACTPER-001 + MDL-FACTTXN-002 + MDL-FACTNOGRAIN-019 + MDL-UNDEFINED-020 + MDL-DIMSTD-004 + MDL-DIMCAL-006 + REL-ONEMANY-001 + REL-NONUNIQ-002 + REL-ORPHAN-003 + REL-MANYMANY-004");
   });
 
   it("renders the pending processing panel and blocks all workbook edits during the real mutation state", () => {

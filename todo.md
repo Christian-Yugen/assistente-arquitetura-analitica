@@ -411,3 +411,8 @@
 - [x] Adotar e validar a preparação não executável da REL-MANYMANY-004, mantendo execução draft e produção bloqueadas até aprovação posterior.
 - [x] Registrar a aprovação explícita de Chris para a Proposta A da REL-MANYMANY-004 nos artefatos governados.
 - [x] Formalizar o gate de reconstrução da REL-MANYMANY-004 sem autorizar implementação.
+- [x] Registrar a autorização explícita de Chris para implementar a REL-MANYMANY-004 exclusivamente em draft.
+- [x] Implementar o classificador privado da REL-MANYMANY-004 e seus testes executáveis.
+- [x] Integrar a REL-MANYMANY-004 ao registro, contrato e pipeline mantendo a allowlist bloqueada até calibração.
+- [x] Criar golden dataset, manifesto, avaliador e gate de calibração da REL-MANYMANY-004.
+- [x] Ativar a REL-MANYMANY-004 somente em draft e sincronizar catálogo, intake, prontidão, interface e provas documentais.

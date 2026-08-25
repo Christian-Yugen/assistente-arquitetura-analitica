@@ -1,0 +1,14 @@
+{
+  "dataset_id": "GD-REL-MANYMANY-004-001",
+  "rule_id": "REL-MANYMANY-004",
+  "dataset_path": "artifacts/golden/rel-manymany-draft-golden-v1.json",
+  "sha256": "63ee7b1ed9eab8eb06b9928315f12fcf693da605f965053b7620871e6da7add9",
+  "synthetic_only": true,
+  "evaluation": {
+    "evaluator": "engine/calibration/evaluate_rel_manymany_draft_golden.py",
+    "true_positives": 3,
+    "false_positives": 0,
+    "false_negatives": 0
+  },
+  "production_authorized": false
+}

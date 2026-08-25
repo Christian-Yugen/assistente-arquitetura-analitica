@@ -5,6 +5,7 @@ from engine.contracts.diagnosis import RULE_VERSIONS, to_relationship_fragment
 from engine.relationships.one_to_many import OneToManyRelationshipPairProfile, classify_one_to_many_relationship
 from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshipPairProfile
 from engine.relationships.orphan_reference import OrphanReferenceRelationshipPairProfile
+from engine.relationships.many_to_many import ManyToManyRelationshipPairProfile
 
 
 class RelationshipContractTests(unittest.TestCase):
@@ -101,6 +102,26 @@ class RelationshipContractTests(unittest.TestCase):
                 fact_reference_complete=True,
                 referential_coverage_ratio=0.5,
                 uncovered_reference_distinct_count=1,
+                eligible_direction_count=1,
+            ),
+        )
+        self.assertIsNotNone(result)
+
+    def test_many_to_many_rule_is_versioned_and_executes_only_in_the_draft_profile(self):
+        record = get_rule_execution_record("REL-MANYMANY-004")
+
+        self.assertEqual(RULE_VERSIONS["REL-MANYMANY-004"], "0.1.0-provisional.1")
+        self.assertEqual(record.status, "executable_draft")
+        result = execute_registered_rule(
+            "REL-MANYMANY-004",
+            ManyToManyRelationshipPairProfile(
+                source_standard_dimension_candidate=True,
+                target_fact_candidate=True,
+                eligible_dimension_key_count=1,
+                eligible_fact_reference_count=1,
+                dimension_key_complete=True,
+                fact_reference_complete=True,
+                referential_coverage_ratio=1.0,
                 eligible_direction_count=1,
             ),
         )

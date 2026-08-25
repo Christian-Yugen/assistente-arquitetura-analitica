@@ -23,11 +23,18 @@
     ]
   },
   "source_gap": "O blueprint oficial define somente título, propósito, prioridade P0, escopo por par de abas, dependência de classificação de tabela e saída relationship_or_finding. Ele não define critérios de muitos-para-muitos, cobertura referencial, exclusões, evidências, confiança, severidade, pergunta humana, perfil privado, versão contratual, testes ou calibração. A regra não pode revelar ou persistir títulos de abas, cabeçalhos, valores, posições, pares correspondentes, frequências individuais, chaves ou identificadores; não pode criar, alterar ou recomendar automaticamente uma relação no Power BI.",
-  "local_readiness": "policy_approved_pending_reconstruction_gate",
+  "local_readiness": "executable_draft",
   "authorization": {
-    "implementation_authorized": false,
-    "reason": "Chris aprovou explicitamente a Proposta A em 2026-08-25. A regra permanece sem perfil, classificador, registro, contrato, pipeline, catálogo executável, golden dataset, calibração ou allowlist draft até a formalização do gate e uma autorização específica posterior de implementação.",
-    "required_gate": "REL-MANYMANY-004-RECONSTRUCTION-AUTHORIZATION-001"
+    "intake_authorized": true,
+    "intake_authorized_by": "Chris",
+    "policy_approved": true,
+    "policy_approved_by": "Chris",
+    "policy_approved_proposal": "A",
+    "implementation_authorized": true,
+    "implementation_authorized_by": "Chris",
+    "reason": "Chris autorizou explicitamente a implementação exclusivamente em perfil draft após o gate de reconstrução. Produção continua bloqueada.",
+    "required_gate": "REL-MANYMANY-004-RECONSTRUCTION-AUTHORIZATION-001",
+    "calibration_gate": "REL-MANYMANY-004-DRAFT-CALIBRATION-001"
   },
   "required_before_implementation": [
     "Aprovação explícita de Chris para uma política conservadora de muitos-para-muitos",
@@ -37,7 +44,7 @@
     "Classificador determinístico, versão contratual, pergunta humana bloqueante e integração protegida por catálogo",
     "Testes, golden dataset exclusivamente sintético, manifesto SHA-256, avaliador reproduzível, calibração e gate individual"
   ],
-  "status": "policy_approved_pending_reconstruction_gate",
-  "execution_blocked": true,
-  "missing_before_execution": ["condition", "exclusions", "evidence", "severity", "confidence", "questions", "tests", "golden_dataset", "authorization_gate"]
+  "status": "executable_draft",
+  "execution_blocked": false,
+  "missing_before_execution": []
 }
