@@ -416,3 +416,7 @@
 - [x] Integrar a REL-MANYMANY-004 ao registro, contrato e pipeline mantendo a allowlist bloqueada até calibração.
 - [x] Criar golden dataset, manifesto, avaliador e gate de calibração da REL-MANYMANY-004.
 - [x] Ativar a REL-MANYMANY-004 somente em draft e sincronizar catálogo, intake, prontidão, interface e provas documentais.
+- [x] Criar branch de segurança e registrar o intake da REL-FACTFACT-006, mantendo-a não executável.
+- [x] Propor política conservadora e especificação lógica não executável da REL-FACTFACT-006 antes de qualquer código executável.
+- [ ] Obter aprovação explícita de Chris para a Proposta A e formalizar o gate de reconstrução da REL-FACTFACT-006.
+- [ ] Implementar, testar, calibrar e ativar a REL-FACTFACT-006 exclusivamente após autorização específica de Chris no perfil draft.

@@ -1,0 +1,54 @@
+{
+  "intake_id": "REL-FACTFACT-006-INTAKE-001",
+  "rule": {
+    "rule_id": "REL-FACTFACT-006",
+    "title": "Relacionamento direto entre fatos",
+    "category": "relationship",
+    "purpose": "Detectar ou recomendar relacionamento direto entre fatos.",
+    "priority": "P0",
+    "stage": "relationship_inference",
+    "scope": "sheet_pair",
+    "depends_on": ["table_classification"],
+    "primary_output": "relationship_or_finding",
+    "source_implementation_status": "planned"
+  },
+  "source": {
+    "blueprint_id": "PM-MVP-PBI-RULE-BP-001",
+    "blueprint_version": "1.0.0",
+    "artifacts": [
+      "artifacts/catalogs/official-rule-blueprint-95.json",
+      "artifacts/catalogs/rule-implementation-readiness-v1.json",
+      "docs/governance/RULE_DEVELOPMENT_LIFECYCLE_001.md"
+    ]
+  },
+  "source_gap": "O blueprint oficial define somente título, propósito, prioridade P0, escopo por par de abas, dependência de classificação de tabela e saída relationship_or_finding. Ele não define se uma relação direta entre fatos é desejável, critérios de elegibilidade, exclusões, evidências, confiança, severidade, pergunta humana, perfil privado, contrato, testes ou calibração. A regra não pode revelar ou persistir títulos de abas, cabeçalhos, valores, posições, pares correspondentes, frequências individuais, chaves ou identificadores; não pode criar, alterar ou recomendar automaticamente uma relação, tabela ponte ou direção de filtro no Power BI.",
+  "local_readiness": "intake_required",
+  "authorization": {
+    "intake_authorized": true,
+    "intake_authorized_by": "Chris",
+    "policy_approved": false,
+    "implementation_authorized": false,
+    "required_gate": "REL-FACTFACT-006-RECONSTRUCTION-AUTHORIZATION-001"
+  },
+  "required_before_implementation": [
+    "Aprovação explícita de Chris para uma política conservadora que trate a relação direta entre fatos apenas como hipótese de revisão",
+    "Gate de reconstrução que mantenha a execução bloqueada até nova autorização específica",
+    "Perfil privado por par composto apenas de contagens e indicadores agregados, sem valores, nomes, cabeçalhos, posições ou pares correspondentes",
+    "Guardas contra fórmulas, sensibilidade, incompletude, cobertura parcial, autorreferência, classificação incompatível, conflito e ambiguidade",
+    "Classificador determinístico, versão contratual, pergunta humana bloqueante e integração protegida por catálogo",
+    "Testes, golden dataset exclusivamente sintético, manifesto SHA-256, avaliador reproduzível, calibração e gate individual"
+  ],
+  "status": "intake_required",
+  "execution_blocked": true,
+  "missing_before_execution": [
+    "condition",
+    "exclusions",
+    "evidence",
+    "severity",
+    "confidence",
+    "questions",
+    "tests",
+    "golden_dataset",
+    "authorization_gate"
+  ]
+}
