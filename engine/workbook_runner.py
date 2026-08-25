@@ -24,6 +24,7 @@ def run(input_path: Path, metadata_path: Path) -> dict[str, object]:
         workbook_profile.columns,
         metadata=metadata,
         relationship_pair_signals=workbook_profile.relationship_pair_signals,
+        composite_relationship_pair_signals=workbook_profile.composite_relationship_pair_signals,
     )
 
 

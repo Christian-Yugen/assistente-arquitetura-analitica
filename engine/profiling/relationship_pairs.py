@@ -38,6 +38,26 @@ class RelationshipPairSignal:
     source_or_target_has_formula: bool
 
 
+@dataclass(frozen=True)
+class CompositeRelationshipPairSignal:
+    """Sinal agregado por par de abas, sem IDs de colunas, tuplas ou assinaturas."""
+
+    source_sheet_id: str
+    target_sheet_id: str
+    eligible_composite_key_pair_count: int
+    eligible_composite_reference_pair_count: int
+    composite_key_complete: bool
+    composite_key_unique: bool
+    composite_reference_complete: bool
+    composite_reference_unique: bool
+    referential_coverage_ratio: float
+    eligible_direction_count: int
+    has_one_to_one_pattern: bool
+    has_many_to_many_pattern: bool
+    source_or_target_sensitive: bool
+    source_or_target_has_formula: bool
+
+
 def _signature(value: object) -> tuple[str, str] | None:
     if isinstance(value, bool):
         return None
@@ -95,6 +115,47 @@ class RelationshipColumnAccumulator:
         """Retorna somente a contagem agregada de assinaturas sem cobertura."""
 
         return len(self._signatures.difference(reference._signatures))
+
+    def clear(self) -> None:
+        self._signatures.clear()
+
+
+@dataclass
+class CompositeRelationshipAccumulator:
+    """Acumulador descartável para uma tupla de dois campos, sem expor sua assinatura."""
+
+    observed_count: int = 0
+    non_missing_count: int = 0
+    has_formula: bool = False
+    _signatures: set[tuple[tuple[str, str], tuple[str, str]]] = field(default_factory=set, repr=False)
+
+    def consume(self, values: tuple[object, object], *, has_formula: bool) -> None:
+        self.observed_count += 1
+        self.has_formula = self.has_formula or has_formula
+        if has_formula or any(missing_class(value) is not None for value in values):
+            return
+        signatures = (_signature(values[0]), _signature(values[1]))
+        if signatures[0] is None or signatures[1] is None:
+            return
+        self.non_missing_count += 1
+        self._signatures.add((signatures[0], signatures[1]))
+
+    @property
+    def distinct_count(self) -> int:
+        return len(self._signatures)
+
+    @property
+    def complete(self) -> bool:
+        return self.observed_count > 0 and self.non_missing_count == self.observed_count
+
+    @property
+    def unique(self) -> bool:
+        return self.complete and self.distinct_count == self.non_missing_count
+
+    def coverage_from(self, reference: "CompositeRelationshipAccumulator") -> float:
+        if not self._signatures:
+            return 0.0
+        return round(len(self._signatures.intersection(reference._signatures)) / len(self._signatures), 8)
 
     def clear(self) -> None:
         self._signatures.clear()

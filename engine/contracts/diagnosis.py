@@ -55,6 +55,7 @@ RULE_VERSIONS = {
     "REL-FACTFACT-006": "0.1.0-provisional.1",
     "REL-AMBIG-007": "0.1.0-provisional.1",
     "REL-BIDIR-008": "0.1.0-provisional.1",
+    "REL-COMPKEY-009": "0.1.0-provisional.1",
 }
 
 

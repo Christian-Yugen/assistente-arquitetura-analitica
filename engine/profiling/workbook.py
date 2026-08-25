@@ -32,7 +32,12 @@ from engine.profiling.semantic_identifier import SemanticIdentifierAccumulator, 
 from engine.profiling.semantic_identifier import ELIGIBLE_HEADERS, SENSITIVE_HEADERS, _normalize_header
 from engine.profiling.semantic_currency import SemanticCurrencyAccumulator, has_explicit_currency_format
 from engine.profiling.composite_grain import CompositeGrainAccumulator
-from engine.profiling.relationship_pairs import RelationshipColumnAccumulator, RelationshipPairSignal
+from engine.profiling.relationship_pairs import (
+    CompositeRelationshipAccumulator,
+    CompositeRelationshipPairSignal,
+    RelationshipColumnAccumulator,
+    RelationshipPairSignal,
+)
 
 
 MAX_SHEETS = 10
@@ -49,6 +54,7 @@ class WorkbookProfile:
 
     columns: tuple[ColumnAnalysisContext, ...]
     relationship_pair_signals: tuple[RelationshipPairSignal, ...]
+    composite_relationship_pair_signals: tuple[CompositeRelationshipPairSignal, ...]
 
 
 @dataclass
@@ -56,6 +62,12 @@ class _RelationshipColumnTransient:
     sheet_id: str
     column_id: str
     accumulator: RelationshipColumnAccumulator = field(repr=False)
+
+
+@dataclass
+class _CompositeRelationshipTransient:
+    sheet_id: str
+    accumulator: CompositeRelationshipAccumulator = field(repr=False)
 
 
 @dataclass
@@ -219,6 +231,7 @@ def profile_workbook_with_relationship_pairs(path: Path) -> WorkbookProfile:
 
     contexts: list[ColumnAnalysisContext] = []
     relationship_columns: list[_RelationshipColumnTransient] = []
+    composite_relationship_pairs: list[_CompositeRelationshipTransient] = []
     for sheet_position, worksheet in enumerate(workbook.worksheets):
         rows = worksheet.iter_rows()
         header_cells = next(rows, None)
@@ -237,6 +250,9 @@ def profile_workbook_with_relationship_pairs(path: Path) -> WorkbookProfile:
         candidate_positions = [position for position, value in enumerate(header) if _normalize_header(str(value or "")) in ELIGIBLE_HEADERS and _normalize_header(str(value or "")) not in SENSITIVE_HEADERS]
         relationship_accumulators = {position: RelationshipColumnAccumulator() for position in candidate_positions}
         candidate_pairs = [(candidate_positions[left], candidate_positions[right]) for left in range(len(candidate_positions)) for right in range(left + 1, len(candidate_positions))]
+        composite_relationship_accumulators = {
+            pair: CompositeRelationshipAccumulator() for pair in candidate_pairs[:10]
+        }
         composite_grain_accumulator = CompositeGrainAccumulator(candidate_pairs[:10])
         profilers = [StreamingColumnProfiler(semantic_identifier_accumulator=SemanticIdentifierAccumulator(str(header[position] or ""))) for position in range(column_count)]
         semantic_currency_accumulators = [SemanticCurrencyAccumulator(header=header[position]) for position in range(column_count)]
@@ -270,6 +286,15 @@ def profile_workbook_with_relationship_pairs(path: Path) -> WorkbookProfile:
                         bounded_row[position],
                         is_formula=bool(cell is not None and cell.data_type == "f"),
                     )
+            for pair, accumulator in composite_relationship_accumulators.items():
+                left_position, right_position = pair
+                accumulator.consume(
+                    (bounded_row[left_position], bounded_row[right_position]),
+                    has_formula=bool(
+                        (bounded_cells[left_position] is not None and bounded_cells[left_position].data_type == "f")
+                        or (bounded_cells[right_position] is not None and bounded_cells[right_position].data_type == "f")
+                    ),
+                )
         duplicate_rows = duplicate_rows_accumulator.finalize()
         empty_rows = empty_rows_accumulator.finalize()
         total_rows = total_rows_accumulator.finalize()
@@ -311,9 +336,14 @@ def profile_workbook_with_relationship_pairs(path: Path) -> WorkbookProfile:
             )
             for position, accumulator in relationship_accumulators.items()
         )
+        composite_relationship_pairs.extend(
+            _CompositeRelationshipTransient(sheet_id=sheet_id, accumulator=accumulator)
+            for accumulator in composite_relationship_accumulators.values()
+        )
     if not contexts:
         raise WorkbookValidationError("O workbook não possui colunas analisáveis após a linha de cabeçalho.")
     relationship_pair_signals: list[RelationshipPairSignal] = []
+    composite_relationship_pair_signals: list[CompositeRelationshipPairSignal] = []
     try:
         for source in relationship_columns:
             for target in relationship_columns:
@@ -341,10 +371,63 @@ def profile_workbook_with_relationship_pairs(path: Path) -> WorkbookProfile:
                         source_or_target_has_formula=source.accumulator.has_formula or target.accumulator.has_formula,
                     )
                 )
+        sheet_ids = {column.sheet_id for column in relationship_columns}
+        for source_sheet_id in sheet_ids:
+            source_pairs = [item.accumulator for item in composite_relationship_pairs if item.sheet_id == source_sheet_id]
+            for target_sheet_id in sheet_ids:
+                if source_sheet_id == target_sheet_id:
+                    continue
+                target_pairs = [item.accumulator for item in composite_relationship_pairs if item.sheet_id == target_sheet_id]
+                eligible_source_pairs = [item for item in source_pairs if item.complete and item.unique and not item.has_formula]
+                eligible_target_pairs = [item for item in target_pairs if item.complete and not item.unique and not item.has_formula]
+                direction_pairs = [
+                    (source, target)
+                    for source in eligible_source_pairs
+                    for target in eligible_target_pairs
+                    if target.coverage_from(source) == 1.0
+                ]
+                coverage = max(
+                    (target.coverage_from(source) for source in eligible_source_pairs for target in eligible_target_pairs),
+                    default=0.0,
+                )
+                one_to_one = any(
+                    source.complete and source.unique and target.complete and target.unique and target.coverage_from(source) == 1.0
+                    for source in source_pairs
+                    for target in target_pairs
+                )
+                many_to_many = any(
+                    source.complete and not source.unique and target.complete and not target.unique and target.coverage_from(source) == 1.0
+                    for source in source_pairs
+                    for target in target_pairs
+                )
+                composite_relationship_pair_signals.append(
+                    CompositeRelationshipPairSignal(
+                        source_sheet_id=source_sheet_id,
+                        target_sheet_id=target_sheet_id,
+                        eligible_composite_key_pair_count=len(eligible_source_pairs),
+                        eligible_composite_reference_pair_count=len(eligible_target_pairs),
+                        composite_key_complete=bool(eligible_source_pairs),
+                        composite_key_unique=bool(eligible_source_pairs),
+                        composite_reference_complete=bool(eligible_target_pairs),
+                        composite_reference_unique=False,
+                        referential_coverage_ratio=coverage,
+                        eligible_direction_count=len(direction_pairs),
+                        has_one_to_one_pattern=one_to_one,
+                        has_many_to_many_pattern=many_to_many,
+                        source_or_target_sensitive=False,
+                        source_or_target_has_formula=any(item.has_formula for item in source_pairs + target_pairs),
+                    )
+                )
     finally:
         for column in relationship_columns:
             column.accumulator.clear()
-    return WorkbookProfile(columns=tuple(contexts), relationship_pair_signals=tuple(relationship_pair_signals))
+        for composite_pair in composite_relationship_pairs:
+            composite_pair.accumulator.clear()
+    return WorkbookProfile(
+        columns=tuple(contexts),
+        relationship_pair_signals=tuple(relationship_pair_signals),
+        composite_relationship_pair_signals=tuple(composite_relationship_pair_signals),
+    )
 
 
 def profile_workbook(path: Path) -> list[ColumnAnalysisContext]:

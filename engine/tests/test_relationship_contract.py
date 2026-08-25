@@ -9,6 +9,7 @@ from engine.relationships.many_to_many import ManyToManyRelationshipPairProfile
 from engine.relationships.direct_fact import DirectFactRelationshipPairProfile
 from engine.relationships.ambiguous_path import AmbiguousRelationshipPathPairProfile
 from engine.relationships.bidirectional_filter import BidirectionalFilterReviewPairProfile
+from engine.relationships.composite_key import CompositeRelationshipKeyPairProfile
 
 
 class RelationshipContractTests(unittest.TestCase):
@@ -190,6 +191,28 @@ class RelationshipContractTests(unittest.TestCase):
                 dimension_key_unique=True,
                 fact_reference_complete=True,
                 fact_reference_unique=False,
+                referential_coverage_ratio=1.0,
+                eligible_direction_count=1,
+            ),
+        )
+        self.assertIsNotNone(result)
+
+    def test_composite_key_rule_is_versioned_and_executes_only_in_the_draft_profile(self):
+        record = get_rule_execution_record("REL-COMPKEY-009")
+
+        self.assertEqual(RULE_VERSIONS["REL-COMPKEY-009"], "0.1.0-provisional.1")
+        self.assertEqual(record.status, "executable_draft")
+        result = execute_registered_rule(
+            "REL-COMPKEY-009",
+            CompositeRelationshipKeyPairProfile(
+                source_standard_dimension_candidate=True,
+                target_fact_candidate=True,
+                eligible_composite_key_pair_count=1,
+                eligible_composite_reference_pair_count=1,
+                composite_key_complete=True,
+                composite_key_unique=True,
+                composite_reference_complete=True,
+                composite_reference_unique=False,
                 referential_coverage_ratio=1.0,
                 eligible_direction_count=1,
             ),

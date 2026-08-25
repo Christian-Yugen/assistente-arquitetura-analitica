@@ -7,6 +7,7 @@ from engine.relationships.many_to_many import classify_many_to_many_relationship
 from engine.relationships.direct_fact import classify_direct_fact_relationship
 from engine.relationships.ambiguous_path import classify_ambiguous_relationship_path
 from engine.relationships.bidirectional_filter import classify_bidirectional_filter_review
+from engine.relationships.composite_key import classify_composite_relationship_key
 
 
 RELATIONSHIP_RULE_IMPLEMENTATIONS = {
@@ -17,4 +18,5 @@ RELATIONSHIP_RULE_IMPLEMENTATIONS = {
     "REL-FACTFACT-006": classify_direct_fact_relationship,
     "REL-AMBIG-007": classify_ambiguous_relationship_path,
     "REL-BIDIR-008": classify_bidirectional_filter_review,
+    "REL-COMPKEY-009": classify_composite_relationship_key,
 }

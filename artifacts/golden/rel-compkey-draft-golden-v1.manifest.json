@@ -1,0 +1,14 @@
+{
+  "dataset_id": "GD-REL-COMPKEY-009-001",
+  "rule_id": "REL-COMPKEY-009",
+  "dataset_path": "artifacts/golden/rel-compkey-draft-golden-v1.json",
+  "sha256": "f1fae8383331b1fa900af2163af6c78674fe450bf6d837d747be35d35792d3fa",
+  "synthetic_only": true,
+  "evaluation": {
+    "evaluator": "engine/calibration/evaluate_rel_compkey_draft_golden.py",
+    "true_positives": 3,
+    "false_positives": 0,
+    "false_negatives": 0
+  },
+  "production_authorized": false
+}
