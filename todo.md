@@ -506,3 +506,6 @@
 - [x] Obter autorização explícita de Chris antes de implementar a MET-RATE-007 em draft.
 - [x] Implementar, calibrar e ativar a MET-RATE-007 somente após autorização específica, mantendo produção bloqueada.
 - [x] Registrar no intake a autorização específica de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração e gate individual da MET-RATE-007.
+- [x] Criar branch de segurança e registrar o intake da MET-ABSDELTA-008, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MET-ABSDELTA-008, mantendo a produção bloqueada.
+- [ ] Obter autorização explícita de Chris antes de implementar a MET-ABSDELTA-008 exclusivamente em draft.
