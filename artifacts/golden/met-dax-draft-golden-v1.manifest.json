@@ -1,0 +1,1 @@
+{"rule_id":"MET-DAX-015","gate_id":"MET-DAX-015-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/met-dax-draft-golden-v1.json","sha256":"aa673cd12c21415893ef8052aff3d06a89a9baf5a230b7cd64f5b30d8c54bba8","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}

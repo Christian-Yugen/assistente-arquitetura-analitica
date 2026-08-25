@@ -21,6 +21,7 @@ from engine.metrics.weighted_average import WeightedAverageConceptProfile
 from engine.metrics.semiadditive import SemiadditiveConceptProfile
 from engine.metrics.domain import DomainMetricConceptProfile
 from engine.metrics.impossible import InsufficientMetricConceptProfile
+from engine.metrics.dax import DaxTemplateConceptProfile
 from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_metric_fragment, to_relationship_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
@@ -861,6 +862,7 @@ def execute_quality_diagnosis(
         "MET-SEMIADD-012": get_rule_execution_record("MET-SEMIADD-012").status,
         "MET-DOMAIN-013": get_rule_execution_record("MET-DOMAIN-013").status,
         "MET-IMPOSS-014": get_rule_execution_record("MET-IMPOSS-014").status,
+        "MET-DAX-015": get_rule_execution_record("MET-DAX-015").status,
     }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
@@ -1366,6 +1368,11 @@ def execute_quality_diagnosis(
                 semantic_types = [candidate.get("semantic_type") for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates]
                 insufficient_metric_profile = InsufficientMetricConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), eligible_measure_candidate_count=sum(semantic_types.count(metric_type) for metric_type in ("quantity_candidate", "currency_candidate", "actual_candidate", "target_or_forecast_candidate")), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
                 candidate = execute_registered_rule("MET-IMPOSS-014", insufficient_metric_profile)
+                if candidate:
+                    metric_candidates.append((sheet_id, [candidate]))
+            if metric_rule_statuses["MET-DAX-015"] == "executable_draft":
+                dax_template_profile = DaxTemplateConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), confirmed_conceptual_formula_count=0, human_confirmation_count=0, has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                candidate = execute_registered_rule("MET-DAX-015", dax_template_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
 

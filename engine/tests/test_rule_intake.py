@@ -18,9 +18,9 @@ class RuleIntakeTests(unittest.TestCase):
         self.assertEqual(len(readiness["rules"]), 95)
         self.assertEqual(readiness["counts"], {
             "baseline_reference": 0,
-            "executable_draft": 63,
+            "executable_draft": 64,
             "reference_catalog_draft": 0,
-            "intake_required": 32,
+            "intake_required": 31,
         })
 
         by_id = {rule["rule_id"]: rule for rule in readiness["rules"]}
@@ -29,6 +29,8 @@ class RuleIntakeTests(unittest.TestCase):
             self.assertTrue(by_id[rule_id]["executable"])
         self.assertEqual(by_id["MET-IMPOSS-014"]["local_readiness"], "executable_draft")
         self.assertTrue(by_id["MET-IMPOSS-014"]["executable"])
+        self.assertEqual(by_id["MET-DAX-015"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["MET-DAX-015"]["executable"])
 
     def test_catvar_intake_preserves_policy_gaps_after_provisional_draft_activation(self):
         intake = json.loads(
