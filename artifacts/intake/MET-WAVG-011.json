@@ -1,0 +1,29 @@
+{
+  "intake_id": "MET-WAVG-011-INTAKE-001",
+  "rule": {
+    "rule_id": "MET-WAVG-011",
+    "title": "Média ponderada",
+    "category": "metric",
+    "purpose": "Sugerir ou validar média ponderada.",
+    "priority": "P1",
+    "stage": "metric_suggestion",
+    "scope": "sheet",
+    "depends_on": ["semantic_typing", "grain_inference"],
+    "primary_output": "metric_or_finding",
+    "source_implementation_status": "planned"
+  },
+  "local_readiness": "intake_required",
+  "authorization": {
+    "intake_authorized": true,
+    "intake_authorized_by": "Chris",
+    "policy_approved": true,
+    "policy_approved_by": "Chris",
+    "policy_approved_proposal": "A",
+    "policy_approval_basis": "PROPOSAL-A-APPROVAL-DELEGATION-001",
+    "implementation_authorized": false,
+    "required_gate": "MET-WAVG-011-RECONSTRUCTION-AUTHORIZATION-001"
+  },
+  "status": "intake_required",
+  "execution_blocked": true,
+  "missing_before_execution": ["condition", "exclusions", "evidence", "questions", "tests", "golden_dataset", "authorization_gate"]
+}
