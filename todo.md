@@ -426,3 +426,7 @@
 - [x] Integrar a REL-FACTFACT-006 ao registro, contrato e pipeline mantendo a allowlist bloqueada até calibração.
 - [x] Criar testes, golden dataset sintético, manifesto SHA-256, avaliador e gate de calibração da REL-FACTFACT-006.
 - [x] Ativar a REL-FACTFACT-006 somente em draft e sincronizar catálogo, intake, prontidão, interface e provas documentais.
+- [x] Criar branch de segurança e registrar o intake da REL-AMBIG-007, mantendo-a não executável.
+- [x] Propor política conservadora e especificação lógica não executável da REL-AMBIG-007 antes de qualquer código executável.
+- [ ] Obter aprovação explícita de Chris para a Proposta A e formalizar o gate de reconstrução da REL-AMBIG-007.
+- [ ] Implementar, testar, calibrar e ativar a REL-AMBIG-007 exclusivamente após autorização específica de Chris no perfil draft.
