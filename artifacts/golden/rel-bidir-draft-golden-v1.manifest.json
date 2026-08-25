@@ -1,0 +1,14 @@
+{
+  "dataset_id": "GD-REL-BIDIR-008-001",
+  "rule_id": "REL-BIDIR-008",
+  "dataset_path": "artifacts/golden/rel-bidir-draft-golden-v1.json",
+  "sha256": "372d5dad4caafbd7a4f2ad21429a3c96892bf24f62e57c86220b18dca52ecdc9",
+  "synthetic_only": true,
+  "evaluation": {
+    "evaluator": "engine/calibration/evaluate_rel_bidir_draft_golden.py",
+    "true_positives": 3,
+    "false_positives": 0,
+    "false_negatives": 0
+  },
+  "production_authorized": false
+}

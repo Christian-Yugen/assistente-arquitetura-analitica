@@ -93,6 +93,7 @@ from engine.relationships.orphan_reference import OrphanReferenceRelationshipPai
 from engine.relationships.many_to_many import ManyToManyRelationshipPairProfile
 from engine.relationships.direct_fact import DirectFactRelationshipPairProfile
 from engine.relationships.ambiguous_path import AmbiguousRelationshipPathPairProfile
+from engine.relationships.bidirectional_filter import BidirectionalFilterReviewPairProfile
 
 
 @dataclass(frozen=True)
@@ -822,6 +823,7 @@ def execute_quality_diagnosis(
         "REL-MANYMANY-004": get_rule_execution_record("REL-MANYMANY-004").status,
         "REL-FACTFACT-006": get_rule_execution_record("REL-FACTFACT-006").status,
         "REL-AMBIG-007": get_rule_execution_record("REL-AMBIG-007").status,
+        "REL-BIDIR-008": get_rule_execution_record("REL-BIDIR-008").status,
     }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
@@ -1105,6 +1107,18 @@ def execute_quality_diagnosis(
                 if candidate:
                     relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
                     emitted_ambiguous_relationship_pairs.add(pair_key)
+            if relationship_rule_statuses["REL-BIDIR-008"] == "executable_draft":
+                bidirectional_filter_profile = BidirectionalFilterReviewPairProfile(
+                    **common_profile,
+                    eligible_dimension_key_count=source_key_counts[signal.source_sheet_id],
+                    eligible_fact_reference_count=target_reference_counts[signal.target_sheet_id],
+                    dimension_key_unique=signal.source_unique,
+                    fact_reference_unique=signal.target_unique,
+                    eligible_direction_count=eligible_direction_counts[pair_key],
+                )
+                candidate = execute_registered_rule("REL-BIDIR-008", bidirectional_filter_profile)
+                if candidate:
+                    relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []

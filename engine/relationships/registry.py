@@ -6,6 +6,7 @@ from engine.relationships.orphan_reference import classify_orphan_reference_rela
 from engine.relationships.many_to_many import classify_many_to_many_relationship
 from engine.relationships.direct_fact import classify_direct_fact_relationship
 from engine.relationships.ambiguous_path import classify_ambiguous_relationship_path
+from engine.relationships.bidirectional_filter import classify_bidirectional_filter_review
 
 
 RELATIONSHIP_RULE_IMPLEMENTATIONS = {
@@ -15,4 +16,5 @@ RELATIONSHIP_RULE_IMPLEMENTATIONS = {
     "REL-MANYMANY-004": classify_many_to_many_relationship,
     "REL-FACTFACT-006": classify_direct_fact_relationship,
     "REL-AMBIG-007": classify_ambiguous_relationship_path,
+    "REL-BIDIR-008": classify_bidirectional_filter_review,
 }

@@ -23,7 +23,7 @@
     ]
   },
   "source_gap": "O blueprint oficial define somente título, propósito, prioridade P0, escopo por par de abas, dependência de classificação de tabela e saída relationship_or_finding. Ele não disponibiliza o modelo Power BI, direções de filtro configuradas, relacionamento existente, critérios de suspeita, exclusões, evidências, confiança, severidade, pergunta humana, perfil privado, contrato, testes ou calibração. Sem o modelo semântico, a regra não pode detectar um filtro bidirecional existente; ela só poderá alertar que uma eventual configuração bidirecional exige revisão quando o workbook suporta uma relação unidirecional dimensão–fato. A regra não pode revelar ou persistir títulos de abas, cabeçalhos, valores, posições, pares correspondentes, frequências individuais, chaves ou identificadores; não pode criar, alterar ou recomendar automaticamente filtros ou relações no Power BI.",
-  "local_readiness": "intake_required",
+  "local_readiness": "executable_draft",
   "authorization": {
     "intake_authorized": true,
     "intake_authorized_by": "Chris",
@@ -31,9 +31,11 @@
     "policy_approved_by": "Chris",
     "policy_approved_proposal": "A",
     "policy_approval_basis": "PROPOSAL-A-APPROVAL-DELEGATION-001",
-    "implementation_authorized": false,
-    "reason": "A Proposta A foi aprovada sob a diretriz de delegação de Chris. O gate autoriza somente preparação controlada; implementação e produção continuam bloqueadas.",
-    "required_gate": "REL-BIDIR-008-RECONSTRUCTION-AUTHORIZATION-001"
+    "implementation_authorized": true,
+    "implementation_authorized_by": "Chris",
+    "reason": "Chris autorizou explicitamente a implementação exclusivamente em perfil draft após o gate de reconstrução. Produção continua bloqueada.",
+    "required_gate": "REL-BIDIR-008-RECONSTRUCTION-AUTHORIZATION-001",
+    "calibration_gate": "REL-BIDIR-008-DRAFT-CALIBRATION-001"
   },
   "required_before_implementation": [
     "Autorização explícita de Chris para implementação draft, separada da aprovação delegada da Proposta A",
@@ -42,17 +44,7 @@
     "Classificador determinístico, versão contratual, pergunta humana bloqueante e integração protegida por catálogo",
     "Testes, golden dataset exclusivamente sintético, manifesto SHA-256, avaliador reproduzível, calibração e gate individual"
   ],
-  "status": "intake_required",
-  "execution_blocked": true,
-  "missing_before_execution": [
-    "condition",
-    "exclusions",
-    "evidence",
-    "severity",
-    "confidence",
-    "questions",
-    "tests",
-    "golden_dataset",
-    "authorization_gate"
-  ]
+  "status": "executable_draft",
+  "execution_blocked": false,
+  "missing_before_execution": []
 }
