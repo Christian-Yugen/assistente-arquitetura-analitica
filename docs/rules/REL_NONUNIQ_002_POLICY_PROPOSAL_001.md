@@ -22,4 +22,4 @@ Como alternativa mais restritiva, a regra futura poderia apenas perguntar ao rev
 
 ## Controle de autorização
 
-**A Proposta A foi aprovada explicitamente por Chris.** Esta aprovação não autoriza por si só perfil, classificador, registro, contrato, pipeline, catálogo, testes executáveis, dataset golden, calibração, ativação draft ou produção. Um gate de reconstrução e uma autorização específica posterior continuam obrigatórios.
+**A Proposta A foi aprovada explicitamente por Chris.** Esta aprovação não autoriza por si só perfil, classificador, registro, contrato, pipeline, catálogo, testes executáveis, dataset golden, calibração, ativação draft ou produção. O gate de reconstrução formalizado e uma autorização específica posterior continuam obrigatórios antes de qualquer implementação.

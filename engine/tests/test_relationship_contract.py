@@ -1,8 +1,9 @@
 import unittest
 
-from engine.catalog import execute_registered_rule, get_rule_execution_record
+from engine.catalog import RuleExecutionUnavailableError, execute_registered_rule, get_rule_execution_record
 from engine.contracts.diagnosis import RULE_VERSIONS, to_relationship_fragment
 from engine.relationships.one_to_many import OneToManyRelationshipPairProfile, classify_one_to_many_relationship
+from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshipPairProfile
 
 
 class RelationshipContractTests(unittest.TestCase):
@@ -55,6 +56,27 @@ class RelationshipContractTests(unittest.TestCase):
                 dimension_key_unique=True,
                 fact_reference_complete=True,
                 fact_reference_unique=False,
+                referential_coverage_ratio=1.0,
+                eligible_direction_count=1,
+            ),
+        )
+        self.assertIsNotNone(result)
+
+    def test_non_unique_rule_is_versioned_and_executes_only_in_the_draft_profile(self):
+        record = get_rule_execution_record("REL-NONUNIQ-002")
+
+        self.assertEqual(RULE_VERSIONS["REL-NONUNIQ-002"], "0.1.0-provisional.1")
+        self.assertEqual(record.status, "executable_draft")
+        result = execute_registered_rule(
+            "REL-NONUNIQ-002",
+            NonUniqueOneSideRelationshipPairProfile(
+                source_standard_dimension_candidate=True,
+                target_fact_candidate=True,
+                eligible_dimension_key_count=1,
+                eligible_fact_reference_count=1,
+                dimension_key_complete=True,
+                dimension_key_duplicate_count=1,
+                fact_reference_complete=True,
                 referential_coverage_ratio=1.0,
                 eligible_direction_count=1,
             ),

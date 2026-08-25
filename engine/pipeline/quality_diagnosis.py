@@ -88,6 +88,7 @@ from engine.fact_dimension.fact_without_grain import FactWithoutDefinedGrainShee
 from engine.fact_dimension.undefined_classification import UndefinedTableClassificationSheetProfile
 from engine.profiling.relationship_pairs import RelationshipPairSignal
 from engine.relationships.one_to_many import OneToManyRelationshipPairProfile
+from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshipPairProfile
 
 
 @dataclass(frozen=True)
@@ -810,7 +811,11 @@ def execute_quality_diagnosis(
             ))
 
     relationship_candidates: list[tuple[str, str, list[dict[str, object]]]] = []
-    if get_rule_execution_record("REL-ONEMANY-001").status == "executable_draft":
+    relationship_rule_statuses = {
+        "REL-ONEMANY-001": get_rule_execution_record("REL-ONEMANY-001").status,
+        "REL-NONUNIQ-002": get_rule_execution_record("REL-NONUNIQ-002").status,
+    }
+    if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
             sheet_id: frozenset(
                 str(candidate.get("classification_type", ""))
@@ -856,6 +861,34 @@ def execute_quality_diagnosis(
             )
             for sheet_id in grouped_columns
         }
+        non_unique_source_key_counts = {
+            sheet_id: len(
+                {
+                    signal.source_column_id
+                    for signal in relationship_pair_signals
+                    if signal.source_sheet_id == sheet_id
+                    and signal.source_complete
+                    and not signal.source_unique
+                    and signal.source_distinct_count < signal.source_non_missing_count
+                    and not signal.source_or_target_sensitive
+                    and not signal.source_or_target_has_formula
+                }
+            )
+            for sheet_id in grouped_columns
+        }
+        complete_target_reference_counts = {
+            sheet_id: len(
+                {
+                    signal.target_column_id
+                    for signal in relationship_pair_signals
+                    if signal.target_sheet_id == sheet_id
+                    and signal.target_complete
+                    and not signal.source_or_target_sensitive
+                    and not signal.source_or_target_has_formula
+                }
+            )
+            for sheet_id in grouped_columns
+        }
         eligible_direction_counts = {
             (source_sheet_id, target_sheet_id): sum(
                 1
@@ -874,36 +907,70 @@ def execute_quality_diagnosis(
             for target_sheet_id in grouped_columns
             if source_sheet_id != target_sheet_id
         }
+        non_unique_direction_counts = {
+            (source_sheet_id, target_sheet_id): sum(
+                1
+                for signal in relationship_pair_signals
+                if signal.source_sheet_id == source_sheet_id
+                and signal.target_sheet_id == target_sheet_id
+                and signal.source_complete
+                and not signal.source_unique
+                and signal.source_distinct_count < signal.source_non_missing_count
+                and signal.target_complete
+                and signal.referential_coverage_ratio == 1.0
+                and not signal.source_or_target_sensitive
+                and not signal.source_or_target_has_formula
+            )
+            for source_sheet_id in grouped_columns
+            for target_sheet_id in grouped_columns
+            if source_sheet_id != target_sheet_id
+        }
         for signal in relationship_pair_signals:
             source_types = classification_types_by_sheet.get(signal.source_sheet_id, frozenset())
             target_types = classification_types_by_sheet.get(signal.target_sheet_id, frozenset())
             source_conflict_count = max(0, len(source_types) - 1)
             target_conflict_count = max(0, len(target_types) - 1)
-            pair_profile = OneToManyRelationshipPairProfile(
-                source_standard_dimension_candidate="dimension_standard_candidate" in source_types,
-                target_fact_candidate=bool({"fact_transactional_candidate", "fact_periodic_candidate"} & target_types),
-                source_calendar_dimension_candidate="dimension_calendar_candidate" in source_types,
-                source_or_target_undefined_candidate="table_classification_undefined_candidate" in source_types | target_types,
-                source_or_target_fact_without_grain_candidate="fact_without_defined_grain_candidate" in source_types | target_types,
-                source_or_target_classification_conflict=source_conflict_count > 0 or target_conflict_count > 0,
-                source_or_target_sensitive=signal.source_or_target_sensitive or signal.source_sheet_id in sensitive_sheet_ids or signal.target_sheet_id in sensitive_sheet_ids,
-                source_or_target_has_formula=signal.source_or_target_has_formula,
-                self_reference=signal.source_sheet_id == signal.target_sheet_id,
-                eligible_dimension_key_count=source_key_counts[signal.source_sheet_id],
-                eligible_fact_reference_count=target_reference_counts[signal.target_sheet_id],
-                dimension_key_complete=signal.source_complete,
-                dimension_key_unique=signal.source_unique,
-                fact_reference_complete=signal.target_complete,
-                fact_reference_unique=signal.target_unique,
-                referential_coverage_ratio=signal.referential_coverage_ratio,
-                eligible_direction_count=eligible_direction_counts[(signal.source_sheet_id, signal.target_sheet_id)],
-                has_one_to_one_pattern=signal.source_complete and signal.source_unique and signal.target_complete and signal.target_unique and signal.referential_coverage_ratio == 1.0,
-                has_many_to_many_pattern=not signal.source_unique and not signal.target_unique,
-                ambiguity_count=source_conflict_count + target_conflict_count,
-            )
-            candidates = execute_registered_rule("REL-ONEMANY-001", pair_profile)
-            if candidates:
-                relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidates]))
+            common_profile = {
+                "source_standard_dimension_candidate": "dimension_standard_candidate" in source_types,
+                "target_fact_candidate": bool({"fact_transactional_candidate", "fact_periodic_candidate"} & target_types),
+                "source_calendar_dimension_candidate": "dimension_calendar_candidate" in source_types,
+                "source_or_target_undefined_candidate": "table_classification_undefined_candidate" in source_types | target_types,
+                "source_or_target_fact_without_grain_candidate": "fact_without_defined_grain_candidate" in source_types | target_types,
+                "source_or_target_classification_conflict": source_conflict_count > 0 or target_conflict_count > 0,
+                "source_or_target_sensitive": signal.source_or_target_sensitive or signal.source_sheet_id in sensitive_sheet_ids or signal.target_sheet_id in sensitive_sheet_ids,
+                "source_or_target_has_formula": signal.source_or_target_has_formula,
+                "self_reference": signal.source_sheet_id == signal.target_sheet_id,
+                "dimension_key_complete": signal.source_complete,
+                "fact_reference_complete": signal.target_complete,
+                "referential_coverage_ratio": signal.referential_coverage_ratio,
+                "has_one_to_one_pattern": signal.source_complete and signal.source_unique and signal.target_complete and signal.target_unique and signal.referential_coverage_ratio == 1.0,
+                "has_many_to_many_pattern": not signal.source_unique and not signal.target_unique,
+                "ambiguity_count": source_conflict_count + target_conflict_count,
+            }
+            if relationship_rule_statuses["REL-ONEMANY-001"] == "executable_draft":
+                one_to_many_profile = OneToManyRelationshipPairProfile(
+                    **common_profile,
+                    eligible_dimension_key_count=source_key_counts[signal.source_sheet_id],
+                    eligible_fact_reference_count=target_reference_counts[signal.target_sheet_id],
+                    dimension_key_unique=signal.source_unique,
+                    fact_reference_unique=signal.target_unique,
+                    eligible_direction_count=eligible_direction_counts[(signal.source_sheet_id, signal.target_sheet_id)],
+                )
+                candidate = execute_registered_rule("REL-ONEMANY-001", one_to_many_profile)
+                if candidate:
+                    relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
+            if relationship_rule_statuses["REL-NONUNIQ-002"] == "executable_draft":
+                non_unique_profile = NonUniqueOneSideRelationshipPairProfile(
+                    **common_profile,
+                    eligible_dimension_key_count=non_unique_source_key_counts[signal.source_sheet_id],
+                    eligible_fact_reference_count=complete_target_reference_counts[signal.target_sheet_id],
+                    dimension_key_unique=signal.source_unique,
+                    dimension_key_duplicate_count=max(0, signal.source_non_missing_count - signal.source_distinct_count),
+                    eligible_direction_count=non_unique_direction_counts[(signal.source_sheet_id, signal.target_sheet_id)],
+                )
+                candidate = execute_registered_rule("REL-NONUNIQ-002", non_unique_profile)
+                if candidate:
+                    relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []
