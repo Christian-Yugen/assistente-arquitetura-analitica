@@ -58,6 +58,7 @@ RULE_VERSIONS = {
     "REL-COMPKEY-009": "0.1.0-provisional.1",
     "REL-CONFORMED-010": "0.1.0-provisional.1",
     "MET-COMPL-001": "0.1.0-provisional.1",
+    "MET-SUM-002": "0.1.0-provisional.1",
 }
 
 

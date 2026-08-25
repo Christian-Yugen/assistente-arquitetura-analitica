@@ -484,5 +484,5 @@
 - [x] Criar branch de segurança e registrar o intake da MET-SUM-002, mantendo-a não executável.
 - [x] Elaborar e aprovar sob a diretriz de Proposta A a política conceitual e a especificação não executável da MET-SUM-002.
 - [x] Formalizar o gate de reconstrução da MET-SUM-002 sem autorizar implementação.
-- [ ] Obter autorização explícita de Chris para implementar a MET-SUM-002 exclusivamente no perfil draft.
+- [x] Obter autorização explícita de Chris para implementar a MET-SUM-002 exclusivamente no perfil draft.
 - [ ] Implementar, testar, calibrar e ativar a MET-SUM-002 exclusivamente após autorização específica de Chris no perfil draft.
