@@ -125,6 +125,7 @@ from engine.fact_dimension.bridge_table import BridgeTableProfile
 from engine.fact_dimension.auxiliary_table import AuxiliaryTableProfile
 from engine.fact_dimension.parameter_table import ParameterTableProfile
 from engine.fact_dimension.flat_table import FlatTableProfile
+from engine.fact_dimension.mixed_table import MixedTableProfile
 from engine.profiling.relationship_pairs import CompositeRelationshipPairSignal, RelationshipPairSignal
 from engine.relationships.one_to_many import OneToManyRelationshipPairProfile
 from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshipPairProfile
@@ -731,6 +732,11 @@ def execute_quality_diagnosis(
             table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
                 "MDL-FLAT-012",
                 FlatTableProfile(independent_flat_table_signal_count=0),
+            ))
+        if get_rule_execution_record("MDL-MIXED-013").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-MIXED-013",
+                MixedTableProfile(independent_mixed_table_signal_count=0),
             ))
         if get_rule_execution_record("MDL-FACTTXN-002").status == "executable_draft":
             table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(

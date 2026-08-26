@@ -14,6 +14,7 @@ from engine.fact_dimension.bridge_table import classify_bridge_table
 from engine.fact_dimension.auxiliary_table import classify_auxiliary_table
 from engine.fact_dimension.parameter_table import classify_parameter_table
 from engine.fact_dimension.flat_table import classify_flat_table
+from engine.fact_dimension.mixed_table import classify_mixed_table
 
 
 FACT_DIMENSION_RULE_IMPLEMENTATIONS = {
@@ -31,4 +32,5 @@ FACT_DIMENSION_RULE_IMPLEMENTATIONS = {
     "MDL-AUX-010": classify_auxiliary_table,
     "MDL-PARAM-011": classify_parameter_table,
     "MDL-FLAT-012": classify_flat_table,
+    "MDL-MIXED-013": classify_mixed_table,
 }

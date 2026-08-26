@@ -18,9 +18,9 @@ class RuleIntakeTests(unittest.TestCase):
         self.assertEqual(len(readiness["rules"]), 95)
         self.assertEqual(readiness["counts"], {
             "baseline_reference": 0,
-            "executable_draft": 88,
+            "executable_draft": 89,
             "reference_catalog_draft": 0,
-            "intake_required": 7,
+            "intake_required": 6,
         })
 
         by_id = {rule["rule_id"]: rule for rule in readiness["rules"]}
@@ -71,6 +71,8 @@ class RuleIntakeTests(unittest.TestCase):
         self.assertTrue(by_id["MDL-PARAM-011"]["executable"])
         self.assertEqual(by_id["MDL-FLAT-012"]["local_readiness"], "executable_draft")
         self.assertTrue(by_id["MDL-FLAT-012"]["executable"])
+        self.assertEqual(by_id["MDL-MIXED-013"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["MDL-MIXED-013"]["executable"])
         self.assertEqual(by_id["ALT-METRIC-006"]["local_readiness"], "executable_draft")
         self.assertTrue(by_id["ALT-METRIC-006"]["executable"])
         self.assertEqual(by_id["ALT-SUMPCT-007"]["local_readiness"], "executable_draft")
