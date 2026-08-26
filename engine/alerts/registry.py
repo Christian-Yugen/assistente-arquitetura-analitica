@@ -4,6 +4,7 @@ from engine.alerts.grain import classify_undefined_grain_modeling_block
 from engine.alerts.key import classify_invalid_key_modeling_block
 from engine.alerts.ambiguity import classify_structural_ambiguity_modeling_block
 from engine.alerts.metric_risk import classify_potentially_misleading_metric_review
+from engine.alerts.percentage_sum import classify_percentage_sum_review
 
 
 ALERT_RULE_IMPLEMENTATIONS = {
@@ -13,4 +14,5 @@ ALERT_RULE_IMPLEMENTATIONS = {
     "ALT-KEY-004": classify_invalid_key_modeling_block,
     "ALT-AMBIG-005": classify_structural_ambiguity_modeling_block,
     "ALT-METRIC-006": classify_potentially_misleading_metric_review,
+    "ALT-SUMPCT-007": classify_percentage_sum_review,
 }

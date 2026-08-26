@@ -28,6 +28,7 @@ from engine.alerts.grain import UndefinedGrainAlertProfile
 from engine.alerts.key import InvalidKeyAlertProfile
 from engine.alerts.ambiguity import StructuralAmbiguityAlertProfile
 from engine.alerts.metric_risk import PotentiallyMisleadingMetricAlertProfile
+from engine.alerts.percentage_sum import PercentageSumAlertProfile
 from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_metric_fragment, to_relationship_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
@@ -877,6 +878,7 @@ def execute_quality_diagnosis(
         "ALT-KEY-004": get_rule_execution_record("ALT-KEY-004").status,
         "ALT-AMBIG-005": get_rule_execution_record("ALT-AMBIG-005").status,
         "ALT-METRIC-006": get_rule_execution_record("ALT-METRIC-006").status,
+        "ALT-SUMPCT-007": get_rule_execution_record("ALT-SUMPCT-007").status,
     }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
@@ -1468,6 +1470,18 @@ def execute_quality_diagnosis(
         )
         if metric_risk_alert_candidate:
             quality_findings.append(("model", "model", metric_risk_alert_candidate))
+
+    if alert_rule_statuses["ALT-SUMPCT-007"] == "executable_draft":
+        percentage_sum_alert_candidate = execute_registered_rule(
+            "ALT-SUMPCT-007",
+            PercentageSumAlertProfile(
+                # Não há fonte independente autorizada para risco na soma de percentuais.
+                # O pipeline permanece fail-closed e não deriva o sinal de conteúdo privado.
+                independent_percentage_sum_risk_signal_count=0,
+            ),
+        )
+        if percentage_sum_alert_candidate:
+            quality_findings.append(("model", "model", percentage_sum_alert_candidate))
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []
