@@ -683,3 +683,5 @@
 - [x] Inventariar a cobertura e as limitações da calibração draft para preparar um gate produtivo sem dados privados.
 - [x] Definir proposta documental de conjunto aprovado, métricas FP/FN e critérios de aceite para calibração produtiva, sem executar dados reais.
 - [x] Validar o plano de calibração, salvar checkpoint e solicitar gate explícito antes de qualquer execução produtiva.
+- [x] Registrar a autorização de Chris e abrir o intake documental vazio do conjunto de calibração produtiva, sem receber ou processar dados.
+- [x] Validar que o intake de calibração permanece bloqueado para coleta, upload, execução, alteração de regra e promoção.
