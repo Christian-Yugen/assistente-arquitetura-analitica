@@ -1,7 +1,9 @@
-# GRN-PREAGG-008 — Gate de reconstrução
+# GRN-PREAGG-008 — Gate de reconstrução e autorização
 
-**Decisão:** intake e Proposta A não executáveis registrados sob `PROPOSAL-A-APPROVAL-DELEGATION-001`.
+**Regra:** `GRN-PREAGG-008 — Agregação prévia`
+**Decisão:** autorizada exclusivamente para **draft controlado**.
+**Registro da autorização de implementação:** Chris — “autorizado”.
 
-Este gate limita a GRN-PREAGG-008 ao registro documental da política conservadora. Qualquer futura implementação draft exigirá autorização explícita adicional de Chris para código, seguida de perfil agregado, classificador determinístico, contrato, pipeline fail-closed, allowlist, testes, golden exclusivamente sintético, manifesto SHA-256, calibração limitada e gate individual.
+O executor somente consolida sinal **independente, autorizado, opaco e agregado** para hipótese de revisão humana. Ausência de sinal, confirmação humana prévia, conflito estrutural, sensibilidade ou erro contratual suprimem o finding de modo fail-closed. A regra não infere, identifica, calcula, soma, conta, compara, recomputa, seleciona ou desagrega métricas, medidas, níveis de detalhe, entidades, eventos, chaves, fatos, dimensões, relações, cardinalidades, campos, valores, frequências, períodos ou conteúdo de workbook. O pipeline real fixa o sinal independente em zero enquanto não existir fonte independente autorizada.
 
-Não há autorização para inferir, identificar, calcular, somar, contar, comparar, recomputar, selecionar ou desagregar métricas, medidas, níveis de detalhe, entidades, eventos, chaves, fatos, dimensões, relações, cardinalidades, campos, valores, frequências, períodos ou conteúdo privado. Não há autorização para persistir, exibir ou registrar dados de workbook, modificar arquivos ou gerar DAX/M. **Produção permanece bloqueada.**
+Golden sintético, SHA-256, testes, allowlist e gate individual sustentam somente draft. **Produção permanece bloqueada** até cobertura, calibração produtiva, exclusão física, E2E e gate produtivo.

@@ -11,6 +11,7 @@ from engine.alerts.low_confidence import classify_low_confidence_review
 from engine.alerts.snapshot_grain import classify_snapshot_grain
 from engine.alerts.period_per_row import classify_period_per_row
 from engine.alerts.entity_association import classify_entity_association
+from engine.alerts.pre_aggregation import classify_pre_aggregation
 
 
 ALERT_RULE_IMPLEMENTATIONS = {
@@ -27,4 +28,5 @@ ALERT_RULE_IMPLEMENTATIONS = {
     "GRN-SNAP-006": classify_snapshot_grain,
     "GRN-PERIOD-005": classify_period_per_row,
     "GRN-ASSOC-007": classify_entity_association,
+    "GRN-PREAGG-008": classify_pre_aggregation,
 }

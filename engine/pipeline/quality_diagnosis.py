@@ -35,6 +35,7 @@ from engine.alerts.low_confidence import LowConfidenceAlertProfile
 from engine.alerts.snapshot_grain import SnapshotGrainProfile
 from engine.alerts.period_per_row import PeriodPerRowProfile
 from engine.alerts.entity_association import EntityAssociationProfile
+from engine.alerts.pre_aggregation import PreAggregationProfile
 from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_metric_fragment, to_relationship_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
@@ -891,6 +892,7 @@ def execute_quality_diagnosis(
         "GRN-SNAP-006": get_rule_execution_record("GRN-SNAP-006").status,
         "GRN-PERIOD-005": get_rule_execution_record("GRN-PERIOD-005").status,
         "GRN-ASSOC-007": get_rule_execution_record("GRN-ASSOC-007").status,
+        "GRN-PREAGG-008": get_rule_execution_record("GRN-PREAGG-008").status,
     }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
@@ -1564,6 +1566,17 @@ def execute_quality_diagnosis(
         )
         if entity_association_candidate:
             quality_findings.append(("model", "model", entity_association_candidate))
+    if alert_rule_statuses["GRN-PREAGG-008"] == "executable_draft":
+        pre_aggregation_candidate = execute_registered_rule(
+            "GRN-PREAGG-008",
+            PreAggregationProfile(
+                # Não há fonte independente autorizada de agregação prévia.
+                # O pipeline permanece fail-closed e não deriva sinal de conteúdo privado.
+                independent_pre_aggregation_signal_count=0,
+            ),
+        )
+        if pre_aggregation_candidate:
+            quality_findings.append(("model", "model", pre_aggregation_candidate))
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []
