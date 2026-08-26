@@ -27,6 +27,7 @@ from engine.alerts.quality import CriticalQualityRiskProfile
 from engine.alerts.grain import UndefinedGrainAlertProfile
 from engine.alerts.key import InvalidKeyAlertProfile
 from engine.alerts.ambiguity import StructuralAmbiguityAlertProfile
+from engine.alerts.metric_risk import PotentiallyMisleadingMetricAlertProfile
 from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_metric_fragment, to_relationship_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
@@ -875,6 +876,7 @@ def execute_quality_diagnosis(
         "ALT-GRAIN-003": get_rule_execution_record("ALT-GRAIN-003").status,
         "ALT-KEY-004": get_rule_execution_record("ALT-KEY-004").status,
         "ALT-AMBIG-005": get_rule_execution_record("ALT-AMBIG-005").status,
+        "ALT-METRIC-006": get_rule_execution_record("ALT-METRIC-006").status,
     }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
@@ -1454,6 +1456,18 @@ def execute_quality_diagnosis(
         )
         if ambiguity_alert_candidate:
             quality_findings.append(("model", "model", ambiguity_alert_candidate))
+
+    if alert_rule_statuses["ALT-METRIC-006"] == "executable_draft":
+        metric_risk_alert_candidate = execute_registered_rule(
+            "ALT-METRIC-006",
+            PotentiallyMisleadingMetricAlertProfile(
+                # Não há fonte independente autorizada para risco de interpretação de métrica.
+                # O pipeline permanece fail-closed e não deriva o sinal de conteúdo privado.
+                independent_metric_risk_signal_count=0,
+            ),
+        )
+        if metric_risk_alert_candidate:
+            quality_findings.append(("model", "model", metric_risk_alert_candidate))
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []

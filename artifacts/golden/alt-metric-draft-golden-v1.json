@@ -1,0 +1,42 @@
+{
+  "golden_id": "ALT-METRIC-006-DRAFT-GOLDEN-001",
+  "rule_id": "ALT-METRIC-006",
+  "synthetic_only": true,
+  "profile_defaults": {
+    "independent_metric_risk_signal_count": 0,
+    "confirmed_metric_interpretation_count": 0,
+    "structural_conflict_count": 0,
+    "sensitive_signal_count": 0,
+    "contract_error_count": 0
+  },
+  "cases": [
+    {
+      "case_id": "synthetic-independent-risk-signal",
+      "overrides": {
+        "independent_metric_risk_signal_count": 1
+      },
+      "expected_finding": true
+    },
+    {
+      "case_id": "no-independent-signal",
+      "overrides": {},
+      "expected_finding": false
+    },
+    {
+      "case_id": "human-interpretation-confirmed",
+      "overrides": {
+        "independent_metric_risk_signal_count": 1,
+        "confirmed_metric_interpretation_count": 1
+      },
+      "expected_finding": false
+    },
+    {
+      "case_id": "sensitive-signal-blocks-consolidation",
+      "overrides": {
+        "independent_metric_risk_signal_count": 1,
+        "sensitive_signal_count": 1
+      },
+      "expected_finding": false
+    }
+  ]
+}

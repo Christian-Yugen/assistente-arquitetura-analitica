@@ -2,7 +2,7 @@
 
 ## Decisão atual
 
-O gate aprova exclusivamente o intake `ALT-METRIC-006-INTAKE-001` e a `ALT_METRIC_006_POLICY_PROPOSAL_001.md` como documentação não executável, conforme `PROPOSAL-A-APPROVAL-DELEGATION-001`. A regra oficial é `ALT-METRIC-006 — Métrica potencialmente enganosa`, no estágio `alert_consolidation`, escopo `model` e prioridade `P0`.
+O gate aprovou inicialmente exclusivamente o intake `ALT-METRIC-006-INTAKE-001` e a `ALT_METRIC_006_POLICY_PROPOSAL_001.md` como documentação não executável, conforme `PROPOSAL-A-APPROVAL-DELEGATION-001`. Chris autorizou a implementação draft por chat: **“sim autorizado. continue isso logo para finaizarmos essas 95 regras”**. A regra oficial é `ALT-METRIC-006 — Métrica potencialmente enganosa`, no estágio `alert_consolidation`, escopo `model` e prioridade `P0`.
 
 ## Limite da futura implementação
 
@@ -10,8 +10,8 @@ Após autorização explícita e específica de Chris, uma eventual implementaç
 
 ## Bloqueios obrigatórios
 
-Perfil agregado, classificador, registry, contrato, pipeline, allowlist, testes executáveis, golden sintético, SHA-256, calibração TP/FP/FN e gate individual `ALT-METRIC-006-DRAFT-CALIBRATION-001` ainda não existem e permanecem bloqueados. A entrada `ALT-METRIC-006` não é executável e não altera a contagem do workspace. **Produção permanece bloqueada.**
+Produção, promoção de ambiente e qualquer uso fora do perfil draft permanecem bloqueados. O perfil agregado, classificador, registry, contrato, pipeline, allowlist, testes executáveis, golden sintético, SHA-256, calibração TP/FP/FN e gate individual `ALT-METRIC-006-DRAFT-CALIBRATION-001` somente podem ser criados dentro do escopo autorizado e devem manter os controles descritos neste gate. **Produção permanece bloqueada.**
 
 ## Próxima decisão necessária
 
-Chris deve autorizar explicitamente a criação de código executável para a regra no perfil draft. Sem essa autorização, a execução é negada e nenhum comportamento do motor pode ser modificado.
+O ciclo autorizado exige testes determinísticos, golden estritamente sintético, manifesto SHA-256, calibração com TP/FP/FN, gate individual e allowlist draft antes de a regra ser considerada executável. Sem todos esses controles, a execução é negada.
