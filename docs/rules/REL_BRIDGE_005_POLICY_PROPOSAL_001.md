@@ -1,6 +1,6 @@
 # Proposta A — REL-BRIDGE-005: Necessidade de ponte
 
-**Estado:** documental e não executável. **Regra oficial:** `REL-BRIDGE-005`, categoria `relationship`, prioridade `P1`, escopo `sheet_pair`, etapa `relationship_inference`, dependência declarada `table_classification` e saída primária `relationship_or_finding`.
+**Estado:** ativada somente em draft. **Regra oficial:** `REL-BRIDGE-005`, categoria `relationship`, prioridade `P1`, escopo `sheet_pair`, etapa `relationship_inference`, dependência declarada `table_classification` e saída primária `relationship_or_finding`.
 
 ## Finalidade limitada
 
@@ -16,4 +16,4 @@ Qualquer desenho futuro deverá receber exclusivamente contagens e flags agregad
 
 ## Critérios para eventual código draft
 
-Código executável continua bloqueado até autorização explícita de Chris. Depois dela, serão obrigatórios perfil agregado, classificador determinístico, integração em registro e contrato, pipeline com sinal zero, allowlist, testes, golden exclusivamente sintético com SHA-256, calibração limitada com TP/FP/FN e gate individual. **Produção permanece bloqueada.**
+Chris autorizou explicitamente o código draft em `Chat: SIM, autorizado`. O perfil agregado, classificador determinístico, integração em registro e contrato, pipeline com sinal zero, allowlist, testes, golden exclusivamente sintético com SHA-256, calibração limitada com TP/FP/FN e gate individual foram vinculados a essa autorização. **Produção permanece bloqueada.**

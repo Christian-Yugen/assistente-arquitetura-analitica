@@ -9,6 +9,7 @@ from engine.relationships.ambiguous_path import classify_ambiguous_relationship_
 from engine.relationships.bidirectional_filter import classify_bidirectional_filter_review
 from engine.relationships.composite_key import classify_composite_relationship_key
 from engine.relationships.conformed_dimension import classify_conformed_dimension
+from engine.relationships.bridge_need import classify_bridge_need
 
 
 RELATIONSHIP_RULE_IMPLEMENTATIONS = {
@@ -16,6 +17,7 @@ RELATIONSHIP_RULE_IMPLEMENTATIONS = {
     "REL-NONUNIQ-002": classify_non_unique_one_side_relationship,
     "REL-ORPHAN-003": classify_orphan_reference_relationship,
     "REL-MANYMANY-004": classify_many_to_many_relationship,
+    "REL-BRIDGE-005": classify_bridge_need,
     "REL-FACTFACT-006": classify_direct_fact_relationship,
     "REL-AMBIG-007": classify_ambiguous_relationship_path,
     "REL-BIDIR-008": classify_bidirectional_filter_review,
