@@ -1,0 +1,3 @@
+# ALT-LOWCONF-010 — Proposta A de Política 001
+
+Uma futura implementação draft poderá somente consolidar uma contagem ou flag **independente, autorizada, opaca e agregada** de baixa confiança acumulada em solicitação conceptual de revisão humana. Ela não poderá calcular confiança, pesos, limiares, medidas, campos, entidades, populações, períodos, filtros ou agregações; não poderá usar ou expor conteúdo de workbook nem gerar DAX/M. Ausência de sinal, sinal não autorizado, sensibilidade, conflito estrutural, erro contratual ou confirmação humana devem suprimir o finding de modo fail-closed. Esta Proposta A é não executável sob `PROPOSAL-A-APPROVAL-DELEGATION-001`; qualquer código requer autorização explícita de Chris e produção permanece bloqueada.
