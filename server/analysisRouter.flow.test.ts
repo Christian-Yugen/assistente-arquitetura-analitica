@@ -83,6 +83,17 @@ describe("analysis router flow", () => {
     expect(retainedFile?.referenceRemovedAt).toBeInstanceOf(Date);
   });
 
+  it("uses a private CSV key when an authenticated owner submits a CSV", async () => {
+    calls.nextVersion.mockResolvedValue(1);
+    const user = { id: 77, openId: "owner-77", email: null, name: null, loginMethod: "manus", role: "user" as const, createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date() };
+    const caller = appRouter.createCaller({ user, req: {} as TrpcContext["req"], res: {} as TrpcContext["res"] });
+    await caller.analysis.analyzeWorkbook({ projectName: "Projeto", objective: "Objetivo", fileName: "modelo.csv", mimeType: "text/csv", dataBase64: "aWQsdmFsb3IKMSwxMAo=" });
+
+    const storage = await import("./storage");
+    expect(storage.storagePut).toHaveBeenCalledWith(expect.stringMatching(/^analysis\/77\/[^/]+\/[^/]+\.csv$/), expect.any(Buffer), "text/csv");
+    expect(calls.createFile.mock.calls[0][0]).toMatchObject({ ownerId: 77, mimeType: "text/csv" });
+  });
+
   it("returns a generic error when the engine fails with internal details", async () => {
     calls.executeEngine.mockRejectedValueOnce(new Error("CPF 123.456.789-09 in temporary file"));
     const user = { id: 77, openId: "owner-77", email: null, name: null, loginMethod: "manus", role: "user" as const, createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date() };

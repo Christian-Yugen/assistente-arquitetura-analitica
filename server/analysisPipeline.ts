@@ -7,10 +7,12 @@ import { sanitizeSensitiveText, sanitizeWorkbookFileName } from "./privacy";
 
 const MAX_BYTES = 25 * 1024 * 1024;
 const XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+const CSV_MIME = "text/csv";
+const ACCEPTED_CSV_MIMES = new Set([CSV_MIME, "application/csv", "application/vnd.ms-excel", "application/octet-stream"]);
 
 export class UploadValidationError extends Error {}
 
-export type ValidatedWorkbook = { buffer: Buffer; originalName: string; mimeType: string; sha256: string };
+export type ValidatedWorkbook = { buffer: Buffer; originalName: string; mimeType: string; sha256: string; format: "xlsx" | "csv"; extension: "xlsx" | "csv" };
 export { sanitizeSensitiveText } from "./privacy";
 export type WorkbookInspection = { sheetCount: number };
 
@@ -21,19 +23,26 @@ function contractUuid(seed: string): string {
 
 export function validateWorkbookUpload(input: { fileName: string; mimeType: string; dataBase64: string }): ValidatedWorkbook {
   const requestedName = input.fileName.trim().replace(/[\\/\0]/g, "_").slice(0, 255);
-  if (!requestedName.toLowerCase().endsWith(".xlsx")) throw new UploadValidationError("Envie somente arquivos .xlsx.");
+  const lowerName = requestedName.toLowerCase();
+  const format = lowerName.endsWith(".xlsx") ? "xlsx" : lowerName.endsWith(".csv") ? "csv" : null;
+  if (!format) throw new UploadValidationError("Envie arquivos .xlsx ou .csv.");
   const originalName = sanitizeWorkbookFileName(requestedName);
-  if (input.mimeType && input.mimeType !== XLSX_MIME && input.mimeType !== "application/octet-stream") {
+  if (format === "xlsx" && input.mimeType && input.mimeType !== XLSX_MIME && input.mimeType !== "application/octet-stream") {
     throw new UploadValidationError("O tipo informado não corresponde a uma planilha XLSX.");
+  }
+  if (format === "csv" && input.mimeType && !ACCEPTED_CSV_MIMES.has(input.mimeType)) {
+    throw new UploadValidationError("O tipo informado não corresponde a um arquivo CSV.");
   }
   if (!/^[A-Za-z0-9+/]+={0,2}$/.test(input.dataBase64) || input.dataBase64.length % 4 !== 0) {
     throw new UploadValidationError("O conteúdo do upload não está codificado em base64 válido.");
   }
   const buffer = Buffer.from(input.dataBase64, "base64");
   if (!buffer.length || buffer.length > MAX_BYTES) throw new UploadValidationError("O arquivo deve ter entre 1 byte e 25 MB.");
-  const isZip = buffer.length >= 4 && buffer[0] === 0x50 && buffer[1] === 0x4b && [0x03, 0x05, 0x07].includes(buffer[2]) && [0x04, 0x06, 0x08].includes(buffer[3]);
-  if (!isZip) throw new UploadValidationError("O conteúdo não possui a assinatura ZIP esperada para XLSX.");
-  return { buffer, originalName, mimeType: XLSX_MIME, sha256: createHash("sha256").update(buffer).digest("hex") };
+  if (format === "xlsx") {
+    const isZip = buffer.length >= 4 && buffer[0] === 0x50 && buffer[1] === 0x4b && [0x03, 0x05, 0x07].includes(buffer[2]) && [0x04, 0x06, 0x08].includes(buffer[3]);
+    if (!isZip) throw new UploadValidationError("O conteúdo não possui a assinatura ZIP esperada para XLSX.");
+  }
+  return { buffer, originalName, mimeType: format === "xlsx" ? XLSX_MIME : CSV_MIME, sha256: createHash("sha256").update(buffer).digest("hex"), format, extension: format };
 }
 
 export function validateWorkbookInspection(input: { sheet_count: unknown }): WorkbookInspection {
@@ -45,11 +54,11 @@ export function validateWorkbookInspection(input: { sheet_count: unknown }): Wor
 
 export async function inspectWorkbookBeforePersistence(workbook: ValidatedWorkbook): Promise<WorkbookInspection> {
   const workDir = await mkdtemp(join(tmpdir(), "analytical-workbook-inspection-"));
-  const inputPath = join(workDir, "input.xlsx");
+  const inputPath = join(workDir, `input.${workbook.extension}`);
   try {
     await writeFile(inputPath, workbook.buffer);
     const stdout = await new Promise<string>((resolve, reject) => {
-      const child = spawn("python3", ["-m", "engine.workbook_validator", "--input", inputPath], {
+      const child = spawn("python3", ["-m", "engine.workbook_validator", "--input", inputPath, "--format", workbook.format], {
         cwd: process.cwd(),
         env: { ...process.env, PYTHONPATH: process.cwd() },
       });
@@ -73,13 +82,13 @@ export async function inspectWorkbookBeforePersistence(workbook: ValidatedWorkbo
 
 export async function executeWorkbookEngine(workbook: ValidatedWorkbook, metadata: Record<string, unknown>) {
   const workDir = await mkdtemp(join(tmpdir(), "analytical-workbook-"));
-  const inputPath = join(workDir, "input.xlsx");
+  const inputPath = join(workDir, `input.${workbook.extension}`);
   const metadataPath = join(workDir, "metadata.json");
   const outputPath = join(workDir, "diagnosis.json");
   try {
     await Promise.all([writeFile(inputPath, workbook.buffer), writeFile(metadataPath, JSON.stringify(metadata))]);
     await new Promise<void>((resolve, reject) => {
-      const child = spawn("python3", ["-m", "engine.workbook_runner", "--input", inputPath, "--metadata", metadataPath, "--output", outputPath], { cwd: process.cwd(), env: { ...process.env, PYTHONPATH: process.cwd() } });
+      const child = spawn("python3", ["-m", "engine.workbook_runner", "--input", inputPath, "--metadata", metadataPath, "--output", outputPath, "--format", workbook.format], { cwd: process.cwd(), env: { ...process.env, PYTHONPATH: process.cwd() } });
       let stderr = "";
       const timer = setTimeout(() => child.kill("SIGKILL"), 120_000);
       child.stderr.on("data", chunk => { stderr += chunk.toString(); });

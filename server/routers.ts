@@ -50,7 +50,7 @@ export const appRouter = router({
       try {
         await db.createAnalysisProject({ id: projectId, ownerId: ctx.user.id, name: sanitizeSensitiveText(input.projectName), domain: "generic" });
         await db.updateAnalysisProjectStatus(projectId, ctx.user.id, "uploading");
-        const stored = await storagePut(`analysis/${ctx.user.id}/${projectId}/${fileId}.xlsx`, workbook.buffer, workbook.mimeType);
+        const stored = await storagePut(`analysis/${ctx.user.id}/${projectId}/${fileId}.${workbook.extension}`, workbook.buffer, workbook.mimeType);
         await db.createAnalysisFile({
           id: fileId, projectId, ownerId: ctx.user.id, originalName: workbook.originalName, storageKey: stored.key,
           sha256: workbook.sha256, mimeType: workbook.mimeType, sizeBytes: workbook.buffer.length,

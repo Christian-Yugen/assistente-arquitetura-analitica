@@ -61,8 +61,8 @@ export default function Home() {
   async function onFileChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0] ?? null;
     if (!file) return;
-    if (!file.name.toLowerCase().endsWith(".xlsx")) {
-      toast.error("Selecione um arquivo no formato XLSX.");
+    if (!/\.(xlsx|csv)$/i.test(file.name)) {
+      toast.error("Selecione um arquivo no formato XLSX ou CSV.");
       event.target.value = "";
       return;
     }
@@ -72,7 +72,7 @@ export default function Home() {
       return;
     }
     setSelectedFile(file);
-    if (!projectName) setProjectName(file.name.replace(/\.xlsx$/i, ""));
+    if (!projectName) setProjectName(file.name.replace(/\.(xlsx|csv)$/i, ""));
   }
 
   async function toBase64(file: File) {
@@ -132,7 +132,7 @@ export default function Home() {
         <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <Card id="nova-analise" className="overflow-hidden rounded-[1.5rem] border-[#dbe3d9] bg-white shadow-[0_18px_45px_rgba(29,61,50,0.06)]">
             <CardContent className="p-6 sm:p-8">
-              <div className="mb-7 flex items-start justify-between gap-4"><div><p className="text-xs font-semibold tracking-[0.13em] text-[#5a8068] uppercase">Nova análise</p><h2 className="mt-2 font-serif text-2xl text-[#18332c]">Enviar workbook</h2></div><Badge variant="secondary" className="rounded-full bg-[#edf4e9] px-3 py-1 text-[#47795b]">XLSX · até 25 MB</Badge></div>
+              <div className="mb-7 flex items-start justify-between gap-4"><div><p className="text-xs font-semibold tracking-[0.13em] text-[#5a8068] uppercase">Nova análise</p><h2 className="mt-2 font-serif text-2xl text-[#18332c]">Enviar workbook</h2></div><Badge variant="secondary" className="rounded-full bg-[#edf4e9] px-3 py-1 text-[#47795b]">XLSX ou CSV · até 25 MB</Badge></div>
               <AnalysisAuthNotice state={uiState} onLogin={startLogin} />
               {uiState === "analyzing" ? <AnalysisProcessingPanel fileName={selectedFile?.name} /> : null}
               {uiState === "ready" || uiState === "analyzing" || uiState === "success" ? <form onSubmit={submit} className="space-y-5">
@@ -140,8 +140,8 @@ export default function Home() {
                 <div className="space-y-2"><Label htmlFor="objective">Objetivo da análise</Label><Textarea id="objective" value={objective} onChange={event => setObjective(event.target.value)} className="min-h-24 rounded-xl border-[#d8e1d7] bg-[#fbfcfa]" disabled={analyze.isPending} required /></div>
                 <label className={`group flex items-center gap-4 rounded-2xl border border-dashed border-[#a8c4aa] bg-[#f5f9f3] p-5 transition-colors ${analyze.isPending ? "cursor-not-allowed opacity-70" : "cursor-pointer hover:bg-[#edf5ea]"}`}>
                   <span className="grid h-11 w-11 place-items-center rounded-xl bg-white text-[#4b815d] shadow-sm"><FileUp className="h-5 w-5" /></span>
-                  <span className="min-w-0 flex-1"><span className="block truncate text-sm font-semibold text-[#24453a]">{selectedFile ? selectedFile.name : "Escolha a planilha XLSX"}</span><span className="mt-1 block text-xs text-[#718177]">Limite de 10 abas · dados lidos somente no servidor</span></span>
-                  <input className="sr-only" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={onFileChange} disabled={analyze.isPending} />
+                  <span className="min-w-0 flex-1"><span className="block truncate text-sm font-semibold text-[#24453a]">{selectedFile ? selectedFile.name : "Escolha a planilha XLSX ou CSV"}</span><span className="mt-1 block text-xs text-[#718177]">XLSX: até 10 abas · CSV: uma aba lógica · dados lidos somente no servidor</span></span>
+                  <input className="sr-only" type="file" accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" onChange={onFileChange} disabled={analyze.isPending} />
                 </label>
                 <AnalysisSubmitButton isPending={analyze.isPending} />
               </form> : null}

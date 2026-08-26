@@ -84,7 +84,7 @@ describe("Home workspace flow", () => {
     expect(pending).toContain("Nenhum percentual é estimado");
     expect(tagWith(pending, 'id="projectName"')).toContain('disabled=""');
     expect(tagWith(pending, 'id="objective"')).toContain('disabled=""');
-    expect(tagWith(pending, 'accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"')).toContain('disabled=""');
+    expect(tagWith(pending, 'accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"')).toContain('disabled=""');
   });
 
   it("renders the created version confirmation when the mutation succeeds", () => {

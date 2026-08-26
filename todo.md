@@ -706,3 +706,6 @@
 - [x] Corrigir somente a causa comprovada de ausência de perguntas e hipóteses draft, com regressões, gate e sem expor conteúdo privado — a interface agora explica a limitação sem alterar limiares ou fabricar hipóteses.
 - [x] Definir e validar o contrato agregado de insuficiência de amostra, com limiar de dez valores não ausentes, riscos e próxima ação sem valores, títulos ou posições brutas.
 - [x] Implementar e testar a explicação de insuficiência no diagnóstico e na interface, mantendo os limiares das regras e a produção bloqueada.
+- [x] Definir a política de aceitação CSV: MIME/extensão, limite de 25 MB, codificação, delimitadores permitidos, aba lógica única e rejeições fail-closed.
+- [x] Implementar upload, validação e parsing CSV exclusivamente no servidor, preservando o contexto agregado e o isolamento owner-scoped.
+- [x] Cobrir CSV válido, inválido, codificação/delimitador não suportados e regressões XLSX; validar interface e checkpoint draft.
