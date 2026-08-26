@@ -58,6 +58,7 @@ RULE_VERSIONS = {
     "MDL-FLAT-012": "0.1.0-provisional.1",
     "MDL-MIXED-013": "0.1.0-provisional.1",
     "MDL-ATTRREP-014": "0.1.0-provisional.1",
+    "MDL-MEASURE-015": "0.1.0-provisional.1",
     "MDL-FACTPER-001": "0.1.0-provisional.1",
     "MDL-FACTTXN-002": "0.1.0-provisional.1",
     "MDL-FACTNOGRAIN-019": "0.1.0-provisional.1",

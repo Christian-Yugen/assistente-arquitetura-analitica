@@ -16,6 +16,7 @@ from engine.fact_dimension.parameter_table import classify_parameter_table
 from engine.fact_dimension.flat_table import classify_flat_table
 from engine.fact_dimension.mixed_table import classify_mixed_table
 from engine.fact_dimension.repeated_attributes import classify_repeated_attributes
+from engine.fact_dimension.stored_measures import classify_stored_measures
 
 
 FACT_DIMENSION_RULE_IMPLEMENTATIONS = {
@@ -35,4 +36,5 @@ FACT_DIMENSION_RULE_IMPLEMENTATIONS = {
     "MDL-FLAT-012": classify_flat_table,
     "MDL-MIXED-013": classify_mixed_table,
     "MDL-ATTRREP-014": classify_repeated_attributes,
+    "MDL-MEASURE-015": classify_stored_measures,
 }
