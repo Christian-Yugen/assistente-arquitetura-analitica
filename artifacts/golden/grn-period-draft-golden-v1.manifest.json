@@ -1,0 +1,12 @@
+{
+  "golden_id": "GRN-PERIOD-005-DRAFT-GOLDEN-001",
+  "file": "grn-period-draft-golden-v1.json",
+  "sha256": "25ef9b21b407715f71033c15d5f4fe2fc64f66132d6724dc03143e71329bd2a6",
+  "synthetic_only": true,
+  "calibration": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0
+  },
+  "production_authorized": false
+}

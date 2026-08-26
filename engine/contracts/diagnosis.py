@@ -43,6 +43,7 @@ RULE_VERSIONS = {
     "GRN-EVENT-004": "0.1.0-provisional.1",
     "GRN-EXPL-002": "0.1.0-provisional.1",
     "GRN-SNAP-006": "0.1.0-provisional.1",
+    "GRN-PERIOD-005": "0.1.0-provisional.1",
     "MDL-FACTPER-001": "0.1.0-provisional.1",
     "MDL-FACTTXN-002": "0.1.0-provisional.1",
     "MDL-FACTNOGRAIN-019": "0.1.0-provisional.1",
