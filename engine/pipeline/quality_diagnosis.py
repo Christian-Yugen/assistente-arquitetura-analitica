@@ -118,6 +118,7 @@ from engine.fact_dimension.calendar_dimension import CalendarDimensionSheetProfi
 from engine.fact_dimension.fact_without_grain import FactWithoutDefinedGrainSheetProfile
 from engine.fact_dimension.undefined_classification import UndefinedTableClassificationSheetProfile
 from engine.fact_dimension.accumulated_snapshot import AccumulatedSnapshotProfile
+from engine.fact_dimension.conformed_dimension import ConformedDimensionProfile
 from engine.profiling.relationship_pairs import CompositeRelationshipPairSignal, RelationshipPairSignal
 from engine.relationships.one_to_many import OneToManyRelationshipPairProfile
 from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshipPairProfile
@@ -689,6 +690,11 @@ def execute_quality_diagnosis(
                     # O pipeline permanece fail-closed e não deriva sinal de conteúdo privado.
                     independent_accumulated_snapshot_signal_count=0,
                 ),
+            ))
+        if get_rule_execution_record("MDL-DIMCONF-005").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-DIMCONF-005",
+                ConformedDimensionProfile(independent_conformed_dimension_signal_count=0),
             ))
         if get_rule_execution_record("MDL-FACTTXN-002").status == "executable_draft":
             table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
