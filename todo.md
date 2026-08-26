@@ -689,3 +689,7 @@
 - [x] Validar a preparação documental de E2E sintético, salvar checkpoint e manter a execução E2E e a produção bloqueadas até ambiente autorizado.
 - [x] Registrar a autorização de Chris e verificar a adequação de ambiente descartável para E2E com identidades e XLSX exclusivamente sintéticos.
 - [ ] Preparar e executar os cenários E2E sintéticos autorizados com evidências sanitizadas, regressão e gate sem promoção produtiva.
+- [x] Auditar e reconciliar inconsistências de contagem ou escopo nos gates de prontidão após a cobertura de 95 regras draft, sem alterar runtime ou promoção.
+- [x] Validar a reconciliação documental, salvar checkpoint e manter explícitos todos os bloqueios de produção.
+- [x] Reconciliar no Gate MVP as referências correntes a 77 regras e aos goldens correlatos com o estado governado de 95 regras draft, preservando atualizações históricas como histórico e sem promover produção.
+- [x] Provar por teste documental que o Gate MVP distingue histórico, cobertura draft atual e bloqueios produtivos.
