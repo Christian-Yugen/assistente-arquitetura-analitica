@@ -13,6 +13,7 @@ from engine.fact_dimension.degenerate_dimension import classify_degenerate_dimen
 from engine.fact_dimension.bridge_table import classify_bridge_table
 from engine.fact_dimension.auxiliary_table import classify_auxiliary_table
 from engine.fact_dimension.parameter_table import classify_parameter_table
+from engine.fact_dimension.flat_table import classify_flat_table
 
 
 FACT_DIMENSION_RULE_IMPLEMENTATIONS = {
@@ -29,4 +30,5 @@ FACT_DIMENSION_RULE_IMPLEMENTATIONS = {
     "MDL-BRIDGE-009": classify_bridge_table,
     "MDL-AUX-010": classify_auxiliary_table,
     "MDL-PARAM-011": classify_parameter_table,
+    "MDL-FLAT-012": classify_flat_table,
 }

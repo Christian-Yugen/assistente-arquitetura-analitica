@@ -55,6 +55,7 @@ RULE_VERSIONS = {
     "MDL-BRIDGE-009": "0.1.0-provisional.1",
     "MDL-AUX-010": "0.1.0-provisional.1",
     "MDL-PARAM-011": "0.1.0-provisional.1",
+    "MDL-FLAT-012": "0.1.0-provisional.1",
     "MDL-FACTPER-001": "0.1.0-provisional.1",
     "MDL-FACTTXN-002": "0.1.0-provisional.1",
     "MDL-FACTNOGRAIN-019": "0.1.0-provisional.1",
