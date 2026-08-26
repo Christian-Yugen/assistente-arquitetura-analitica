@@ -145,4 +145,34 @@ describe("Home workspace flow", () => {
     expect(diagnostic).toContain("Recomendação três");
     expect(diagnostic).toContain("Pergunta três");
   });
+
+  it("explains the analytical limit when a short sample emits no modeling hypotheses", () => {
+    state.diagnostic = {
+      data: {
+        id: "11111111-1111-4111-8111-111111111111",
+        projectId: "22222222-2222-4222-8222-222222222222",
+        version: 4,
+        contractVersion: "1.0.0-reconstructed.1",
+        payload: {
+          summary: { counts: { sheets: 4, risks: 4 } },
+          sheets: [{ row_count: 6 }, { row_count: 3 }, { row_count: 3 }, { row_count: 3 }],
+          findings: [],
+          questions: [],
+          semantic_classifications: [],
+          relationships: [],
+          metrics: [],
+          proposed_model: { tables: [] },
+          file: { retention: { status: "reference_removed" } },
+        },
+      },
+      isFetching: false,
+      isError: false,
+    };
+
+    const diagnostic = renderHome();
+    expect(diagnostic).toContain("Amostra insuficiente para hipóteses estruturais");
+    expect(diagnostic).toContain("4 de 4 abas avaliadas têm entre 3 e 6 linhas observadas");
+    expect(diagnostic).toContain("ao menos 10 valores não ausentes por campo relevante");
+    expect(diagnostic).toContain("distintividade, cardinalidade, padrões temporais e distribuições numéricas podem ser instáveis");
+  });
 });

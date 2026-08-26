@@ -702,3 +702,7 @@
 - [ ] Retomar a criação e execução de E2E somente quando a plataforma fornecer navegador de automação e implantação isolada suportados.
 - [x] Auditar e comprovar o fluxo central draft de upload XLSX, análise server-side e visualização owner-scoped sem dados privados nas evidências.
 - [x] Corrigir somente falhas funcionais comprovadas no fluxo central, validar regressões e manter o perfil draft e a produção bloqueada — nenhuma falha funcional comprovada foi identificada na auditoria.
+- [x] Investigar o diagnóstico XLSX real que emitiu apenas achados de qualidade, sem consultar valores brutos ou reenviar o arquivo — a amostra tinha entre três e seis linhas por aba, abaixo dos limiares semânticos conservadores.
+- [x] Corrigir somente a causa comprovada de ausência de perguntas e hipóteses draft, com regressões, gate e sem expor conteúdo privado — a interface agora explica a limitação sem alterar limiares ou fabricar hipóteses.
+- [x] Definir e validar o contrato agregado de insuficiência de amostra, com limiar de dez valores não ausentes, riscos e próxima ação sem valores, títulos ou posições brutas.
+- [x] Implementar e testar a explicação de insuficiência no diagnóstico e na interface, mantendo os limiares das regras e a produção bloqueada.
