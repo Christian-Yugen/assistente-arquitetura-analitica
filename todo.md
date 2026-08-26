@@ -567,4 +567,5 @@
 - [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da ALT-SUMPCT-007.
 - [x] Criar branch de segurança e registrar o intake da ALT-AVGAVG-008, mantendo-a não executável.
 - [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da ALT-AVGAVG-008, mantendo a produção bloqueada.
-- [ ] Obter autorização explícita de Chris antes de implementar a ALT-AVGAVG-008 exclusivamente em draft.
+- [x] Obter autorização explícita de Chris antes de implementar a ALT-AVGAVG-008 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da ALT-AVGAVG-008.

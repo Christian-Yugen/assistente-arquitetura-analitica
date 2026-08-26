@@ -1,0 +1,9 @@
+{
+  "manifest_id": "ALT-AVGAVG-008-DRAFT-GOLDEN-MANIFEST-001",
+  "rule_id": "ALT-AVGAVG-008",
+  "golden_path": "artifacts/golden/alt-avgavg-draft-golden-v1.json",
+  "sha256": "e64594ed197e96848bd0fe5ead4692ea726b8b5280849d12b8ecc1e2173110fe",
+  "synthetic_only": true,
+  "calibration": {"tp": 1, "fp": 0, "fn": 0},
+  "production_authorized": false
+}
