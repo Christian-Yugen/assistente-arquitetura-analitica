@@ -123,6 +123,7 @@ from engine.fact_dimension.role_dimension import RoleDimensionProfile
 from engine.fact_dimension.degenerate_dimension import DegenerateDimensionProfile
 from engine.fact_dimension.bridge_table import BridgeTableProfile
 from engine.fact_dimension.auxiliary_table import AuxiliaryTableProfile
+from engine.fact_dimension.parameter_table import ParameterTableProfile
 from engine.profiling.relationship_pairs import CompositeRelationshipPairSignal, RelationshipPairSignal
 from engine.relationships.one_to_many import OneToManyRelationshipPairProfile
 from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshipPairProfile
@@ -719,6 +720,11 @@ def execute_quality_diagnosis(
             table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
                 "MDL-AUX-010",
                 AuxiliaryTableProfile(independent_auxiliary_table_signal_count=0),
+            ))
+        if get_rule_execution_record("MDL-PARAM-011").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-PARAM-011",
+                ParameterTableProfile(independent_parameter_table_signal_count=0),
             ))
         if get_rule_execution_record("MDL-FACTTXN-002").status == "executable_draft":
             table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
