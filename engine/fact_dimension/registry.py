@@ -9,6 +9,7 @@ from engine.fact_dimension.undefined_classification import classify_undefined_ta
 from engine.fact_dimension.accumulated_snapshot import classify_accumulated_snapshot
 from engine.fact_dimension.conformed_dimension import classify_conformed_dimension
 from engine.fact_dimension.role_dimension import classify_role_dimension
+from engine.fact_dimension.degenerate_dimension import classify_degenerate_dimension
 
 
 FACT_DIMENSION_RULE_IMPLEMENTATIONS = {
@@ -21,4 +22,5 @@ FACT_DIMENSION_RULE_IMPLEMENTATIONS = {
     "MDL-FACTACC-003": classify_accumulated_snapshot,
     "MDL-DIMCONF-005": classify_conformed_dimension,
     "MDL-DIMROLE-007": classify_role_dimension,
+    "MDL-DIMDEG-008": classify_degenerate_dimension,
 }

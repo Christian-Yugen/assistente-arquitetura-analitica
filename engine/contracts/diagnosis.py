@@ -51,6 +51,7 @@ RULE_VERSIONS = {
     "MDL-FACTACC-003": "0.1.0-provisional.1",
     "MDL-DIMCONF-005": "0.1.0-provisional.1",
     "MDL-DIMROLE-007": "0.1.0-provisional.1",
+    "MDL-DIMDEG-008": "0.1.0-provisional.1",
     "MDL-FACTPER-001": "0.1.0-provisional.1",
     "MDL-FACTTXN-002": "0.1.0-provisional.1",
     "MDL-FACTNOGRAIN-019": "0.1.0-provisional.1",

@@ -617,5 +617,5 @@
 - [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-DIMROLE-007.
 - [x] Criar branch de segurança e registrar o intake da MDL-DIMDEG-008, mantendo-a não executável.
 - [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-DIMDEG-008, mantendo a produção bloqueada.
-- [ ] Obter autorização explícita de Chris antes de implementar a MDL-DIMDEG-008 exclusivamente em draft.
-- [ ] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-DIMDEG-008.
+- [x] Obter autorização explícita de Chris antes de implementar a MDL-DIMDEG-008 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-DIMDEG-008.

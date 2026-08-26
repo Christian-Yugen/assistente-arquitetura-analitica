@@ -120,6 +120,7 @@ from engine.fact_dimension.undefined_classification import UndefinedTableClassif
 from engine.fact_dimension.accumulated_snapshot import AccumulatedSnapshotProfile
 from engine.fact_dimension.conformed_dimension import ConformedDimensionProfile
 from engine.fact_dimension.role_dimension import RoleDimensionProfile
+from engine.fact_dimension.degenerate_dimension import DegenerateDimensionProfile
 from engine.profiling.relationship_pairs import CompositeRelationshipPairSignal, RelationshipPairSignal
 from engine.relationships.one_to_many import OneToManyRelationshipPairProfile
 from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshipPairProfile
@@ -701,6 +702,11 @@ def execute_quality_diagnosis(
             table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
                 "MDL-DIMROLE-007",
                 RoleDimensionProfile(independent_role_dimension_signal_count=0),
+            ))
+        if get_rule_execution_record("MDL-DIMDEG-008").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-DIMDEG-008",
+                DegenerateDimensionProfile(independent_degenerate_dimension_signal_count=0),
             ))
         if get_rule_execution_record("MDL-FACTTXN-002").status == "executable_draft":
             table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
