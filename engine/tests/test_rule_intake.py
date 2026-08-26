@@ -18,9 +18,9 @@ class RuleIntakeTests(unittest.TestCase):
         self.assertEqual(len(readiness["rules"]), 95)
         self.assertEqual(readiness["counts"], {
             "baseline_reference": 0,
-            "executable_draft": 83,
+            "executable_draft": 93,
             "reference_catalog_draft": 0,
-            "intake_required": 12,
+            "intake_required": 2,
         })
 
         by_id = {rule["rule_id"]: rule for rule in readiness["rules"]}
@@ -61,6 +61,26 @@ class RuleIntakeTests(unittest.TestCase):
         self.assertTrue(by_id["MDL-DIMCONF-005"]["executable"])
         self.assertEqual(by_id["MDL-DIMROLE-007"]["local_readiness"], "executable_draft")
         self.assertTrue(by_id["MDL-DIMROLE-007"]["executable"])
+        self.assertEqual(by_id["MDL-DIMDEG-008"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["MDL-DIMDEG-008"]["executable"])
+        self.assertEqual(by_id["MDL-BRIDGE-009"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["MDL-BRIDGE-009"]["executable"])
+        self.assertEqual(by_id["MDL-AUX-010"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["MDL-AUX-010"]["executable"])
+        self.assertEqual(by_id["MDL-PARAM-011"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["MDL-PARAM-011"]["executable"])
+        self.assertEqual(by_id["MDL-FLAT-012"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["MDL-FLAT-012"]["executable"])
+        self.assertEqual(by_id["MDL-MIXED-013"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["MDL-MIXED-013"]["executable"])
+        self.assertEqual(by_id["MDL-ATTRREP-014"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["MDL-ATTRREP-014"]["executable"])
+        self.assertEqual(by_id["MDL-MEASURE-015"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["MDL-MEASURE-015"]["executable"])
+        self.assertEqual(by_id["MDL-DIMEXTRACT-016"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["MDL-DIMEXTRACT-016"]["executable"])
+        self.assertEqual(by_id["MDL-DIMMISS-017"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["MDL-DIMMISS-017"]["executable"])
         self.assertEqual(by_id["ALT-METRIC-006"]["local_readiness"], "executable_draft")
         self.assertTrue(by_id["ALT-METRIC-006"]["executable"])
         self.assertEqual(by_id["ALT-SUMPCT-007"]["local_readiness"], "executable_draft")

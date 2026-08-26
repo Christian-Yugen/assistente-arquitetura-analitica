@@ -617,5 +617,47 @@
 - [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-DIMROLE-007.
 - [x] Criar branch de segurança e registrar o intake da MDL-DIMDEG-008, mantendo-a não executável.
 - [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-DIMDEG-008, mantendo a produção bloqueada.
-- [ ] Obter autorização explícita de Chris antes de implementar a MDL-DIMDEG-008 exclusivamente em draft.
-- [ ] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-DIMDEG-008.
+- [x] Obter autorização explícita de Chris antes de implementar a MDL-DIMDEG-008 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-DIMDEG-008.
+- [x] Criar branch de segurança e registrar o intake da MDL-BRIDGE-009, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-BRIDGE-009, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a MDL-BRIDGE-009 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-BRIDGE-009.
+- [x] Criar branch de segurança e registrar o intake da MDL-AUX-010, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-AUX-010, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a MDL-AUX-010 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-AUX-010.
+- [x] Criar branch de segurança e registrar o intake da MDL-PARAM-011, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-PARAM-011, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a MDL-PARAM-011 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-PARAM-011.
+- [x] Criar branch de segurança e registrar o intake da MDL-FLAT-012, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-FLAT-012, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a MDL-FLAT-012 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-FLAT-012.
+- [x] Criar branch de segurança e registrar o intake da MDL-MIXED-013, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-MIXED-013, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a MDL-MIXED-013 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-MIXED-013.
+- [x] Criar branch de segurança e registrar o intake da MDL-ATTRREP-014, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-ATTRREP-014, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a MDL-ATTRREP-014 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-ATTRREP-014.
+- [x] Criar branch de segurança e registrar o intake da MDL-MEASURE-015, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-MEASURE-015, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a MDL-MEASURE-015 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-MEASURE-015.
+- [x] Criar branch de segurança e registrar o intake da MDL-DIMEXTRACT-016, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-DIMEXTRACT-016, mantendo a produção bloqueada.
+- [x] Validar a preparação documental da MDL-DIMEXTRACT-016, salvar checkpoint e publicar a branch de reconciliação.
+- [x] Obter autorização explícita de Chris antes de implementar a MDL-DIMEXTRACT-016 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-DIMEXTRACT-016.
+- [x] Criar branch de segurança e registrar o intake da MDL-DIMMISS-017, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-DIMMISS-017, mantendo a produção bloqueada.
+- [x] Validar a preparação documental da MDL-DIMMISS-017, salvar checkpoint e publicar a branch de reconciliação.
+- [x] Obter autorização explícita de Chris antes de implementar a MDL-DIMMISS-017 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-DIMMISS-017.
+- [x] Criar branch de segurança e registrar o intake da MDL-FACTNOMEAS-018, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-FACTNOMEAS-018, mantendo a produção bloqueada.
+- [x] Validar a preparação documental da MDL-FACTNOMEAS-018, salvar checkpoint e publicar a branch de reconciliação.
+- [ ] Obter autorização explícita de Chris antes de implementar a MDL-FACTNOMEAS-018 exclusivamente em draft.

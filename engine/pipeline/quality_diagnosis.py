@@ -120,6 +120,16 @@ from engine.fact_dimension.undefined_classification import UndefinedTableClassif
 from engine.fact_dimension.accumulated_snapshot import AccumulatedSnapshotProfile
 from engine.fact_dimension.conformed_dimension import ConformedDimensionProfile
 from engine.fact_dimension.role_dimension import RoleDimensionProfile
+from engine.fact_dimension.degenerate_dimension import DegenerateDimensionProfile
+from engine.fact_dimension.bridge_table import BridgeTableProfile
+from engine.fact_dimension.auxiliary_table import AuxiliaryTableProfile
+from engine.fact_dimension.parameter_table import ParameterTableProfile
+from engine.fact_dimension.flat_table import FlatTableProfile
+from engine.fact_dimension.mixed_table import MixedTableProfile
+from engine.fact_dimension.repeated_attributes import RepeatedAttributesProfile
+from engine.fact_dimension.stored_measures import StoredMeasuresProfile
+from engine.fact_dimension.extractable_dimension import ExtractableDimensionProfile
+from engine.fact_dimension.missing_dimension import MissingDimensionProfile
 from engine.profiling.relationship_pairs import CompositeRelationshipPairSignal, RelationshipPairSignal
 from engine.relationships.one_to_many import OneToManyRelationshipPairProfile
 from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshipPairProfile
@@ -701,6 +711,56 @@ def execute_quality_diagnosis(
             table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
                 "MDL-DIMROLE-007",
                 RoleDimensionProfile(independent_role_dimension_signal_count=0),
+            ))
+        if get_rule_execution_record("MDL-DIMDEG-008").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-DIMDEG-008",
+                DegenerateDimensionProfile(independent_degenerate_dimension_signal_count=0),
+            ))
+        if get_rule_execution_record("MDL-BRIDGE-009").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-BRIDGE-009",
+                BridgeTableProfile(independent_bridge_table_signal_count=0),
+            ))
+        if get_rule_execution_record("MDL-AUX-010").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-AUX-010",
+                AuxiliaryTableProfile(independent_auxiliary_table_signal_count=0),
+            ))
+        if get_rule_execution_record("MDL-PARAM-011").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-PARAM-011",
+                ParameterTableProfile(independent_parameter_table_signal_count=0),
+            ))
+        if get_rule_execution_record("MDL-FLAT-012").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-FLAT-012",
+                FlatTableProfile(independent_flat_table_signal_count=0),
+            ))
+        if get_rule_execution_record("MDL-MIXED-013").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-MIXED-013",
+                MixedTableProfile(independent_mixed_table_signal_count=0),
+            ))
+        if get_rule_execution_record("MDL-ATTRREP-014").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-ATTRREP-014",
+                RepeatedAttributesProfile(independent_repeated_attribute_signal_count=0),
+            ))
+        if get_rule_execution_record("MDL-MEASURE-015").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-MEASURE-015",
+                StoredMeasuresProfile(independent_stored_measure_signal_count=0),
+            ))
+        if get_rule_execution_record("MDL-DIMEXTRACT-016").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-DIMEXTRACT-016",
+                ExtractableDimensionProfile(independent_extractable_dimension_signal_count=0),
+            ))
+        if get_rule_execution_record("MDL-DIMMISS-017").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-DIMMISS-017",
+                MissingDimensionProfile(independent_missing_dimension_signal_count=0),
             ))
         if get_rule_execution_record("MDL-FACTTXN-002").status == "executable_draft":
             table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(

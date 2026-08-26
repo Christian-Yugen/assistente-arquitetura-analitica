@@ -352,7 +352,7 @@ class RuleCatalogTests(unittest.TestCase):
             "MDL-DIMCAL-006",
             CalendarDimensionSheetProfile(20, True, (CalendarDateProfile(20, 20, 19),), 0),
         )
-        self.assertEqual(executable_rule_count(), 83)
+        self.assertEqual(executable_rule_count(), 93)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
@@ -457,6 +457,16 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(get_rule_execution_record("MDL-FACTACC-003").status, "executable_draft")
         self.assertEqual(get_rule_execution_record("MDL-DIMCONF-005").status, "executable_draft")
         self.assertEqual(get_rule_execution_record("MDL-DIMROLE-007").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("MDL-DIMDEG-008").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("MDL-BRIDGE-009").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("MDL-AUX-010").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("MDL-PARAM-011").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("MDL-FLAT-012").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("MDL-MIXED-013").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("MDL-ATTRREP-014").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("MDL-MEASURE-015").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("MDL-DIMEXTRACT-016").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("MDL-DIMMISS-017").status, "executable_draft")
         self.assertEqual(record.title, "Números armazenados como texto")
 
     def test_baseline_reference_and_reserved_official_slots_cannot_execute(self):
