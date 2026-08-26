@@ -11,6 +11,7 @@ from engine.fact_dimension.conformed_dimension import classify_conformed_dimensi
 from engine.fact_dimension.role_dimension import classify_role_dimension
 from engine.fact_dimension.degenerate_dimension import classify_degenerate_dimension
 from engine.fact_dimension.bridge_table import classify_bridge_table
+from engine.fact_dimension.auxiliary_table import classify_auxiliary_table
 
 
 FACT_DIMENSION_RULE_IMPLEMENTATIONS = {
@@ -25,4 +26,5 @@ FACT_DIMENSION_RULE_IMPLEMENTATIONS = {
     "MDL-DIMROLE-007": classify_role_dimension,
     "MDL-DIMDEG-008": classify_degenerate_dimension,
     "MDL-BRIDGE-009": classify_bridge_table,
+    "MDL-AUX-010": classify_auxiliary_table,
 }
