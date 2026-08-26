@@ -1,0 +1,41 @@
+{
+  "intake_id": "PROD-CALIBRATION-DATASET-001",
+  "title": "Conjunto de calibração produtiva desidentificado",
+  "status": "intake_open_no_data",
+  "authorization": {
+    "intake_authorized": true,
+    "intake_authorized_by": "Chris",
+    "intake_authorization_record": "Chat: sim, aturorizado",
+    "data_processing_authorized": false,
+    "production_authorized": false
+  },
+  "data_receipt": {
+    "received": false,
+    "origin": null,
+    "owner_scope": null,
+    "pii_inventory": null,
+    "deidentification_method": null,
+    "human_label_source": null,
+    "retention_period": null,
+    "physical_deletion_available": false
+  },
+  "operations": {
+    "upload_allowed": false,
+    "collection_allowed": false,
+    "processing_allowed": false,
+    "rule_change_allowed": false,
+    "allowlist_change_allowed": false,
+    "environment_promotion_allowed": false
+  },
+  "required_before_data_processing": [
+    "authorized_origin",
+    "owner_scope",
+    "pii_inventory",
+    "verified_deidentification_method",
+    "human_labels",
+    "retention_rule",
+    "explicit_data_processing_authorization",
+    "individual_calibration_gate"
+  ],
+  "production_blocked": true
+}
