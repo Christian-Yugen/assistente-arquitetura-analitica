@@ -583,3 +583,7 @@
 - [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da GRN-SNAP-006, mantendo a produção bloqueada.
 - [x] Obter autorização explícita de Chris antes de implementar a GRN-SNAP-006 exclusivamente em draft.
 - [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da GRN-SNAP-006.
+- [x] Criar branch de segurança e registrar o intake da GRN-PERIOD-005, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da GRN-PERIOD-005, mantendo a produção bloqueada.
+- [ ] Obter autorização explícita de Chris antes de implementar a GRN-PERIOD-005 exclusivamente em draft.
+- [ ] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da GRN-PERIOD-005.
