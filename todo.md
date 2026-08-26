@@ -655,4 +655,5 @@
 - [x] Criar branch de segurança e registrar o intake da MDL-DIMMISS-017, mantendo-a não executável.
 - [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-DIMMISS-017, mantendo a produção bloqueada.
 - [x] Validar a preparação documental da MDL-DIMMISS-017, salvar checkpoint e publicar a branch de reconciliação.
-- [ ] Obter autorização explícita de Chris antes de implementar a MDL-DIMMISS-017 exclusivamente em draft.
+- [x] Obter autorização explícita de Chris antes de implementar a MDL-DIMMISS-017 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-DIMMISS-017.
