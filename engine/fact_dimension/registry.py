@@ -6,6 +6,7 @@ from engine.fact_dimension.periodic import classify_periodic_fact
 from engine.fact_dimension.standard_dimension import classify_standard_dimension
 from engine.fact_dimension.transactional import classify_transactional_fact
 from engine.fact_dimension.undefined_classification import classify_undefined_table_classification
+from engine.fact_dimension.accumulated_snapshot import classify_accumulated_snapshot
 
 
 FACT_DIMENSION_RULE_IMPLEMENTATIONS = {
@@ -15,4 +16,5 @@ FACT_DIMENSION_RULE_IMPLEMENTATIONS = {
     "MDL-DIMSTD-004": classify_standard_dimension,
     "MDL-DIMCAL-006": classify_calendar_dimension,
     "MDL-UNDEFINED-020": classify_undefined_table_classification,
+    "MDL-FACTACC-003": classify_accumulated_snapshot,
 }

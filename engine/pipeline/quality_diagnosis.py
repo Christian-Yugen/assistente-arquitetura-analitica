@@ -117,6 +117,7 @@ from engine.fact_dimension.transactional import TransactionalFactSheetProfile
 from engine.fact_dimension.calendar_dimension import CalendarDimensionSheetProfile
 from engine.fact_dimension.fact_without_grain import FactWithoutDefinedGrainSheetProfile
 from engine.fact_dimension.undefined_classification import UndefinedTableClassificationSheetProfile
+from engine.fact_dimension.accumulated_snapshot import AccumulatedSnapshotProfile
 from engine.profiling.relationship_pairs import CompositeRelationshipPairSignal, RelationshipPairSignal
 from engine.relationships.one_to_many import OneToManyRelationshipPairProfile
 from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshipPairProfile
@@ -678,6 +679,15 @@ def execute_quality_diagnosis(
                 eligible_measure_column_count=sum(
                     1 for column in sheet_columns
                     if column.physical_type == "numeric" and column.formulas.formula_count == 0
+                ),
+            ))
+        if get_rule_execution_record("MDL-FACTACC-003").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-FACTACC-003",
+                AccumulatedSnapshotProfile(
+                    # Não há fonte independente autorizada de snapshot acumulado.
+                    # O pipeline permanece fail-closed e não deriva sinal de conteúdo privado.
+                    independent_accumulated_snapshot_signal_count=0,
                 ),
             ))
         if get_rule_execution_record("MDL-FACTTXN-002").status == "executable_draft":
