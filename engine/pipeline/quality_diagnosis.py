@@ -37,6 +37,7 @@ from engine.alerts.period_per_row import PeriodPerRowProfile
 from engine.alerts.entity_association import EntityAssociationProfile
 from engine.alerts.pre_aggregation import PreAggregationProfile
 from engine.alerts.inconsistent_grain import InconsistentGrainProfile
+from engine.alerts.duplicate_grain import DuplicateGrainProfile
 from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_metric_fragment, to_relationship_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
@@ -895,6 +896,7 @@ def execute_quality_diagnosis(
         "GRN-ASSOC-007": get_rule_execution_record("GRN-ASSOC-007").status,
         "GRN-PREAGG-008": get_rule_execution_record("GRN-PREAGG-008").status,
         "GRN-INCONS-009": get_rule_execution_record("GRN-INCONS-009").status,
+        "GRN-DUP-010": get_rule_execution_record("GRN-DUP-010").status,
     }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
@@ -1583,6 +1585,10 @@ def execute_quality_diagnosis(
         inconsistent_grain_candidate = execute_registered_rule("GRN-INCONS-009", InconsistentGrainProfile(independent_inconsistent_grain_signal_count=0))
         if inconsistent_grain_candidate:
             quality_findings.append(("model", "model", inconsistent_grain_candidate))
+    if alert_rule_statuses["GRN-DUP-010"] == "executable_draft":
+        duplicate_grain_candidate = execute_registered_rule("GRN-DUP-010", DuplicateGrainProfile(independent_duplicate_grain_signal_count=0))
+        if duplicate_grain_candidate:
+            quality_findings.append(("model", "model", duplicate_grain_candidate))
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []

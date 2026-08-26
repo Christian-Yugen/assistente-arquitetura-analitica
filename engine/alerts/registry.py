@@ -13,6 +13,7 @@ from engine.alerts.period_per_row import classify_period_per_row
 from engine.alerts.entity_association import classify_entity_association
 from engine.alerts.pre_aggregation import classify_pre_aggregation
 from engine.alerts.inconsistent_grain import classify_inconsistent_grain
+from engine.alerts.duplicate_grain import classify_duplicate_grain
 
 
 ALERT_RULE_IMPLEMENTATIONS = {
@@ -31,4 +32,5 @@ ALERT_RULE_IMPLEMENTATIONS = {
     "GRN-ASSOC-007": classify_entity_association,
     "GRN-PREAGG-008": classify_pre_aggregation,
     "GRN-INCONS-009": classify_inconsistent_grain,
+    "GRN-DUP-010": classify_duplicate_grain,
 }
