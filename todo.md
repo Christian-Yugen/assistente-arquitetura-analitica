@@ -635,3 +635,7 @@
 - [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-FLAT-012, mantendo a produção bloqueada.
 - [x] Obter autorização explícita de Chris antes de implementar a MDL-FLAT-012 exclusivamente em draft.
 - [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-FLAT-012.
+- [x] Criar branch de segurança e registrar o intake da MDL-MIXED-013, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-MIXED-013, mantendo a produção bloqueada.
+- [ ] Obter autorização explícita de Chris antes de implementar a MDL-MIXED-013 exclusivamente em draft.
+- [ ] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-MIXED-013.
