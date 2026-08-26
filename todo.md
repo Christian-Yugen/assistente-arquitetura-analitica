@@ -693,3 +693,6 @@
 - [x] Validar a reconciliação documental, salvar checkpoint e manter explícitos todos os bloqueios de produção.
 - [x] Reconciliar no Gate MVP as referências correntes a 77 regras e aos goldens correlatos com o estado governado de 95 regras draft, preservando atualizações históricas como histórico e sem promover produção.
 - [x] Provar por teste documental que o Gate MVP distingue histórico, cobertura draft atual e bloqueios produtivos.
+- [x] Definir requisitos verificáveis de isolamento, descarte, identidades e evidências sanitizadas para um ambiente E2E exclusivo de dados sintéticos.
+- [x] Verificar a via suportada de provisionamento de ambiente E2E separado, sem reutilizar banco, armazenamento ou credenciais do ambiente atual.
+- [ ] Preparar o ambiente E2E somente após confirmar isolamento técnico e registrar o gate de execução correspondente.
