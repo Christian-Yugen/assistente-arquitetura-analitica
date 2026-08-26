@@ -687,3 +687,5 @@
 - [x] Validar que o intake de calibração permanece bloqueado para coleta, upload, execução, alteração de regra e promoção.
 - [x] Preparar gate documental de E2E sintético com cenários owner-scoped, limites de privacidade e critérios de bloqueio, sem executar fluxos provisionados.
 - [x] Validar a preparação documental de E2E sintético, salvar checkpoint e manter a execução E2E e a produção bloqueadas até ambiente autorizado.
+- [x] Registrar a autorização de Chris e verificar a adequação de ambiente descartável para E2E com identidades e XLSX exclusivamente sintéticos.
+- [ ] Preparar e executar os cenários E2E sintéticos autorizados com evidências sanitizadas, regressão e gate sem promoção produtiva.
