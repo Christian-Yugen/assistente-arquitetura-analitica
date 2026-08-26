@@ -20,6 +20,11 @@ describe("E2E environment requirements", () => {
     expect(requirements).toContain("não expôs integração, ambiente ou comando suportado de provisionamento E2E/WebDev separado");
     expect(requirements).toContain("não há via verificável para criar o ambiente isolado");
     expect(requirements).toContain("não autoriza reutilizar a aplicação local, o banco atual ou qualquer armazenamento existente");
+    expect(requirements).toContain("Chris autorizou explicitamente a criação de E2E real em ambiente isolado");
+    expect(requirements).toContain("navegador exigido para automação não estava instalado");
+    expect(requirements).toContain("não ofereceu operação oficial de instalação");
+    expect(requirements).toContain("não instalará navegador manualmente");
+    expect(requirements).toContain("navegador de automação funcional e implantação isolada verificável");
     expect(requirements).toContain("Aprovação dos cenários não libera produção");
   });
 });

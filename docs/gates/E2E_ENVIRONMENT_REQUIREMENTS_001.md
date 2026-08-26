@@ -34,6 +34,12 @@ Em 26 de agosto de 2026, a configuração disponível do projeto foi inspecionad
 
 O desbloqueio requer uma capacidade explícita de provisionamento de projeto/implantação de teste ou a disponibilização de um ambiente separado por Chris. Até então, a tarefa de preparar e executar cenários E2E permanece aberta e a produção continua bloqueada.
 
+## Bloqueio de automação verificado
+
+Chris autorizou explicitamente a criação de E2E real em ambiente isolado, exclusivamente com dados sintéticos. Para verificar a automação necessária, a integração de navegador disponível foi habilitada e consultada. A sessão informou que o navegador exigido para automação não estava instalado. A interface exposta não ofereceu operação oficial de instalação; a operação de instalação indicada pela própria sessão também não foi disponibilizada.
+
+Essa combinação impede a execução de navegador neste ciclo. O projeto não instalará navegador manualmente, não executará comandos não suportados de automação e não substituirá o ambiente isolado pelo ambiente local. O E2E permanece **fail-closed** até que a plataforma ofereça, simultaneamente, navegador de automação funcional e implantação isolada verificável.
+
 ## Gate de execução posterior
 
 Quando o ambiente existir, o gate de execução deverá registrar: identificador opaco do ambiente, versão do executor, hashes das fixtures, IDs opacos dos dois owners, janela de descarte, resultados dos cenários `E2E-SYN-001` a `E2E-SYN-006`, ausência de conteúdo privado nas evidências e decisão limitada ao perfil draft. Aprovação dos cenários não libera produção.

@@ -696,3 +696,7 @@
 - [x] Definir requisitos verificáveis de isolamento, descarte, identidades e evidências sanitizadas para um ambiente E2E exclusivo de dados sintéticos.
 - [x] Verificar a via suportada de provisionamento de ambiente E2E separado, sem reutilizar banco, armazenamento ou credenciais do ambiente atual.
 - [ ] Preparar o ambiente E2E somente após confirmar isolamento técnico e registrar o gate de execução correspondente.
+- [x] Registrar a autorização explícita de Chris para criar o ambiente E2E isolado e confirmar se a plataforma permite provisionamento seguro nesta sessão.
+- [ ] Provisionar o ambiente E2E isolado, somente se a plataforma expuser operação suportada com banco, armazenamento e segredos distintos.
+- [x] Registrar o bloqueio técnico de E2E: navegador de automação ausente e operação de instalação não exposta, sem contornar a plataforma ou reutilizar o ambiente atual.
+- [ ] Retomar a criação e execução de E2E somente quando a plataforma fornecer navegador de automação e implantação isolada suportados.
