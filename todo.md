@@ -607,3 +607,7 @@
 - [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-FACTACC-003, mantendo a produção bloqueada.
 - [x] Obter autorização explícita de Chris antes de implementar a MDL-FACTACC-003 exclusivamente em draft.
 - [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-FACTACC-003.
+- [x] Criar branch de segurança e registrar o intake da MDL-DIMCONF-005, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-DIMCONF-005, mantendo a produção bloqueada.
+- [ ] Obter autorização explícita de Chris antes de implementar a MDL-DIMCONF-005 exclusivamente em draft.
+- [ ] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-DIMCONF-005.
