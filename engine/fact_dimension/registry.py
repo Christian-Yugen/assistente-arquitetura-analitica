@@ -19,6 +19,7 @@ from engine.fact_dimension.repeated_attributes import classify_repeated_attribut
 from engine.fact_dimension.stored_measures import classify_stored_measures
 from engine.fact_dimension.extractable_dimension import classify_extractable_dimension
 from engine.fact_dimension.missing_dimension import classify_missing_dimension
+from engine.fact_dimension.fact_without_measures import classify_fact_without_measures
 
 
 FACT_DIMENSION_RULE_IMPLEMENTATIONS = {
@@ -41,4 +42,5 @@ FACT_DIMENSION_RULE_IMPLEMENTATIONS = {
     "MDL-MEASURE-015": classify_stored_measures,
     "MDL-DIMEXTRACT-016": classify_extractable_dimension,
     "MDL-DIMMISS-017": classify_missing_dimension,
+    "MDL-FACTNOMEAS-018": classify_fact_without_measures,
 }

@@ -660,4 +660,5 @@
 - [x] Criar branch de segurança e registrar o intake da MDL-FACTNOMEAS-018, mantendo-a não executável.
 - [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-FACTNOMEAS-018, mantendo a produção bloqueada.
 - [x] Validar a preparação documental da MDL-FACTNOMEAS-018, salvar checkpoint e publicar a branch de reconciliação.
-- [ ] Obter autorização explícita de Chris antes de implementar a MDL-FACTNOMEAS-018 exclusivamente em draft.
+- [x] Obter autorização explícita de Chris antes de implementar a MDL-FACTNOMEAS-018 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-FACTNOMEAS-018.

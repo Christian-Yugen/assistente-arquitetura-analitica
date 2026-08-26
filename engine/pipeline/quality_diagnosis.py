@@ -130,6 +130,7 @@ from engine.fact_dimension.repeated_attributes import RepeatedAttributesProfile
 from engine.fact_dimension.stored_measures import StoredMeasuresProfile
 from engine.fact_dimension.extractable_dimension import ExtractableDimensionProfile
 from engine.fact_dimension.missing_dimension import MissingDimensionProfile
+from engine.fact_dimension.fact_without_measures import FactWithoutMeasuresProfile
 from engine.profiling.relationship_pairs import CompositeRelationshipPairSignal, RelationshipPairSignal
 from engine.relationships.one_to_many import OneToManyRelationshipPairProfile
 from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshipPairProfile
@@ -761,6 +762,11 @@ def execute_quality_diagnosis(
             table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
                 "MDL-DIMMISS-017",
                 MissingDimensionProfile(independent_missing_dimension_signal_count=0),
+            ))
+        if get_rule_execution_record("MDL-FACTNOMEAS-018").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-FACTNOMEAS-018",
+                FactWithoutMeasuresProfile(independent_fact_without_measures_signal_count=0),
             ))
         if get_rule_execution_record("MDL-FACTTXN-002").status == "executable_draft":
             table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
