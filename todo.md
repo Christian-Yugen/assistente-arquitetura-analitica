@@ -641,5 +641,5 @@
 - [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-MIXED-013.
 - [x] Criar branch de segurança e registrar o intake da MDL-ATTRREP-014, mantendo-a não executável.
 - [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-ATTRREP-014, mantendo a produção bloqueada.
-- [ ] Obter autorização explícita de Chris antes de implementar a MDL-ATTRREP-014 exclusivamente em draft.
-- [ ] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-ATTRREP-014.
+- [x] Obter autorização explícita de Chris antes de implementar a MDL-ATTRREP-014 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-ATTRREP-014.
