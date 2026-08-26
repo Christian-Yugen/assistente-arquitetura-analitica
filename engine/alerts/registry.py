@@ -8,6 +8,7 @@ from engine.alerts.percentage_sum import classify_percentage_sum_review
 from engine.alerts.average_of_averages import classify_average_of_averages_review
 from engine.alerts.mixed_grain import classify_mixed_grain_review
 from engine.alerts.low_confidence import classify_low_confidence_review
+from engine.alerts.snapshot_grain import classify_snapshot_grain
 
 
 ALERT_RULE_IMPLEMENTATIONS = {
@@ -21,4 +22,5 @@ ALERT_RULE_IMPLEMENTATIONS = {
     "ALT-AVGAVG-008": classify_average_of_averages_review,
     "ALT-MIXGRAIN-009": classify_mixed_grain_review,
     "ALT-LOWCONF-010": classify_low_confidence_review,
+    "GRN-SNAP-006": classify_snapshot_grain,
 }

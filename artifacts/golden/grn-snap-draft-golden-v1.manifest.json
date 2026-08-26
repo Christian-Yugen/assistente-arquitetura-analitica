@@ -1,0 +1,12 @@
+{
+  "golden_id": "GRN-SNAP-006-DRAFT-GOLDEN-001",
+  "file": "grn-snap-draft-golden-v1.json",
+  "sha256": "aad8c27211fddf4a2e39cc6fe77fc44fd396afa48e517f6785cf0cbf3b5b20db",
+  "synthetic_only": true,
+  "calibration": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0
+  },
+  "production_authorized": false
+}
