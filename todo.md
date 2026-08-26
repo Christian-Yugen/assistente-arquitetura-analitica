@@ -685,3 +685,5 @@
 - [x] Validar o plano de calibração, salvar checkpoint e solicitar gate explícito antes de qualquer execução produtiva.
 - [x] Registrar a autorização de Chris e abrir o intake documental vazio do conjunto de calibração produtiva, sem receber ou processar dados.
 - [x] Validar que o intake de calibração permanece bloqueado para coleta, upload, execução, alteração de regra e promoção.
+- [x] Preparar gate documental de E2E sintético com cenários owner-scoped, limites de privacidade e critérios de bloqueio, sem executar fluxos provisionados.
+- [x] Validar a preparação documental de E2E sintético, salvar checkpoint e manter a execução E2E e a produção bloqueadas até ambiente autorizado.
