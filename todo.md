@@ -679,3 +679,7 @@
 - [x] Definir e testar o contrato documental aditivo de reconciliação dos intakes legados, sem alterar runtime ou allowlist.
 - [x] Criar fichas de linhagem para os grupos de intakes ausentes, legados e defasados, mantendo produção bloqueada.
 - [x] Validar em regressão que a reconciliação documental não altera runtime, allowlist, contagens do índice ou promoção de ambiente.
+- [x] Documentar a indisponibilidade atual de exclusão física na camada de armazenamento e manter a promoção produtiva bloqueada sem alterar operações de arquivo.
+- [x] Inventariar a cobertura e as limitações da calibração draft para preparar um gate produtivo sem dados privados.
+- [x] Definir proposta documental de conjunto aprovado, métricas FP/FN e critérios de aceite para calibração produtiva, sem executar dados reais.
+- [x] Validar o plano de calibração, salvar checkpoint e solicitar gate explícito antes de qualquer execução produtiva.
