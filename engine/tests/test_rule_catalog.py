@@ -352,7 +352,7 @@ class RuleCatalogTests(unittest.TestCase):
             "MDL-DIMCAL-006",
             CalendarDimensionSheetProfile(20, True, (CalendarDateProfile(20, 20, 19),), 0),
         )
-        self.assertEqual(executable_rule_count(), 94)
+        self.assertEqual(executable_rule_count(), 95)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
@@ -431,6 +431,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(get_rule_execution_record("REL-NONUNIQ-002").status, "executable_draft")
         self.assertEqual(get_rule_execution_record("REL-ORPHAN-003").status, "executable_draft")
         self.assertEqual(get_rule_execution_record("REL-MANYMANY-004").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("REL-BRIDGE-005").status, "executable_draft")
         self.assertEqual(get_rule_execution_record("REL-FACTFACT-006").status, "executable_draft")
         self.assertEqual(get_rule_execution_record("REL-AMBIG-007").status, "executable_draft")
         self.assertEqual(get_rule_execution_record("REL-BIDIR-008").status, "executable_draft")

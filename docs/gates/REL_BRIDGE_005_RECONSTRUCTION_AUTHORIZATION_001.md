@@ -4,7 +4,7 @@
 
 ## Decisão e escopo
 
-O intake e a Proposta A documental foram registrados sob `PROPOSAL-A-APPROVAL-DELEGATION-001`. Esta decisão autoriza somente a documentação preparatória; ela não autoriza perfil, classificador, registro, contrato, pipeline, allowlist, testes executáveis, golden, calibração ou qualquer alteração que execute a regra.
+O intake e a Proposta A documental foram registrados sob `PROPOSAL-A-APPROVAL-DELEGATION-001`. Chris autorizou a implementação exclusivamente draft em `Chat: SIM, autorizado`; a autorização não promove produção.
 
 ## Limites vinculantes
 
@@ -12,4 +12,4 @@ Uma futura regra só poderá consolidar sinal **independente, autorizado, opaco 
 
 ## Condições para reconstrução draft
 
-Antes de qualquer código, Chris deverá conceder autorização explícita de implementação. Esse ciclo deverá incluir perfil agregado, classificador determinístico, contrato, pipeline fail-closed com sinal real fixado em zero, allowlist, testes, golden exclusivamente sintético, manifesto SHA-256, calibração limitada e gate individual. **Produção permanece bloqueada.**
+O ciclo draft inclui perfil agregado, classificador determinístico, contrato, pipeline fail-closed com sinal real fixado em zero, allowlist, testes, golden exclusivamente sintético, manifesto SHA-256, calibração limitada e gate individual. **Produção permanece bloqueada.**

@@ -136,6 +136,7 @@ from engine.relationships.one_to_many import OneToManyRelationshipPairProfile
 from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshipPairProfile
 from engine.relationships.orphan_reference import OrphanReferenceRelationshipPairProfile
 from engine.relationships.many_to_many import ManyToManyRelationshipPairProfile
+from engine.relationships.bridge_need import BridgeNeedProfile
 from engine.relationships.direct_fact import DirectFactRelationshipPairProfile
 from engine.relationships.ambiguous_path import AmbiguousRelationshipPathPairProfile
 from engine.relationships.bidirectional_filter import BidirectionalFilterReviewPairProfile
@@ -945,6 +946,7 @@ def execute_quality_diagnosis(
         "REL-NONUNIQ-002": get_rule_execution_record("REL-NONUNIQ-002").status,
         "REL-ORPHAN-003": get_rule_execution_record("REL-ORPHAN-003").status,
         "REL-MANYMANY-004": get_rule_execution_record("REL-MANYMANY-004").status,
+        "REL-BRIDGE-005": get_rule_execution_record("REL-BRIDGE-005").status,
         "REL-FACTFACT-006": get_rule_execution_record("REL-FACTFACT-006").status,
         "REL-AMBIG-007": get_rule_execution_record("REL-AMBIG-007").status,
         "REL-BIDIR-008": get_rule_execution_record("REL-BIDIR-008").status,
@@ -1234,6 +1236,11 @@ def execute_quality_diagnosis(
                     eligible_direction_count=many_to_many_direction_counts[(signal.source_sheet_id, signal.target_sheet_id)],
                 )
                 candidate = execute_registered_rule("REL-MANYMANY-004", many_to_many_profile)
+                if candidate:
+                    relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
+            if relationship_rule_statuses["REL-BRIDGE-005"] == "executable_draft":
+                bridge_need_profile = BridgeNeedProfile(independent_bridge_need_signal_count=0)
+                candidate = execute_registered_rule("REL-BRIDGE-005", bridge_need_profile)
                 if candidate:
                     relationship_candidates.append((signal.source_sheet_id, signal.target_sheet_id, [candidate]))
             if relationship_rule_statuses["REL-FACTFACT-006"] == "executable_draft":
