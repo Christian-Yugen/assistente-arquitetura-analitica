@@ -76,6 +76,7 @@ RULE_VERSIONS = {
     "ALT-QUALITY-002": "0.1.0-provisional.1",
     "ALT-GRAIN-003": "0.1.0-provisional.1",
     "ALT-KEY-004": "0.1.0-provisional.1",
+    "ALT-AMBIG-005": "0.1.0-provisional.1",
 }
 
 

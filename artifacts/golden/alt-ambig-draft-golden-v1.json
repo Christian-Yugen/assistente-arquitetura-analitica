@@ -1,0 +1,1 @@
+{"profile_defaults":{"structural_ambiguity_signal_count":1,"confirmed_unambiguous_relationship_count":0,"contract_error_count":0},"cases":[{"overrides":{},"expected":true},{"overrides":{"structural_ambiguity_signal_count":0},"expected":false},{"overrides":{"confirmed_unambiguous_relationship_count":1},"expected":false},{"overrides":{"contract_error_count":1},"expected":false}]}

@@ -352,7 +352,7 @@ class RuleCatalogTests(unittest.TestCase):
             "MDL-DIMCAL-006",
             CalendarDimensionSheetProfile(20, True, (CalendarDateProfile(20, 20, 19),), 0),
         )
-        self.assertEqual(executable_rule_count(), 68)
+        self.assertEqual(executable_rule_count(), 69)
         self.assertEqual(result[0]["rule_id"], "QLT-NUMTEXT-007")
         self.assertEqual(null_result[0]["rule_id"], "QLT-NULL-001")
         self.assertEqual(catvar_result[0]["rule_id"], "QLT-CATVAR-008")
@@ -442,6 +442,7 @@ class RuleCatalogTests(unittest.TestCase):
         self.assertEqual(get_rule_execution_record("ALT-QUALITY-002").status, "executable_draft")
         self.assertEqual(get_rule_execution_record("ALT-GRAIN-003").status, "executable_draft")
         self.assertEqual(get_rule_execution_record("ALT-KEY-004").status, "executable_draft")
+        self.assertEqual(get_rule_execution_record("ALT-AMBIG-005").status, "executable_draft")
         self.assertEqual(record.title, "Números armazenados como texto")
 
     def test_baseline_reference_and_reserved_official_slots_cannot_execute(self):
