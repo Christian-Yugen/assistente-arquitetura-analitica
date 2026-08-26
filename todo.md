@@ -675,4 +675,7 @@
 - [x] Inventariar os bloqueios produtivos remanescentes após a cobertura de 95/95 regras draft e registrar o próximo gate governado.
 - [x] Consolidar somente os controles de prontidão produtiva autorizados, sem promover produção.
 - [x] Validar os gates, regressões e bloqueios produtivos antes de qualquer nova solicitação de autorização.
-- [ ] Registrar e reconciliar documentalmente as inconsistências de linhagem entre o índice de 95 regras executable_draft e os intakes legados, sem alterar a executabilidade nem promover produção.
+- [x] Registrar e reconciliar documentalmente as inconsistências de linhagem entre o índice de 95 regras executable_draft e os intakes legados, sem alterar a executabilidade nem promover produção.
+- [x] Definir e testar o contrato documental aditivo de reconciliação dos intakes legados, sem alterar runtime ou allowlist.
+- [x] Criar fichas de linhagem para os grupos de intakes ausentes, legados e defasados, mantendo produção bloqueada.
+- [x] Validar em regressão que a reconciliação documental não altera runtime, allowlist, contagens do índice ou promoção de ambiente.
