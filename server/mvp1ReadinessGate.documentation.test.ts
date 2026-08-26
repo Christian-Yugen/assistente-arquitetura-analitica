@@ -10,7 +10,7 @@ describe("MVP-1.0-READINESS-001", () => {
 
     expect(gate).toContain("**BLOQUEADO para MVP 1.0 produtivo.**");
     expect(gate).toContain("MVP draft controlado");
-    expect(gate).toContain("Somente 72 de 95 regras");
+    expect(gate).toContain("Somente 73 de 95 regras");
     expect(gate).toContain("As quinze regras de Qualidade");
     expect(gate).toContain("regras semânticas, de granularidade e de modelagem previamente habilitadas");
     expect(gate).toContain("REL-ONEMANY-001@0.1.0-provisional.1");
@@ -45,6 +45,7 @@ describe("MVP-1.0-READINESS-001", () => {
     expect(gate).toContain("ALT-METRIC-006@0.1.0-provisional.1");
     expect(gate).toContain("ALT-SUMPCT-007");
     expect(gate).toContain("ALT-AVGAVG-008@0.1.0-provisional.1");
+    expect(gate).toContain("ALT-MIXGRAIN-009@0.1.0-provisional.1");
     expect(gate).toContain("exclusão física owner-scoped");
     expect(gate).toContain("Prova E2E produtiva ausente");
     expect(gate).toContain("não autoriza produção");

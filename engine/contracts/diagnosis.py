@@ -80,6 +80,7 @@ RULE_VERSIONS = {
     "ALT-METRIC-006": "0.1.0-provisional.1",
     "ALT-SUMPCT-007": "0.1.0-provisional.1",
     "ALT-AVGAVG-008": "0.1.0-provisional.1",
+    "ALT-MIXGRAIN-009": "0.1.0-provisional.1",
 }
 
 

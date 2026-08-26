@@ -25,7 +25,7 @@ Os registros individuais incluem `REL-ONEMANY-001@0.1.0-provisional.1`, `REL-NON
 
 | Bloqueio | Evidência do bloqueio | Condição objetiva de remoção |
 |---|---|---|
-| Catálogo incompleto | Somente 72 de 95 regras estão executáveis no perfil draft. | Completar os ciclos governados das regras necessárias ao escopo produtivo, sem pular intake, especificação, testes, golden dataset e gate. |
+| Catálogo incompleto | Somente 73 de 95 regras estão executáveis no perfil draft. | Completar os ciclos governados das regras necessárias ao escopo produtivo, sem pular intake, especificação, testes, golden dataset e gate. |
 | Cobertura analítica incompleta | Há tipagem semântica draft limitada, hipóteses de granularidade e de modelagem controladas; MET-COMPL, MET-SUM, MET-COUNT, MET-DCOUNT, MET-AVG, MET-MINMAX, MET-RATE, MET-ABSDELTA, MET-PCTDELTA, MET-RUNNING, MET-WAVG e MET-SEMIADD somente sugerem fórmulas conceituais revisáveis, sem calcular valores, escolher entidade/medida/unidade/referência, determinar saldo ou gerar DAX. MET-DOMAIN permanece fail-closed enquanto não houver sinal independente, opaco e autorizado; MET-IMPOSS somente alerta, de modo conceitual e agregado, que não há base para sugestão de métrica; e MET-DAX permanece fail-closed enquanto não houver fonte de confirmação humana autorizada. ALT-SENS somente consolida um sinal existente, opaco e agregado em restrição de processamento. ALT-QUALITY somente consolida contagens agregadas de findings de qualidade já executados. ALT-GRAIN, ALT-KEY, ALT-AMBIG, ALT-METRIC, ALT-SUMPCT e ALT-AVGAVG permanecem fail-closed enquanto não houver seus sinais independentes e autorizados; não derivam seus sinais de conteúdo privado. Os demais alertas ainda não têm executor autorizado. | Autorizar e validar os módulos correspondentes em ciclos independentes. |
 | Calibração limitada | Golden datasets draft cobrem as setenta e duas regras autorizadas, incluindo `GD-MET-COMPL-001-001`, `GD-MET-SUM-002-001`, `GD-MET-COUNT-003-001` e os goldens sintéticos selados de `MET-RATE-007`, `MET-ABSDELTA-008`, `MET-PCTDELTA-009`, `MET-RUNNING-010`, `MET-WAVG-011`, `MET-SEMIADD-012`, `MET-DOMAIN-013`, `MET-IMPOSS-014`, `MET-DAX-015`, `ALT-SENS-001`, `ALT-QUALITY-002`, `ALT-GRAIN-003`, `ALT-KEY-004`, `ALT-AMBIG-005`, `ALT-METRIC-006`, `ALT-SUMPCT-007` e `ALT-AVGAVG-008`, mas não dados reais nem todas as categorias. | Calibrar o motor com conjuntos aprovados para produção e registrar falsos positivos e falsos negativos por regra. |
 | Exclusão física indisponível | O armazenamento não expõe operação oficial de deleção; há apenas `RETENTION-EXCEPTION-001`. | Implementar exclusão física owner-scoped, testá-la e obter gate de retenção produtivo. |
@@ -33,7 +33,11 @@ Os registros individuais incluem `REL-ONEMANY-001@0.1.0-provisional.1`, `REL-NON
 | Prova E2E produtiva ausente | A regressão automatizada cobre componentes, API, motor e fixtures; não há evidência de cenário E2E produtivo em banco provisionado. | Executar cenário E2E automatizado contra ambiente provisionado, sem dados pessoais e com isolamento comprovado. |
 | Linhagem canônica de nulos | `QLT-NULL-001` é uma reconstrução autorizada, não a recuperação da fonte original. | Recuperar ou substituir formalmente a fonte canônica e aprovar a decisão de promoção correspondente. |
 
-> A aprovação do MVP draft não autoriza produção, não permite anunciar exclusão física, não amplia a cobertura parcial das setenta e duas regras e não equivale a aprovação do Gate MVP 1.0.
+> A aprovação do MVP draft não autoriza produção, não permite anunciar exclusão física, não amplia a cobertura parcial das setenta e três regras e não equivale a aprovação do Gate MVP 1.0.
+
+## Atualização controlada — ALT-MIXGRAIN-009
+
+A `ALT-MIXGRAIN-009@0.1.0-provisional.1` integra o escopo de **73 regras draft** após autorização explícita, golden sintético e gate individual. Ela apenas consolida sinal independente e agregado de mistura de granularidades; o pipeline fixa `independent_mixed_grain_signal_count=0` até existir fonte independente autorizada. A regra não infere ou combina granularidades, fatos, dimensões, chaves, relações, medidas ou campos. **Produção permanece bloqueada.**
 
 ## Conclusão e próxima reavaliação
 
