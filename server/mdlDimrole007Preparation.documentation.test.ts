@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 const root = resolve(import.meta.dirname, "..");
 
 describe("MDL-DIMROLE-007 policy boundaries", () => {
-  it("preserva a Proposta A documental e bloqueia execução e produção", () => {
+  it("preserva a Proposta A e o bloqueio produtivo após a autorização draft", () => {
     const intake = JSON.parse(
       readFileSync(resolve(root, "artifacts/intake/MDL-DIMROLE-007.json"), "utf8"),
     );
@@ -18,9 +18,9 @@ describe("MDL-DIMROLE-007 policy boundaries", () => {
       "utf8",
     );
 
-    expect(intake.local_readiness).toBe("intake_required");
-    expect(intake.authorization.implementation_authorized).toBe(false);
-    expect(intake.execution_blocked).toBe(true);
+    expect(intake.local_readiness).toBe("executable_draft");
+    expect(intake.authorization.implementation_authorized).toBe(true);
+    expect(intake.execution_blocked).toBe(false);
     expect(intake.production_blocked).toBe(true);
     expect(policy).toContain("sinal **independente, autorizado, opaco e agregado**");
     expect(policy).toContain("Produção permanece bloqueada");
