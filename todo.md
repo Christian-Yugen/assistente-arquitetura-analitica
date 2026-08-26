@@ -679,3 +679,4 @@
 - [x] Definir e testar o contrato documental aditivo de reconciliação dos intakes legados, sem alterar runtime ou allowlist.
 - [x] Criar fichas de linhagem para os grupos de intakes ausentes, legados e defasados, mantendo produção bloqueada.
 - [x] Validar em regressão que a reconciliação documental não altera runtime, allowlist, contagens do índice ou promoção de ambiente.
+- [x] Documentar a indisponibilidade atual de exclusão física na camada de armazenamento e manter a promoção produtiva bloqueada sem alterar operações de arquivo.
