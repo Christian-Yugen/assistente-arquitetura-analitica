@@ -10,6 +10,7 @@ from engine.alerts.mixed_grain import classify_mixed_grain_review
 from engine.alerts.low_confidence import classify_low_confidence_review
 from engine.alerts.snapshot_grain import classify_snapshot_grain
 from engine.alerts.period_per_row import classify_period_per_row
+from engine.alerts.entity_association import classify_entity_association
 
 
 ALERT_RULE_IMPLEMENTATIONS = {
@@ -25,4 +26,5 @@ ALERT_RULE_IMPLEMENTATIONS = {
     "ALT-LOWCONF-010": classify_low_confidence_review,
     "GRN-SNAP-006": classify_snapshot_grain,
     "GRN-PERIOD-005": classify_period_per_row,
+    "GRN-ASSOC-007": classify_entity_association,
 }

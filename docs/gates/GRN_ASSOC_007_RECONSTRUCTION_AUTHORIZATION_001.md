@@ -1,7 +1,11 @@
-# GRN-ASSOC-007 — Gate de reconstrução
+# GRN-ASSOC-007 — Gate de reconstrução e autorização
 
-**Decisão:** intake e Proposta A não executáveis registrados sob `PROPOSAL-A-APPROVAL-DELEGATION-001`.
+**Regra:** `GRN-ASSOC-007 — Associação entre entidades`
+**Decisão:** autorizada exclusivamente para **draft controlado**.
+**Registro da autorização de implementação:** Chris — “autorizado”.
 
-Este gate limita a GRN-ASSOC-007 ao registro documental da política conservadora. Qualquer futura implementação draft exigirá autorização explícita adicional de Chris para código, seguida de perfil agregado, classificador determinístico, contrato, pipeline fail-closed, allowlist, testes, golden exclusivamente sintético, manifesto SHA-256, calibração limitada e gate individual.
+O ciclo foi autorizado após intake e Proposta A. O executor só consolida sinal **independente, autorizado, opaco e agregado** para formular uma hipótese de revisão humana. Ausência de sinal, confirmação humana prévia, conflito estrutural, sensibilidade ou erro contratual suprimem o finding de modo fail-closed.
 
-Não há autorização para inferir, identificar, vincular, comparar ou selecionar entidades, eventos, chaves, fatos, dimensões, relações, cardinalidades, campos, valores, pares, frequências, calendário ou conteúdo privado. Não há autorização para persistir, exibir ou registrar dados de workbook, calcular métricas, modificar arquivos ou gerar DAX/M. **Produção permanece bloqueada.**
+A regra não infere, identifica, vincula, compara ou seleciona entidades, eventos, chaves, fatos, dimensões, relações, cardinalidades, campos, valores, pares, frequências, calendário ou conteúdo de workbook. Não persiste nem expõe conteúdo de workbook, não calcula métricas e não gera DAX ou Power Query. O pipeline real fixa o sinal independente em zero enquanto não existir fonte independente autorizada.
+
+O gate individual `GRN-ASSOC-007-DRAFT-CALIBRATION-001`, o golden estritamente sintético, o manifesto SHA-256, os testes determinísticos, a allowlist e a regressão integral sustentam apenas o perfil draft. **Produção permanece bloqueada** até os requisitos próprios de cobertura, calibração produtiva, exclusão física, E2E e gate produtivo.
