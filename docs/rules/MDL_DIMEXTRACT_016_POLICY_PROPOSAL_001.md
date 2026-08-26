@@ -1,6 +1,6 @@
 # Proposta A — MDL-DIMEXTRACT-016: Dimensão extraível da fato
 
-**Estado:** documental e não executável. **Regra oficial:** `MDL-DIMEXTRACT-016`, categoria `fact_dimension`, prioridade `P1`, escopo `sheet`, etapa `table_classification`, dependência declarada `grain` e saída primária `classification_or_table`.
+**Estado:** ativada somente em draft. **Regra oficial:** `MDL-DIMEXTRACT-016`, categoria `fact_dimension`, prioridade `P1`, escopo `sheet`, etapa `table_classification`, dependência declarada `grain` e saída primária `classification_or_table`.
 
 ## Finalidade limitada
 
@@ -16,4 +16,4 @@ Qualquer desenho futuro deverá receber exclusivamente contagens e flags agregad
 
 ## Critérios para eventual código draft
 
-Código executável continua bloqueado até autorização explícita de Chris. Depois dela, serão obrigatórios perfil agregado, classificador determinístico, integração em registro e contrato, pipeline com sinal zero, allowlist, testes, golden exclusivamente sintético com SHA-256, calibração limitada com TP/FP/FN e gate individual. **Produção permanece bloqueada.**
+Chris autorizou explicitamente o código draft em `Chat: Sim, autorizado`. O perfil agregado, classificador determinístico, integração em registro e contrato, pipeline com sinal zero, allowlist, testes, golden exclusivamente sintético com SHA-256, calibração limitada com TP/FP/FN e gate individual foram vinculados a essa autorização. **Produção permanece bloqueada.**
