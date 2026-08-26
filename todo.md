@@ -700,3 +700,5 @@
 - [ ] Provisionar o ambiente E2E isolado, somente se a plataforma expuser operação suportada com banco, armazenamento e segredos distintos.
 - [x] Registrar o bloqueio técnico de E2E: navegador de automação ausente e operação de instalação não exposta, sem contornar a plataforma ou reutilizar o ambiente atual.
 - [ ] Retomar a criação e execução de E2E somente quando a plataforma fornecer navegador de automação e implantação isolada suportados.
+- [x] Auditar e comprovar o fluxo central draft de upload XLSX, análise server-side e visualização owner-scoped sem dados privados nas evidências.
+- [x] Corrigir somente falhas funcionais comprovadas no fluxo central, validar regressões e manter o perfil draft e a produção bloqueada — nenhuma falha funcional comprovada foi identificada na auditoria.
