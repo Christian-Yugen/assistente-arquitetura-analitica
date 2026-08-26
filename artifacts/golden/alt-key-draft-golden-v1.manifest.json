@@ -1,0 +1,1 @@
+{"rule_id":"ALT-KEY-004","gate_id":"ALT-KEY-004-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/alt-key-draft-golden-v1.json","sha256":"d8125d8fe11746057c10f024af3616d9f6170dcac1c0aeb95617591b04ae3f8f","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}

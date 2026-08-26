@@ -9,9 +9,9 @@
   "policy": "A regra só pode ser executada quando local_readiness for executable_draft e houver gate de implementação registrado.",
   "counts": {
     "baseline_reference": 0,
-    "executable_draft": 67,
+    "executable_draft": 68,
     "reference_catalog_draft": 0,
-    "intake_required": 28
+    "intake_required": 27
   },
   "rules": [
     {
@@ -1678,20 +1678,10 @@
         "metric_suggestion"
       ],
       "primary_output": "finding_or_suppression",
-      "source_implementation_status": "planned",
-      "local_readiness": "intake_required",
-      "executable": false,
-      "missing_before_execution": [
-        "condition",
-        "exclusions",
-        "evidence",
-        "severity",
-        "confidence",
-        "questions",
-        "tests",
-        "golden_dataset",
-        "authorization_gate"
-      ]
+      "source_implementation_status": "reference_implemented_draft",
+      "local_readiness": "executable_draft",
+      "executable": true,
+      "missing_before_execution": []
     },
     {
       "rule_id": "ALT-AMBIG-005",

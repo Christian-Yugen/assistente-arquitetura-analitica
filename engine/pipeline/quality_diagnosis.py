@@ -25,6 +25,7 @@ from engine.metrics.dax import DaxTemplateConceptProfile
 from engine.alerts.sensitivity import SensitiveDataRestrictionProfile
 from engine.alerts.quality import CriticalQualityRiskProfile
 from engine.alerts.grain import UndefinedGrainAlertProfile
+from engine.alerts.key import InvalidKeyAlertProfile
 from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_metric_fragment, to_relationship_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
@@ -871,6 +872,7 @@ def execute_quality_diagnosis(
         "ALT-SENS-001": get_rule_execution_record("ALT-SENS-001").status,
         "ALT-QUALITY-002": get_rule_execution_record("ALT-QUALITY-002").status,
         "ALT-GRAIN-003": get_rule_execution_record("ALT-GRAIN-003").status,
+        "ALT-KEY-004": get_rule_execution_record("ALT-KEY-004").status,
     }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
@@ -1426,6 +1428,18 @@ def execute_quality_diagnosis(
         )
         if grain_alert_candidate:
             quality_findings.append(("model", "model", grain_alert_candidate))
+
+    if alert_rule_statuses["ALT-KEY-004"] == "executable_draft":
+        key_alert_candidate = execute_registered_rule(
+            "ALT-KEY-004",
+            InvalidKeyAlertProfile(
+                # Não há fonte independente autorizada para sinal de chave inválida.
+                # O pipeline permanece fail-closed e não deriva o sinal de conteúdo privado.
+                invalid_key_signal_count=0,
+            ),
+        )
+        if key_alert_candidate:
+            quality_findings.append(("model", "model", key_alert_candidate))
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []

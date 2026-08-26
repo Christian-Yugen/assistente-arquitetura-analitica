@@ -12,7 +12,7 @@
     "primary_output": "finding_or_suppression",
     "source_implementation_status": "planned"
   },
-  "local_readiness": "intake_required",
+  "local_readiness": "executable_draft",
   "authorization": {
     "intake_authorized": true,
     "intake_authorized_by": "Chris",
@@ -20,13 +20,15 @@
     "policy_approved_by": "Chris",
     "policy_approved_proposal": "A",
     "policy_approval_basis": "PROPOSAL-A-APPROVAL-DELEGATION-001",
-    "implementation_authorized": false,
+    "implementation_authorized": true,
+    "implementation_authorized_by": "Chris",
+    "implementation_authorization_record": "Chat: sim, atutorizadocontinuar",
     "required_gate": "ALT-KEY-004-DRAFT-CALIBRATION-001",
     "production_authorized": false
   },
-  "status": "intake_required",
-  "execution_blocked": true,
-  "execution_profile": "none",
-  "missing_before_execution": ["condition", "exclusions", "evidence", "severity", "confidence", "questions", "tests", "golden_dataset", "authorization_gate"],
+  "status": "executable_draft",
+  "execution_blocked": false,
+  "execution_profile": "draft",
+  "missing_before_execution": [],
   "production_blocked": true
 }

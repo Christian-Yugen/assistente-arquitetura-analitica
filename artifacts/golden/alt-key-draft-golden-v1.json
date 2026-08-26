@@ -1,0 +1,1 @@
+{"profile_defaults":{"invalid_key_signal_count":1,"confirmed_key_count":0,"contract_error_count":0},"cases":[{"overrides":{},"expected":true},{"overrides":{"invalid_key_signal_count":0},"expected":false},{"overrides":{"confirmed_key_count":1},"expected":false},{"overrides":{"contract_error_count":1},"expected":false}]}
