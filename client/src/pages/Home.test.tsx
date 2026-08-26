@@ -66,11 +66,11 @@ describe("Home workspace flow", () => {
     expect(renderHome()).toContain("Tentar login novamente");
   });
 
-  it("shows the ninety-three rules authorized for the current draft profile", () => {
+  it("shows the ninety-four rules authorized for the current draft profile", () => {
     const workspace = renderHome();
     expect(workspace).toContain("Regras executáveis");
-    expect(workspace).toContain(">93<");
-    expect(workspace).toContain("GRN-ENTITY-003 + GRN-PERIOD-005 + GRN-SNAP-006 + GRN-ASSOC-007 + GRN-PREAGG-008 + GRN-INCONS-009 + GRN-DUP-010 + MDL-FACTACC-003 + MDL-DIMCONF-005 + MDL-DIMROLE-007 + MDL-DIMDEG-008 + MDL-BRIDGE-009 + MDL-AUX-010 + MDL-PARAM-011 + MDL-FLAT-012 + MDL-MIXED-013 + MDL-ATTRREP-014 + MDL-MEASURE-015 + MDL-DIMEXTRACT-016 + MDL-DIMMISS-017");
+    expect(workspace).toContain(">94<");
+    expect(workspace).toContain("GRN-ENTITY-003 + GRN-PERIOD-005 + GRN-SNAP-006 + GRN-ASSOC-007 + GRN-PREAGG-008 + GRN-INCONS-009 + GRN-DUP-010 + MDL-FACTACC-003 + MDL-DIMCONF-005 + MDL-DIMROLE-007 + MDL-DIMDEG-008 + MDL-BRIDGE-009 + MDL-AUX-010 + MDL-PARAM-011 + MDL-FLAT-012 + MDL-MIXED-013 + MDL-ATTRREP-014 + MDL-MEASURE-015 + MDL-DIMEXTRACT-016 + MDL-DIMMISS-017 + MDL-FACTNOMEAS-018");
     expect(workspace).toContain("MET-AVG-005 + MET-MINMAX-006 + MET-RATE-007 + MET-ABSDELTA-008 + MET-PCTDELTA-009 + MET-RUNNING-010 + MET-WAVG-011 + MET-SEMIADD-012 + MET-DOMAIN-013 + MET-IMPOSS-014 + MET-DAX-015 + ALT-SENS-001 + ALT-QUALITY-002 + ALT-GRAIN-003 + ALT-KEY-004 + ALT-AMBIG-005 + ALT-METRIC-006 + ALT-SUMPCT-007 + ALT-AVGAVG-008 + ALT-MIXGRAIN-009 + ALT-LOWCONF-010");
   });
 
