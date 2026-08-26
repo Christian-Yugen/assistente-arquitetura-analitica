@@ -18,9 +18,9 @@ class RuleIntakeTests(unittest.TestCase):
         self.assertEqual(len(readiness["rules"]), 95)
         self.assertEqual(readiness["counts"], {
             "baseline_reference": 0,
-            "executable_draft": 64,
+            "executable_draft": 82,
             "reference_catalog_draft": 0,
-            "intake_required": 31,
+            "intake_required": 13,
         })
 
         by_id = {rule["rule_id"]: rule for rule in readiness["rules"]}
@@ -31,6 +31,42 @@ class RuleIntakeTests(unittest.TestCase):
         self.assertTrue(by_id["MET-IMPOSS-014"]["executable"])
         self.assertEqual(by_id["MET-DAX-015"]["local_readiness"], "executable_draft")
         self.assertTrue(by_id["MET-DAX-015"]["executable"])
+        self.assertEqual(by_id["ALT-SENS-001"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["ALT-SENS-001"]["executable"])
+        self.assertEqual(by_id["ALT-QUALITY-002"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["ALT-QUALITY-002"]["executable"])
+        self.assertEqual(by_id["ALT-GRAIN-003"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["ALT-GRAIN-003"]["executable"])
+        self.assertEqual(by_id["ALT-KEY-004"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["ALT-KEY-004"]["executable"])
+        self.assertEqual(by_id["ALT-AMBIG-005"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["ALT-AMBIG-005"]["executable"])
+        self.assertEqual(by_id["ALT-LOWCONF-010"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["ALT-LOWCONF-010"]["executable"])
+        self.assertEqual(by_id["GRN-SNAP-006"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["GRN-SNAP-006"]["executable"])
+        self.assertEqual(by_id["GRN-PERIOD-005"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["GRN-PERIOD-005"]["executable"])
+        self.assertEqual(by_id["GRN-ASSOC-007"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["GRN-ASSOC-007"]["executable"])
+        self.assertEqual(by_id["GRN-PREAGG-008"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["GRN-PREAGG-008"]["executable"])
+        self.assertEqual(by_id["GRN-INCONS-009"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["GRN-INCONS-009"]["executable"])
+        self.assertEqual(by_id["GRN-DUP-010"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["GRN-DUP-010"]["executable"])
+        self.assertEqual(by_id["MDL-FACTACC-003"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["MDL-FACTACC-003"]["executable"])
+        self.assertEqual(by_id["MDL-DIMCONF-005"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["MDL-DIMCONF-005"]["executable"])
+        self.assertEqual(by_id["ALT-METRIC-006"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["ALT-METRIC-006"]["executable"])
+        self.assertEqual(by_id["ALT-SUMPCT-007"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["ALT-SUMPCT-007"]["executable"])
+        self.assertEqual(by_id["ALT-AVGAVG-008"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["ALT-AVGAVG-008"]["executable"])
+        self.assertEqual(by_id["ALT-MIXGRAIN-009"]["local_readiness"], "executable_draft")
+        self.assertTrue(by_id["ALT-MIXGRAIN-009"]["executable"])
 
     def test_catvar_intake_preserves_policy_gaps_after_provisional_draft_activation(self):
         intake = json.loads(

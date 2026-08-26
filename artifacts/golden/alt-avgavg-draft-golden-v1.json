@@ -1,0 +1,34 @@
+{
+  "golden_id": "ALT-AVGAVG-008-DRAFT-GOLDEN-001",
+  "rule_id": "ALT-AVGAVG-008",
+  "synthetic_only": true,
+  "profile_defaults": {
+    "independent_average_of_averages_risk_signal_count": 0,
+    "confirmed_average_composition_count": 0,
+    "structural_conflict_count": 0,
+    "sensitive_signal_count": 0,
+    "contract_error_count": 0
+  },
+  "cases": [
+    {
+      "case_id": "synthetic-independent-average-of-averages-risk-signal",
+      "overrides": {"independent_average_of_averages_risk_signal_count": 1},
+      "expected_finding": true
+    },
+    {
+      "case_id": "no-independent-signal",
+      "overrides": {},
+      "expected_finding": false
+    },
+    {
+      "case_id": "human-composition-confirmed",
+      "overrides": {"independent_average_of_averages_risk_signal_count": 1, "confirmed_average_composition_count": 1},
+      "expected_finding": false
+    },
+    {
+      "case_id": "sensitive-signal-blocks-consolidation",
+      "overrides": {"independent_average_of_averages_risk_signal_count": 1, "sensitive_signal_count": 1},
+      "expected_finding": false
+    }
+  ]
+}

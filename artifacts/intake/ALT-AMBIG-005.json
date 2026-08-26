@@ -1,0 +1,34 @@
+{
+  "intake_id": "ALT-AMBIG-005-INTAKE-001",
+  "rule": {
+    "rule_id": "ALT-AMBIG-005",
+    "title": "Ambiguidade estrutural",
+    "category": "alert",
+    "purpose": "Consolidar alerta de ambiguidade estrutural.",
+    "priority": "P0",
+    "stage": "alert_consolidation",
+    "scope": "model",
+    "depends_on": ["quality", "semantic_typing", "grain_inference", "table_classification", "relationship_inference", "metric_suggestion"],
+    "primary_output": "finding_or_suppression",
+    "source_implementation_status": "planned"
+  },
+  "local_readiness": "executable_draft",
+  "authorization": {
+    "intake_authorized": true,
+    "intake_authorized_by": "Chris",
+    "policy_approved": true,
+    "policy_approved_by": "Chris",
+    "policy_approved_proposal": "A",
+    "policy_approval_basis": "PROPOSAL-A-APPROVAL-DELEGATION-001",
+    "implementation_authorized": true,
+    "implementation_authorized_by": "Chris",
+    "implementation_authorization_record": "Chat: sim, autorizado",
+    "required_gate": "ALT-AMBIG-005-DRAFT-CALIBRATION-001",
+    "production_authorized": false
+  },
+  "status": "executable_draft",
+  "execution_blocked": false,
+  "execution_profile": "draft",
+  "missing_before_execution": [],
+  "production_blocked": true
+}

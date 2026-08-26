@@ -1,0 +1,9 @@
+{
+  "manifest_id": "ALT-MIXGRAIN-009-DRAFT-GOLDEN-MANIFEST-001",
+  "rule_id": "ALT-MIXGRAIN-009",
+  "golden_path": "artifacts/golden/alt-mixgrain-draft-golden-v1.json",
+  "sha256": "5cec12d4ac12c12f4e7601524b72d0c995695553c88b2371fcf88fc5bb3dba71",
+  "synthetic_only": true,
+  "calibration": {"tp": 1, "fp": 0, "fn": 0},
+  "production_authorized": false
+}

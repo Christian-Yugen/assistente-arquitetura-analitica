@@ -22,6 +22,22 @@ from engine.metrics.semiadditive import SemiadditiveConceptProfile
 from engine.metrics.domain import DomainMetricConceptProfile
 from engine.metrics.impossible import InsufficientMetricConceptProfile
 from engine.metrics.dax import DaxTemplateConceptProfile
+from engine.alerts.sensitivity import SensitiveDataRestrictionProfile
+from engine.alerts.quality import CriticalQualityRiskProfile
+from engine.alerts.grain import UndefinedGrainAlertProfile
+from engine.alerts.key import InvalidKeyAlertProfile
+from engine.alerts.ambiguity import StructuralAmbiguityAlertProfile
+from engine.alerts.metric_risk import PotentiallyMisleadingMetricAlertProfile
+from engine.alerts.percentage_sum import PercentageSumAlertProfile
+from engine.alerts.average_of_averages import AverageOfAveragesAlertProfile
+from engine.alerts.mixed_grain import MixedGrainAlertProfile
+from engine.alerts.low_confidence import LowConfidenceAlertProfile
+from engine.alerts.snapshot_grain import SnapshotGrainProfile
+from engine.alerts.period_per_row import PeriodPerRowProfile
+from engine.alerts.entity_association import EntityAssociationProfile
+from engine.alerts.pre_aggregation import PreAggregationProfile
+from engine.alerts.inconsistent_grain import InconsistentGrainProfile
+from engine.alerts.duplicate_grain import DuplicateGrainProfile
 from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_metric_fragment, to_relationship_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
@@ -101,6 +117,8 @@ from engine.fact_dimension.transactional import TransactionalFactSheetProfile
 from engine.fact_dimension.calendar_dimension import CalendarDimensionSheetProfile
 from engine.fact_dimension.fact_without_grain import FactWithoutDefinedGrainSheetProfile
 from engine.fact_dimension.undefined_classification import UndefinedTableClassificationSheetProfile
+from engine.fact_dimension.accumulated_snapshot import AccumulatedSnapshotProfile
+from engine.fact_dimension.conformed_dimension import ConformedDimensionProfile
 from engine.profiling.relationship_pairs import CompositeRelationshipPairSignal, RelationshipPairSignal
 from engine.relationships.one_to_many import OneToManyRelationshipPairProfile
 from engine.relationships.non_unique_one_side import NonUniqueOneSideRelationshipPairProfile
@@ -664,6 +682,20 @@ def execute_quality_diagnosis(
                     if column.physical_type == "numeric" and column.formulas.formula_count == 0
                 ),
             ))
+        if get_rule_execution_record("MDL-FACTACC-003").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-FACTACC-003",
+                AccumulatedSnapshotProfile(
+                    # Não há fonte independente autorizada de snapshot acumulado.
+                    # O pipeline permanece fail-closed e não deriva sinal de conteúdo privado.
+                    independent_accumulated_snapshot_signal_count=0,
+                ),
+            ))
+        if get_rule_execution_record("MDL-DIMCONF-005").status == "executable_draft":
+            table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
+                "MDL-DIMCONF-005",
+                ConformedDimensionProfile(independent_conformed_dimension_signal_count=0),
+            ))
         if get_rule_execution_record("MDL-FACTTXN-002").status == "executable_draft":
             table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
                 "MDL-FACTTXN-002",
@@ -863,6 +895,24 @@ def execute_quality_diagnosis(
         "MET-DOMAIN-013": get_rule_execution_record("MET-DOMAIN-013").status,
         "MET-IMPOSS-014": get_rule_execution_record("MET-IMPOSS-014").status,
         "MET-DAX-015": get_rule_execution_record("MET-DAX-015").status,
+    }
+    alert_rule_statuses = {
+        "ALT-SENS-001": get_rule_execution_record("ALT-SENS-001").status,
+        "ALT-QUALITY-002": get_rule_execution_record("ALT-QUALITY-002").status,
+        "ALT-GRAIN-003": get_rule_execution_record("ALT-GRAIN-003").status,
+        "ALT-KEY-004": get_rule_execution_record("ALT-KEY-004").status,
+        "ALT-AMBIG-005": get_rule_execution_record("ALT-AMBIG-005").status,
+        "ALT-METRIC-006": get_rule_execution_record("ALT-METRIC-006").status,
+        "ALT-SUMPCT-007": get_rule_execution_record("ALT-SUMPCT-007").status,
+        "ALT-AVGAVG-008": get_rule_execution_record("ALT-AVGAVG-008").status,
+        "ALT-MIXGRAIN-009": get_rule_execution_record("ALT-MIXGRAIN-009").status,
+        "ALT-LOWCONF-010": get_rule_execution_record("ALT-LOWCONF-010").status,
+        "GRN-SNAP-006": get_rule_execution_record("GRN-SNAP-006").status,
+        "GRN-PERIOD-005": get_rule_execution_record("GRN-PERIOD-005").status,
+        "GRN-ASSOC-007": get_rule_execution_record("GRN-ASSOC-007").status,
+        "GRN-PREAGG-008": get_rule_execution_record("GRN-PREAGG-008").status,
+        "GRN-INCONS-009": get_rule_execution_record("GRN-INCONS-009").status,
+        "GRN-DUP-010": get_rule_execution_record("GRN-DUP-010").status,
     }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
@@ -1375,6 +1425,186 @@ def execute_quality_diagnosis(
                 candidate = execute_registered_rule("MET-DAX-015", dax_template_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
+
+    if alert_rule_statuses["ALT-SENS-001"] == "executable_draft":
+        for sheet_id, column_id, candidates in sensitivity_candidates:
+            sensitivity_signal_candidate_count = sum(candidate.get("sensitivity") == "personal_data_candidate" for candidate in candidates)
+            alert_candidate = execute_registered_rule(
+                "ALT-SENS-001",
+                SensitiveDataRestrictionProfile(
+                    sensitivity_signal_candidate_count=sensitivity_signal_candidate_count,
+                    sensitivity_conflict_count=max(0, sensitivity_signal_candidate_count - 1),
+                ),
+            )
+            if alert_candidate:
+                quality_findings.append((sheet_id, column_id, alert_candidate))
+
+    if alert_rule_statuses["ALT-QUALITY-002"] == "executable_draft":
+        quality_rule_findings = [
+            finding
+            for _, _, finding in quality_findings
+            if str(finding.get("rule_id", "")).startswith("QLT-")
+        ]
+        quality_alert_candidate = execute_registered_rule(
+            "ALT-QUALITY-002",
+            CriticalQualityRiskProfile(
+                high_quality_finding_count=sum(finding.get("severity") == "high" for finding in quality_rule_findings),
+                distinct_quality_rule_count=len({str(finding.get("rule_id")) for finding in quality_rule_findings}),
+                analyzed_sheet_count=len(grouped_columns),
+            ),
+        )
+        if quality_alert_candidate:
+            quality_findings.append(("model", "model", quality_alert_candidate))
+
+    if alert_rule_statuses["ALT-GRAIN-003"] == "executable_draft":
+        grain_alert_candidate = execute_registered_rule(
+            "ALT-GRAIN-003",
+            UndefinedGrainAlertProfile(
+                # Não há fonte independente autorizada para sinal de grão indefinido.
+                # O pipeline permanece fail-closed e não deriva o sinal de conteúdo privado.
+                undefined_grain_signal_count=0,
+                confirmed_grain_count=sum(bool(candidates) for candidates in grain_candidates.values()),
+            ),
+        )
+        if grain_alert_candidate:
+            quality_findings.append(("model", "model", grain_alert_candidate))
+
+    if alert_rule_statuses["ALT-KEY-004"] == "executable_draft":
+        key_alert_candidate = execute_registered_rule(
+            "ALT-KEY-004",
+            InvalidKeyAlertProfile(
+                # Não há fonte independente autorizada para sinal de chave inválida.
+                # O pipeline permanece fail-closed e não deriva o sinal de conteúdo privado.
+                invalid_key_signal_count=0,
+            ),
+        )
+        if key_alert_candidate:
+            quality_findings.append(("model", "model", key_alert_candidate))
+
+    if alert_rule_statuses["ALT-AMBIG-005"] == "executable_draft":
+        ambiguity_alert_candidate = execute_registered_rule(
+            "ALT-AMBIG-005",
+            StructuralAmbiguityAlertProfile(
+                # Não há fonte independente autorizada para ambiguidade estrutural.
+                # O pipeline permanece fail-closed e não deriva o sinal de conteúdo privado.
+                structural_ambiguity_signal_count=0,
+            ),
+        )
+        if ambiguity_alert_candidate:
+            quality_findings.append(("model", "model", ambiguity_alert_candidate))
+
+    if alert_rule_statuses["ALT-METRIC-006"] == "executable_draft":
+        metric_risk_alert_candidate = execute_registered_rule(
+            "ALT-METRIC-006",
+            PotentiallyMisleadingMetricAlertProfile(
+                # Não há fonte independente autorizada para risco de interpretação de métrica.
+                # O pipeline permanece fail-closed e não deriva o sinal de conteúdo privado.
+                independent_metric_risk_signal_count=0,
+            ),
+        )
+        if metric_risk_alert_candidate:
+            quality_findings.append(("model", "model", metric_risk_alert_candidate))
+
+    if alert_rule_statuses["ALT-SUMPCT-007"] == "executable_draft":
+        percentage_sum_alert_candidate = execute_registered_rule(
+            "ALT-SUMPCT-007",
+            PercentageSumAlertProfile(
+                # Não há fonte independente autorizada para risco na soma de percentuais.
+                # O pipeline permanece fail-closed e não deriva o sinal de conteúdo privado.
+                independent_percentage_sum_risk_signal_count=0,
+            ),
+        )
+        if percentage_sum_alert_candidate:
+            quality_findings.append(("model", "model", percentage_sum_alert_candidate))
+
+    if alert_rule_statuses["ALT-AVGAVG-008"] == "executable_draft":
+        average_of_averages_alert_candidate = execute_registered_rule(
+            "ALT-AVGAVG-008",
+            AverageOfAveragesAlertProfile(
+                # Não há fonte independente autorizada para risco em média de médias.
+                # O pipeline permanece fail-closed e não deriva o sinal de conteúdo privado.
+                independent_average_of_averages_risk_signal_count=0,
+            ),
+        )
+        if average_of_averages_alert_candidate:
+            quality_findings.append(("model", "model", average_of_averages_alert_candidate))
+
+    if alert_rule_statuses["ALT-MIXGRAIN-009"] == "executable_draft":
+        mixed_grain_alert_candidate = execute_registered_rule(
+            "ALT-MIXGRAIN-009",
+            MixedGrainAlertProfile(
+                # Não há fonte independente autorizada para risco de mistura de granularidades.
+                # O pipeline permanece fail-closed e não deriva o sinal de conteúdo privado.
+                independent_mixed_grain_signal_count=0,
+            ),
+        )
+        if mixed_grain_alert_candidate:
+            quality_findings.append(("model", "model", mixed_grain_alert_candidate))
+
+    if alert_rule_statuses["ALT-LOWCONF-010"] == "executable_draft":
+        low_confidence_alert_candidate = execute_registered_rule(
+            "ALT-LOWCONF-010",
+            LowConfidenceAlertProfile(
+                # Não há fonte independente autorizada de baixa confiança acumulada.
+                # O pipeline permanece fail-closed e não deriva sinal de conteúdo privado.
+                independent_low_confidence_signal_count=0,
+            ),
+        )
+        if low_confidence_alert_candidate:
+            quality_findings.append(("model", "model", low_confidence_alert_candidate))
+
+    if alert_rule_statuses["GRN-SNAP-006"] == "executable_draft":
+        snapshot_grain_candidate = execute_registered_rule(
+            "GRN-SNAP-006",
+            SnapshotGrainProfile(
+                # Não há fonte independente autorizada de snapshot periódico.
+                # O pipeline permanece fail-closed e não deriva sinal de conteúdo privado.
+                independent_snapshot_signal_count=0,
+            ),
+        )
+        if snapshot_grain_candidate:
+            quality_findings.append(("model", "model", snapshot_grain_candidate))
+    if alert_rule_statuses["GRN-PERIOD-005"] == "executable_draft":
+        period_per_row_candidate = execute_registered_rule(
+            "GRN-PERIOD-005",
+            PeriodPerRowProfile(
+                # Não há fonte independente autorizada de período por linha.
+                # O pipeline permanece fail-closed e não deriva sinal de conteúdo privado.
+                independent_period_signal_count=0,
+            ),
+        )
+        if period_per_row_candidate:
+            quality_findings.append(("model", "model", period_per_row_candidate))
+    if alert_rule_statuses["GRN-ASSOC-007"] == "executable_draft":
+        entity_association_candidate = execute_registered_rule(
+            "GRN-ASSOC-007",
+            EntityAssociationProfile(
+                # Não há fonte independente autorizada de associação entre entidades.
+                # O pipeline permanece fail-closed e não deriva sinal de conteúdo privado.
+                independent_association_signal_count=0,
+            ),
+        )
+        if entity_association_candidate:
+            quality_findings.append(("model", "model", entity_association_candidate))
+    if alert_rule_statuses["GRN-PREAGG-008"] == "executable_draft":
+        pre_aggregation_candidate = execute_registered_rule(
+            "GRN-PREAGG-008",
+            PreAggregationProfile(
+                # Não há fonte independente autorizada de agregação prévia.
+                # O pipeline permanece fail-closed e não deriva sinal de conteúdo privado.
+                independent_pre_aggregation_signal_count=0,
+            ),
+        )
+        if pre_aggregation_candidate:
+            quality_findings.append(("model", "model", pre_aggregation_candidate))
+    if alert_rule_statuses["GRN-INCONS-009"] == "executable_draft":
+        inconsistent_grain_candidate = execute_registered_rule("GRN-INCONS-009", InconsistentGrainProfile(independent_inconsistent_grain_signal_count=0))
+        if inconsistent_grain_candidate:
+            quality_findings.append(("model", "model", inconsistent_grain_candidate))
+    if alert_rule_statuses["GRN-DUP-010"] == "executable_draft":
+        duplicate_grain_candidate = execute_registered_rule("GRN-DUP-010", DuplicateGrainProfile(independent_duplicate_grain_signal_count=0))
+        if duplicate_grain_candidate:
+            quality_findings.append(("model", "model", duplicate_grain_candidate))
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []

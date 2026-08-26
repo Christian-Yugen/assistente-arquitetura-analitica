@@ -1,0 +1,13 @@
+{
+  "manifest_id": "ALT-METRIC-006-DRAFT-GOLDEN-MANIFEST-001",
+  "rule_id": "ALT-METRIC-006",
+  "golden_path": "artifacts/golden/alt-metric-draft-golden-v1.json",
+  "sha256": "554f5e3098d5c2bca251cca45c086efd32fb32c02d515db14701ba4eaaea5735",
+  "synthetic_only": true,
+  "calibration": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0
+  },
+  "production_authorized": false
+}

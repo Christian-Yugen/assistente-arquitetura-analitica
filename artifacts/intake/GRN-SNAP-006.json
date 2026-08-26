@@ -1,0 +1,32 @@
+{
+  "intake_id": "GRN-SNAP-006-INTAKE-001",
+  "rule": {
+    "rule_id": "GRN-SNAP-006",
+    "title": "Snapshot periódico",
+    "category": "grain",
+    "priority": "P1",
+    "stage": "grain_inference",
+    "scope": "model",
+    "depends_on": ["quality", "semantic_typing", "table_classification"],
+    "primary_output": "grain_candidate_or_suppression",
+    "source_implementation_status": "planned"
+  },
+  "local_readiness": "executable_draft",
+  "authorization": {
+    "intake_authorized": true,
+    "intake_authorized_by": "Chris",
+    "policy_approved": true,
+    "policy_approved_by": "Chris",
+    "policy_approved_proposal": "A",
+    "policy_approval_basis": "PROPOSAL-A-APPROVAL-DELEGATION-001",
+    "implementation_authorized": true,
+    "implementation_authorization_record": "Chat: sim",
+    "required_gate": "GRN-SNAP-006-DRAFT-CALIBRATION-001",
+    "production_authorized": false
+  },
+  "status": "draft_activated",
+  "execution_blocked": false,
+  "execution_profile": "draft",
+  "missing_before_execution": [],
+  "production_blocked": true
+}

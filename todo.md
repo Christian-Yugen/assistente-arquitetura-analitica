@@ -539,4 +539,75 @@
 - [x] Registrar a aprovação de Chris e concluir perfil agregado, template abstrato, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MET-DAX-015.
 - [x] Criar branch de segurança e registrar o intake da ALT-SENS-001, mantendo-a não executável.
 - [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da ALT-SENS-001, mantendo a produção bloqueada.
-- [ ] Obter autorização explícita de Chris antes de implementar a ALT-SENS-001 exclusivamente em draft.
+- [x] Obter autorização explícita de Chris antes de implementar a ALT-SENS-001 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da ALT-SENS-001.
+- [x] Criar branch de segurança e registrar o intake da ALT-QUALITY-002, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da ALT-QUALITY-002, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a ALT-QUALITY-002 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da ALT-QUALITY-002.
+- [x] Criar branch de segurança e registrar o intake da ALT-GRAIN-003, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da ALT-GRAIN-003, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a ALT-GRAIN-003 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da ALT-GRAIN-003.
+- [x] Criar branch de segurança e registrar o intake da ALT-KEY-004, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da ALT-KEY-004, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a ALT-KEY-004 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da ALT-KEY-004.
+- [x] Criar branch de segurança e registrar o intake da ALT-AMBIG-005, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da ALT-AMBIG-005, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a ALT-AMBIG-005 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da ALT-AMBIG-005.
+- [x] Criar branch de segurança e registrar o intake da ALT-METRIC-006, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da ALT-METRIC-006, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a ALT-METRIC-006 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da ALT-METRIC-006.
+- [x] Criar branch de segurança e registrar o intake da ALT-SUMPCT-007, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da ALT-SUMPCT-007, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a ALT-SUMPCT-007 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da ALT-SUMPCT-007.
+- [x] Criar branch de segurança e registrar o intake da ALT-AVGAVG-008, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da ALT-AVGAVG-008, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a ALT-AVGAVG-008 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da ALT-AVGAVG-008.
+- [x] Criar branch de segurança e registrar o intake da ALT-MIXGRAIN-009, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da ALT-MIXGRAIN-009, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a ALT-MIXGRAIN-009 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da ALT-MIXGRAIN-009.
+- [ ] Criar branch de segurança e registrar o intake da ALT-LOWCONF-010, mantendo-a não executável.
+- [ ] Elaborar a Proposta A e o gate de reconstrução não executáveis da ALT-LOWCONF-010, mantendo a produção bloqueada.
+- [x] Criar branch de segurança e registrar o intake da ALT-LOWCONF-010, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da ALT-LOWCONF-010, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a ALT-LOWCONF-010 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da ALT-LOWCONF-010.
+- [x] Criar branch de segurança e registrar o intake da GRN-SNAP-006, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da GRN-SNAP-006, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a GRN-SNAP-006 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da GRN-SNAP-006.
+- [x] Criar branch de segurança e registrar o intake da GRN-PERIOD-005, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da GRN-PERIOD-005, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a GRN-PERIOD-005 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da GRN-PERIOD-005.
+- [x] Criar branch de segurança e registrar o intake da GRN-ASSOC-007, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da GRN-ASSOC-007, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a GRN-ASSOC-007 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da GRN-ASSOC-007.
+- [x] Criar branch de segurança e registrar o intake da GRN-PREAGG-008, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da GRN-PREAGG-008, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a GRN-PREAGG-008 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da GRN-PREAGG-008.
+- [x] Criar branch de segurança e registrar o intake da GRN-INCONS-009, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da GRN-INCONS-009, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a GRN-INCONS-009 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da GRN-INCONS-009.
+- [x] Criar branch de segurança e registrar o intake da GRN-DUP-010, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da GRN-DUP-010, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a GRN-DUP-010 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da GRN-DUP-010.
+- [x] Criar branch de segurança e registrar o intake da MDL-FACTACC-003, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-FACTACC-003, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a MDL-FACTACC-003 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-FACTACC-003.
+- [x] Criar branch de segurança e registrar o intake da MDL-DIMCONF-005, mantendo-a não executável.
+- [x] Elaborar a Proposta A e o gate de reconstrução não executáveis da MDL-DIMCONF-005, mantendo a produção bloqueada.
+- [x] Obter autorização explícita de Chris antes de implementar a MDL-DIMCONF-005 exclusivamente em draft.
+- [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da MDL-DIMCONF-005.

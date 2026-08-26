@@ -1,0 +1,13 @@
+{
+  "manifest_id": "ALT-SUMPCT-007-DRAFT-GOLDEN-MANIFEST-001",
+  "rule_id": "ALT-SUMPCT-007",
+  "golden_path": "artifacts/golden/alt-sumpct-draft-golden-v1.json",
+  "sha256": "71ffb48513d1300c6b9ec16ceb7cde714f6f9aaa7bf438a16cac5d94186847cc",
+  "synthetic_only": true,
+  "calibration": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0
+  },
+  "production_authorized": false
+}

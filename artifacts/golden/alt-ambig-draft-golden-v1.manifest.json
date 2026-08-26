@@ -1,0 +1,1 @@
+{"rule_id":"ALT-AMBIG-005","gate_id":"ALT-AMBIG-005-DRAFT-CALIBRATION-001","dataset_path":"artifacts/golden/alt-ambig-draft-golden-v1.json","sha256":"8514702d56d26ffdad547f1f27bb9479095c3357170666e457f936d0d20e0bf9","calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}

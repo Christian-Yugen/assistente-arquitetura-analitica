@@ -1,0 +1,32 @@
+{
+  "intake_id": "GRN-PERIOD-005-INTAKE-001",
+  "rule": {
+    "rule_id": "GRN-PERIOD-005",
+    "title": "Período por linha",
+    "category": "grain",
+    "priority": "P0",
+    "stage": "grain_inference",
+    "scope": "sheet",
+    "depends_on": ["semantic_typing"],
+    "primary_output": "grain",
+    "source_implementation_status": "planned"
+  },
+  "local_readiness": "executable_draft",
+  "authorization": {
+    "intake_authorized": true,
+    "intake_authorized_by": "Chris",
+    "policy_approved": true,
+    "policy_approved_by": "Chris",
+    "policy_approved_proposal": "A",
+    "policy_approval_basis": "PROPOSAL-A-APPROVAL-DELEGATION-001",
+    "implementation_authorized": true,
+    "implementation_authorization_record": "Chat: ok. continue",
+    "required_gate": "GRN-PERIOD-005-DRAFT-CALIBRATION-001",
+    "production_authorized": false
+  },
+  "status": "draft_activated",
+  "execution_blocked": false,
+  "execution_profile": "draft",
+  "missing_before_execution": [],
+  "production_blocked": true
+}

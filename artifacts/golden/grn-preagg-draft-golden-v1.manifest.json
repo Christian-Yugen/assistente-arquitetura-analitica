@@ -1,0 +1,8 @@
+{
+  "golden_id": "GRN-PREAGG-008-DRAFT-GOLDEN-001",
+  "file": "grn-preagg-draft-golden-v1.json",
+  "sha256": "ddd8fb907d161beccd7b1be4da10ea7472759418b1d2a8346b238803d20623cc",
+  "synthetic_only": true,
+  "calibration": {"tp": 1, "fp": 0, "fn": 0},
+  "production_authorized": false
+}

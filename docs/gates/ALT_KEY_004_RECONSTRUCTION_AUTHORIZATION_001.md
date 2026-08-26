@@ -1,0 +1,3 @@
+# ALT-KEY-004 — Gate de Reconstrução 001
+
+Aplicado sob `PROPOSAL-A-APPROVAL-DELEGATION-001`, este gate registrou inicialmente somente o intake e a Proposta A não executáveis da `ALT-KEY-004`. Chris autorizou a implementação por chat: **“sim, atutorizadocontinuar”**. A implementação permanece limitada ao perfil draft, ao intake `ALT-KEY-004-INTAKE-001` e ao gate individual `ALT-KEY-004-DRAFT-CALIBRATION-001`; ela consolida somente sinal independente, opaco e agregado de chave inválida em bloqueio de modelagem. Ela não detecta, revela ou seleciona chaves por conteúdo privado, expõe aba, tabela, campo, valor, posição, frequência, exemplos, pares ou candidatos, altera, exclui, retém ou exporta dados e não gera DAX/M. **Produção permanece bloqueada.**

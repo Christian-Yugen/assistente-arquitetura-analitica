@@ -1,0 +1,3 @@
+# ALT-GRAIN-003 — Gate de Reconstrução 001
+
+Aplicado sob `PROPOSAL-A-APPROVAL-DELEGATION-001`, este gate registrou inicialmente somente o intake e a Proposta A não executáveis da `ALT-GRAIN-003`. Chris autorizou a implementação por chat: **“sim, autorizado”**. A implementação permanece limitada ao perfil draft, ao intake `ALT-GRAIN-003-INTAKE-001` e ao gate individual `ALT-GRAIN-003-DRAFT-CALIBRATION-001`; ela consolida somente sinal de granularidade previamente inferido, opaco e agregado em bloqueio de modelagem. Ela não infere grão de conteúdo privado, revela aba, campo, valor, posição, frequência, pares ou candidatos, seleciona elementos do modelo, altera, exclui, retém ou exporta dados e não gera DAX/M. **Produção permanece bloqueada.**

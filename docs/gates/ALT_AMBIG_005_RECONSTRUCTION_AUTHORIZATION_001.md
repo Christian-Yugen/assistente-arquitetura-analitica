@@ -1,0 +1,3 @@
+# ALT-AMBIG-005 — Gate de Reconstrução 001
+
+Aplicado sob `PROPOSAL-A-APPROVAL-DELEGATION-001`, este gate registrou inicialmente somente o intake e a Proposta A não executáveis da `ALT-AMBIG-005`. Chris autorizou a implementação por chat: **“sim, autorizado”**. A implementação permanece limitada ao perfil draft, ao intake `ALT-AMBIG-005-INTAKE-001` e ao gate individual `ALT-AMBIG-005-DRAFT-CALIBRATION-001`; ela consolida somente sinal independente, opaco e agregado de ambiguidade estrutural em bloqueio de modelagem. Ela não infere, revela ou seleciona relações por conteúdo privado, expõe aba, tabela, campo, valor, posição, frequência, pares, caminhos ou candidatos, altera, exclui, retém ou exporta dados e não gera DAX/M. **Produção permanece bloqueada.**

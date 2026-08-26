@@ -1,0 +1,18 @@
+{
+  "golden_id": "ALT-MIXGRAIN-009-DRAFT-GOLDEN-001",
+  "rule_id": "ALT-MIXGRAIN-009",
+  "synthetic_only": true,
+  "profile_defaults": {
+    "independent_mixed_grain_signal_count": 0,
+    "confirmed_single_grain_count": 0,
+    "structural_conflict_count": 0,
+    "sensitive_signal_count": 0,
+    "contract_error_count": 0
+  },
+  "cases": [
+    {"case_id": "synthetic-independent-mixed-grain-risk-signal", "overrides": {"independent_mixed_grain_signal_count": 1}, "expected_finding": true},
+    {"case_id": "no-independent-signal", "overrides": {}, "expected_finding": false},
+    {"case_id": "human-single-grain-confirmed", "overrides": {"independent_mixed_grain_signal_count": 1, "confirmed_single_grain_count": 1}, "expected_finding": false},
+    {"case_id": "sensitive-signal-blocks-consolidation", "overrides": {"independent_mixed_grain_signal_count": 1, "sensitive_signal_count": 1}, "expected_finding": false}
+  ]
+}

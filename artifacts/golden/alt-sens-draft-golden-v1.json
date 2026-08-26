@@ -1,0 +1,1 @@
+{"profile_defaults":{"sensitivity_signal_candidate_count":1,"sensitivity_conflict_count":0},"cases":[{"overrides":{},"expected":true},{"overrides":{"sensitivity_signal_candidate_count":0},"expected":false},{"overrides":{"sensitivity_signal_candidate_count":2},"expected":false},{"overrides":{"sensitivity_conflict_count":1},"expected":false}]}
