@@ -1,0 +1,3 @@
+# GRN-SNAP-006 — Proposta A de Política 001
+
+Uma futura implementação draft poderá somente consolidar um sinal independente, autorizado, opaco e agregado de que uma estrutura exige revisão humana como possível snapshot periódico. Ela não poderá inferir período, calendário, entidade, evento, chave, fato, dimensão, relação, medida, campo, valor ou conteúdo de workbook; não poderá calcular, selecionar ou gerar DAX/M. Ausência de sinal, sensibilidade, conflito ou erro contratual suprimem de modo fail-closed. Esta proposta é não executável; qualquer código requer nova autorização explícita de Chris. **Produção permanece bloqueada.**
