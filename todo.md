@@ -672,3 +672,7 @@
 - [x] Validar a preparação documental da REL-BRIDGE-005, salvar checkpoint e publicar a branch de reconciliação.
 - [x] Obter autorização explícita de Chris antes de implementar a REL-BRIDGE-005 exclusivamente em draft.
 - [x] Registrar a autorização de Chris e concluir perfil agregado, contrato, pipeline, golden sintético, calibração, gate individual e ativação draft da REL-BRIDGE-005.
+- [x] Inventariar os bloqueios produtivos remanescentes após a cobertura de 95/95 regras draft e registrar o próximo gate governado.
+- [x] Consolidar somente os controles de prontidão produtiva autorizados, sem promover produção.
+- [x] Validar os gates, regressões e bloqueios produtivos antes de qualquer nova solicitação de autorização.
+- [ ] Registrar e reconciliar documentalmente as inconsistências de linhagem entre o índice de 95 regras executable_draft e os intakes legados, sem alterar a executabilidade nem promover produção.
