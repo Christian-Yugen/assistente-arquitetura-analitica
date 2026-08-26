@@ -1,0 +1,1 @@
+{"manifest_id":"ALT-LOWCONF-010-DRAFT-GOLDEN-MANIFEST-001","rule_id":"ALT-LOWCONF-010","golden_path":"artifacts/golden/alt-lowconf-draft-golden-v1.json","sha256":"2056d6681ecd9d58701c295785ab983e5ed97205573cfa35cf70b0243942645e","synthetic_only":true,"calibration":{"tp":1,"fp":0,"fn":0},"production_authorized":false}

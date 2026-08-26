@@ -31,6 +31,7 @@ from engine.alerts.metric_risk import PotentiallyMisleadingMetricAlertProfile
 from engine.alerts.percentage_sum import PercentageSumAlertProfile
 from engine.alerts.average_of_averages import AverageOfAveragesAlertProfile
 from engine.alerts.mixed_grain import MixedGrainAlertProfile
+from engine.alerts.low_confidence import LowConfidenceAlertProfile
 from engine.contracts.diagnosis import CONTRACT_ID, SCHEMA_VERSION, _timestamp, to_diagnosis_fragment, to_grain_fragment, to_metric_fragment, to_relationship_fragment, to_semantic_classification_fragment, to_sensitivity_fragment, to_table_classification_fragment
 from engine.contracts.execution_profile import DraftExecutionProfile, validate_governed_output
 from engine.contracts.validation import validate_diagnosis_root
@@ -883,6 +884,7 @@ def execute_quality_diagnosis(
         "ALT-SUMPCT-007": get_rule_execution_record("ALT-SUMPCT-007").status,
         "ALT-AVGAVG-008": get_rule_execution_record("ALT-AVGAVG-008").status,
         "ALT-MIXGRAIN-009": get_rule_execution_record("ALT-MIXGRAIN-009").status,
+        "ALT-LOWCONF-010": get_rule_execution_record("ALT-LOWCONF-010").status,
     }
     if "executable_draft" in relationship_rule_statuses.values():
         classification_types_by_sheet = {
@@ -1510,6 +1512,18 @@ def execute_quality_diagnosis(
         )
         if mixed_grain_alert_candidate:
             quality_findings.append(("model", "model", mixed_grain_alert_candidate))
+
+    if alert_rule_statuses["ALT-LOWCONF-010"] == "executable_draft":
+        low_confidence_alert_candidate = execute_registered_rule(
+            "ALT-LOWCONF-010",
+            LowConfidenceAlertProfile(
+                # Não há fonte independente autorizada de baixa confiança acumulada.
+                # O pipeline permanece fail-closed e não deriva sinal de conteúdo privado.
+                independent_low_confidence_signal_count=0,
+            ),
+        )
+        if low_confidence_alert_candidate:
+            quality_findings.append(("model", "model", low_confidence_alert_candidate))
 
     findings: list[dict[str, object]] = []
     questions: list[dict[str, object]] = []

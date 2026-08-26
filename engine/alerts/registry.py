@@ -7,6 +7,7 @@ from engine.alerts.metric_risk import classify_potentially_misleading_metric_rev
 from engine.alerts.percentage_sum import classify_percentage_sum_review
 from engine.alerts.average_of_averages import classify_average_of_averages_review
 from engine.alerts.mixed_grain import classify_mixed_grain_review
+from engine.alerts.low_confidence import classify_low_confidence_review
 
 
 ALERT_RULE_IMPLEMENTATIONS = {
@@ -19,4 +20,5 @@ ALERT_RULE_IMPLEMENTATIONS = {
     "ALT-SUMPCT-007": classify_percentage_sum_review,
     "ALT-AVGAVG-008": classify_average_of_averages_review,
     "ALT-MIXGRAIN-009": classify_mixed_grain_review,
+    "ALT-LOWCONF-010": classify_low_confidence_review,
 }
