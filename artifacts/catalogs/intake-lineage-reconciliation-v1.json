@@ -1,0 +1,45 @@
+{
+  "reconciliation_id": "INTAKE-LINEAGE-RECONCILIATION-001",
+  "version": "1.0",
+  "scope": {
+    "index": "rule-implementation-readiness-v1.json",
+    "executable_draft_count": 95,
+    "intake_required_count": 0
+  },
+  "document_only": true,
+  "runtime_change_prohibited": true,
+  "allowlist_change_prohibited": true,
+  "production_authorized": false,
+  "groups": [
+    {
+      "group_id": "missing_intake_file",
+      "lineage_status": "missing_intake_file",
+      "rule_ids": ["QLT-NULL-001", "QLT-DUP-002", "QLT-EMPTYCOL-003", "QLT-EMPTYROW-004", "QLT-MIXTYPE-005", "QLT-BADDATE-006", "QLT-NUMTEXT-007", "QLT-WHITESPACE-009", "QLT-TOTALROW-010"],
+      "evidence_scope": "índice governado e evidências históricas existentes; ausência de intake individual atual",
+      "required_future_action": "criar ficha aditiva por regra sem reescrever artefatos históricos",
+      "runtime_change_prohibited": true,
+      "allowlist_change_prohibited": true,
+      "production_authorized": false
+    },
+    {
+      "group_id": "legacy_intake_schema",
+      "lineage_status": "legacy_intake_schema",
+      "rule_ids": ["SEM-QTY-005", "SEM-CURR-006", "SEM-PCT-007", "SEM-TARGET-013", "SEM-ACTUAL-014", "SEM-SENS-015", "MDL-FACTPER-001", "MDL-FACTTXN-002", "MDL-DIMSTD-004", "MDL-DIMCAL-006"],
+      "evidence_scope": "intake histórico existente sem campo local_readiness",
+      "required_future_action": "mapear equivalência de esquema em ficha aditiva sem modificar o intake original",
+      "runtime_change_prohibited": true,
+      "allowlist_change_prohibited": true,
+      "production_authorized": false
+    },
+    {
+      "group_id": "stale_intake_readiness",
+      "lineage_status": "stale_intake_readiness",
+      "rule_ids": ["QLT-CATVAR-008", "QLT-NEGATIVE-011", "QLT-OUTLIER-012", "QLT-FORMULA-013", "QLT-HEADERS-014", "QLT-IDMISS-015", "SEM-DATE-001", "SEM-ID-003", "GRN-COMP-001", "MET-DAX-015", "ALT-METRIC-006", "ALT-SUMPCT-007", "ALT-AVGAVG-008", "ALT-MIXGRAIN-009", "ALT-LOWCONF-010"],
+      "evidence_scope": "intake atual com prontidão anterior ao índice operacional draft",
+      "required_future_action": "registrar vínculo aditivo à evidência de ativação existente sem reclassificar execução",
+      "runtime_change_prohibited": true,
+      "allowlist_change_prohibited": true,
+      "production_authorized": false
+    }
+  ]
+}
