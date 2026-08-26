@@ -1,0 +1,3 @@
+# ALT-AMBIG-005 — Gate de Reconstrução 001
+
+Aplicado sob `PROPOSAL-A-APPROVAL-DELEGATION-001`, este gate registra somente o intake e a Proposta A não executáveis da `ALT-AMBIG-005`. Uma eventual regra poderá consolidar somente sinal independente, opaco e agregado de ambiguidade estrutural em bloqueio de modelagem. Ela não pode inferir, revelar ou selecionar relações por conteúdo privado, expor aba, tabela, campo, valor, posição, frequência, pares, caminhos ou candidatos, nem alterar, excluir, reter ou exportar dados; não gera DAX/M. Perfil, classificador, registro, contrato, pipeline, allowlist, testes executáveis, golden, calibração e produção continuam não autorizados. **Produção permanece bloqueada.**
