@@ -193,6 +193,50 @@ class WorkbookRunnerTests(unittest.TestCase):
             self.assertTrue(any(item["sensitivity"] == "personal_data_candidate" for item in diagnosis["sensitivity_classifications"]))
             self.assertNotIn("contato-1@example.test", serialized)
 
+    def test_emits_a_structural_review_result_for_the_aggregated_real_profile_with_sensitive_attributes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            workbook_path = base / "perfil_agregado_sintetico.xlsx"
+            metadata_path = base / "metadata.json"
+            workbook = Workbook()
+            sheet = workbook.active
+            sheet.title = "Aba sintética"
+            sheet.append(["Código do registro", "Descrição", "Categoria", "E-mail", "Telefone", "Observação"])
+            for position in range(1, 176):
+                sheet.append([
+                    f"registro-{position:03d}",
+                    f"descrição-{position}",
+                    "grupo-a" if position % 2 else "grupo-b",
+                    f"contato-{position}@example.test",
+                    f"1199999{position:04d}",
+                    "revisar" if position % 3 else "validar",
+                ])
+            workbook.save(workbook_path)
+            content = workbook_path.read_bytes()
+            metadata_path.write_text(json.dumps({
+                "analysis_id": str(uuid4()), "project_id": str(uuid4()), "owner_user_id": str(uuid4()),
+                "project_name": "Teste sintético", "objective": "Validar perfil agregado", "file_id": str(uuid4()),
+                "original_name": "perfil_agregado_sintetico.xlsx", "file_size_bytes": len(content), "file_sha256": hashlib.sha256(content).hexdigest(),
+                "file_mime_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "workbook_readable": True,
+                "consented_at": "2026-08-27T00:00:00Z", "created_at": "2026-08-27T00:00:00Z",
+                "uploaded_at": "2026-08-27T00:00:00Z", "retention_delete_at": "2026-08-27T00:00:00Z",
+                "retention_status": "reference_removed", "correlation_id": str(uuid4()), "terms_version": "1.0",
+                "domain": "generic", "business_questions": [], "analysis_version": 1, "supersedes_analysis_id": None,
+            }), encoding="utf-8")
+
+            diagnosis = run(workbook_path, metadata_path)
+            serialized = json.dumps(diagnosis)
+
+            self.assertEqual(diagnosis["sheets"][0]["row_count"], 175)
+            self.assertEqual(diagnosis["sheets"][0]["column_count"], 6)
+            self.assertIsNotNone(diagnosis["sheets"][0]["grain"])
+            self.assertEqual(diagnosis["sheets"][0]["classification"]["type"], "table_classification_undefined_candidate")
+            self.assertEqual(diagnosis["summary"]["counts"]["dimensions"], 0)
+            self.assertEqual(diagnosis["summary"]["counts"]["metrics"], 0)
+            self.assertEqual(len(diagnosis["sensitivity_classifications"]), 2)
+            self.assertNotIn("Código do registro", serialized)
+            self.assertNotIn("contato-001@example.test", serialized)
+
     def test_does_not_emit_modeling_hypotheses_when_only_sensitive_attributes_are_available(self):
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory)

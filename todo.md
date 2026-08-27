@@ -754,3 +754,4 @@
 - [ ] Investigar e corrigir a falha “Failed to fetch” reportada por Chris, verificando serviço e rede sem registrar conteúdo de upload.
 - [x] Auditar a linhagem backend do último diagnóstico aceito, somente por metadados sanitizados, até explicar a ausência ou a presença de grão, dimensão, fato e métricas.
 - [x] Reproduzir e corrigir a ausência de identificação estrutural para cabeçalhos compostos comuns, sem usar campo sensível e sem alterar os limiares de completude ou unicidade.
+- [x] Adicionar prova de regressão com uma aba de 175 linhas, seis colunas e dois atributos sensíveis isolados, usando somente características agregadas da execução real.
