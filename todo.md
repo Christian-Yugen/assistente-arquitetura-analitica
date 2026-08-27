@@ -709,3 +709,7 @@
 - [x] Definir a política de aceitação CSV: MIME/extensão, limite de 25 MB, codificação, delimitadores permitidos, aba lógica única e rejeições fail-closed.
 - [x] Implementar upload, validação e parsing CSV exclusivamente no servidor, preservando o contexto agregado e o isolamento owner-scoped.
 - [x] Cobrir CSV válido, inválido, codificação/delimitador não suportados e regressões XLSX; validar interface e checkpoint draft.
+- [x] Definir contrato seguro para orientar achados e registrar respostas humanas por pergunta, usando apenas opções enumeradas e status owner-scoped.
+- [x] Implementar persistência, procedimento autenticado e interface para responder perguntas sem armazenar texto livre ou conteúdo do arquivo.
+- [x] Exibir plano de preparação priorizado com próximos passos, estado das respostas e orientação para reenviar uma versão corrigida.
+- [x] Validar isolamento entre owners, ações de resposta, plano de preparação e regressões antes do checkpoint draft.

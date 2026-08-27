@@ -15,6 +15,7 @@ const state = vi.hoisted(() => ({
   mutation: { isPending: false, isSuccess: false, data: undefined as { diagnosticId: string; version: number } | undefined },
   projects: { data: [], isLoading: false, isError: false },
   diagnostic: { data: undefined as DiagnosticMock | undefined, isFetching: false, isError: false },
+  actionState: { data: { answers: [] as { questionId: string; decision: string }[] }, isFetching: false, isError: false },
 }));
 
 vi.mock("@/_core/hooks/useAuth", () => ({ useAuth: () => state.auth }));
@@ -25,10 +26,12 @@ vi.mock("@/components/DashboardLayout", async () => {
 });
 vi.mock("@/lib/trpc", () => ({
   trpc: {
-    useUtils: () => ({ analysis: { listProjects: { invalidate: vi.fn() } } }),
+    useUtils: () => ({ analysis: { listProjects: { invalidate: vi.fn() }, getActionState: { invalidate: vi.fn() } } }),
     analysis: {
       listProjects: { useQuery: () => state.projects },
       getDiagnostic: { useQuery: () => state.diagnostic },
+      getActionState: { useQuery: () => state.actionState },
+      answerQuestion: { useMutation: () => ({ isPending: false, mutate: vi.fn() }) },
       analyzeWorkbook: { useMutation: () => ({ ...state.mutation, mutate: vi.fn() }) },
     },
   },
@@ -51,6 +54,7 @@ describe("Home workspace flow", () => {
     state.mutation = { isPending: false, isSuccess: false, data: undefined };
     state.projects = { data: [], isLoading: false, isError: false };
     state.diagnostic = { data: undefined, isFetching: false, isError: false };
+    state.actionState = { data: { answers: [] }, isFetching: false, isError: false };
   });
 
   it("renders loading, sign-in and session-error workspace states", () => {
@@ -144,6 +148,8 @@ describe("Home workspace flow", () => {
     expect(diagnostic).toContain("Achado três");
     expect(diagnostic).toContain("Recomendação três");
     expect(diagnostic).toContain("Pergunta três");
+    expect(diagnostic).toContain("Como preparar este arquivo");
+    expect(diagnostic).toContain("Corrigir arquivo");
   });
 
   it("explains the analytical limit when a short sample emits no modeling hypotheses", () => {

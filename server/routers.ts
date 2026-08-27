@@ -6,6 +6,7 @@ import { TRPCError } from "@trpc/server";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import * as db from "./db";
+import { ANSWER_DECISIONS, answerDecisionFromStoredValue, questionIdsFromDiagnostic } from "./diagnosticActions";
 import { buildWorkbookMetadata, executeWorkbookEngine, inspectWorkbookBeforePersistence, sanitizeSensitiveText, UploadValidationError, validateWorkbookUpload } from "./analysisPipeline";
 import { containsUnsafeDiagnosticContent } from "./privacy";
 import { storagePut } from "./storage";
@@ -29,6 +30,34 @@ export const appRouter = router({
       const diagnostic = await db.getAnalysisDiagnosticForOwner(input.diagnosticId, ctx.user.id);
       if (!diagnostic) throw new TRPCError({ code: "NOT_FOUND", message: "Diagnóstico não encontrado." });
       return diagnostic;
+    }),
+    getActionState: protectedProcedure.input(z.object({ diagnosticId: z.string().uuid() }).strict()).query(async ({ ctx, input }) => {
+      const diagnostic = await db.getAnalysisDiagnosticForOwner(input.diagnosticId, ctx.user.id);
+      if (!diagnostic) throw new TRPCError({ code: "NOT_FOUND", message: "Diagnóstico não encontrado." });
+      const allowedQuestionIds = new Set(questionIdsFromDiagnostic(diagnostic.payload));
+      const answers = await db.listAnalysisAnswersForDiagnostic(diagnostic.id, ctx.user.id);
+      return {
+        answers: answers.flatMap(answer => {
+          const decision = answerDecisionFromStoredValue(answer.answer);
+          return decision && allowedQuestionIds.has(answer.questionId) ? [{ questionId: answer.questionId, decision }] : [];
+        }),
+      };
+    }),
+    answerQuestion: protectedProcedure.input(z.object({
+      diagnosticId: z.string().uuid(),
+      questionId: z.string().min(1).max(36),
+      decision: z.enum(ANSWER_DECISIONS),
+    }).strict()).mutation(async ({ ctx, input }) => {
+      const diagnostic = await db.getAnalysisDiagnosticForOwner(input.diagnosticId, ctx.user.id);
+      if (!diagnostic) throw new TRPCError({ code: "NOT_FOUND", message: "Diagnóstico não encontrado." });
+      if (!questionIdsFromDiagnostic(diagnostic.payload).includes(input.questionId)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Pergunta de validação inválida para este diagnóstico." });
+      }
+      await db.upsertAnalysisAnswer({
+        id: randomUUID(), projectId: diagnostic.projectId, ownerId: ctx.user.id, sourceDiagnosticId: diagnostic.id,
+        questionId: input.questionId, answer: { decision: input.decision },
+      });
+      return { questionId: input.questionId, decision: input.decision };
     }),
     analyzeWorkbook: protectedProcedure.input(z.object({
       projectName: z.string().trim().min(1).max(160),
