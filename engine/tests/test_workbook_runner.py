@@ -82,3 +82,37 @@ class WorkbookRunnerTests(unittest.TestCase):
             self.assertNotIn("conteúdo confidencial", serialized)
             self.assertNotIn("REF-0", serialized)
             self.assertNotIn("raw_values", serialized)
+
+    def test_masks_all_workbook_headers_before_serializing_the_diagnosis(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            workbook_path = base / "entrada_cabecalhos.xlsx"
+            metadata_path = base / "metadata.json"
+            workbook = Workbook()
+            sheet = workbook.active
+            sheet.title = "Dados internos"
+            sheet.append(["Name: Customer", "E-mail de contato", "Receita mensal"])
+            for position in range(12):
+                sheet.append([f"cliente-{position}", f"contato-{position}@example.test", position * 10])
+            workbook.save(workbook_path)
+            content = workbook_path.read_bytes()
+            metadata_path.write_text(json.dumps({
+                "analysis_id": str(uuid4()), "project_id": str(uuid4()), "owner_user_id": str(uuid4()),
+                "project_name": "Teste", "objective": "Validar mascaramento", "file_id": str(uuid4()),
+                "original_name": "entrada_cabecalhos.xlsx", "file_size_bytes": len(content), "file_sha256": hashlib.sha256(content).hexdigest(),
+                "file_mime_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "workbook_readable": True,
+                "consented_at": "2026-08-20T00:00:00Z", "created_at": "2026-08-20T00:00:00Z",
+                "uploaded_at": "2026-08-20T00:00:00Z", "retention_delete_at": "2026-08-20T00:00:00Z",
+                "retention_status": "reference_removed", "correlation_id": str(uuid4()), "terms_version": "1.0",
+                "domain": "generic", "business_questions": [], "analysis_version": 1, "supersedes_analysis_id": None,
+            }), encoding="utf-8")
+
+            diagnosis = run(workbook_path, metadata_path)
+            serialized = json.dumps(diagnosis)
+
+            self.assertIn("Coluna 1", serialized)
+            self.assertNotIn("Name: Customer", serialized)
+            self.assertNotIn("E-mail de contato", serialized)
+            self.assertNotIn("Receita mensal", serialized)
+            self.assertNotIn("cliente-0", serialized)
+            self.assertNotIn("contato-0@example.test", serialized)

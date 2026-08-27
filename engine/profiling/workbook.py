@@ -175,13 +175,9 @@ class StreamingColumnProfiler:
         return self.semantic_identifier_accumulator.finalize() if self.semantic_identifier_accumulator else SemanticIdentifierProfile()
 
 
-def safe_column_name(value: object, position: int) -> str:
-    raw = str(value).strip() if value is not None else ""
-    if not raw:
-        return f"Coluna {position + 1}"
-    if SENSITIVE_HEADER.search(raw):
-        return f"Campo sensível {position + 1}"
-    return raw[:160]
+def safe_column_name(_value: object, position: int) -> str:
+    """Publica somente um rótulo posicional, nunca o cabeçalho original do workbook."""
+    return f"Coluna {position + 1}"
 
 
 def worksheet_visibility(value: str) -> Literal["visible", "hidden", "very_hidden"]:

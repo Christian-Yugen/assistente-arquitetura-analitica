@@ -32,14 +32,19 @@ class WorkbookProfilingTests(unittest.TestCase):
         finally:
             path.unlink(missing_ok=True)
 
-        value_column = next(context for context in contexts if context.column_name == "Valor")
+        value_column = next(context for context in contexts if context.column_position == 1)
         email_column = next(context for context in contexts if context.column_position == 2)
         self.assertEqual(len(contexts), 3)
         self.assertEqual(value_column.numeric_text.numeric_text_candidate_count, 2)
         self.assertEqual(value_column.numeric_text.numeric_text_candidate_ratio, 1.0)
-        self.assertEqual(email_column.column_name, "Campo sensível 3")
+        self.assertEqual(value_column.column_name, "Coluna 2")
+        self.assertEqual(email_column.column_name, "Coluna 3")
+        self.assertEqual({context.column_name for context in contexts}, {"Coluna 1", "Coluna 2", "Coluna 3"})
         self.assertEqual({context.sheet_name for context in contexts}, {"Aba 1"})
         self.assertNotIn("Vendas", {context.sheet_name for context in contexts})
+        self.assertNotIn("Cliente", {context.column_name for context in contexts})
+        self.assertNotIn("Valor", {context.column_name for context in contexts})
+        self.assertNotIn("E-mail", {context.column_name for context in contexts})
         self.assertFalse(hasattr(value_column, "raw_values"))
 
     def test_rejects_workbook_with_more_than_ten_sheets(self):

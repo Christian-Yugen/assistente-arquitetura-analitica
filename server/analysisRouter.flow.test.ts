@@ -104,6 +104,9 @@ describe("analysis router flow", () => {
 
     expect(error).toMatchObject({ code: "INTERNAL_SERVER_ERROR" });
     expect(error.message).toBe("Não foi possível concluir a análise.");
+    expect(calls.removeReference).toHaveBeenCalledWith(expect.any(String), 77);
+    const persistedFile = calls.createFile.mock.calls[0][0];
+    expect(calls.files.get(String(persistedFile.id))).toMatchObject({ storageKey: null, retentionStatus: "reference_removed" });
   });
 
   it("persists a failed diagnostic with reference removal and marks the project as failed", async () => {
@@ -135,6 +138,6 @@ describe("analysis router flow", () => {
 
     expect(error.message).toBe("Não foi possível concluir a análise.");
     expect(calls.createDiagnostic).not.toHaveBeenCalled();
-    expect(calls.removeReference).not.toHaveBeenCalled();
+    expect(calls.removeReference).toHaveBeenCalledWith(expect.any(String), 77);
   });
 });

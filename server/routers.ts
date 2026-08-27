@@ -76,6 +76,7 @@ export const appRouter = router({
       const projectId = randomUUID();
       const fileId = randomUUID();
       const diagnosticId = randomUUID();
+      let fileReferencePersisted = false;
       try {
         await db.createAnalysisProject({ id: projectId, ownerId: ctx.user.id, name: sanitizeSensitiveText(input.projectName), domain: "generic" });
         await db.updateAnalysisProjectStatus(projectId, ctx.user.id, "uploading");
@@ -85,6 +86,7 @@ export const appRouter = router({
           sha256: workbook.sha256, mimeType: workbook.mimeType, sizeBytes: workbook.buffer.length,
           sheetCount: 0, analyzableSheetCount: 0, retentionStatus: "private_active",
         });
+        fileReferencePersisted = true;
         await db.updateAnalysisProjectStatus(projectId, ctx.user.id, "analyzing");
         const version = await db.getNextDiagnosticVersion(projectId, ctx.user.id);
         const diagnosis = await executeWorkbookEngine(workbook, buildWorkbookMetadata({
@@ -104,6 +106,9 @@ export const appRouter = router({
         await db.updateAnalysisProjectStatus(projectId, ctx.user.id, analysis.status === "failed" ? "failed" : "completed");
         return { projectId, diagnosticId, version };
       } catch (error) {
+        if (fileReferencePersisted) {
+          await db.markFileReferenceRemoved(fileId, ctx.user.id).catch(() => undefined);
+        }
         await db.updateAnalysisProjectStatus(projectId, ctx.user.id, "failed").catch(() => undefined);
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Não foi possível concluir a análise." });
       }
