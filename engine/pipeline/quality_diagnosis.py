@@ -1003,15 +1003,6 @@ def execute_quality_diagnosis(
             )
             for sheet_id, candidates in table_candidates.items()
         }
-        sensitive_sheet_ids = {
-            sheet_id
-            for sheet_id, _, candidates in sensitivity_candidates
-            if any(candidate.get("sensitivity") == "personal_data_candidate" for candidate in candidates)
-        } | {
-            sheet_id
-            for sheet_id, sheet_columns in grouped_columns.items()
-            if any(column.semantic_identifier.sensitive_header for column in sheet_columns)
-        }
         source_key_counts = {
             sheet_id: len(
                 {
