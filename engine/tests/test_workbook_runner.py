@@ -191,6 +191,39 @@ class WorkbookRunnerTests(unittest.TestCase):
             self.assertTrue(any(item["sensitivity"] == "personal_data_candidate" for item in diagnosis["sensitivity_classifications"]))
             self.assertNotIn("contato-1@example.test", serialized)
 
+    def test_does_not_emit_modeling_hypotheses_when_only_sensitive_attributes_are_available(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            workbook_path = base / "somente_sensiveis.xlsx"
+            metadata_path = base / "metadata.json"
+            workbook = Workbook()
+            sheet = workbook.active
+            sheet.title = "Aba sintética"
+            sheet.append(["E-mail", "Telefone"])
+            for position in range(1, 21):
+                sheet.append([f"contato-{position}@example.test", f"1199999{position:04d}"])
+            workbook.save(workbook_path)
+            content = workbook_path.read_bytes()
+            metadata_path.write_text(json.dumps({
+                "analysis_id": str(uuid4()), "project_id": str(uuid4()), "owner_user_id": str(uuid4()),
+                "project_name": "Teste sintético", "objective": "Validar somente atributos sensíveis", "file_id": str(uuid4()),
+                "original_name": "somente_sensiveis.xlsx", "file_size_bytes": len(content), "file_sha256": hashlib.sha256(content).hexdigest(),
+                "file_mime_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "workbook_readable": True,
+                "consented_at": "2026-08-27T00:00:00Z", "created_at": "2026-08-27T00:00:00Z",
+                "uploaded_at": "2026-08-27T00:00:00Z", "retention_delete_at": "2026-08-27T00:00:00Z",
+                "retention_status": "reference_removed", "correlation_id": str(uuid4()), "terms_version": "1.0",
+                "domain": "generic", "business_questions": [], "analysis_version": 1, "supersedes_analysis_id": None,
+            }), encoding="utf-8")
+
+            diagnosis = run(workbook_path, metadata_path)
+            serialized = json.dumps(diagnosis)
+
+            self.assertEqual(diagnosis["summary"]["counts"]["dimensions"], 0)
+            self.assertEqual(diagnosis["summary"]["counts"]["facts"], 0)
+            self.assertEqual(diagnosis["summary"]["counts"]["metrics"], 0)
+            self.assertTrue(any(item["sensitivity"] == "personal_data_candidate" for item in diagnosis["sensitivity_classifications"]))
+            self.assertNotIn("contato-1@example.test", serialized)
+
     def test_runs_multi_sheet_draft_workbook_to_sanitized_modeling_diagnosis(self):
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory)
@@ -199,9 +232,9 @@ class WorkbookRunnerTests(unittest.TestCase):
             workbook = Workbook()
             dimension = workbook.active
             dimension.title = "Entidades sintéticas"
-            dimension.append(["ID", "Cliente", "Categoria"])
+            dimension.append(["ID", "Cliente", "Categoria", "E-mail"])
             for position in range(1, 21):
-                dimension.append([f"entidade-{position}", f"cliente-{position}", "grupo-a" if position % 2 else "grupo-b"])
+                dimension.append([f"entidade-{position}", f"cliente-{position}", "grupo-a" if position % 2 else "grupo-b", f"contato-{position}@example.test"])
             facts = workbook.create_sheet("Eventos sintéticos")
             facts.append(["Chave", "Código", "Transação", "Data", "Quantidade"])
             for position in range(1, 21):
@@ -232,6 +265,7 @@ class WorkbookRunnerTests(unittest.TestCase):
             self.assertEqual(diagnosis["summary"]["counts"]["facts"], 1)
             self.assertGreaterEqual(diagnosis["summary"]["counts"]["relationships"], 1)
             self.assertGreaterEqual(diagnosis["summary"]["counts"]["metrics"], 1)
+            self.assertTrue(any(item["sensitivity"] == "personal_data_candidate" for item in diagnosis["sensitivity_classifications"]))
             self.assertTrue(all(sheet["grain"] is not None for sheet in diagnosis["sheets"]))
             self.assertEqual(
                 {sheet["classification"]["type"] for sheet in diagnosis["sheets"]},
@@ -242,6 +276,7 @@ class WorkbookRunnerTests(unittest.TestCase):
             self.assertNotIn("Eventos sintéticos", serialized)
             self.assertNotIn("cliente-1", serialized)
             self.assertNotIn("evento-1", serialized)
+            self.assertNotIn("contato-1@example.test", serialized)
             self.assertNotIn("raw_values", serialized)
 
     def test_runs_missingness_workbook_to_reconstructed_null_finding_without_raw_values(self):
