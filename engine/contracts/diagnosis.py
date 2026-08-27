@@ -360,6 +360,12 @@ def to_metric_fragment(candidates: list[dict[str, object]], *, sheet_id: str) ->
             }
         )
         question = candidate["question"]
+        raw_options = question.get("options", [])
+        normalized_options = [
+            option if isinstance(option, dict) else {"value": f"option_{index + 1}", "label": option}
+            for index, option in enumerate(raw_options)
+            if isinstance(option, (dict, str))
+        ]
         questions.append(
             {
                 "question_id": str(uuid4()),
@@ -369,7 +375,7 @@ def to_metric_fragment(candidates: list[dict[str, object]], *, sheet_id: str) ->
                 "priority": question["priority"],
                 "blocking": question["blocking"],
                 "status": "pending",
-                "options": question["options"],
+                "options": normalized_options,
                 "impact": {"affected_modules": ["metric_suggestion"], "affected_rule_ids": [rule_id], "affected_recommendation_ids": []},
                 "answer": None,
                 "created_at": created_at,

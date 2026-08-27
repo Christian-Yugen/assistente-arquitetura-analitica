@@ -32,6 +32,9 @@ from engine.profiling.semantic_identifier import SemanticIdentifierAccumulator, 
 from engine.profiling.semantic_identifier import ELIGIBLE_HEADERS, SENSITIVE_HEADERS, _normalize_header
 from engine.profiling.semantic_currency import SemanticCurrencyAccumulator, has_explicit_currency_format
 from engine.profiling.composite_grain import CompositeGrainAccumulator
+from engine.profiling.entity_per_row_grain import profile_entity_marker_header
+from engine.profiling.event_per_row_grain import profile_event_marker_header
+from engine.profiling.explicit_key_grain import profile_explicit_key_header
 from engine.profiling.relationship_pairs import (
     CompositeRelationshipAccumulator,
     CompositeRelationshipPairSignal,
@@ -322,6 +325,9 @@ def profile_workbook_with_relationship_pairs(path: Path) -> WorkbookProfile:
                     semantic_currency=semantic_currency_accumulators[column_position].finalize(),
                     semantic_identifier=profiler.semantic_identifier_profile(),
                     composite_grain=composite_grain,
+                    entity_marker_header=profile_entity_marker_header(str(header[column_position] or "")),
+                    event_marker_header=profile_event_marker_header(str(header[column_position] or "")),
+                    explicit_key_header=profile_explicit_key_header(str(header[column_position] or "")),
                 )
             )
         relationship_columns.extend(

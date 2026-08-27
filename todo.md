@@ -735,3 +735,5 @@
 - [x] Validar o fluxo completo com artefato sintético permitido e testes de regressão, sem simular resultado de arquivo real ou promover produção.
 - [x] Cobrir todos os tipos semânticos e hipóteses de grão emitidos pelo motor na orientação draft, sem expor entidades, colunas ou valores privados.
 - [x] Vincular visualmente cada decisão humana à hipótese de modelagem correspondente, sem alterar diagnóstico, arquivo, regras ou criar uma conclusão nova.
+- [x] Auditar e reproduzir a supressão de fato, dimensão, grão, relação e métrica quando o diagnóstico possui volume suficiente, sem acessar conteúdo do workbook.
+- [x] Corrigir somente bloqueios estruturais indevidos comprovados e validar que as hipóteses emitidas chegam à orientação draft sem fabricar conclusões.

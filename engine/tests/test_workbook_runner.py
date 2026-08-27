@@ -90,6 +90,41 @@ class WorkbookRunnerTests(unittest.TestCase):
             self.assertNotIn("Beta", serialized)
             self.assertNotIn("raw_values", serialized)
 
+    def test_emits_dimension_grain_and_count_metric_from_a_supported_synthetic_structure(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            workbook_path = base / "modelo_dimensao.xlsx"
+            metadata_path = base / "metadata.json"
+            workbook = Workbook()
+            sheet = workbook.active
+            sheet.title = "Aba sintética"
+            sheet.append(["ID", "Cliente", "Categoria"])
+            for position in range(1, 21):
+                sheet.append([f"id-{position:03d}", f"entidade-{position}", "grupo-a" if position % 2 else "grupo-b"])
+            workbook.save(workbook_path)
+            content = workbook_path.read_bytes()
+            metadata_path.write_text(json.dumps({
+                "analysis_id": str(uuid4()), "project_id": str(uuid4()), "owner_user_id": str(uuid4()),
+                "project_name": "Teste sintético", "objective": "Validar estrutura de dimensão", "file_id": str(uuid4()),
+                "original_name": "modelo_dimensao.xlsx", "file_size_bytes": len(content), "file_sha256": hashlib.sha256(content).hexdigest(),
+                "file_mime_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "workbook_readable": True,
+                "consented_at": "2026-08-27T00:00:00Z", "created_at": "2026-08-27T00:00:00Z",
+                "uploaded_at": "2026-08-27T00:00:00Z", "retention_delete_at": "2026-08-27T00:00:00Z",
+                "retention_status": "reference_removed", "correlation_id": str(uuid4()), "terms_version": "1.0",
+                "domain": "generic", "business_questions": [], "analysis_version": 1, "supersedes_analysis_id": None,
+            }), encoding="utf-8")
+
+            diagnosis = run(workbook_path, metadata_path)
+            serialized = json.dumps(diagnosis)
+
+            self.assertIsNotNone(diagnosis["sheets"][0]["grain"])
+            self.assertEqual(diagnosis["sheets"][0]["classification"]["type"], "dimension_standard_candidate")
+            self.assertTrue(any(metric["metric_type"] == "count_conceptual_metric_candidate" for metric in diagnosis["metrics"]))
+            self.assertTrue(all(isinstance(option, dict) for question in diagnosis["questions"] for option in question["options"]))
+            self.assertNotIn("Aba sintética", serialized)
+            self.assertNotIn("entidade-001", serialized)
+            self.assertNotIn("raw_values", serialized)
+
     def test_runs_multi_sheet_draft_workbook_to_sanitized_modeling_diagnosis(self):
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory)
