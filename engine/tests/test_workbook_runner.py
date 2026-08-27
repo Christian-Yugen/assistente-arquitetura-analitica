@@ -90,7 +90,7 @@ class WorkbookRunnerTests(unittest.TestCase):
             self.assertNotIn("Beta", serialized)
             self.assertNotIn("raw_values", serialized)
 
-    def test_emits_dimension_grain_and_count_metric_from_a_supported_synthetic_structure(self):
+    def test_emits_dimension_grain_and_count_metric_from_a_compound_identifier_header(self):
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory)
             workbook_path = base / "modelo_dimensao.xlsx"
@@ -98,7 +98,7 @@ class WorkbookRunnerTests(unittest.TestCase):
             workbook = Workbook()
             sheet = workbook.active
             sheet.title = "Aba sintética"
-            sheet.append(["ID", "Cliente", "Categoria"])
+            sheet.append(["Código do registro", "Cliente", "Categoria"])
             for position in range(1, 21):
                 sheet.append([f"id-{position:03d}", f"entidade-{position}", "grupo-a" if position % 2 else "grupo-b"])
             workbook.save(workbook_path)
@@ -126,6 +126,7 @@ class WorkbookRunnerTests(unittest.TestCase):
             self.assertEqual(diagnosis["proposed_model"]["tables"][0]["table_type"], "dimension_standard_candidate")
             self.assertTrue(all(isinstance(option, dict) for question in diagnosis["questions"] for option in question["options"]))
             self.assertNotIn("Aba sintética", serialized)
+            self.assertNotIn("Código do registro", serialized)
             self.assertNotIn("entidade-001", serialized)
             self.assertNotIn("raw_values", serialized)
 

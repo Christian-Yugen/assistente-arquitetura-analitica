@@ -12,6 +12,13 @@ class SemanticIdentifierTests(unittest.TestCase):
         self.assertTrue(result[0]["evidence"]["individually_unique"])
         self.assertNotIn("1001", repr(profile))
 
+    def test_classifies_compound_identifier_header_without_retaining_content(self):
+        profile = profile_semantic_identifier("codigo do registro", list(range(1001, 1021)))
+        result = classify_identifier(SemanticIdentifierColumnProfile("numeric", 0, profile))
+        self.assertEqual(result[0]["semantic_type"], "identifier")
+        self.assertTrue(result[0]["evidence"]["individually_unique"])
+        self.assertNotIn("1001", repr(profile))
+
     def test_classifies_repeated_component_when_diversity_is_sufficient(self):
         profile = profile_semantic_identifier("cod", [value for value in range(1, 11) for _ in range(2)])
         result = classify_identifier(SemanticIdentifierColumnProfile("numeric", 0, profile))

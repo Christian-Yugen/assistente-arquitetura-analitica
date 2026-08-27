@@ -746,8 +746,11 @@
 - [ ] Reconciliar formalmente as tarefas históricas do backlog com evidências rastreáveis por item, distinguindo cobertura draft concluída de pendências reais e bloqueios produtivos.
 - [x] Comparar somente metadados agregados da nova execução real vazia com os cenários sintéticos para localizar os critérios estruturais não satisfeitos.
 - [x] Reproduzir a divergência comprovada e corrigir exclusivamente o bloqueio técnico que impedir a geração automática de resultados draft.
-- [x] Impedir que um sinal de campo sensível bloqueie a classificação estrutural de toda a aba, preservando o alerta e excluindo o campo sensível de chaves, relações e medidas.
+- [x] Impedir que um sinal de campo sensível bloqueie a classificação estrutural de toda a aba, preservando o alerta e excluindo o campo sensível de chaves, relações e medidas; a guarda residual MDL-UNDEFINED-020 foi corrigida.
 - [ ] Reproduzir e tratar o caso de chave, atributo descritivo e data reconhecida sem rótulo literal de evento, emitindo apenas hipótese draft quando os sinais agregados forem compatíveis.
 - [x] Isolar campos sensíveis nas contagens de métricas e nas guardas de relacionamento, preservando a exclusão da coluna sensível e as hipóteses sustentadas somente por colunas elegíveis.
 - [x] Investigar e corrigir a rejeição de validação de workbook reportada por Chris, usando somente logs e metadados sanitizados e uma reprodução sintética.
 - [x] Reproduzir e corrigir a rejeição de CSV reportada por Chris, preservando o limite, a validação estrutural e a não exposição de conteúdo do arquivo.
+- [ ] Investigar e corrigir a falha “Failed to fetch” reportada por Chris, verificando serviço e rede sem registrar conteúdo de upload.
+- [x] Auditar a linhagem backend do último diagnóstico aceito, somente por metadados sanitizados, até explicar a ausência ou a presença de grão, dimensão, fato e métricas.
+- [x] Reproduzir e corrigir a ausência de identificação estrutural para cabeçalhos compostos comuns, sem usar campo sensível e sem alterar os limiares de completude ou unicidade.

@@ -35,7 +35,6 @@ def classify_explicit_key(profile: ExplicitKeySheetProfile) -> list[dict[str, ob
         for column in profile.columns
         if (
             column.header.header_eligible
-            and (column.identifier_signal or column.header.header_eligible)
             and not column.sensitive_header
             and not column.description_header
             and column.recognized_date_count == 0

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+import re
 import unicodedata
 from collections import Counter
 from dataclasses import dataclass
@@ -11,7 +12,7 @@ from typing import Iterable
 
 from engine.profiling.missingness import missing_class
 
-SEMANTIC_IDENTIFIER_BASIS = "closed_header_signal_text_or_numeric_coverage90_distinct10_min20_v1"
+SEMANTIC_IDENTIFIER_BASIS = "closed_header_token_signal_text_or_numeric_coverage90_distinct10_min20_v1"
 ELIGIBLE_HEADERS = frozenset({"id", "codigo", "cod", "chave", "matricula", "numero", "num"})
 SENSITIVE_HEADERS = frozenset({"cpf", "cnpj", "email", "e-mail", "nome", "telefone", "celular", "endereco", "endereço"})
 
@@ -19,6 +20,13 @@ SENSITIVE_HEADERS = frozenset({"cpf", "cnpj", "email", "e-mail", "nome", "telefo
 def _normalize_header(value: str) -> str:
     decomposed = unicodedata.normalize("NFKD", unicodedata.normalize("NFKC", value))
     return " ".join("".join(char for char in decomposed if not unicodedata.combining(char)).casefold().split())
+
+
+def _header_tokens(value: str) -> frozenset[str]:
+    normalized = _normalize_header(value).replace("_", " ")
+    tokens = set(re.findall(r"[a-z0-9]+", normalized))
+    tokens.update(re.findall(r"[a-z0-9]+", normalized.replace("-", "")))
+    return frozenset(tokens)
 
 
 def _signature(value: object) -> tuple[str, str] | None:
@@ -51,9 +59,9 @@ class SemanticIdentifierProfile:
 
 class SemanticIdentifierAccumulator:
     def __init__(self, header: str) -> None:
-        normalized = _normalize_header(header)
-        self._header_signal = normalized in ELIGIBLE_HEADERS
-        self._sensitive_header = normalized in SENSITIVE_HEADERS
+        tokens = _header_tokens(header)
+        self._header_signal = bool(tokens.intersection(ELIGIBLE_HEADERS))
+        self._sensitive_header = bool(tokens.intersection(SENSITIVE_HEADERS))
         self._observed = 0
         self._non_missing = 0
         self._signatures: Counter[tuple[str, str]] = Counter()
