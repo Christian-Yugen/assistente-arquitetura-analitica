@@ -188,6 +188,7 @@ class WorkbookRunnerTests(unittest.TestCase):
             serialized = json.dumps(diagnosis)
 
             self.assertTrue(diagnosis["sheets"][0]["classification"]["type"].startswith("dimension_"))
+            self.assertGreaterEqual(diagnosis["summary"]["counts"]["metrics"], 1)
             self.assertTrue(any(item["sensitivity"] == "personal_data_candidate" for item in diagnosis["sensitivity_classifications"]))
             self.assertNotIn("contato-1@example.test", serialized)
 
