@@ -716,3 +716,6 @@
 - [x] Simplificar a orientação pós-diagnóstico, distinguindo claramente poucos registros de campos sem informação e reduzindo linguagem técnica.
 - [x] Contextualizar as opções de decisão para que o usuário saiba quando confirmar, corrigir arquivo, revisar negócio ou marcar não se aplica.
 - [x] Validar acessibilidade, interação e regressões da experiência simplificada antes do checkpoint draft.
+- [x] Definir precedência segura para o resumo pós-decisão: corrigir e reenviar, aguardar decisão de negócio, concluir sem nova ação ou continuar respondendo perguntas.
+- [x] Implementar o resumo acionável no plano de diagnóstico, sem editar automaticamente XLSX/CSV, diagnóstico ou regras.
+- [x] Cobrir estados e precedência do resumo acionável com testes e regressão antes do checkpoint draft.

@@ -16,6 +16,7 @@ describe("DiagnosticActionPlan", () => {
     />);
 
     expect(screen.getByText("O que fazer agora")).toBeTruthy();
+    expect(screen.getByText("Próxima ação: concluir as escolhas pendentes")).toBeTruthy();
     expect(screen.getByText(/7 pontos para verificar/)).toBeTruthy();
     expect(screen.getByText(/0 de 1 decisões registradas/)).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Corrigir arquivo" }));
@@ -24,7 +25,7 @@ describe("DiagnosticActionPlan", () => {
 
   it("shows the registered decision rather than storing or requesting free text", () => {
     const view = render(<DiagnosticActionPlan
-      findingCount={0}
+      findingCount={2}
       questions={[{ question_id: "opaque-q-2", text: "Pergunta segura" }]}
       answers={[{ questionId: "opaque-q-2", decision: "confirmed" }]}
       onAnswer={vi.fn()}
@@ -32,6 +33,7 @@ describe("DiagnosticActionPlan", () => {
     />);
 
     expect(view.getByText("Escolha registrada: Confirmada")).toBeTruthy();
+    expect(view.getByText("Próxima ação: manter esta versão como referência")).toBeTruthy();
     expect(view.queryByRole("textbox")).toBeNull();
   });
 });

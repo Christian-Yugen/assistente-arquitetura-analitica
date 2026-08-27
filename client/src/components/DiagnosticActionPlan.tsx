@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { getDiagnosticNextAction } from "@/lib/diagnosticNextAction";
 import { CheckCircle2, CircleAlert, ClipboardCheck, RefreshCw } from "lucide-react";
 import React from "react";
 
@@ -35,9 +36,11 @@ export function DiagnosticActionPlan({
 }) {
   const answersByQuestion = new Map(answers.map(answer => [answer.questionId, answer.decision]));
   const answeredCount = questions.filter(question => typeof question.question_id === "string" && answersByQuestion.has(question.question_id)).length;
+  const nextAction = getDiagnosticNextAction({ findingCount, questionCount: questions.length, answers });
 
   return <section aria-labelledby="action-plan-heading" className="rounded-xl border border-[#b8d7a7]/30 bg-[#b8d7a7]/10 p-4">
     <div className="flex gap-3"><ClipboardCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#d0efc1]" /><div className="min-w-0"><h3 id="action-plan-heading" className="text-sm font-semibold text-[#eff9e9]">O que fazer agora</h3><p className="mt-1 text-xs leading-5 text-[#d5e7d5]">Siga estes passos para preparar o arquivo. Suas escolhas registram o contexto; elas não mudam o arquivo automaticamente.</p></div></div>
+    <div role="status" className="mt-4 rounded-lg border border-[#d0efc1]/25 bg-[#0e3028]/55 p-3"><p className="text-xs font-semibold text-[#d0efc1]">{nextAction.title}</p><p className="mt-1 text-xs leading-5 text-[#d9e9d8]">{nextAction.description}</p></div>
     <ol className="mt-4 space-y-3 text-xs leading-5 text-[#dcebdc]">
       <li className="flex gap-3"><CircleAlert className="mt-0.5 h-4 w-4 shrink-0 text-[#f4d39d]" /><span><strong>{findingCount} ponto{findingCount === 1 ? "" : "s"} para verificar:</strong> alguns campos podem estar sem informação. Isso é diferente de ter poucos registros.</span></li>
       <li className="flex gap-3"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#cde9bb]" /><span><strong>{answeredCount} de {questions.length} decisões registradas:</strong> escolha a opção que melhor descreve cada situação abaixo.</span></li>
