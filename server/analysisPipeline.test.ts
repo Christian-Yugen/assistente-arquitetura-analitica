@@ -22,6 +22,13 @@ describe("validateWorkbookUpload", () => {
     await expect(inspectWorkbookBeforePersistence(result)).resolves.toEqual({ sheetCount: 1 });
   });
 
+  it("accepts a Windows-1252 CSV exported by local spreadsheet software", async () => {
+    const cp1252Csv = Buffer.from([0x69, 0x64, 0x3b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0xe7, 0xe3, 0x6f, 0x0a, 0x31, 0x3b, 0x61, 0x74, 0x69, 0x76, 0x6f, 0x0a]);
+    const result = validateWorkbookUpload({ fileName: "modelo.csv", mimeType: "text/csv", dataBase64: cp1252Csv.toString("base64") });
+
+    await expect(inspectWorkbookBeforePersistence(result)).resolves.toEqual({ sheetCount: 1 });
+  });
+
   it("executes CSV through temporary normalization and returns only a sanitized diagnosis", async () => {
     const workbook = validateWorkbookUpload({ fileName: "modelo.csv", mimeType: "text/csv", dataBase64: csvBuffer.toString("base64") });
     const diagnosis = await executeWorkbookEngine(workbook, buildWorkbookMetadata({
@@ -81,7 +88,7 @@ describe("validateWorkbookUpload", () => {
   });
 
   it("rejects CSV with invalid encoding or divergent fields before persistence", async () => {
-    const nonUtf8 = validateWorkbookUpload({ fileName: "arquivo.csv", mimeType: "text/csv", dataBase64: Buffer.from([0x69, 0x64, 0x2c, 0xe7]).toString("base64") });
+    const nonUtf8 = validateWorkbookUpload({ fileName: "arquivo.csv", mimeType: "text/csv", dataBase64: Buffer.from([0x69, 0x64, 0x2c, 0x81]).toString("base64") });
     const divergent = validateWorkbookUpload({ fileName: "arquivo.csv", mimeType: "text/csv", dataBase64: Buffer.from("id,valor\n1,2,3\n").toString("base64") });
     await expect(inspectWorkbookBeforePersistence(nonUtf8)).rejects.toMatchObject({ failureCode: "inspection_csv_invalid" } satisfies Partial<WorkbookInspectionError>);
     await expect(inspectWorkbookBeforePersistence(divergent)).rejects.toMatchObject({ failureCode: "inspection_csv_invalid" } satisfies Partial<WorkbookInspectionError>);

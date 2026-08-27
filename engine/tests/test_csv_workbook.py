@@ -25,11 +25,17 @@ class CsvWorkbookTests(unittest.TestCase):
         path = self._path("id;descrição\n1;ativo\n".encode("utf-8"))
         self.assertEqual(inspect_csv(path), {"sheet_count": 1})
 
-    def test_rejects_binary_or_non_utf8_content(self) -> None:
+    def test_rejects_binary_content(self) -> None:
         with self.assertRaises(CsvWorkbookError):
             inspect_csv(self._path(b"id,valor\x00\n1,2\n"))
+
+    def test_supports_windows_1252_csv_from_local_export(self) -> None:
+        path = self._path("id;descrição\n1;ativo\n".encode("cp1252"))
+        self.assertEqual(inspect_csv(path), {"sheet_count": 1})
+
+    def test_rejects_undecodable_text_content(self) -> None:
         with self.assertRaises(CsvWorkbookError):
-            inspect_csv(self._path(b"id,descri\xe7\xe3o\n1,2\n"))
+            inspect_csv(self._path(b"id,descri\x81\n1,2\n"))
 
     def test_rejects_rows_with_divergent_field_counts(self) -> None:
         with self.assertRaises(CsvWorkbookError):

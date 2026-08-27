@@ -750,3 +750,4 @@
 - [ ] Reproduzir e tratar o caso de chave, atributo descritivo e data reconhecida sem rótulo literal de evento, emitindo apenas hipótese draft quando os sinais agregados forem compatíveis.
 - [x] Isolar campos sensíveis nas contagens de métricas e nas guardas de relacionamento, preservando a exclusão da coluna sensível e as hipóteses sustentadas somente por colunas elegíveis.
 - [x] Investigar e corrigir a rejeição de validação de workbook reportada por Chris, usando somente logs e metadados sanitizados e uma reprodução sintética.
+- [x] Reproduzir e corrigir a rejeição de CSV reportada por Chris, preservando o limite, a validação estrutural e a não exposição de conteúdo do arquivo.

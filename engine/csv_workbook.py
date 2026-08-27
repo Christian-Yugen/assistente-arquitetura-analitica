@@ -32,8 +32,14 @@ def _read_text(path: Path) -> str:
         raise CsvWorkbookError("O CSV contém bytes binários não permitidos.")
     try:
         return raw.decode("utf-8-sig", errors="strict")
-    except UnicodeDecodeError as error:
-        raise CsvWorkbookError("O CSV deve usar codificação UTF-8.") from error
+    except UnicodeDecodeError:
+        try:
+            text = raw.decode("cp1252", errors="strict")
+        except UnicodeDecodeError as error:
+            raise CsvWorkbookError("O CSV deve usar codificação UTF-8 ou Windows-1252.") from error
+        if any((ord(character) < 32 and character not in "\t\n\r") or 127 <= ord(character) <= 159 for character in text):
+            raise CsvWorkbookError("O CSV contém caracteres de controle não permitidos.")
+        return text
 
 
 def _candidate_delimiters(text: str) -> list[str]:
