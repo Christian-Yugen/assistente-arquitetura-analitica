@@ -737,3 +737,7 @@
 - [x] Vincular visualmente cada decisão humana à hipótese de modelagem correspondente, sem alterar diagnóstico, arquivo, regras ou criar uma conclusão nova.
 - [x] Auditar e reproduzir a supressão de fato, dimensão, grão, relação e métrica quando o diagnóstico possui volume suficiente, sem acessar conteúdo do workbook.
 - [x] Corrigir somente bloqueios estruturais indevidos comprovados e validar que as hipóteses emitidas chegam à orientação draft sem fabricar conclusões.
+- [x] Projetar e entregar um resumo de resultados que conte hipóteses de dimensão, fato, grão, relação e métrica, separado das explicações de uso.
+- [x] Converter achados existentes em uma lista priorizada de bloqueios, problemas e ações de correção antes de explorar o modelo, sem expor conteúdo de workbook.
+- [x] Ampliar a geração draft de propostas estruturadas somente a partir de sinais internos comprovados e validar os cenários sintéticos antes de reprocessar o arquivo de Chris.
+- [x] Auditar e projetar todos os candidatos já emitidos pelas 95 regras em contagens e resultados estruturados, sem alterar catálogo, allowlist ou limiares.

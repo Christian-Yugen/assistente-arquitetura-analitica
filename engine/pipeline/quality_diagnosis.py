@@ -1744,6 +1744,30 @@ def execute_quality_diagnosis(
         questions.extend(metric_questions)  # type: ignore[arg-type]
         question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in metric_questions)  # type: ignore[index,union-attr]
 
+    proposed_tables: list[dict[str, object]] = []
+    for sheet_id in grouped_columns:
+        classification = classifications_by_sheet[sheet_id]
+        if not classification:
+            continue
+        grain = grains_by_sheet[sheet_id]
+        proposed_tables.append(
+            {
+                "scope": {"entity_type": "sheet", "entity_id": sheet_id},
+                "table_type": classification["type"],
+                "table_rule_id": classification["rule_id"],
+                "status": classification["status"],
+                "confidence": classification["confidence"],
+                "grain_type": grain["type"] if grain else None,
+                "grain_rule_id": grain["rule_id"] if grain else None,
+            }
+        )
+    dimension_table_count = sum(
+        1 for table in proposed_tables if str(table["table_type"]).startswith("dimension_")
+    )
+    fact_table_count = sum(
+        1 for table in proposed_tables if str(table["table_type"]).startswith("fact_")
+    )
+
     finding_ids_by_sheet: dict[str, list[str]] = {sheet_id: [] for sheet_id in grouped_columns}
     for finding in findings:
         sheet_id = finding["affected_entities"][0]["entity_id"]  # type: ignore[index]
@@ -1834,13 +1858,13 @@ def execute_quality_diagnosis(
         "summary": {
             "quality_score": None,
             "completeness_ratio": round(executable_rule_count() / profile.catalog_target_rule_count, 8),
-            "counts": {"sheets": len(sheet_objects), "columns": sum(sheet["column_count"] for sheet in sheet_objects), "facts": 0, "dimensions": 0, "relationships": len(relationships), "metrics": len(metrics), "risks": len(findings)},
+            "counts": {"sheets": len(sheet_objects), "columns": sum(sheet["column_count"] for sheet in sheet_objects), "facts": fact_table_count, "dimensions": dimension_table_count, "relationships": len(relationships), "metrics": len(metrics), "risks": len(findings)},
             "top_risk_finding_ids": [finding["finding_id"] for finding in findings[:10]],
             "executive_summary": profile.summary_template.format(sheet_count=len(sheet_objects), column_count=sum(sheet["column_count"] for sheet in sheet_objects), finding_count=len(findings)),
             "next_recommended_action": profile.next_action_with_questions if questions else profile.next_action_without_questions,
         },
         "sheets": sheet_objects,
-        "proposed_model": {"status": profile.proposed_model_status, "tables": [], "implementation_steps": [], "assumptions": [], "limitations": [profile.proposed_model_limitation], "confidence": None},
+        "proposed_model": {"status": profile.proposed_model_status, "tables": proposed_tables, "implementation_steps": [], "assumptions": [], "limitations": [profile.proposed_model_limitation], "confidence": None},
         "relationships": relationships,
         "metrics": metrics,
         "questions": questions,

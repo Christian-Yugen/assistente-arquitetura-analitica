@@ -180,9 +180,9 @@ describe("Home workspace flow", () => {
     expect(diagnostic).toContain("4 de 4 abas têm entre 3 e 6 registros");
     expect(diagnostic).toContain("não quer dizer que há erro ou que você precisa inventar dados");
     expect(diagnostic).toContain("pelo menos 10 registros não vazios em cada campo relevante");
-    expect(diagnostic).toContain("O que você pode começar a desenhar no Power BI");
-    expect(diagnostic).toContain("Defina o grão");
-    expect(diagnostic).toContain("Finalize medidas");
+    expect(diagnostic).toContain("Resultado da leitura");
+    expect(diagnostic).toContain("Proposta de modelagem encontrada");
+    expect(diagnostic).toContain("Detalhamento dos resultados");
     expect(diagnostic).toContain("Nenhuma dimensão foi sugerida com evidência suficiente nesta versão.");
   });
 
@@ -207,8 +207,11 @@ describe("Home workspace flow", () => {
     expect(diagnostic).toContain("Possível data");
     expect(diagnostic).toContain("Relação um-para-muitos candidata");
     expect(diagnostic).toContain("SUM(eligible_measure)");
+    expect(diagnostic).toContain("Proposta de modelagem encontrada");
+    expect(diagnostic).toContain("Dimensões");
+    expect(diagnostic).toContain("Medidas/DAX");
     expect(diagnostic).toContain("As perguntas abaixo não editam sua planilha");
-    expect(diagnostic).toContain("Valide relações");
+    expect(diagnostic).toContain("Estruturas sugeridas para o Power BI");
     expect(diagnostic).toContain("Validação desta seção:");
     expect(diagnostic).toContain("0 de 1 decisões registradas");
     expect(diagnostic).not.toContain("Aba secreta");
