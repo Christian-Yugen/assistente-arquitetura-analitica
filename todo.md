@@ -719,12 +719,14 @@
 - [x] Definir precedência segura para o resumo pós-decisão: corrigir e reenviar, aguardar decisão de negócio, concluir sem nova ação ou continuar respondendo perguntas.
 - [x] Implementar o resumo acionável no plano de diagnóstico, sem editar automaticamente XLSX/CSV, diagnóstico ou regras.
 - [x] Cobrir estados e precedência do resumo acionável com testes e regressão antes do checkpoint draft.
-- [ ] Auditar os blocos de semântica, fatos, dimensões, relacionamentos e métricas já presentes no diagnóstico e identificar quais estão ocultos pela interface.
-- [ ] Definir a exibição draft segura e os estados vazios dos blocos estruturais, sem fabricar hipóteses nem expor conteúdo privado.
-- [ ] Implementar e validar a visualização dos blocos estruturais existentes, com regressões e checkpoint draft.
+- [x] Auditar os blocos de semântica, fatos, dimensões, relacionamentos e métricas já presentes no diagnóstico e identificar quais estão ocultos pela interface.
+- [x] Definir a exibição draft segura e os estados vazios dos blocos estruturais, sem fabricar hipóteses nem expor conteúdo privado.
+- [x] Implementar e validar a visualização dos blocos estruturais existentes, com regressões e checkpoint draft.
 - [x] Investigar a falha sanitizada “Não foi possível concluir a análise” sem ler ou expor conteúdo do arquivo enviado.
 - [x] Reproduzir com fixture sintética, corrigir a causa comprovada e validar o fluxo XLSX/CSV com regressões antes do checkpoint.
 - [x] Instrumentar a falha remanescente de análise com códigos de etapa sanitizados, sem registrar erro bruto, conteúdo, nomes, cabeçalhos ou valores do workbook.
 - [ ] Reproduzir a etapa identificada com fixture sintética, aplicar correção mínima e revalidar o reenvio XLSX/CSV antes do checkpoint.
 - [x] Capturar somente a categoria técnica da exceção Python do motor e correlacioná-la a uma reprodução sintética antes de qualquer correção adicional.
 - [x] Localizar e tratar o pressuposto de chave ausente que gera engine_key_error, com reprodução sintética e sem inspecionar conteúdo de workbook.
+- [x] Traduzir hipóteses existentes do diagnóstico em cartões acionáveis de dimensão, fato, relacionamento e medida/DAX, deixando explícito quando não houver evidência suficiente.
+- [x] Preservar achados, perguntas e decisões humanas como validações de hipótese, sem fabricar fórmulas, relações ou tabelas inexistentes.

@@ -180,5 +180,33 @@ describe("Home workspace flow", () => {
     expect(diagnostic).toContain("4 de 4 abas têm entre 3 e 6 registros");
     expect(diagnostic).toContain("não quer dizer que há erro ou que você precisa inventar dados");
     expect(diagnostic).toContain("pelo menos 10 registros não vazios em cada campo relevante");
+    expect(diagnostic).toContain("O que você pode começar a desenhar no Power BI");
+    expect(diagnostic).toContain("Nenhuma dimensão foi sugerida com evidência suficiente nesta versão.");
+  });
+
+  it("shows safe structural guidance and conceptual DAX without rendering private payload fields", () => {
+    state.diagnostic = {
+      data: {
+        id: "11111111-1111-4111-8111-111111111111", projectId: "22222222-2222-4222-8222-222222222222", version: 5, contractVersion: "1.0.0-reconstructed.1",
+        payload: {
+          summary: { counts: { sheets: 2, risks: 0 } },
+          sheets: [{ name: "Aba secreta", classification: { type: "dimension_standard_candidate", confidence: 0.8 }, columns: [{ name: "Campo secreto" }] }, { classification: { type: "fact_transactional_candidate", confidence: 0.7 } }],
+          relationships: [{ relationship_type: "one_to_many_relationship_candidate", confidence: 0.7, source: { entity_id: "id-privado" } }],
+          metrics: [{ metric_type: "sum_conceptual_metric_candidate", confidence: 0.6, conceptual_formula: "SUM([CAMPO_SECRETO])" }],
+          semantic_classifications: [{ semantic_type: "date_candidate", confidence: 0.7 }], findings: [], questions: [], file: { retention: { status: "reference_removed" } },
+        },
+      }, isFetching: false, isError: false,
+    };
+
+    const diagnostic = renderHome();
+    expect(diagnostic).toContain("Dimensão candidata");
+    expect(diagnostic).toContain("Fato transacional candidato");
+    expect(diagnostic).toContain("Relação um-para-muitos candidata");
+    expect(diagnostic).toContain("SUM(eligible_measure)");
+    expect(diagnostic).toContain("As perguntas abaixo não editam sua planilha");
+    expect(diagnostic).not.toContain("Aba secreta");
+    expect(diagnostic).not.toContain("Campo secreto");
+    expect(diagnostic).not.toContain("CAMPO_SECRETO");
+    expect(diagnostic).not.toContain("id-privado");
   });
 });
