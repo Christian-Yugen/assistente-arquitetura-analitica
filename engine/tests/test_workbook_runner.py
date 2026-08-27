@@ -4,9 +4,13 @@ import tempfile
 import unittest
 from pathlib import Path
 from uuid import uuid4
+from unittest.mock import patch
 
 from openpyxl import Workbook
 
+from engine.alerts.quality import CriticalQualityRiskProfile, classify_critical_quality_risk
+from engine.contracts.execution_profile import load_authorized_draft_profile
+from engine.pipeline.quality_diagnosis import DiagnosisMetadata, build_column_analysis_context, execute_quality_diagnosis
 from engine.profiling.workbook import WorkbookValidationError
 from engine.workbook_runner import run, safe_engine_failure_code
 
@@ -17,6 +21,40 @@ class WorkbookRunnerTests(unittest.TestCase):
         self.assertEqual(safe_engine_failure_code(ValueError("conteúdo privado")), "engine_value_error")
         self.assertEqual(safe_engine_failure_code(TypeError("conteúdo privado")), "engine_type_error")
         self.assertEqual(safe_engine_failure_code(RuntimeError("conteúdo privado")), "engine_unexpected_error")
+
+    def test_completes_model_level_alert_without_assigning_it_to_a_workbook_sheet(self):
+        model_alert = classify_critical_quality_risk(
+            CriticalQualityRiskProfile(high_quality_finding_count=3, distinct_quality_rule_count=2, analyzed_sheet_count=1)
+        )
+        self.assertIsNotNone(model_alert)
+        original_execute = __import__("engine.pipeline.quality_diagnosis", fromlist=["execute_registered_rule"]).execute_registered_rule
+
+        def execute_with_model_alert(rule_id, profile):
+            if rule_id == "ALT-QUALITY-002":
+                return model_alert
+            return original_execute(rule_id, profile)
+
+        metadata = DiagnosisMetadata(
+            analysis_id=str(uuid4()), project_id=str(uuid4()), owner_user_id=str(uuid4()), project_name="Teste", objective="Validar alerta global",
+            file_id=str(uuid4()), original_name="entrada.xlsx", file_size_bytes=0, file_sha256="0" * 64,
+            file_mime_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", workbook_readable=True,
+            consented_at="2026-08-20T00:00:00Z", created_at="2026-08-20T00:00:00Z", uploaded_at="2026-08-20T00:00:00Z",
+            retention_delete_at="2026-08-20T00:00:00Z", retention_status="reference_removed", correlation_id=str(uuid4()),
+            terms_version="1.0", domain="generic", business_questions=(), analysis_version=1, supersedes_analysis_id=None,
+            execution_profile=load_authorized_draft_profile(),
+        )
+        context = build_column_analysis_context(
+            sheet_id=str(uuid4()), column_id=str(uuid4()), column_name="Coluna 1", values=[1, 2, 3],
+            sheet_name="Aba 1", sheet_position=0, sheet_visibility="visible", column_position=0,
+        )
+
+        with patch("engine.pipeline.quality_diagnosis.execute_registered_rule", side_effect=execute_with_model_alert):
+            diagnosis = execute_quality_diagnosis([context], metadata=metadata)
+
+        alert_finding = next(finding for finding in diagnosis["findings"] if finding["rule_id"] == "ALT-QUALITY-002")
+        self.assertEqual(alert_finding["affected_entities"], [{"entity_type": "model", "entity_id": "model"}])
+        self.assertTrue(any(question["impact"]["affected_rule_ids"] == ["ALT-QUALITY-002"] for question in diagnosis["questions"]))
+        self.assertFalse(any(alert_finding["finding_id"] in sheet["finding_ids"] for sheet in diagnosis["sheets"]))
 
     def test_runs_validated_workbook_to_canonical_diagnosis_without_raw_values(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -144,8 +144,9 @@ def to_diagnosis_fragment(
             }
             for item in finding["evidence"]
         ]
-        affected_entities = [{"entity_type": "sheet", "entity_id": sheet_id}]
-        if column_id is not None:
+        is_model_level_finding = sheet_id == "model"
+        affected_entities = [{"entity_type": "model" if is_model_level_finding else "sheet", "entity_id": sheet_id}]
+        if column_id is not None and not is_model_level_finding:
             affected_entities.append({"entity_type": "column", "entity_id": column_id})
         contract_findings.append(
             {

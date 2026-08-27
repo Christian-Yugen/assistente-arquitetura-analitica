@@ -1699,7 +1699,8 @@ def execute_quality_diagnosis(
         findings.extend(fragment["findings"])  # type: ignore[arg-type]
         fragment_questions = fragment["questions"]  # type: ignore[assignment]
         questions.extend(fragment_questions)  # type: ignore[arg-type]
-        question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in fragment_questions)  # type: ignore[index, union-attr]
+        if sheet_id in question_ids_by_sheet:
+            question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in fragment_questions)  # type: ignore[index, union-attr]
     for sheet_id, column_id, candidates in semantic_candidates:
         fragment = to_semantic_classification_fragment(candidates, sheet_id=sheet_id, column_id=column_id)
         semantic_classifications.extend(fragment["semantic_classifications"])  # type: ignore[arg-type]
@@ -1746,7 +1747,8 @@ def execute_quality_diagnosis(
     finding_ids_by_sheet: dict[str, list[str]] = {sheet_id: [] for sheet_id in grouped_columns}
     for finding in findings:
         sheet_id = finding["affected_entities"][0]["entity_id"]  # type: ignore[index]
-        finding_ids_by_sheet[sheet_id].append(finding["finding_id"])  # type: ignore[index]
+        if sheet_id in finding_ids_by_sheet:
+            finding_ids_by_sheet[sheet_id].append(finding["finding_id"])  # type: ignore[index]
     analysis_status = "awaiting_user" if questions else "completed_with_warnings"
     execution_completed_at = _timestamp()
     analysis_completed_at = execution_completed_at if analysis_status.startswith("completed") else None
