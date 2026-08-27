@@ -3,6 +3,7 @@ import { spawn } from "node:child_process";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { sanitizeSensitiveText, sanitizeWorkbookFileName } from "./privacy";
 
 const MAX_BYTES = 25 * 1024 * 1024;
@@ -11,6 +12,23 @@ const CSV_MIME = "text/csv";
 const ACCEPTED_CSV_MIMES = new Set([CSV_MIME, "application/csv", "application/vnd.ms-excel", "application/octet-stream"]);
 
 export class UploadValidationError extends Error {}
+
+export type WorkbookInspectionFailureCode =
+  | "inspection_workbook_invalid"
+  | "inspection_csv_invalid"
+  | "inspection_process_failed";
+
+const INSPECTION_FAILURE_CODES = new Set<WorkbookInspectionFailureCode>([
+  "inspection_workbook_invalid",
+  "inspection_csv_invalid",
+  "inspection_process_failed",
+]);
+
+export class WorkbookInspectionError extends UploadValidationError {
+  constructor(public readonly failureCode: WorkbookInspectionFailureCode) {
+    super(`Não foi possível validar a estrutura do workbook. Código seguro: ${failureCode}.`);
+  }
+}
 
 export type WorkbookEngineFailureCode =
   | "engine_timeout"
@@ -52,9 +70,23 @@ async function readSafeEngineFailureCode(path: string): Promise<WorkbookEngineFa
   }
 }
 
+async function readSafeInspectionFailureCode(path: string): Promise<WorkbookInspectionFailureCode> {
+  try {
+    const output = JSON.parse(await readFile(path, "utf8")) as { failure_code?: unknown };
+    return typeof output.failure_code === "string" && INSPECTION_FAILURE_CODES.has(output.failure_code as WorkbookInspectionFailureCode)
+      ? output.failure_code as WorkbookInspectionFailureCode
+      : "inspection_process_failed";
+  } catch {
+    return "inspection_process_failed";
+  }
+}
+
 export type ValidatedWorkbook = { buffer: Buffer; originalName: string; mimeType: string; sha256: string; format: "xlsx" | "csv"; extension: "xlsx" | "csv" };
 export { sanitizeSensitiveText } from "./privacy";
 export type WorkbookInspection = { sheetCount: number };
+
+const PROJECT_ROOT = fileURLToPath(new URL("../", import.meta.url));
+const WORKBOOK_VALIDATOR_PATH = fileURLToPath(new URL("../engine/workbook_validator.py", import.meta.url));
 
 function contractUuid(seed: string): string {
   const hex = createHash("sha256").update(seed).digest("hex");
@@ -95,23 +127,22 @@ export function validateWorkbookInspection(input: { sheet_count: unknown }): Wor
 export async function inspectWorkbookBeforePersistence(workbook: ValidatedWorkbook): Promise<WorkbookInspection> {
   const workDir = await mkdtemp(join(tmpdir(), "analytical-workbook-inspection-"));
   const inputPath = join(workDir, `input.${workbook.extension}`);
+  const errorPath = join(workDir, "inspection-error.json");
   try {
     await writeFile(inputPath, workbook.buffer);
     const stdout = await new Promise<string>((resolve, reject) => {
-      const child = spawn("python3", ["-m", "engine.workbook_validator", "--input", inputPath, "--format", workbook.format], {
-        cwd: process.cwd(),
-        env: { ...process.env, PYTHONPATH: process.cwd() },
+      const child = spawn("python3", [WORKBOOK_VALIDATOR_PATH, "--input", inputPath, "--format", workbook.format, "--error-output", errorPath], {
+        cwd: PROJECT_ROOT,
+        env: { ...process.env, PYTHONPATH: PROJECT_ROOT },
       });
       let output = "";
-      let stderr = "";
       const timer = setTimeout(() => child.kill("SIGKILL"), 30_000);
       child.stdout.on("data", chunk => { output += chunk.toString(); });
-      child.stderr.on("data", chunk => { stderr += chunk.toString(); });
-      child.once("error", reject);
+      child.once("error", () => reject(new WorkbookInspectionError("inspection_process_failed")));
       child.once("close", code => {
         clearTimeout(timer);
         if (code === 0) resolve(output);
-        else reject(new UploadValidationError("Não foi possível validar a estrutura do workbook."));
+        else void readSafeInspectionFailureCode(errorPath).then(failureCode => reject(new WorkbookInspectionError(failureCode)));
       });
     });
     return validateWorkbookInspection(JSON.parse(stdout) as { sheet_count: unknown });

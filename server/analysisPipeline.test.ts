@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildWorkbookMetadata, executeWorkbookEngine, inspectWorkbookBeforePersistence, UploadValidationError, validateWorkbookInspection, validateWorkbookUpload } from "./analysisPipeline";
+import { buildWorkbookMetadata, executeWorkbookEngine, inspectWorkbookBeforePersistence, UploadValidationError, validateWorkbookInspection, validateWorkbookUpload, WorkbookInspectionError } from "./analysisPipeline";
 
 const zipHeader = Buffer.from([0x50, 0x4b, 0x03, 0x04, 0x00, 0x00]);
 const xlsxMime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -62,7 +62,9 @@ describe("validateWorkbookUpload", () => {
       dataBase64: zipHeader.toString("base64"),
     });
 
-    await expect(inspectWorkbookBeforePersistence(zipButNotWorkbook)).rejects.toThrow("Não foi possível validar a estrutura do workbook.");
+    await expect(inspectWorkbookBeforePersistence(zipButNotWorkbook)).rejects.toMatchObject({
+      failureCode: "inspection_workbook_invalid",
+    } satisfies Partial<WorkbookInspectionError>);
   });
 
   it("returns a sanitized workbook failure code when a ZIP-shaped XLSX cannot be processed", async () => {
@@ -81,8 +83,8 @@ describe("validateWorkbookUpload", () => {
   it("rejects CSV with invalid encoding or divergent fields before persistence", async () => {
     const nonUtf8 = validateWorkbookUpload({ fileName: "arquivo.csv", mimeType: "text/csv", dataBase64: Buffer.from([0x69, 0x64, 0x2c, 0xe7]).toString("base64") });
     const divergent = validateWorkbookUpload({ fileName: "arquivo.csv", mimeType: "text/csv", dataBase64: Buffer.from("id,valor\n1,2,3\n").toString("base64") });
-    await expect(inspectWorkbookBeforePersistence(nonUtf8)).rejects.toThrow("Não foi possível validar a estrutura do workbook.");
-    await expect(inspectWorkbookBeforePersistence(divergent)).rejects.toThrow("Não foi possível validar a estrutura do workbook.");
+    await expect(inspectWorkbookBeforePersistence(nonUtf8)).rejects.toMatchObject({ failureCode: "inspection_csv_invalid" } satisfies Partial<WorkbookInspectionError>);
+    await expect(inspectWorkbookBeforePersistence(divergent)).rejects.toMatchObject({ failureCode: "inspection_csv_invalid" } satisfies Partial<WorkbookInspectionError>);
   });
 
   it("builds deterministic pseudonymous metadata that separates owners", () => {

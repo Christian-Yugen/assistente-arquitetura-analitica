@@ -34,8 +34,19 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", required=True)
     parser.add_argument("--format", choices=("xlsx", "csv"), default="xlsx")
+    parser.add_argument("--error-output")
     args = parser.parse_args()
-    print(json.dumps(inspect_workbook(Path(args.input), args.format)))
+    try:
+        print(json.dumps(inspect_workbook(Path(args.input), args.format)))
+    except WorkbookValidationError:
+        if args.error_output:
+            failure_code = "inspection_csv_invalid" if args.format == "csv" else "inspection_workbook_invalid"
+            Path(args.error_output).write_text(json.dumps({"failure_code": failure_code}), encoding="utf-8")
+        raise SystemExit(1)
+    except Exception:
+        if args.error_output:
+            Path(args.error_output).write_text(json.dumps({"failure_code": "inspection_process_failed"}), encoding="utf-8")
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

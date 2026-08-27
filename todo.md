@@ -749,3 +749,4 @@
 - [x] Impedir que um sinal de campo sensível bloqueie a classificação estrutural de toda a aba, preservando o alerta e excluindo o campo sensível de chaves, relações e medidas.
 - [ ] Reproduzir e tratar o caso de chave, atributo descritivo e data reconhecida sem rótulo literal de evento, emitindo apenas hipótese draft quando os sinais agregados forem compatíveis.
 - [x] Isolar campos sensíveis nas contagens de métricas e nas guardas de relacionamento, preservando a exclusão da coluna sensível e as hipóteses sustentadas somente por colunas elegíveis.
+- [x] Investigar e corrigir a rejeição de validação de workbook reportada por Chris, usando somente logs e metadados sanitizados e uma reprodução sintética.
