@@ -5,7 +5,7 @@ from __future__ import annotations
 import math
 import re
 import xml.etree.ElementTree as element_tree
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import date, datetime
 from itertools import chain
 from pathlib import Path
@@ -16,7 +16,7 @@ import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.utils.cell import range_boundaries
 
-from engine.pipeline.quality_diagnosis import ColumnAnalysisContext
+from engine.pipeline.quality_diagnosis import ColumnAnalysisContext, build_column_analysis_context
 from engine.profiling.missingness import MissingnessProfile, missing_class, row_has_meaningful_value
 from engine.profiling.numeric_text import LOCALE_AMBIGUOUS_NUMBER, STRICT_CANONICAL_NUMBER, NumericTextProfile
 from engine.profiling.categorical_variations import CategoricalVariationProfile, profile_categorical_variations
@@ -254,6 +254,7 @@ def profile_workbook_with_relationship_pairs(path: Path) -> WorkbookProfile:
         }
         composite_grain_accumulator = CompositeGrainAccumulator(candidate_pairs[:10])
         profilers = [StreamingColumnProfiler(semantic_identifier_accumulator=SemanticIdentifierAccumulator(str(header[position] or ""))) for position in range(column_count)]
+        transient_column_values: list[list[object]] = [[] for _ in range(column_count)]
         semantic_currency_accumulators = [SemanticCurrencyAccumulator(header=header[position]) for position in range(column_count)]
         formula_accumulators = [FormulaConsistencyAccumulator() for _ in range(column_count)]
         duplicate_rows_accumulator = DuplicateRowsAccumulator()
@@ -263,6 +264,8 @@ def profile_workbook_with_relationship_pairs(path: Path) -> WorkbookProfile:
         for row in data_rows:
             bounded_cells = tuple(row[position] if position < len(row) else None for position in range(column_count))
             bounded_row = tuple(cell.value if cell is not None else None for cell in bounded_cells)
+            for position in range(column_count):
+                transient_column_values[position].append(bounded_row[position])
             empty_rows_accumulator.consume(bounded_row)
             total_rows_accumulator.consume(bounded_row)
             if not row_has_meaningful_value(bounded_row):
@@ -301,15 +304,21 @@ def profile_workbook_with_relationship_pairs(path: Path) -> WorkbookProfile:
         for column_position, profiler in enumerate(profilers):
             categorical_variations = profiler.categorical_variation_profile()
             profiler.categorical_text_values.clear()
+            semantic_context = build_column_analysis_context(
+                sheet_id=sheet_id,
+                column_id=column_ids[column_position],
+                column_name=str(header[column_position] or ""),
+                values=transient_column_values[column_position],
+                sheet_name=safe_sheet_name(sheet_position),
+                sheet_position=sheet_position,
+                sheet_visibility=worksheet_visibility(worksheet.sheet_state),
+                column_position=column_position,
+            )
+            transient_column_values[column_position].clear()
             contexts.append(
-                ColumnAnalysisContext(
-                    sheet_id=sheet_id,
-                    sheet_name=safe_sheet_name(sheet_position),
-                    sheet_position=sheet_position,
-                    sheet_visibility=worksheet_visibility(worksheet.sheet_state),
-                    column_id=column_ids[column_position],
+                replace(
+                    semantic_context,
                     column_name=safe_column_name(header[column_position], column_position),
-                    column_position=column_position,
                     physical_type=profiler.physical_type(),
                     numeric_text=profiler.numeric_text_profile(),
                     missingness=profiler.missingness_profile(),
@@ -325,9 +334,6 @@ def profile_workbook_with_relationship_pairs(path: Path) -> WorkbookProfile:
                     semantic_currency=semantic_currency_accumulators[column_position].finalize(),
                     semantic_identifier=profiler.semantic_identifier_profile(),
                     composite_grain=composite_grain,
-                    entity_marker_header=profile_entity_marker_header(str(header[column_position] or "")),
-                    event_marker_header=profile_event_marker_header(str(header[column_position] or "")),
-                    explicit_key_header=profile_explicit_key_header(str(header[column_position] or "")),
                 )
             )
         relationship_columns.extend(

@@ -110,6 +110,17 @@ def _timestamp() -> str:
     return datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
 
+def _normalize_question_options(raw_options: object) -> list[dict[str, object]]:
+    """Mantém opções controladas no formato do contrato, sem conteúdo de workbook."""
+    if not isinstance(raw_options, list):
+        return []
+    return [
+        dict(option) if isinstance(option, dict) else {"value": f"option_{index + 1}", "label": option}
+        for index, option in enumerate(raw_options)
+        if isinstance(option, (dict, str))
+    ]
+
+
 def to_diagnosis_fragment(
     findings: list[dict[str, object]],
     *,
@@ -177,7 +188,7 @@ def to_diagnosis_fragment(
                     "priority": question["priority"],
                     "blocking": question["blocking"],
                     "status": "pending",
-                    "options": question["options"],
+                    "options": _normalize_question_options(question.get("options")),
                     "impact": {
                         "affected_modules": question["affected_modules"],
                         "affected_rule_ids": [finding["rule_id"]],
@@ -210,7 +221,7 @@ def to_semantic_classification_fragment(classifications: list[dict[str, object]]
         question = classification["question"]
         questions.append({"question_id": str(uuid4()), "text": question["text"], "reason": question["reason"],
                           "question_type": question["question_type"], "priority": question["priority"], "blocking": question["blocking"],
-                          "status": "pending", "options": question["options"],
+                          "status": "pending", "options": _normalize_question_options(question.get("options")),
                           "impact": {"affected_modules": ["semantic_typing"], "affected_rule_ids": [rule_id], "affected_recommendation_ids": []}, "answer": None, "created_at": created_at})
     return {"semantic_classifications": projected, "questions": questions}
 
@@ -232,7 +243,7 @@ def to_sensitivity_fragment(classifications: list[dict[str, object]], *, sheet_i
         question = classification["question"]
         questions.append({"question_id": str(uuid4()), "text": question["text"], "reason": question["reason"],
                           "question_type": question["question_type"], "priority": question["priority"], "blocking": question["blocking"],
-                          "status": "pending", "options": question["options"],
+                          "status": "pending", "options": _normalize_question_options(question.get("options")),
                           "impact": {"affected_modules": ["sensitivity"], "affected_rule_ids": [rule_id], "affected_recommendation_ids": []}, "answer": None, "created_at": created_at})
     return {"sensitivity_classifications": projected, "questions": questions}
 
@@ -254,7 +265,7 @@ def to_grain_fragment(candidates: list[dict[str, object]], *, sheet_id: str) -> 
         "questions": [{
             "question_id": str(uuid4()), "text": question["text"], "reason": question["reason"],
             "question_type": question["question_type"], "priority": question["priority"],
-            "blocking": question["blocking"], "status": "pending", "options": question["options"],
+            "blocking": question["blocking"], "status": "pending", "options": _normalize_question_options(question.get("options")),
             "impact": {"affected_modules": ["granularity"], "affected_rule_ids": [rule_id], "affected_recommendation_ids": []},
             "answer": None, "created_at": created_at,
         }],
@@ -276,7 +287,7 @@ def to_table_classification_fragment(candidates: list[dict[str, object]], *, she
         "questions": [{
             "question_id": str(uuid4()), "text": candidate_question["text"], "reason": candidate_question["reason"],
             "question_type": candidate_question["question_type"], "priority": candidate_question["priority"],
-            "blocking": candidate_question["blocking"], "status": "pending", "options": candidate_question["options"],
+            "blocking": candidate_question["blocking"], "status": "pending", "options": _normalize_question_options(candidate_question.get("options")),
             "impact": {"affected_modules": ["fact_dimension"], "affected_rule_ids": [str(item["rule_id"])], "affected_recommendation_ids": []},
             "answer": None, "created_at": created_at,
         } for item in candidates for candidate_question in [item["question"]]],
@@ -322,7 +333,7 @@ def to_relationship_fragment(
                 "priority": question["priority"],
                 "blocking": question["blocking"],
                 "status": "pending",
-                "options": question["options"],
+                "options": _normalize_question_options(question.get("options")),
                 "impact": {
                     "affected_modules": ["relationships"],
                     "affected_rule_ids": [rule_id],
@@ -360,12 +371,6 @@ def to_metric_fragment(candidates: list[dict[str, object]], *, sheet_id: str) ->
             }
         )
         question = candidate["question"]
-        raw_options = question.get("options", [])
-        normalized_options = [
-            option if isinstance(option, dict) else {"value": f"option_{index + 1}", "label": option}
-            for index, option in enumerate(raw_options)
-            if isinstance(option, (dict, str))
-        ]
         questions.append(
             {
                 "question_id": str(uuid4()),
@@ -375,7 +380,7 @@ def to_metric_fragment(candidates: list[dict[str, object]], *, sheet_id: str) ->
                 "priority": question["priority"],
                 "blocking": question["blocking"],
                 "status": "pending",
-                "options": normalized_options,
+                "options": _normalize_question_options(question.get("options")),
                 "impact": {"affected_modules": ["metric_suggestion"], "affected_rule_ids": [rule_id], "affected_recommendation_ids": []},
                 "answer": None,
                 "created_at": created_at,

@@ -129,6 +129,37 @@ class WorkbookRunnerTests(unittest.TestCase):
             self.assertNotIn("entidade-001", serialized)
             self.assertNotIn("raw_values", serialized)
 
+    def test_emits_transactional_fact_from_semantic_profiles_in_a_supported_synthetic_structure(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            workbook_path = base / "modelo_fato.xlsx"
+            metadata_path = base / "metadata.json"
+            workbook = Workbook()
+            sheet = workbook.active
+            sheet.title = "Aba sintética"
+            sheet.append(["ID", "Transação", "Data", "Quantidade"])
+            for position in range(1, 21):
+                sheet.append([f"id-{position:03d}", f"evento-{position}", f"2026-01-{position:02d}", position])
+            workbook.save(workbook_path)
+            content = workbook_path.read_bytes()
+            metadata_path.write_text(json.dumps({
+                "analysis_id": str(uuid4()), "project_id": str(uuid4()), "owner_user_id": str(uuid4()),
+                "project_name": "Teste sintético", "objective": "Validar estrutura de fato", "file_id": str(uuid4()),
+                "original_name": "modelo_fato.xlsx", "file_size_bytes": len(content), "file_sha256": hashlib.sha256(content).hexdigest(),
+                "file_mime_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "workbook_readable": True,
+                "consented_at": "2026-08-27T00:00:00Z", "created_at": "2026-08-27T00:00:00Z",
+                "uploaded_at": "2026-08-27T00:00:00Z", "retention_delete_at": "2026-08-27T00:00:00Z",
+                "retention_status": "reference_removed", "correlation_id": str(uuid4()), "terms_version": "1.0",
+                "domain": "generic", "business_questions": [], "analysis_version": 1, "supersedes_analysis_id": None,
+            }), encoding="utf-8")
+
+            diagnosis = run(workbook_path, metadata_path)
+
+            self.assertIsNotNone(diagnosis["sheets"][0]["grain"])
+            self.assertEqual(diagnosis["sheets"][0]["classification"]["type"], "fact_transactional_candidate")
+            self.assertEqual(diagnosis["summary"]["counts"]["facts"], 1)
+            self.assertTrue(any(metric["metric_type"] == "sum_conceptual_metric_candidate" for metric in diagnosis["metrics"]))
+
     def test_runs_multi_sheet_draft_workbook_to_sanitized_modeling_diagnosis(self):
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory)
@@ -137,13 +168,13 @@ class WorkbookRunnerTests(unittest.TestCase):
             workbook = Workbook()
             dimension = workbook.active
             dimension.title = "Entidades sintéticas"
-            dimension.append(["Identificador interno", "Categoria interna"])
+            dimension.append(["ID", "Cliente", "Categoria"])
             for position in range(1, 21):
-                dimension.append([f"entidade-{position}", "grupo-a" if position % 2 else "grupo-b"])
+                dimension.append([f"entidade-{position}", f"cliente-{position}", "grupo-a" if position % 2 else "grupo-b"])
             facts = workbook.create_sheet("Eventos sintéticos")
-            facts.append(["Identificador de evento", "Data do evento", "Quantidade interna", "Valor interno"])
+            facts.append(["Chave", "Código", "Transação", "Data", "Quantidade"])
             for position in range(1, 21):
-                facts.append([f"evento-{position}", f"2026-01-{position:02d}", position, position * 10])
+                facts.append([f"evento-{position}", f"entidade-{(position - 1) % 10 + 1}", f"evento-{position}", f"2026-01-{position:02d}", position])
             workbook.save(workbook_path)
             content = workbook_path.read_bytes()
             metadata_path.write_text(json.dumps({
@@ -166,9 +197,19 @@ class WorkbookRunnerTests(unittest.TestCase):
             self.assertIn("semantic_classifications", diagnosis)
             self.assertIn("relationships", diagnosis)
             self.assertIn("metrics", diagnosis)
+            self.assertEqual(diagnosis["summary"]["counts"]["dimensions"], 1)
+            self.assertEqual(diagnosis["summary"]["counts"]["facts"], 1)
+            self.assertGreaterEqual(diagnosis["summary"]["counts"]["relationships"], 1)
+            self.assertGreaterEqual(diagnosis["summary"]["counts"]["metrics"], 1)
+            self.assertTrue(all(sheet["grain"] is not None for sheet in diagnosis["sheets"]))
+            self.assertEqual(
+                {sheet["classification"]["type"] for sheet in diagnosis["sheets"]},
+                {"dimension_standard_candidate", "fact_transactional_candidate"},
+            )
+            self.assertTrue(any(item["relationship_type"] == "one_to_many_relationship_candidate" for item in diagnosis["relationships"]))
             self.assertNotIn("Entidades sintéticas", serialized)
             self.assertNotIn("Eventos sintéticos", serialized)
-            self.assertNotIn("Identificador interno", serialized)
+            self.assertNotIn("cliente-1", serialized)
             self.assertNotIn("evento-1", serialized)
             self.assertNotIn("raw_values", serialized)
 

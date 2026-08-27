@@ -64,7 +64,7 @@
 - [x] Classificar no registro do motor os IDs oficiais de referência de SEM, GRN, MDL, REL, MET e ALT sem torná-los executáveis indevidamente.
 - [x] Ampliar os testes para validar títulos, estados e IDs de referência oficiais por categoria antes de reconfirmar o alinhamento completo.
 - [x] Corrigir a tipagem da projeção do catálogo oficial e confirmar em arquivo os registros e testes sincronizados antes de reexecutar a suíte integral.
-- [ ] Completar as nove regras restantes da categoria Qualidade após o checkpoint global e a autorização formal de cada ciclo.
+- [ ] Documentar formalmente a reconciliação da pendência histórica das nove regras de Qualidade, com evidência rastreável por regra e distinção explícita entre cobertura draft e bloqueio produtivo.
 - [x] Gerar o índice de prontidão das 95 regras a partir da fonte oficial, distinguindo baseline, regra executável draft, referência e regras que exigem intake formal.
 - [x] Registrar o intake da próxima regra QLT-CATVAR-008, expondo metadados de origem, lacunas de política e pré-condições de autorização sem criar uma regra executável.
 - [x] Validar em teste o índice de prontidão e o intake da QLT-CATVAR-008, confirmando que a regra permanece não executável.
@@ -86,9 +86,9 @@
 - [x] Implementar um registro de catálogo que diferencie regras executáveis, autorizadas para especificação e reservadas, bloqueando execução de políticas não definidas.
 - [x] Validar que o motor rejeita explicitamente qualquer tentativa de executar uma regra reservada ou sem gate de autorização.
 - [x] Confirmar o registro de catálogo, o teste de rejeição e a integração do pipeline com a suíte completa de validação.
-- [ ] Completar as categorias de Tipagem Semântica, Fato e Dimensão, Relacionamentos, Métricas, Alertas e Granularidade em ciclos com gates, regressão e fechamento documental.
-- [ ] Construir o motor completo com profiling, contexto normalizado, executor, precedência, confiança, agregação e contrato canônico de diagnóstico.
-- [ ] Criar golden datasets de referência e definir expectativas de contexto, findings, severidade, dimensões, fatos, relacionamentos e métricas.
+- [ ] Documentar formalmente a reconciliação das categorias de Tipagem Semântica, Fato e Dimensão, Relacionamentos, Métricas, Alertas e Granularidade, com gates e evidências por categoria no perfil draft.
+- [ ] Consolidar a evidência do motor draft de ponta a ponta — profiling, contexto, executor, precedência, confiança, agregação e contrato — sem alegar completude ou prontidão produtiva.
+- [ ] Registrar golden datasets sintéticos de referência para dimensões, fatos, relacionamentos e métricas, com expectativas versionadas e testes dedicados; eles não substituem calibração produtiva.
 - [x] Definir o escopo de calibração e as expectativas determinísticas dos golden datasets para QLT-NUMTEXT-007 e QLT-NULL-001.
 - [x] Criar fixtures de calibração, manifestos verificáveis e testes de regressão para as regras executáveis do perfil draft.
 - [x] Medir falsos positivos e falsos negativos conhecidos dos golden datasets e registrar a decisão de calibração limitada ao draft.
@@ -741,3 +741,6 @@
 - [x] Converter achados existentes em uma lista priorizada de bloqueios, problemas e ações de correção antes de explorar o modelo, sem expor conteúdo de workbook.
 - [x] Ampliar a geração draft de propostas estruturadas somente a partir de sinais internos comprovados e validar os cenários sintéticos antes de reprocessar o arquivo de Chris.
 - [x] Auditar e projetar todos os candidatos já emitidos pelas 95 regras em contagens e resultados estruturados, sem alterar catálogo, allowlist ou limiares.
+- [x] Auditar e restaurar todas as passagens de perfis agregados do XLSX/CSV ao executor das 95 regras, sem expor cabeçalhos, valores ou conteúdo de workbook.
+- [x] Provar por workbooks sintéticos que o backend emite automaticamente dimensão, fato, grão, relação e medidas conceituais antes de qualquer nova alteração de interface.
+- [ ] Reconciliar formalmente as tarefas históricas do backlog com evidências rastreáveis por item, distinguindo cobertura draft concluída de pendências reais e bloqueios produtivos.

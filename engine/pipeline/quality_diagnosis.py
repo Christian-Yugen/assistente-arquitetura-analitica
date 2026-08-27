@@ -1381,6 +1381,9 @@ def execute_quality_diagnosis(
                 for candidate in grain_candidates.get(sheet_id, [])
                 if candidate.get("rule_id") in {"GRN-COMP-001", "GRN-EVENT-004", "GRN-ENTITY-003", "GRN-EXPL-002"}
             }
+            primary_grain_rule_ids = grain_rule_ids & {"GRN-EVENT-004", "GRN-ENTITY-003"}
+            if primary_grain_rule_ids:
+                grain_rule_ids = primary_grain_rule_ids
             classification_types = {
                 str(candidate["classification_type"])
                 for candidate in table_candidates.get(sheet_id, [])
