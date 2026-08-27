@@ -744,3 +744,7 @@
 - [x] Auditar e restaurar todas as passagens de perfis agregados do XLSX/CSV ao executor das 95 regras, sem expor cabeçalhos, valores ou conteúdo de workbook.
 - [x] Provar por workbooks sintéticos que o backend emite automaticamente dimensão, fato, grão, relação e medidas conceituais antes de qualquer nova alteração de interface.
 - [ ] Reconciliar formalmente as tarefas históricas do backlog com evidências rastreáveis por item, distinguindo cobertura draft concluída de pendências reais e bloqueios produtivos.
+- [x] Comparar somente metadados agregados da nova execução real vazia com os cenários sintéticos para localizar os critérios estruturais não satisfeitos.
+- [x] Reproduzir a divergência comprovada e corrigir exclusivamente o bloqueio técnico que impedir a geração automática de resultados draft.
+- [x] Impedir que um sinal de campo sensível bloqueie a classificação estrutural de toda a aba, preservando o alerta e excluindo o campo sensível de chaves, relações e medidas.
+- [ ] Reproduzir e tratar o caso de chave, atributo descritivo e data reconhecida sem rótulo literal de evento, emitindo apenas hipótese draft quando os sinais agregados forem compatíveis.

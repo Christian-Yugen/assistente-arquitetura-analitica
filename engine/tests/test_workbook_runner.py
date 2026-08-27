@@ -160,6 +160,37 @@ class WorkbookRunnerTests(unittest.TestCase):
             self.assertEqual(diagnosis["summary"]["counts"]["facts"], 1)
             self.assertTrue(any(metric["metric_type"] == "sum_conceptual_metric_candidate" for metric in diagnosis["metrics"]))
 
+    def test_emits_dimension_when_a_non_structural_sensitive_attribute_is_present(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            workbook_path = base / "dimensao_com_atributo_sensivel.xlsx"
+            metadata_path = base / "metadata.json"
+            workbook = Workbook()
+            sheet = workbook.active
+            sheet.title = "Aba sintética"
+            sheet.append(["ID", "Cliente", "Data", "E-mail"])
+            for position in range(1, 21):
+                sheet.append([f"id-{position:03d}", f"cliente-{position}", f"2026-01-{position:02d}", f"contato-{position}@example.test"])
+            workbook.save(workbook_path)
+            content = workbook_path.read_bytes()
+            metadata_path.write_text(json.dumps({
+                "analysis_id": str(uuid4()), "project_id": str(uuid4()), "owner_user_id": str(uuid4()),
+                "project_name": "Teste sintético", "objective": "Validar atributo sensível isolado", "file_id": str(uuid4()),
+                "original_name": "dimensao_com_atributo_sensivel.xlsx", "file_size_bytes": len(content), "file_sha256": hashlib.sha256(content).hexdigest(),
+                "file_mime_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "workbook_readable": True,
+                "consented_at": "2026-08-27T00:00:00Z", "created_at": "2026-08-27T00:00:00Z",
+                "uploaded_at": "2026-08-27T00:00:00Z", "retention_delete_at": "2026-08-27T00:00:00Z",
+                "retention_status": "reference_removed", "correlation_id": str(uuid4()), "terms_version": "1.0",
+                "domain": "generic", "business_questions": [], "analysis_version": 1, "supersedes_analysis_id": None,
+            }), encoding="utf-8")
+
+            diagnosis = run(workbook_path, metadata_path)
+            serialized = json.dumps(diagnosis)
+
+            self.assertTrue(diagnosis["sheets"][0]["classification"]["type"].startswith("dimension_"))
+            self.assertTrue(any(item["sensitivity"] == "personal_data_candidate" for item in diagnosis["sensitivity_classifications"]))
+            self.assertNotIn("contato-1@example.test", serialized)
+
     def test_runs_multi_sheet_draft_workbook_to_sanitized_modeling_diagnosis(self):
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory)

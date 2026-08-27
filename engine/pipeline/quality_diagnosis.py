@@ -590,6 +590,7 @@ def execute_quality_diagnosis(
                 grain_candidates[sheet_id] = event_per_row_candidates + grain_candidates.get(sheet_id, [])
         if get_rule_execution_record("GRN-ENTITY-003").status == "executable_draft":
             observed_row_count = max(column.missingness.observed_cell_count for column in sheet_columns)
+            columns_by_id = {column.column_id: column for column in sheet_columns}
             explicit_key_candidate_count = sum(
                 1
                 for candidate in grain_candidates.get(sheet_id, [])
@@ -613,8 +614,9 @@ def execute_quality_diagnosis(
             )
             non_competence_date_candidate_count = sum(
                 1
-                for candidate_sheet_id, _, candidates in semantic_candidates
+                for candidate_sheet_id, column_id, candidates in semantic_candidates
                 if candidate_sheet_id == sheet_id
+                and columns_by_id[column_id].event_marker_header.header_eligible
                 for candidate in candidates
                 if candidate.get("semantic_type") == "date_generic"
             )
@@ -639,8 +641,12 @@ def execute_quality_diagnosis(
             )
             sensitive_candidate_count = sum(
                 1
-                for candidate_sheet_id, _, candidates in sensitivity_candidates
+                for candidate_sheet_id, column_id, candidates in sensitivity_candidates
                 if candidate_sheet_id == sheet_id
+                and (
+                    columns_by_id[column_id].explicit_key_header.header_eligible
+                    or columns_by_id[column_id].entity_marker_header.header_eligible
+                )
                 for candidate in candidates
                 if candidate.get("sensitivity") == "personal_data_candidate"
             )
