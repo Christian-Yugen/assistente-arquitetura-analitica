@@ -15,15 +15,15 @@ describe("DiagnosticActionPlan", () => {
       isSubmitting={false}
     />);
 
-    expect(screen.getByText("Como preparar este arquivo")).toBeTruthy();
-    expect(screen.getByText(/7 achados de qualidade/)).toBeTruthy();
-    expect(screen.getByText(/0 de 1 perguntas respondidas/)).toBeTruthy();
+    expect(screen.getByText("O que fazer agora")).toBeTruthy();
+    expect(screen.getByText(/7 pontos para verificar/)).toBeTruthy();
+    expect(screen.getByText(/0 de 1 decisões registradas/)).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Corrigir arquivo" }));
     expect(onAnswer).toHaveBeenCalledWith("opaque-q-1", "needs_data_correction");
   });
 
   it("shows the registered decision rather than storing or requesting free text", () => {
-    render(<DiagnosticActionPlan
+    const view = render(<DiagnosticActionPlan
       findingCount={0}
       questions={[{ question_id: "opaque-q-2", text: "Pergunta segura" }]}
       answers={[{ questionId: "opaque-q-2", decision: "confirmed" }]}
@@ -31,7 +31,7 @@ describe("DiagnosticActionPlan", () => {
       isSubmitting={false}
     />);
 
-    expect(screen.getByText("Estado: Confirmada")).toBeTruthy();
-    expect(screen.queryByRole("textbox")).toBeNull();
+    expect(view.getByText("Escolha registrada: Confirmada")).toBeTruthy();
+    expect(view.queryByRole("textbox")).toBeNull();
   });
 });

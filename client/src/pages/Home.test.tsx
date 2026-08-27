@@ -148,7 +148,7 @@ describe("Home workspace flow", () => {
     expect(diagnostic).toContain("Achado três");
     expect(diagnostic).toContain("Recomendação três");
     expect(diagnostic).toContain("Pergunta três");
-    expect(diagnostic).toContain("Como preparar este arquivo");
+    expect(diagnostic).toContain("O que fazer agora");
     expect(diagnostic).toContain("Corrigir arquivo");
   });
 
@@ -176,9 +176,9 @@ describe("Home workspace flow", () => {
     };
 
     const diagnostic = renderHome();
-    expect(diagnostic).toContain("Amostra insuficiente para hipóteses estruturais");
-    expect(diagnostic).toContain("4 de 4 abas avaliadas têm entre 3 e 6 linhas observadas");
-    expect(diagnostic).toContain("ao menos 10 valores não ausentes por campo relevante");
-    expect(diagnostic).toContain("distintividade, cardinalidade, padrões temporais e distribuições numéricas podem ser instáveis");
+    expect(diagnostic).toContain("Poucos registros para concluir a modelagem");
+    expect(diagnostic).toContain("4 de 4 abas têm entre 3 e 6 registros");
+    expect(diagnostic).toContain("não quer dizer que há erro ou que você precisa inventar dados");
+    expect(diagnostic).toContain("pelo menos 10 registros não vazios em cada campo relevante");
   });
 });

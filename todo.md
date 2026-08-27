@@ -713,3 +713,6 @@
 - [x] Implementar persistência, procedimento autenticado e interface para responder perguntas sem armazenar texto livre ou conteúdo do arquivo.
 - [x] Exibir plano de preparação priorizado com próximos passos, estado das respostas e orientação para reenviar uma versão corrigida.
 - [x] Validar isolamento entre owners, ações de resposta, plano de preparação e regressões antes do checkpoint draft.
+- [x] Simplificar a orientação pós-diagnóstico, distinguindo claramente poucos registros de campos sem informação e reduzindo linguagem técnica.
+- [x] Contextualizar as opções de decisão para que o usuário saiba quando confirmar, corrigir arquivo, revisar negócio ou marcar não se aplica.
+- [x] Validar acessibilidade, interação e regressões da experiência simplificada antes do checkpoint draft.
