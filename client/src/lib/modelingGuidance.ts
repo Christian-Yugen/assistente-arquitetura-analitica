@@ -13,6 +13,7 @@ export type ModelingGuidance = {
   dimensions: GuidanceCard[];
   facts: GuidanceCard[];
   structuralReviews: GuidanceCard[];
+  grains: GuidanceCard[];
   relationships: GuidanceCard[];
   metrics: GuidanceCard[];
   semanticSignals: GuidanceCard[];
@@ -73,13 +74,27 @@ const METRIC_TYPES: Record<string, Omit<GuidanceCard, "count" | "confidence">> =
 };
 
 const SEMANTIC_TYPES: Record<string, Omit<GuidanceCard, "count" | "confidence">> = {
-  identifier_candidate: { label: "Possível identificador", definition: "Há um sinal estrutural de campo que pode identificar entidades ou registros.", nextStep: "Confirme unicidade e estabilidade antes de usá-lo como chave." },
-  date_candidate: { label: "Possível data", definition: "Há sinal de campo temporal que pode apoiar calendário e análises de período.", nextStep: "Confirme formato, semântica e relação com a dimensão calendário." },
+  identifier: { label: "Possível identificador", definition: "Há um sinal estrutural de campo que pode identificar entidades ou registros.", nextStep: "Confirme unicidade e estabilidade antes de usá-lo como chave." },
+  date_generic: { label: "Possível data", definition: "Há sinal de campo temporal que pode apoiar calendário e análises de período.", nextStep: "Confirme formato, semântica e relação com a dimensão calendário." },
+  competence_date_candidate: { label: "Possível data de competência", definition: "Há sinal de data que pode indicar o período de referência do negócio.", nextStep: "Confirme a diferença entre data do evento, competência e atualização antes de modelar." },
+  category_candidate: { label: "Possível categoria", definition: "Há um sinal de atributo categórico para agrupar e filtrar fatos.", nextStep: "Confirme se a categoria é estável e pertence a uma dimensão." },
   quantity_candidate: { label: "Possível quantidade", definition: "Há sinal de valor numérico que pode representar quantidade.", nextStep: "Confirme unidade e agregação permitida." },
   currency_candidate: { label: "Possível valor monetário", definition: "Há sinal de valor que pode representar moeda.", nextStep: "Confirme moeda, escala e regra de soma." },
   percentage_candidate: { label: "Possível percentual", definition: "Há sinal de valor que pode representar percentual.", nextStep: "Confirme se é taxa, proporção ou percentual já agregado antes de somar." },
+  duration_candidate: { label: "Possível duração", definition: "Há sinal de intervalo de tempo que pode exigir unidade e agregação específicas.", nextStep: "Confirme unidade, início/fim e se a duração pode ser somada." },
+  location_candidate: { label: "Possível localização", definition: "Há sinal de atributo geográfico ou de localidade.", nextStep: "Confirme hierarquia geográfica e padronização antes de criar uma dimensão." },
+  name_or_description_candidate: { label: "Possível nome ou descrição", definition: "Há sinal de atributo descritivo que ajuda a explicar entidades.", nextStep: "Confirme se é atributo de dimensão, texto livre ou observação." },
+  responsible_candidate: { label: "Possível responsável", definition: "Há sinal de pessoa, equipe ou unidade responsável.", nextStep: "Confirme a entidade responsável e a regra de vigência antes de modelar." },
+  status_candidate: { label: "Possível status", definition: "Há sinal de estado do processo ou entidade.", nextStep: "Confirme o ciclo de vida e quais status devem entrar nos indicadores." },
   actual_candidate: { label: "Possível valor realizado", definition: "Há sinal de valor observado ou realizado.", nextStep: "Defina comparação e período antes de criar variações." },
   target_or_forecast_candidate: { label: "Possível meta ou previsão", definition: "Há sinal de valor de meta ou projeção.", nextStep: "Confirme período, versão e regra de comparação com o realizado." },
+};
+
+const GRAIN_TYPES: Record<string, Omit<GuidanceCard, "count" | "confidence">> = {
+  explicit_key_candidate: { label: "Grão com chave explícita", definition: "Há indício de uma chave que pode definir um registro por linha.", nextStep: "Confirme se a chave é única e se uma linha representa apenas um evento." },
+  composite_key_candidate: { label: "Grão com chave composta", definition: "A identificação de uma linha pode depender de mais de um atributo.", nextStep: "Confirme as partes da chave e a unicidade da combinação." },
+  entity_per_row_candidate: { label: "Uma entidade por linha", definition: "Há indício de que cada linha representa uma entidade de negócio.", nextStep: "Confirme qual entidade e se os atributos descrevem somente ela." },
+  event_per_row_candidate: { label: "Um evento por linha", definition: "Há indício de que cada linha representa um evento, movimento ou ocorrência.", nextStep: "Escreva o grão em uma frase antes de definir o fato e as medidas." },
 };
 
 function asRecord(value: unknown): UnknownRecord {
@@ -111,6 +126,7 @@ export function getModelingGuidance(payload: UnknownRecord): ModelingGuidance {
   const dimensions = new Map<string, GuidanceCard>();
   const facts = new Map<string, GuidanceCard>();
   const structuralReviews = new Map<string, GuidanceCard>();
+  const grains = new Map<string, GuidanceCard>();
   const relationships = new Map<string, GuidanceCard>();
   const metrics = new Map<string, GuidanceCard>();
   const semanticSignals = new Map<string, GuidanceCard>();
@@ -118,6 +134,8 @@ export function getModelingGuidance(payload: UnknownRecord): ModelingGuidance {
   for (const sheet of asRecords(payload.sheets)) {
     const classification = asRecord(sheet.classification);
     const type = classification.type;
+    const grain = asRecord(sheet.grain);
+    addCard(grains, grain.type, grain.confidence, GRAIN_TYPES);
     if (typeof type !== "string") continue;
     const specification = TABLE_TYPES[type];
     if (!specification) continue;
@@ -128,5 +146,5 @@ export function getModelingGuidance(payload: UnknownRecord): ModelingGuidance {
   for (const metric of asRecords(payload.metrics)) addCard(metrics, metric.metric_type, metric.confidence, METRIC_TYPES);
   for (const signal of asRecords(payload.semantic_classifications)) addCard(semanticSignals, signal.semantic_type, signal.confidence, SEMANTIC_TYPES);
 
-  return { dimensions: cardsFrom(dimensions), facts: cardsFrom(facts), structuralReviews: cardsFrom(structuralReviews), relationships: cardsFrom(relationships), metrics: cardsFrom(metrics), semanticSignals: cardsFrom(semanticSignals) };
+  return { dimensions: cardsFrom(dimensions), facts: cardsFrom(facts), structuralReviews: cardsFrom(structuralReviews), grains: cardsFrom(grains), relationships: cardsFrom(relationships), metrics: cardsFrom(metrics), semanticSignals: cardsFrom(semanticSignals) };
 }

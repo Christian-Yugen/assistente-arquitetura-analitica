@@ -730,3 +730,8 @@
 - [x] Localizar e tratar o pressuposto de chave ausente que gera engine_key_error, com reprodução sintética e sem inspecionar conteúdo de workbook.
 - [x] Traduzir hipóteses existentes do diagnóstico em cartões acionáveis de dimensão, fato, relacionamento e medida/DAX, deixando explícito quando não houver evidência suficiente.
 - [x] Preservar achados, perguntas e decisões humanas como validações de hipótese, sem fabricar fórmulas, relações ou tabelas inexistentes.
+- [x] Auditar o fluxo draft completo de upload, diagnóstico, orientação de modelagem e decisões para identificar qualquer lacuna funcional comprovada.
+- [x] Tornar o percurso pós-análise explícito e verificável: revisar hipóteses, validar apenas o indispensável, preparar o modelo no Power BI e reenviar versão corrigida quando houver alteração.
+- [x] Validar o fluxo completo com artefato sintético permitido e testes de regressão, sem simular resultado de arquivo real ou promover produção.
+- [x] Cobrir todos os tipos semânticos e hipóteses de grão emitidos pelo motor na orientação draft, sem expor entidades, colunas ou valores privados.
+- [x] Vincular visualmente cada decisão humana à hipótese de modelagem correspondente, sem alterar diagnóstico, arquivo, regras ou criar uma conclusão nova.

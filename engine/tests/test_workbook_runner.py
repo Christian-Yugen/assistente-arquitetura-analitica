@@ -90,6 +90,49 @@ class WorkbookRunnerTests(unittest.TestCase):
             self.assertNotIn("Beta", serialized)
             self.assertNotIn("raw_values", serialized)
 
+    def test_runs_multi_sheet_draft_workbook_to_sanitized_modeling_diagnosis(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            workbook_path = base / "modelo_sintetico.xlsx"
+            metadata_path = base / "metadata.json"
+            workbook = Workbook()
+            dimension = workbook.active
+            dimension.title = "Entidades sintéticas"
+            dimension.append(["Identificador interno", "Categoria interna"])
+            for position in range(1, 21):
+                dimension.append([f"entidade-{position}", "grupo-a" if position % 2 else "grupo-b"])
+            facts = workbook.create_sheet("Eventos sintéticos")
+            facts.append(["Identificador de evento", "Data do evento", "Quantidade interna", "Valor interno"])
+            for position in range(1, 21):
+                facts.append([f"evento-{position}", f"2026-01-{position:02d}", position, position * 10])
+            workbook.save(workbook_path)
+            content = workbook_path.read_bytes()
+            metadata_path.write_text(json.dumps({
+                "analysis_id": str(uuid4()), "project_id": str(uuid4()), "owner_user_id": str(uuid4()),
+                "project_name": "Teste sintético", "objective": "Validar fluxo multissheet", "file_id": str(uuid4()),
+                "original_name": "modelo_sintetico.xlsx", "file_size_bytes": len(content), "file_sha256": hashlib.sha256(content).hexdigest(),
+                "file_mime_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "workbook_readable": True,
+                "consented_at": "2026-08-27T00:00:00Z", "created_at": "2026-08-27T00:00:00Z",
+                "uploaded_at": "2026-08-27T00:00:00Z", "retention_delete_at": "2026-08-27T00:00:00Z",
+                "retention_status": "reference_removed", "correlation_id": str(uuid4()), "terms_version": "1.0",
+                "domain": "generic", "business_questions": [], "analysis_version": 1, "supersedes_analysis_id": None,
+            }), encoding="utf-8")
+
+            diagnosis = run(workbook_path, metadata_path)
+            serialized = json.dumps(diagnosis)
+
+            self.assertEqual(diagnosis["contract_id"], "PM-MVP-PBI-CON-001")
+            self.assertEqual(diagnosis["file"]["sheet_count"], 2)
+            self.assertEqual(diagnosis["execution"]["status"], "completed")
+            self.assertIn("semantic_classifications", diagnosis)
+            self.assertIn("relationships", diagnosis)
+            self.assertIn("metrics", diagnosis)
+            self.assertNotIn("Entidades sintéticas", serialized)
+            self.assertNotIn("Eventos sintéticos", serialized)
+            self.assertNotIn("Identificador interno", serialized)
+            self.assertNotIn("evento-1", serialized)
+            self.assertNotIn("raw_values", serialized)
+
     def test_runs_missingness_workbook_to_reconstructed_null_finding_without_raw_values(self):
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory)
