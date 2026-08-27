@@ -45,6 +45,7 @@ vi.mock("./analysisPipeline", async importOriginal => {
 });
 
 import { appRouter } from "./routers";
+import { WorkbookEngineError } from "./analysisPipeline";
 import type { TrpcContext } from "./_core/context";
 
 describe("analysis router flow", () => {
@@ -103,10 +104,24 @@ describe("analysis router flow", () => {
       .catch(error => error);
 
     expect(error).toMatchObject({ code: "INTERNAL_SERVER_ERROR" });
-    expect(error.message).toBe("Não foi possível concluir a análise.");
+    expect(error.message).toBe("Não foi possível concluir a análise. Código seguro: engine_failed.");
     expect(calls.removeReference).toHaveBeenCalledWith(expect.any(String), 77);
     const persistedFile = calls.createFile.mock.calls[0][0];
     expect(calls.files.get(String(persistedFile.id))).toMatchObject({ storageKey: null, retentionStatus: "reference_removed" });
+  });
+
+  it("returns only a sanitized engine code when execution reaches its time limit", async () => {
+    calls.executeEngine.mockRejectedValueOnce(new WorkbookEngineError("engine_timeout"));
+    const user = { id: 77, openId: "owner-77", email: null, name: null, loginMethod: "manus", role: "user" as const, createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date() };
+    const caller = appRouter.createCaller({ user, req: {} as TrpcContext["req"], res: {} as TrpcContext["res"] });
+
+    const error = await caller.analysis.analyzeWorkbook({ projectName: "Projeto", objective: "Objetivo", fileName: "arquivo.xlsx", mimeType: "application/octet-stream", dataBase64: "UEsDBA==" })
+      .catch(error => error);
+
+    expect(error).toMatchObject({ code: "INTERNAL_SERVER_ERROR" });
+    expect(error.message).toBe("Não foi possível concluir o processamento do arquivo. Código seguro: engine_timeout.");
+    expect(error.message).not.toContain("arquivo.xlsx");
+    expect(calls.removeReference).toHaveBeenCalledWith(expect.any(String), 77);
   });
 
   it("persists a failed diagnostic with reference removal and marks the project as failed", async () => {
@@ -136,7 +151,7 @@ describe("analysis router flow", () => {
     const error = await caller.analysis.analyzeWorkbook({ projectName: "Projeto", objective: "Objetivo", fileName: "arquivo.xlsx", mimeType: "application/octet-stream", dataBase64: "UEsDBA==" })
       .catch(error => error);
 
-    expect(error.message).toBe("Não foi possível concluir a análise.");
+    expect(error.message).toBe("Não foi possível concluir a análise. Código seguro: privacy_failed.");
     expect(calls.createDiagnostic).not.toHaveBeenCalled();
     expect(calls.removeReference).toHaveBeenCalledWith(expect.any(String), 77);
   });

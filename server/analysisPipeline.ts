@@ -12,6 +12,14 @@ const ACCEPTED_CSV_MIMES = new Set([CSV_MIME, "application/csv", "application/vn
 
 export class UploadValidationError extends Error {}
 
+export type WorkbookEngineFailureCode = "engine_timeout" | "engine_process_failed" | "engine_output_invalid";
+
+export class WorkbookEngineError extends Error {
+  constructor(public readonly failureCode: WorkbookEngineFailureCode) {
+    super("O motor de análise não concluiu o workbook.");
+  }
+}
+
 export type ValidatedWorkbook = { buffer: Buffer; originalName: string; mimeType: string; sha256: string; format: "xlsx" | "csv"; extension: "xlsx" | "csv" };
 export { sanitizeSensitiveText } from "./privacy";
 export type WorkbookInspection = { sheetCount: number };
@@ -89,17 +97,27 @@ export async function executeWorkbookEngine(workbook: ValidatedWorkbook, metadat
     await Promise.all([writeFile(inputPath, workbook.buffer), writeFile(metadataPath, JSON.stringify(metadata))]);
     await new Promise<void>((resolve, reject) => {
       const child = spawn("python3", ["-m", "engine.workbook_runner", "--input", inputPath, "--metadata", metadataPath, "--output", outputPath, "--format", workbook.format], { cwd: process.cwd(), env: { ...process.env, PYTHONPATH: process.cwd() } });
-      let stderr = "";
-      const timer = setTimeout(() => child.kill("SIGKILL"), 120_000);
-      child.stderr.on("data", chunk => { stderr += chunk.toString(); });
+      let timedOut = false;
+      const timer = setTimeout(() => {
+        timedOut = true;
+        child.kill("SIGKILL");
+      }, 120_000);
       child.once("error", reject);
       child.once("close", code => {
         clearTimeout(timer);
         if (code === 0) resolve();
-        else reject(new Error("O motor de análise não concluiu o workbook."));
+        else reject(new WorkbookEngineError(timedOut ? "engine_timeout" : "engine_process_failed"));
       });
     });
-    return JSON.parse(await readFile(outputPath, "utf8")) as Record<string, unknown>;
+    try {
+      const diagnosis = JSON.parse(await readFile(outputPath, "utf8")) as unknown;
+      if (!diagnosis || typeof diagnosis !== "object" || Array.isArray(diagnosis)) {
+        throw new Error("Diagnóstico inválido.");
+      }
+      return diagnosis as Record<string, unknown>;
+    } catch {
+      throw new WorkbookEngineError("engine_output_invalid");
+    }
   } finally {
     await rm(workDir, { recursive: true, force: true });
   }

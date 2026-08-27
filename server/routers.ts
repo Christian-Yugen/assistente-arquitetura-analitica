@@ -7,7 +7,7 @@ import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import * as db from "./db";
 import { ANSWER_DECISIONS, answerDecisionFromStoredValue, questionIdsFromDiagnostic } from "./diagnosticActions";
-import { buildWorkbookMetadata, executeWorkbookEngine, inspectWorkbookBeforePersistence, sanitizeSensitiveText, UploadValidationError, validateWorkbookUpload } from "./analysisPipeline";
+import { buildWorkbookMetadata, executeWorkbookEngine, inspectWorkbookBeforePersistence, sanitizeSensitiveText, UploadValidationError, validateWorkbookUpload, WorkbookEngineError } from "./analysisPipeline";
 import { containsUnsafeDiagnosticContent } from "./privacy";
 import { storagePut } from "./storage";
 
@@ -77,6 +77,7 @@ export const appRouter = router({
       const fileId = randomUUID();
       const diagnosticId = randomUUID();
       let fileReferencePersisted = false;
+      let analysisStage: "storage" | "engine" | "privacy" | "diagnostic" | "reference_removal" = "storage";
       try {
         await db.createAnalysisProject({ id: projectId, ownerId: ctx.user.id, name: sanitizeSensitiveText(input.projectName), domain: "generic" });
         await db.updateAnalysisProjectStatus(projectId, ctx.user.id, "uploading");
@@ -89,19 +90,23 @@ export const appRouter = router({
         fileReferencePersisted = true;
         await db.updateAnalysisProjectStatus(projectId, ctx.user.id, "analyzing");
         const version = await db.getNextDiagnosticVersion(projectId, ctx.user.id);
+        analysisStage = "engine";
         const diagnosis = await executeWorkbookEngine(workbook, buildWorkbookMetadata({
           analysisId: diagnosticId, projectId, ownerNumericId: ctx.user.id, projectName: input.projectName, objective: input.objective, fileId, workbook,
         }));
+        analysisStage = "privacy";
         if (containsUnsafeDiagnosticContent(diagnosis)) {
           throw new Error("O diagnóstico contém dados sensíveis detectáveis.");
         }
         const execution = diagnosis.execution as { engine_version: string; ruleset_version: string };
         const analysis = diagnosis.analysis as { status: "completed_with_warnings" | "failed" | "draft" };
         const file = diagnosis.file as { sheet_count: number; analyzable_sheet_count: number };
+        analysisStage = "diagnostic";
         await db.createAnalysisDiagnostic({
           id: diagnosticId, projectId, ownerId: ctx.user.id, fileId, version, status: analysis.status === "failed" ? "failed" : "completed_with_warnings",
           contractVersion: "1.0.0-reconstructed.1", engineVersion: execution.engine_version, rulesetVersion: execution.ruleset_version, payload: diagnosis,
         });
+        analysisStage = "reference_removal";
         await db.markFileReferenceRemoved(fileId, ctx.user.id);
         await db.updateAnalysisProjectStatus(projectId, ctx.user.id, analysis.status === "failed" ? "failed" : "completed");
         return { projectId, diagnosticId, version };
@@ -110,7 +115,10 @@ export const appRouter = router({
           await db.markFileReferenceRemoved(fileId, ctx.user.id).catch(() => undefined);
         }
         await db.updateAnalysisProjectStatus(projectId, ctx.user.id, "failed").catch(() => undefined);
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Não foi possível concluir a análise." });
+        if (error instanceof WorkbookEngineError) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: `Não foi possível concluir o processamento do arquivo. Código seguro: ${error.failureCode}.` });
+        }
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: `Não foi possível concluir a análise. Código seguro: ${analysisStage}_failed.` });
       }
     }),
   }),

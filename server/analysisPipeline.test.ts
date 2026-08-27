@@ -65,6 +65,19 @@ describe("validateWorkbookUpload", () => {
     await expect(inspectWorkbookBeforePersistence(zipButNotWorkbook)).rejects.toThrow("Não foi possível validar a estrutura do workbook.");
   });
 
+  it("returns a sanitized engine failure code when a ZIP-shaped XLSX cannot be processed", async () => {
+    const zipButNotWorkbook = validateWorkbookUpload({
+      fileName: "arquivo.xlsx",
+      mimeType: xlsxMime,
+      dataBase64: zipHeader.toString("base64"),
+    });
+
+    await expect(executeWorkbookEngine(zipButNotWorkbook, buildWorkbookMetadata({
+      analysisId: "00000000-0000-4000-8000-000000000011", projectId: "00000000-0000-4000-8000-000000000012", ownerNumericId: 42,
+      projectName: "Projeto", objective: "Objetivo", fileId: "00000000-0000-4000-8000-000000000013", workbook: zipButNotWorkbook,
+    }))).rejects.toMatchObject({ failureCode: "engine_process_failed" });
+  });
+
   it("rejects CSV with invalid encoding or divergent fields before persistence", async () => {
     const nonUtf8 = validateWorkbookUpload({ fileName: "arquivo.csv", mimeType: "text/csv", dataBase64: Buffer.from([0x69, 0x64, 0x2c, 0xe7]).toString("base64") });
     const divergent = validateWorkbookUpload({ fileName: "arquivo.csv", mimeType: "text/csv", dataBase64: Buffer.from("id,valor\n1,2,3\n").toString("base64") });
