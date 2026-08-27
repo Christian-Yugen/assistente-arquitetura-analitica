@@ -65,7 +65,7 @@ describe("validateWorkbookUpload", () => {
     await expect(inspectWorkbookBeforePersistence(zipButNotWorkbook)).rejects.toThrow("Não foi possível validar a estrutura do workbook.");
   });
 
-  it("returns a sanitized engine failure code when a ZIP-shaped XLSX cannot be processed", async () => {
+  it("returns a sanitized workbook failure code when a ZIP-shaped XLSX cannot be processed", async () => {
     const zipButNotWorkbook = validateWorkbookUpload({
       fileName: "arquivo.xlsx",
       mimeType: xlsxMime,
@@ -75,7 +75,7 @@ describe("validateWorkbookUpload", () => {
     await expect(executeWorkbookEngine(zipButNotWorkbook, buildWorkbookMetadata({
       analysisId: "00000000-0000-4000-8000-000000000011", projectId: "00000000-0000-4000-8000-000000000012", ownerNumericId: 42,
       projectName: "Projeto", objective: "Objetivo", fileId: "00000000-0000-4000-8000-000000000013", workbook: zipButNotWorkbook,
-    }))).rejects.toMatchObject({ failureCode: "engine_process_failed" });
+    }))).rejects.toMatchObject({ failureCode: "engine_workbook_invalid" });
   });
 
   it("rejects CSV with invalid encoding or divergent fields before persistence", async () => {

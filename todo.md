@@ -726,3 +726,4 @@
 - [x] Reproduzir com fixture sintética, corrigir a causa comprovada e validar o fluxo XLSX/CSV com regressões antes do checkpoint.
 - [x] Instrumentar a falha remanescente de análise com códigos de etapa sanitizados, sem registrar erro bruto, conteúdo, nomes, cabeçalhos ou valores do workbook.
 - [ ] Reproduzir a etapa identificada com fixture sintética, aplicar correção mínima e revalidar o reenvio XLSX/CSV antes do checkpoint.
+- [ ] Capturar somente a categoria técnica da exceção Python do motor e correlacioná-la a uma reprodução sintética antes de qualquer correção adicional.

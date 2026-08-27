@@ -12,11 +12,43 @@ const ACCEPTED_CSV_MIMES = new Set([CSV_MIME, "application/csv", "application/vn
 
 export class UploadValidationError extends Error {}
 
-export type WorkbookEngineFailureCode = "engine_timeout" | "engine_process_failed" | "engine_output_invalid";
+export type WorkbookEngineFailureCode =
+  | "engine_timeout"
+  | "engine_process_failed"
+  | "engine_output_invalid"
+  | "engine_workbook_invalid"
+  | "engine_value_error"
+  | "engine_type_error"
+  | "engine_key_error"
+  | "engine_assertion_error"
+  | "engine_unexpected_error";
+
+const ENGINE_FAILURE_CODES = new Set<WorkbookEngineFailureCode>([
+  "engine_timeout",
+  "engine_process_failed",
+  "engine_output_invalid",
+  "engine_workbook_invalid",
+  "engine_value_error",
+  "engine_type_error",
+  "engine_key_error",
+  "engine_assertion_error",
+  "engine_unexpected_error",
+]);
 
 export class WorkbookEngineError extends Error {
   constructor(public readonly failureCode: WorkbookEngineFailureCode) {
     super("O motor de análise não concluiu o workbook.");
+  }
+}
+
+async function readSafeEngineFailureCode(path: string): Promise<WorkbookEngineFailureCode> {
+  try {
+    const output = JSON.parse(await readFile(path, "utf8")) as { failure_code?: unknown };
+    return typeof output.failure_code === "string" && ENGINE_FAILURE_CODES.has(output.failure_code as WorkbookEngineFailureCode)
+      ? output.failure_code as WorkbookEngineFailureCode
+      : "engine_process_failed";
+  } catch {
+    return "engine_process_failed";
   }
 }
 
@@ -93,20 +125,22 @@ export async function executeWorkbookEngine(workbook: ValidatedWorkbook, metadat
   const inputPath = join(workDir, `input.${workbook.extension}`);
   const metadataPath = join(workDir, "metadata.json");
   const outputPath = join(workDir, "diagnosis.json");
+  const errorPath = join(workDir, "engine-error.json");
   try {
     await Promise.all([writeFile(inputPath, workbook.buffer), writeFile(metadataPath, JSON.stringify(metadata))]);
     await new Promise<void>((resolve, reject) => {
-      const child = spawn("python3", ["-m", "engine.workbook_runner", "--input", inputPath, "--metadata", metadataPath, "--output", outputPath, "--format", workbook.format], { cwd: process.cwd(), env: { ...process.env, PYTHONPATH: process.cwd() } });
+      const child = spawn("python3", ["-m", "engine.workbook_runner", "--input", inputPath, "--metadata", metadataPath, "--output", outputPath, "--error-output", errorPath, "--format", workbook.format], { cwd: process.cwd(), env: { ...process.env, PYTHONPATH: process.cwd() } });
       let timedOut = false;
       const timer = setTimeout(() => {
         timedOut = true;
         child.kill("SIGKILL");
       }, 120_000);
-      child.once("error", reject);
+      child.once("error", () => reject(new WorkbookEngineError("engine_process_failed")));
       child.once("close", code => {
         clearTimeout(timer);
         if (code === 0) resolve();
-        else reject(new WorkbookEngineError(timedOut ? "engine_timeout" : "engine_process_failed"));
+        else if (timedOut) reject(new WorkbookEngineError("engine_timeout"));
+        else void readSafeEngineFailureCode(errorPath).then(failureCode => reject(new WorkbookEngineError(failureCode)));
       });
     });
     try {

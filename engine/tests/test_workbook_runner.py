@@ -7,10 +7,17 @@ from uuid import uuid4
 
 from openpyxl import Workbook
 
-from engine.workbook_runner import run
+from engine.profiling.workbook import WorkbookValidationError
+from engine.workbook_runner import run, safe_engine_failure_code
 
 
 class WorkbookRunnerTests(unittest.TestCase):
+    def test_classifies_exceptions_with_an_allowlisted_failure_code_only(self):
+        self.assertEqual(safe_engine_failure_code(WorkbookValidationError("conteúdo privado")), "engine_workbook_invalid")
+        self.assertEqual(safe_engine_failure_code(ValueError("conteúdo privado")), "engine_value_error")
+        self.assertEqual(safe_engine_failure_code(TypeError("conteúdo privado")), "engine_type_error")
+        self.assertEqual(safe_engine_failure_code(RuntimeError("conteúdo privado")), "engine_unexpected_error")
+
     def test_runs_validated_workbook_to_canonical_diagnosis_without_raw_values(self):
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory)
