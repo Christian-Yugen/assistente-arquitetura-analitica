@@ -325,11 +325,13 @@ class NumericTextPipelineTests(unittest.TestCase):
             ai_usage={"used": False, "providers": ["profile-only"], "fallback": "profile-fallback"},
             assumption="assumption-from-profile",
             limitation="limitation-from-profile",
-            proposed_model_status="hypothesis",
-            proposed_model_limitation="model-limitation-from-profile",
-            summary_template="summary:{sheet_count}:{column_count}:{finding_count}",
-            next_action_with_questions="action-with-question-from-profile",
-            next_action_without_questions="action-without-question-from-profile",
+            proposed_model_status_with_hypotheses="hypothesis",
+            proposed_model_status_without_hypotheses="insufficient",
+            proposed_model_limitation_with_hypotheses="model-hypothesis-limitation-from-profile",
+            proposed_model_limitation_without_hypotheses="model-insufficient-limitation-from-profile",
+            summary_template="summary:{sheet_count}:{column_count}:{finding_count}:{fact_count}:{dimension_count}:{grain_count}:{relationship_count}:{metric_count}",
+            next_action_with_hypotheses="action-with-hypothesis-from-profile",
+            next_action_without_hypotheses="action-without-hypothesis-from-profile",
         )
         metadata = replace(METADATA, execution_profile=profile)
         context_with_question = build_column_analysis_context(
@@ -346,10 +348,10 @@ class NumericTextPipelineTests(unittest.TestCase):
 
         self.assertEqual(diagnosis_with_question["analysis"]["assumptions"], ["assumption-from-profile"])
         self.assertEqual(diagnosis_with_question["analysis"]["limitations"], ["limitation-from-profile"])
-        self.assertEqual(diagnosis_with_question["summary"]["executive_summary"], "summary:1:1:1")
-        self.assertEqual(diagnosis_with_question["summary"]["next_recommended_action"], "action-with-question-from-profile")
-        self.assertEqual(diagnosis_with_question["proposed_model"]["status"], "hypothesis")
-        self.assertEqual(diagnosis_with_question["proposed_model"]["limitations"], ["model-limitation-from-profile"])
+        self.assertEqual(diagnosis_with_question["summary"]["executive_summary"], "summary:1:1:1:0:0:0:0:0")
+        self.assertEqual(diagnosis_with_question["summary"]["next_recommended_action"], "action-without-hypothesis-from-profile")
+        self.assertEqual(diagnosis_with_question["proposed_model"]["status"], "insufficient")
+        self.assertEqual(diagnosis_with_question["proposed_model"]["limitations"], ["model-insufficient-limitation-from-profile"])
         self.assertEqual(diagnosis_with_question["execution"]["engine_version"], "engine-from-profile")
         self.assertEqual(diagnosis_with_question["execution"]["ruleset_version"], "ruleset-from-profile")
         self.assertEqual(diagnosis_with_question["execution"]["confidence_methodology_version"], "confidence-from-profile")
@@ -369,4 +371,4 @@ class NumericTextPipelineTests(unittest.TestCase):
             column_position=0,
         )
         diagnosis_without_question = execute_quality_diagnosis([context_without_question], metadata=metadata)
-        self.assertEqual(diagnosis_without_question["summary"]["next_recommended_action"], "action-without-question-from-profile")
+        self.assertEqual(diagnosis_without_question["summary"]["next_recommended_action"], "action-without-hypothesis-from-profile")

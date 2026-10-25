@@ -6,9 +6,12 @@ import { TRPCError } from "@trpc/server";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import * as db from "./db";
-import { buildWorkbookMetadata, executeWorkbookEngine, inspectWorkbookBeforePersistence, sanitizeSensitiveText, UploadValidationError, validateWorkbookUpload } from "./analysisPipeline";
+import { ANSWER_DECISIONS, answerDecisionFromStoredValue, questionIdsFromDiagnostic } from "./diagnosticActions";
+import { buildWorkbookMetadata, executeWorkbookEngine, inspectWorkbookBeforePersistence, sanitizeSensitiveText, UploadValidationError, validateWorkbookUpload, WorkbookEngineError } from "./analysisPipeline";
 import { containsUnsafeDiagnosticContent } from "./privacy";
 import { storagePut } from "./storage";
+import { createPhysicalStore, physicalDeletionConfigured } from "./physicalStorageAdapter";
+import { deleteAndVerifyObject } from "./physicalRetention";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -30,6 +33,34 @@ export const appRouter = router({
       if (!diagnostic) throw new TRPCError({ code: "NOT_FOUND", message: "Diagnóstico não encontrado." });
       return diagnostic;
     }),
+    getActionState: protectedProcedure.input(z.object({ diagnosticId: z.string().uuid() }).strict()).query(async ({ ctx, input }) => {
+      const diagnostic = await db.getAnalysisDiagnosticForOwner(input.diagnosticId, ctx.user.id);
+      if (!diagnostic) throw new TRPCError({ code: "NOT_FOUND", message: "Diagnóstico não encontrado." });
+      const allowedQuestionIds = new Set(questionIdsFromDiagnostic(diagnostic.payload));
+      const answers = await db.listAnalysisAnswersForDiagnostic(diagnostic.id, ctx.user.id);
+      return {
+        answers: answers.flatMap(answer => {
+          const decision = answerDecisionFromStoredValue(answer.answer);
+          return decision && allowedQuestionIds.has(answer.questionId) ? [{ questionId: answer.questionId, decision }] : [];
+        }),
+      };
+    }),
+    answerQuestion: protectedProcedure.input(z.object({
+      diagnosticId: z.string().uuid(),
+      questionId: z.string().min(1).max(36),
+      decision: z.enum(ANSWER_DECISIONS),
+    }).strict()).mutation(async ({ ctx, input }) => {
+      const diagnostic = await db.getAnalysisDiagnosticForOwner(input.diagnosticId, ctx.user.id);
+      if (!diagnostic) throw new TRPCError({ code: "NOT_FOUND", message: "Diagnóstico não encontrado." });
+      if (!questionIdsFromDiagnostic(diagnostic.payload).includes(input.questionId)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Pergunta de validação inválida para este diagnóstico." });
+      }
+      await db.upsertAnalysisAnswer({
+        id: randomUUID(), projectId: diagnostic.projectId, ownerId: ctx.user.id, sourceDiagnosticId: diagnostic.id,
+        questionId: input.questionId, answer: { decision: input.decision },
+      });
+      return { questionId: input.questionId, decision: input.decision };
+    }),
     analyzeWorkbook: protectedProcedure.input(z.object({
       projectName: z.string().trim().min(1).max(160),
       objective: z.string().trim().min(1).max(500).default("Analisar a estrutura da planilha para modelagem dimensional."),
@@ -44,39 +75,69 @@ export const appRouter = router({
       } catch (error) {
         throw new TRPCError({ code: "BAD_REQUEST", message: error instanceof UploadValidationError ? error.message : "Upload inválido." });
       }
+      // Fail closed before persistence: no upload unless physical deletion is provisioned.
+      if (!physicalDeletionConfigured()) {
+        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Retenção física indisponível; upload temporariamente bloqueado." });
+      }
+      const physicalStore = createPhysicalStore();
       const projectId = randomUUID();
       const fileId = randomUUID();
       const diagnosticId = randomUUID();
+      let fileReferencePersisted = false;
+      let uploadedStorageKey: string | null = null;
+      let physicalAbsenceVerified = false;
+      let analysisStage: "storage" | "engine" | "privacy" | "diagnostic" | "reference_removal" = "storage";
       try {
         await db.createAnalysisProject({ id: projectId, ownerId: ctx.user.id, name: sanitizeSensitiveText(input.projectName), domain: "generic" });
         await db.updateAnalysisProjectStatus(projectId, ctx.user.id, "uploading");
-        const stored = await storagePut(`analysis/${ctx.user.id}/${projectId}/${fileId}.xlsx`, workbook.buffer, workbook.mimeType);
+        const stored = await storagePut(`analysis/${ctx.user.id}/${projectId}/${fileId}.${workbook.extension}`, workbook.buffer, workbook.mimeType);
+        uploadedStorageKey = stored.key;
         await db.createAnalysisFile({
           id: fileId, projectId, ownerId: ctx.user.id, originalName: workbook.originalName, storageKey: stored.key,
           sha256: workbook.sha256, mimeType: workbook.mimeType, sizeBytes: workbook.buffer.length,
           sheetCount: 0, analyzableSheetCount: 0, retentionStatus: "private_active",
         });
+        fileReferencePersisted = true;
         await db.updateAnalysisProjectStatus(projectId, ctx.user.id, "analyzing");
         const version = await db.getNextDiagnosticVersion(projectId, ctx.user.id);
+        analysisStage = "engine";
         const diagnosis = await executeWorkbookEngine(workbook, buildWorkbookMetadata({
           analysisId: diagnosticId, projectId, ownerNumericId: ctx.user.id, projectName: input.projectName, objective: input.objective, fileId, workbook,
         }));
+        analysisStage = "privacy";
         if (containsUnsafeDiagnosticContent(diagnosis)) {
           throw new Error("O diagnóstico contém dados sensíveis detectáveis.");
         }
         const execution = diagnosis.execution as { engine_version: string; ruleset_version: string };
         const analysis = diagnosis.analysis as { status: "completed_with_warnings" | "failed" | "draft" };
         const file = diagnosis.file as { sheet_count: number; analyzable_sheet_count: number };
+        analysisStage = "diagnostic";
         await db.createAnalysisDiagnostic({
           id: diagnosticId, projectId, ownerId: ctx.user.id, fileId, version, status: analysis.status === "failed" ? "failed" : "completed_with_warnings",
           contractVersion: "1.0.0-reconstructed.1", engineVersion: execution.engine_version, rulesetVersion: execution.ruleset_version, payload: diagnosis,
         });
+        analysisStage = "reference_removal";
+        const removal = await deleteAndVerifyObject(physicalStore, stored.key);
+        if (!removal.referenceMayBeRemoved) throw new Error("physical_deletion_unverified");
+        physicalAbsenceVerified = true;
         await db.markFileReferenceRemoved(fileId, ctx.user.id);
         await db.updateAnalysisProjectStatus(projectId, ctx.user.id, analysis.status === "failed" ? "failed" : "completed");
         return { projectId, diagnosticId, version };
       } catch (error) {
+        // Keep the owner-scoped storage reference for audited retry on provider failure.
+        if (uploadedStorageKey) {
+          const removal = physicalAbsenceVerified
+            ? { referenceMayBeRemoved: true as const }
+            : await deleteAndVerifyObject(physicalStore, uploadedStorageKey);
+          if (fileReferencePersisted && removal.referenceMayBeRemoved) {
+            await db.markFileReferenceRemoved(fileId, ctx.user.id).catch(() => undefined);
+          }
+        }
         await db.updateAnalysisProjectStatus(projectId, ctx.user.id, "failed").catch(() => undefined);
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Não foi possível concluir a análise." });
+        if (error instanceof WorkbookEngineError) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: `Não foi possível concluir o processamento do arquivo. Código seguro: ${error.failureCode}.` });
+        }
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: `Não foi possível concluir a análise. Código seguro: ${analysisStage}_failed.` });
       }
     }),
   }),

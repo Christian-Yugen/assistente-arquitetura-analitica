@@ -16,10 +16,12 @@ vi.mock("@/components/DashboardLayout", async () => {
 });
 vi.mock("@/lib/trpc", () => ({
   trpc: {
-    useUtils: () => ({ analysis: { listProjects: { invalidate: vi.fn() } } }),
+    useUtils: () => ({ analysis: { listProjects: { invalidate: vi.fn() }, getActionState: { invalidate: vi.fn() } } }),
     analysis: {
       listProjects: { useQuery: () => ({ data: [], isLoading: false, isError: false }) },
       getDiagnostic: { useQuery: () => ({ data: undefined, isFetching: false, isError: false }) },
+      getActionState: { useQuery: () => ({ data: { answers: [] }, isFetching: false, isError: false }) },
+      answerQuestion: { useMutation: () => ({ isPending: false, mutate: vi.fn() }) },
       analyzeWorkbook: { useMutation: () => ({ ...state.mutation, mutate: vi.fn() }) },
     },
   },

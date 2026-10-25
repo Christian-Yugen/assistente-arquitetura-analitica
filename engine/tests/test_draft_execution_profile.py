@@ -50,6 +50,7 @@ class DraftExecutionProfileTests(unittest.TestCase):
         profile = load_authorized_draft_profile()
 
         self.assertEqual(profile.profile_id, "PM-MVP-PBI-DRAFT-EXECUTION-001")
+        self.assertEqual(profile.profile_version, "1.1.0")
         self.assertEqual(profile.catalog_target_rule_count, 95)
         self.assertEqual(profile.engine_version, "0.1.0")
         self.assertIn("{finding_count}", profile.summary_template)
@@ -60,7 +61,7 @@ class DraftExecutionProfileTests(unittest.TestCase):
 
         self.assertEqual(payload["status"], "authorized_for_mvp_draft")
         self.assertFalse(payload["governance"]["production_ready"])
-        self.assertEqual(payload["governance"]["approved_by_gate"], "CONTRACT-RECONSTRUCTION-001")
+        self.assertEqual(payload["governance"]["approved_by_gate"], "CONTRACT-RESULTS-AUTOMATIC-001")
 
     def test_rejects_any_divergence_in_the_governed_output_allowlist(self):
         profile = load_authorized_draft_profile()

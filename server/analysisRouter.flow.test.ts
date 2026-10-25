@@ -34,7 +34,37 @@ vi.mock("./db", () => ({
   listAnalysisProjectsForOwner: vi.fn(),
   getAnalysisDiagnosticForOwner: vi.fn(),
 }));
-vi.mock("./storage", () => ({ storagePut: vi.fn().mockResolvedValue({ key: "private/generated.xlsx", url: "/manus-storage/private/generated.xlsx" }) }));
+vi.mock("./storage", () => ({
+  storagePut: vi.fn(async () => {
+    const key = "private/generated.xlsx";
+    physicalObjects.add(key);
+    return { key, url: "/manus-storage/private/generated.xlsx" };
+  }),
+}));
+const physicalObjects = vi.hoisted(() => new Set<string>());
+const physicalFailure = vi.hoisted(() => ({
+  mode: "none" as "none" | "provider_error" | "unverified",
+}));
+
+vi.mock("./physicalStorageAdapter", () => ({
+  physicalDeletionConfigured: vi.fn(() => true),
+
+  createPhysicalStore: vi.fn(() => ({
+    async deleteObject(key: string) {
+      if (physicalFailure.mode === "provider_error") {
+        throw new Error("simulated provider failure");
+      }
+      if (physicalFailure.mode === "unverified") {
+        return;
+      }
+      physicalObjects.delete(key);
+    },
+
+    async objectExists(key: string) {
+      return physicalObjects.has(key);
+    },
+  })),
+}));
 vi.mock("./analysisPipeline", async importOriginal => {
   const actual = await importOriginal<typeof import("./analysisPipeline")>();
   return {
@@ -45,12 +75,15 @@ vi.mock("./analysisPipeline", async importOriginal => {
 });
 
 import { appRouter } from "./routers";
+import { WorkbookEngineError } from "./analysisPipeline";
 import type { TrpcContext } from "./_core/context";
 
 describe("analysis router flow", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     calls.files.clear();
+    physicalObjects.clear();
+    physicalFailure.mode = "none";
     calls.executeEngine.mockResolvedValue(safeDiagnosis);
   });
 
@@ -83,6 +116,17 @@ describe("analysis router flow", () => {
     expect(retainedFile?.referenceRemovedAt).toBeInstanceOf(Date);
   });
 
+  it("uses a private CSV key when an authenticated owner submits a CSV", async () => {
+    calls.nextVersion.mockResolvedValue(1);
+    const user = { id: 77, openId: "owner-77", email: null, name: null, loginMethod: "manus", role: "user" as const, createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date() };
+    const caller = appRouter.createCaller({ user, req: {} as TrpcContext["req"], res: {} as TrpcContext["res"] });
+    await caller.analysis.analyzeWorkbook({ projectName: "Projeto", objective: "Objetivo", fileName: "modelo.csv", mimeType: "text/csv", dataBase64: "aWQsdmFsb3IKMSwxMAo=" });
+
+    const storage = await import("./storage");
+    expect(storage.storagePut).toHaveBeenCalledWith(expect.stringMatching(/^analysis\/77\/[^/]+\/[^/]+\.csv$/), expect.any(Buffer), "text/csv");
+    expect(calls.createFile.mock.calls[0][0]).toMatchObject({ ownerId: 77, mimeType: "text/csv" });
+  });
+
   it("returns a generic error when the engine fails with internal details", async () => {
     calls.executeEngine.mockRejectedValueOnce(new Error("CPF 123.456.789-09 in temporary file"));
     const user = { id: 77, openId: "owner-77", email: null, name: null, loginMethod: "manus", role: "user" as const, createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date() };
@@ -92,7 +136,24 @@ describe("analysis router flow", () => {
       .catch(error => error);
 
     expect(error).toMatchObject({ code: "INTERNAL_SERVER_ERROR" });
-    expect(error.message).toBe("Não foi possível concluir a análise.");
+    expect(error.message).toBe("Não foi possível concluir a análise. Código seguro: engine_failed.");
+    expect(calls.removeReference).toHaveBeenCalledWith(expect.any(String), 77);
+    const persistedFile = calls.createFile.mock.calls[0][0];
+    expect(calls.files.get(String(persistedFile.id))).toMatchObject({ storageKey: null, retentionStatus: "reference_removed" });
+  });
+
+  it("returns only a sanitized engine code when execution reaches its time limit", async () => {
+    calls.executeEngine.mockRejectedValueOnce(new WorkbookEngineError("engine_timeout"));
+    const user = { id: 77, openId: "owner-77", email: null, name: null, loginMethod: "manus", role: "user" as const, createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date() };
+    const caller = appRouter.createCaller({ user, req: {} as TrpcContext["req"], res: {} as TrpcContext["res"] });
+
+    const error = await caller.analysis.analyzeWorkbook({ projectName: "Projeto", objective: "Objetivo", fileName: "arquivo.xlsx", mimeType: "application/octet-stream", dataBase64: "UEsDBA==" })
+      .catch(error => error);
+
+    expect(error).toMatchObject({ code: "INTERNAL_SERVER_ERROR" });
+    expect(error.message).toBe("Não foi possível concluir o processamento do arquivo. Código seguro: engine_timeout.");
+    expect(error.message).not.toContain("arquivo.xlsx");
+    expect(calls.removeReference).toHaveBeenCalledWith(expect.any(String), 77);
   });
 
   it("persists a failed diagnostic with reference removal and marks the project as failed", async () => {
@@ -122,8 +183,64 @@ describe("analysis router flow", () => {
     const error = await caller.analysis.analyzeWorkbook({ projectName: "Projeto", objective: "Objetivo", fileName: "arquivo.xlsx", mimeType: "application/octet-stream", dataBase64: "UEsDBA==" })
       .catch(error => error);
 
-    expect(error.message).toBe("Não foi possível concluir a análise.");
+    expect(error.message).toBe("Não foi possível concluir a análise. Código seguro: privacy_failed.");
     expect(calls.createDiagnostic).not.toHaveBeenCalled();
+    expect(calls.removeReference).toHaveBeenCalledWith(expect.any(String), 77);
+  });
+
+  it.each([
+    ["provider_error", "retains the reference when physical deletion fails"],
+    ["unverified", "retains the reference when physical absence is unverified"],
+  ] as const)("%s: %s", async (mode) => {
+    physicalFailure.mode = mode;
+    calls.nextVersion.mockResolvedValue(1);
+
+    const user = {
+      id: 77,
+      openId: "owner-77",
+      email: null,
+      name: null,
+      loginMethod: "manus",
+      role: "user" as const,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      lastSignedIn: new Date(),
+    };
+
+    const caller = appRouter.createCaller({
+      user,
+      req: {} as TrpcContext["req"],
+      res: {} as TrpcContext["res"],
+    });
+
+    const error = await caller.analysis.analyzeWorkbook({
+      projectName: "Projeto",
+      objective: "Objetivo",
+      fileName: "arquivo.xlsx",
+      mimeType: "application/octet-stream",
+      dataBase64: "UEsDBA==",
+    }).catch(error => error);
+
+    expect(error).toMatchObject({ code: "INTERNAL_SERVER_ERROR" });
+    expect(calls.createFile).toHaveBeenCalledTimes(1);
+
+    const persistedFile = calls.createFile.mock.calls[0][0];
+    const fileId = String(persistedFile.id);
+    const storageKey = String(persistedFile.storageKey);
+
+    expect(physicalObjects.has(storageKey)).toBe(true);
     expect(calls.removeReference).not.toHaveBeenCalled();
+
+    expect(calls.files.get(fileId)).toMatchObject({
+      ownerId: 77,
+      storageKey,
+      retentionStatus: "private_active",
+    });
+
+    expect(calls.updateProject).toHaveBeenLastCalledWith(
+      expect.any(String),
+      77,
+      "failed",
+    );
   });
 });

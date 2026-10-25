@@ -11,7 +11,7 @@ export function sanitizeSensitiveText(value: string): string {
 }
 
 export function sanitizeWorkbookFileName(value: string): string {
-  const extension = value.toLowerCase().endsWith(".xlsx") ? ".xlsx" : "";
+  const extension = value.toLowerCase().endsWith(".xlsx") ? ".xlsx" : value.toLowerCase().endsWith(".csv") ? ".csv" : "";
   const baseName = extension ? value.slice(0, -extension.length) : value;
   const sanitized = sanitizeSensitiveText(baseName).replace(/[\[\]]/g, "").trim() || "workbook";
   return `${sanitized.slice(0, Math.max(1, 255 - extension.length))}${extension}`;
