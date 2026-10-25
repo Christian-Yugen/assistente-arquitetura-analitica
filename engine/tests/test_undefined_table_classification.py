@@ -31,6 +31,12 @@ class UndefinedTableClassificationTests(unittest.TestCase):
         self.assertEqual(candidate[0]["evidence"]["positive_table_classification_count"], 0)
         self.assertTrue(candidate[0]["question"]["blocking"])
 
+    def test_keeps_the_residual_hypothesis_when_a_non_structural_sensitive_attribute_exists(self):
+        candidate = classify_undefined_table_classification(replace(self.eligible_profile, sensitive_candidate_count=1))
+
+        self.assertEqual(candidate[0]["classification_type"], "table_classification_undefined_candidate")
+        self.assertEqual(candidate[0]["evidence"]["sensitive_candidate_count"], 1)
+
     def test_profile_and_evidence_do_not_accept_or_emit_raw_or_classifier_identity_data(self):
         candidate = classify_undefined_table_classification(self.eligible_profile)[0]
 
@@ -47,7 +53,6 @@ class UndefinedTableClassificationTests(unittest.TestCase):
             replace(self.eligible_profile, positive_table_classification_count=1),
             replace(self.eligible_profile, classification_conflict_count=1),
             replace(self.eligible_profile, formula_column_count=1),
-            replace(self.eligible_profile, sensitive_candidate_count=1),
             replace(self.eligible_profile, classification_ambiguity_count=1),
         )
 

@@ -11,6 +11,13 @@ describe("MVP-1.0-READINESS-001", () => {
     expect(gate).toContain("**BLOQUEADO para MVP 1.0 produtivo.**");
     expect(gate).toContain("MVP draft controlado");
     expect(gate).toContain("As 95 de 95 regras");
+    expect(gate).toContain("perfil draft atual de **95 regras**");
+    expect(gate).toContain("Registro histórico — expansão para 77 regras");
+    expect(gate).toContain("O escopo atual é de **95 regras draft**");
+    expect(gate).toContain("75 manifestos golden");
+    expect(gate).toContain("38 declaram `synthetic_only=true`");
+    expect(gate).toContain("54 declaram `production_authorized=false`");
+    expect(gate).not.toContain("Aprovado somente no escopo das setenta e sete regras.");
     expect(gate).toContain("As quinze regras de Qualidade");
     expect(gate).toContain("regras semânticas, de granularidade e de modelagem previamente habilitadas");
     expect(gate).toContain("REL-ONEMANY-001@0.1.0-provisional.1");

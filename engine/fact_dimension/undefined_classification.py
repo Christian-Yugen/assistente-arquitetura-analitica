@@ -31,7 +31,6 @@ def classify_undefined_table_classification(
         or profile.positive_table_classification_count != 0
         or profile.classification_conflict_count != 0
         or profile.formula_column_count != 0
-        or profile.sensitive_candidate_count != 0
         or profile.classification_ambiguity_count != 0
     ):
         return []

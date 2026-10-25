@@ -126,6 +126,14 @@
     }
   }
 
+  function safeRequestPath(url) {
+    try {
+      return String(url || "").split("?")[0].slice(0, 256);
+    } catch (e) {
+      return "[unavailable]";
+    }
+  }
+
   // ==========================================================================
   // Semantic UI Event Logging (agent-friendly)
   // ==========================================================================
@@ -466,24 +474,15 @@
       return originalFetch(input, init);
     }
 
-    // Safely parse headers (avoid breaking if headers format is invalid)
-    var requestHeaders = {};
-    try {
-      if (init.headers) {
-        requestHeaders = Object.fromEntries(new Headers(init.headers).entries());
-      }
-    } catch (e) {
-      requestHeaders = { _parseError: true };
-    }
-
     var entry = {
       timestamp: startTime,
       type: "fetch",
       method: method.toUpperCase(),
-      url: url,
+      path: safeRequestPath(url),
       request: {
-        headers: requestHeaders,
-        body: init.body ? sanitizeValue(tryParseJson(init.body)) : null,
+        hasBody: Boolean(init.body),
+        headersCaptured: false,
+        bodyCaptured: false,
       },
       response: null,
       duration: null,
@@ -494,14 +493,11 @@
       .then(function (response) {
         entry.duration = Date.now() - startTime;
 
-        var contentType = (response.headers.get("content-type") || "").toLowerCase();
-        var contentLength = response.headers.get("content-length");
-
         entry.response = {
           status: response.status,
           statusText: response.statusText,
-          headers: Object.fromEntries(response.headers.entries()),
-          body: null,
+          headersCaptured: false,
+          bodyCaptured: false,
         };
 
         // Semantic network hint for agents on failures (sync, no need to wait for body)
@@ -509,67 +505,14 @@
           logUiEvent("network_error", {
             kind: "fetch",
             method: entry.method,
-            url: entry.url,
+            path: entry.path,
             status: response.status,
             statusText: response.statusText,
           });
         }
 
-        // Skip body capture for streaming responses (SSE, etc.) to avoid memory leaks
-        var isStreaming = contentType.indexOf("text/event-stream") !== -1 ||
-                          contentType.indexOf("application/stream") !== -1 ||
-                          contentType.indexOf("application/x-ndjson") !== -1;
-        if (isStreaming) {
-          entry.response.body = "[Streaming response - not captured]";
-          store.networkRequests.push(entry);
-          pruneBuffer(store.networkRequests, CONFIG.bufferSize.network);
-          return response;
-        }
-
-        // Skip body capture for large responses to avoid memory issues
-        if (contentLength && parseInt(contentLength, 10) > CONFIG.maxBodyLength) {
-          entry.response.body = "[Response too large: " + contentLength + " bytes]";
-          store.networkRequests.push(entry);
-          pruneBuffer(store.networkRequests, CONFIG.bufferSize.network);
-          return response;
-        }
-
-        // Skip body capture for binary content types
-        var isBinary = contentType.indexOf("image/") !== -1 ||
-                       contentType.indexOf("video/") !== -1 ||
-                       contentType.indexOf("audio/") !== -1 ||
-                       contentType.indexOf("application/octet-stream") !== -1 ||
-                       contentType.indexOf("application/pdf") !== -1 ||
-                       contentType.indexOf("application/zip") !== -1;
-        if (isBinary) {
-          entry.response.body = "[Binary content: " + contentType + "]";
-          store.networkRequests.push(entry);
-          pruneBuffer(store.networkRequests, CONFIG.bufferSize.network);
-          return response;
-        }
-
-        // For text responses, clone and read body in background
-        var clonedResponse = response.clone();
-
-        // Async: read body in background, don't block the response
-        clonedResponse
-          .text()
-          .then(function (text) {
-            if (text.length <= CONFIG.maxBodyLength) {
-              entry.response.body = sanitizeValue(tryParseJson(text));
-            } else {
-              entry.response.body = text.slice(0, CONFIG.maxBodyLength) + "...[truncated]";
-            }
-          })
-          .catch(function () {
-            entry.response.body = "[Unable to read body]";
-          })
-          .finally(function () {
-            store.networkRequests.push(entry);
-            pruneBuffer(store.networkRequests, CONFIG.bufferSize.network);
-          });
-
-        // Return response immediately, don't wait for body reading
+        store.networkRequests.push(entry);
+        pruneBuffer(store.networkRequests, CONFIG.bufferSize.network);
         return response;
       })
       .catch(function (error) {
@@ -582,7 +525,7 @@
         logUiEvent("network_error", {
           kind: "fetch",
           method: entry.method,
-          url: entry.url,
+          path: entry.path,
           message: error.message,
         });
 
@@ -615,54 +558,19 @@
       xhr._manusData.url.indexOf("/__manus__/") !== 0
     ) {
       xhr._manusData.startTime = Date.now();
-      xhr._manusData.requestBody = body ? sanitizeValue(tryParseJson(body)) : null;
+      xhr._manusData.hasBody = Boolean(body);
 
       xhr.addEventListener("load", function () {
-        var contentType = (xhr.getResponseHeader("content-type") || "").toLowerCase();
-        var responseBody = null;
-
-        // Skip body capture for streaming responses
-        var isStreaming = contentType.indexOf("text/event-stream") !== -1 ||
-                          contentType.indexOf("application/stream") !== -1 ||
-                          contentType.indexOf("application/x-ndjson") !== -1;
-
-        // Skip body capture for binary content types
-        var isBinary = contentType.indexOf("image/") !== -1 ||
-                       contentType.indexOf("video/") !== -1 ||
-                       contentType.indexOf("audio/") !== -1 ||
-                       contentType.indexOf("application/octet-stream") !== -1 ||
-                       contentType.indexOf("application/pdf") !== -1 ||
-                       contentType.indexOf("application/zip") !== -1;
-
-        if (isStreaming) {
-          responseBody = "[Streaming response - not captured]";
-        } else if (isBinary) {
-          responseBody = "[Binary content: " + contentType + "]";
-        } else {
-          // Safe to read responseText for text responses
-          try {
-            var text = xhr.responseText || "";
-            if (text.length > CONFIG.maxBodyLength) {
-              responseBody = text.slice(0, CONFIG.maxBodyLength) + "...[truncated]";
-            } else {
-              responseBody = sanitizeValue(tryParseJson(text));
-            }
-          } catch (e) {
-            // responseText may throw for non-text responses
-            responseBody = "[Unable to read response: " + e.message + "]";
-          }
-        }
-
         var entry = {
           timestamp: xhr._manusData.startTime,
           type: "xhr",
           method: xhr._manusData.method,
-          url: xhr._manusData.url,
-          request: { body: xhr._manusData.requestBody },
+          path: safeRequestPath(xhr._manusData.url),
+          request: { hasBody: xhr._manusData.hasBody, bodyCaptured: false },
           response: {
             status: xhr.status,
             statusText: xhr.statusText,
-            body: responseBody,
+            bodyCaptured: false,
           },
           duration: Date.now() - xhr._manusData.startTime,
           error: null,
@@ -675,7 +583,7 @@
           logUiEvent("network_error", {
             kind: "xhr",
             method: entry.method,
-            url: entry.url,
+            path: entry.path,
             status: entry.response.status,
             statusText: entry.response.statusText,
           });
@@ -687,8 +595,8 @@
           timestamp: xhr._manusData.startTime,
           type: "xhr",
           method: xhr._manusData.method,
-          url: xhr._manusData.url,
-          request: { body: xhr._manusData.requestBody },
+          path: safeRequestPath(xhr._manusData.url),
+          request: { hasBody: xhr._manusData.hasBody, bodyCaptured: false },
           response: null,
           duration: Date.now() - xhr._manusData.startTime,
           error: { message: "Network error" },
@@ -700,7 +608,7 @@
         logUiEvent("network_error", {
           kind: "xhr",
           method: entry.method,
-          url: entry.url,
+          path: entry.path,
           message: "Network error",
         });
       });

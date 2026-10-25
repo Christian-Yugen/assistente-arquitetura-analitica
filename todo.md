@@ -64,7 +64,7 @@
 - [x] Classificar no registro do motor os IDs oficiais de referência de SEM, GRN, MDL, REL, MET e ALT sem torná-los executáveis indevidamente.
 - [x] Ampliar os testes para validar títulos, estados e IDs de referência oficiais por categoria antes de reconfirmar o alinhamento completo.
 - [x] Corrigir a tipagem da projeção do catálogo oficial e confirmar em arquivo os registros e testes sincronizados antes de reexecutar a suíte integral.
-- [ ] Completar as nove regras restantes da categoria Qualidade após o checkpoint global e a autorização formal de cada ciclo.
+- [ ] Documentar formalmente a reconciliação da pendência histórica das nove regras de Qualidade, com evidência rastreável por regra e distinção explícita entre cobertura draft e bloqueio produtivo.
 - [x] Gerar o índice de prontidão das 95 regras a partir da fonte oficial, distinguindo baseline, regra executável draft, referência e regras que exigem intake formal.
 - [x] Registrar o intake da próxima regra QLT-CATVAR-008, expondo metadados de origem, lacunas de política e pré-condições de autorização sem criar uma regra executável.
 - [x] Validar em teste o índice de prontidão e o intake da QLT-CATVAR-008, confirmando que a regra permanece não executável.
@@ -86,9 +86,9 @@
 - [x] Implementar um registro de catálogo que diferencie regras executáveis, autorizadas para especificação e reservadas, bloqueando execução de políticas não definidas.
 - [x] Validar que o motor rejeita explicitamente qualquer tentativa de executar uma regra reservada ou sem gate de autorização.
 - [x] Confirmar o registro de catálogo, o teste de rejeição e a integração do pipeline com a suíte completa de validação.
-- [ ] Completar as categorias de Tipagem Semântica, Fato e Dimensão, Relacionamentos, Métricas, Alertas e Granularidade em ciclos com gates, regressão e fechamento documental.
-- [ ] Construir o motor completo com profiling, contexto normalizado, executor, precedência, confiança, agregação e contrato canônico de diagnóstico.
-- [ ] Criar golden datasets de referência e definir expectativas de contexto, findings, severidade, dimensões, fatos, relacionamentos e métricas.
+- [ ] Documentar formalmente a reconciliação das categorias de Tipagem Semântica, Fato e Dimensão, Relacionamentos, Métricas, Alertas e Granularidade, com gates e evidências por categoria no perfil draft.
+- [ ] Consolidar a evidência do motor draft de ponta a ponta — profiling, contexto, executor, precedência, confiança, agregação e contrato — sem alegar completude ou prontidão produtiva.
+- [ ] Registrar golden datasets sintéticos de referência para dimensões, fatos, relacionamentos e métricas, com expectativas versionadas e testes dedicados; eles não substituem calibração produtiva.
 - [x] Definir o escopo de calibração e as expectativas determinísticas dos golden datasets para QLT-NUMTEXT-007 e QLT-NULL-001.
 - [x] Criar fixtures de calibração, manifestos verificáveis e testes de regressão para as regras executáveis do perfil draft.
 - [x] Medir falsos positivos e falsos negativos conhecidos dos golden datasets e registrar a decisão de calibração limitada ao draft.
@@ -689,3 +689,76 @@
 - [x] Validar a preparação documental de E2E sintético, salvar checkpoint e manter a execução E2E e a produção bloqueadas até ambiente autorizado.
 - [x] Registrar a autorização de Chris e verificar a adequação de ambiente descartável para E2E com identidades e XLSX exclusivamente sintéticos.
 - [ ] Preparar e executar os cenários E2E sintéticos autorizados com evidências sanitizadas, regressão e gate sem promoção produtiva.
+- [x] Auditar e reconciliar inconsistências de contagem ou escopo nos gates de prontidão após a cobertura de 95 regras draft, sem alterar runtime ou promoção.
+- [x] Validar a reconciliação documental, salvar checkpoint e manter explícitos todos os bloqueios de produção.
+- [x] Reconciliar no Gate MVP as referências correntes a 77 regras e aos goldens correlatos com o estado governado de 95 regras draft, preservando atualizações históricas como histórico e sem promover produção.
+- [x] Provar por teste documental que o Gate MVP distingue histórico, cobertura draft atual e bloqueios produtivos.
+- [x] Definir requisitos verificáveis de isolamento, descarte, identidades e evidências sanitizadas para um ambiente E2E exclusivo de dados sintéticos.
+- [x] Verificar a via suportada de provisionamento de ambiente E2E separado, sem reutilizar banco, armazenamento ou credenciais do ambiente atual.
+- [ ] Preparar o ambiente E2E somente após confirmar isolamento técnico e registrar o gate de execução correspondente.
+- [x] Registrar a autorização explícita de Chris para criar o ambiente E2E isolado e confirmar se a plataforma permite provisionamento seguro nesta sessão.
+- [ ] Provisionar o ambiente E2E isolado, somente se a plataforma expuser operação suportada com banco, armazenamento e segredos distintos.
+- [x] Registrar o bloqueio técnico de E2E: navegador de automação ausente e operação de instalação não exposta, sem contornar a plataforma ou reutilizar o ambiente atual.
+- [ ] Retomar a criação e execução de E2E somente quando a plataforma fornecer navegador de automação e implantação isolada suportados.
+- [x] Auditar e comprovar o fluxo central draft de upload XLSX, análise server-side e visualização owner-scoped sem dados privados nas evidências.
+- [x] Corrigir somente falhas funcionais comprovadas no fluxo central, validar regressões e manter o perfil draft e a produção bloqueada — nenhuma falha funcional comprovada foi identificada na auditoria.
+- [x] Investigar o diagnóstico XLSX real que emitiu apenas achados de qualidade, sem consultar valores brutos ou reenviar o arquivo — a amostra tinha entre três e seis linhas por aba, abaixo dos limiares semânticos conservadores.
+- [x] Corrigir somente a causa comprovada de ausência de perguntas e hipóteses draft, com regressões, gate e sem expor conteúdo privado — a interface agora explica a limitação sem alterar limiares ou fabricar hipóteses.
+- [x] Definir e validar o contrato agregado de insuficiência de amostra, com limiar de dez valores não ausentes, riscos e próxima ação sem valores, títulos ou posições brutas.
+- [x] Implementar e testar a explicação de insuficiência no diagnóstico e na interface, mantendo os limiares das regras e a produção bloqueada.
+- [x] Definir a política de aceitação CSV: MIME/extensão, limite de 25 MB, codificação, delimitadores permitidos, aba lógica única e rejeições fail-closed.
+- [x] Implementar upload, validação e parsing CSV exclusivamente no servidor, preservando o contexto agregado e o isolamento owner-scoped.
+- [x] Cobrir CSV válido, inválido, codificação/delimitador não suportados e regressões XLSX; validar interface e checkpoint draft.
+- [x] Definir contrato seguro para orientar achados e registrar respostas humanas por pergunta, usando apenas opções enumeradas e status owner-scoped.
+- [x] Implementar persistência, procedimento autenticado e interface para responder perguntas sem armazenar texto livre ou conteúdo do arquivo.
+- [x] Exibir plano de preparação priorizado com próximos passos, estado das respostas e orientação para reenviar uma versão corrigida.
+- [x] Validar isolamento entre owners, ações de resposta, plano de preparação e regressões antes do checkpoint draft.
+- [x] Simplificar a orientação pós-diagnóstico, distinguindo claramente poucos registros de campos sem informação e reduzindo linguagem técnica.
+- [x] Contextualizar as opções de decisão para que o usuário saiba quando confirmar, corrigir arquivo, revisar negócio ou marcar não se aplica.
+- [x] Validar acessibilidade, interação e regressões da experiência simplificada antes do checkpoint draft.
+- [x] Definir precedência segura para o resumo pós-decisão: corrigir e reenviar, aguardar decisão de negócio, concluir sem nova ação ou continuar respondendo perguntas.
+- [x] Implementar o resumo acionável no plano de diagnóstico, sem editar automaticamente XLSX/CSV, diagnóstico ou regras.
+- [x] Cobrir estados e precedência do resumo acionável com testes e regressão antes do checkpoint draft.
+- [x] Auditar os blocos de semântica, fatos, dimensões, relacionamentos e métricas já presentes no diagnóstico e identificar quais estão ocultos pela interface.
+- [x] Definir a exibição draft segura e os estados vazios dos blocos estruturais, sem fabricar hipóteses nem expor conteúdo privado.
+- [x] Implementar e validar a visualização dos blocos estruturais existentes, com regressões e checkpoint draft.
+- [x] Investigar a falha sanitizada “Não foi possível concluir a análise” sem ler ou expor conteúdo do arquivo enviado.
+- [x] Reproduzir com fixture sintética, corrigir a causa comprovada e validar o fluxo XLSX/CSV com regressões antes do checkpoint.
+- [x] Instrumentar a falha remanescente de análise com códigos de etapa sanitizados, sem registrar erro bruto, conteúdo, nomes, cabeçalhos ou valores do workbook.
+- [ ] Reproduzir a etapa identificada com fixture sintética, aplicar correção mínima e revalidar o reenvio XLSX/CSV antes do checkpoint.
+- [x] Capturar somente a categoria técnica da exceção Python do motor e correlacioná-la a uma reprodução sintética antes de qualquer correção adicional.
+- [x] Localizar e tratar o pressuposto de chave ausente que gera engine_key_error, com reprodução sintética e sem inspecionar conteúdo de workbook.
+- [x] Traduzir hipóteses existentes do diagnóstico em cartões acionáveis de dimensão, fato, relacionamento e medida/DAX, deixando explícito quando não houver evidência suficiente.
+- [x] Preservar achados, perguntas e decisões humanas como validações de hipótese, sem fabricar fórmulas, relações ou tabelas inexistentes.
+- [x] Auditar o fluxo draft completo de upload, diagnóstico, orientação de modelagem e decisões para identificar qualquer lacuna funcional comprovada.
+- [x] Tornar o percurso pós-análise explícito e verificável: revisar hipóteses, validar apenas o indispensável, preparar o modelo no Power BI e reenviar versão corrigida quando houver alteração.
+- [x] Validar o fluxo completo com artefato sintético permitido e testes de regressão, sem simular resultado de arquivo real ou promover produção.
+- [x] Cobrir todos os tipos semânticos e hipóteses de grão emitidos pelo motor na orientação draft, sem expor entidades, colunas ou valores privados.
+- [x] Vincular visualmente cada decisão humana à hipótese de modelagem correspondente, sem alterar diagnóstico, arquivo, regras ou criar uma conclusão nova.
+- [x] Auditar e reproduzir a supressão de fato, dimensão, grão, relação e métrica quando o diagnóstico possui volume suficiente, sem acessar conteúdo do workbook.
+- [x] Corrigir somente bloqueios estruturais indevidos comprovados e validar que as hipóteses emitidas chegam à orientação draft sem fabricar conclusões.
+- [x] Projetar e entregar um resumo de resultados que conte hipóteses de dimensão, fato, grão, relação e métrica, separado das explicações de uso.
+- [x] Converter achados existentes em uma lista priorizada de bloqueios, problemas e ações de correção antes de explorar o modelo, sem expor conteúdo de workbook.
+- [x] Ampliar a geração draft de propostas estruturadas somente a partir de sinais internos comprovados e validar os cenários sintéticos antes de reprocessar o arquivo de Chris.
+- [x] Auditar e projetar todos os candidatos já emitidos pelas 95 regras em contagens e resultados estruturados, sem alterar catálogo, allowlist ou limiares.
+- [x] Auditar e restaurar todas as passagens de perfis agregados do XLSX/CSV ao executor das 95 regras, sem expor cabeçalhos, valores ou conteúdo de workbook.
+- [x] Provar por workbooks sintéticos que o backend emite automaticamente dimensão, fato, grão, relação e medidas conceituais antes de qualquer nova alteração de interface.
+- [ ] Reconciliar formalmente as tarefas históricas do backlog com evidências rastreáveis por item, distinguindo cobertura draft concluída de pendências reais e bloqueios produtivos.
+- [x] Comparar somente metadados agregados da nova execução real vazia com os cenários sintéticos para localizar os critérios estruturais não satisfeitos.
+- [x] Reproduzir a divergência comprovada e corrigir exclusivamente o bloqueio técnico que impedir a geração automática de resultados draft.
+- [x] Impedir que um sinal de campo sensível bloqueie a classificação estrutural de toda a aba, preservando o alerta e excluindo o campo sensível de chaves, relações e medidas; a guarda residual MDL-UNDEFINED-020 foi corrigida.
+- [ ] Reproduzir e tratar o caso de chave, atributo descritivo e data reconhecida sem rótulo literal de evento, emitindo apenas hipótese draft quando os sinais agregados forem compatíveis.
+- [x] Isolar campos sensíveis nas contagens de métricas e nas guardas de relacionamento, preservando a exclusão da coluna sensível e as hipóteses sustentadas somente por colunas elegíveis.
+- [x] Investigar e corrigir a rejeição de validação de workbook reportada por Chris, usando somente logs e metadados sanitizados e uma reprodução sintética.
+- [x] Reproduzir e corrigir a rejeição de CSV reportada por Chris, preservando o limite, a validação estrutural e a não exposição de conteúdo do arquivo.
+- [ ] Investigar e corrigir a falha “Failed to fetch” reportada por Chris, verificando serviço e rede sem registrar conteúdo de upload.
+- [x] Auditar a linhagem backend do último diagnóstico aceito, somente por metadados sanitizados, até explicar a ausência ou a presença de grão, dimensão, fato e métricas.
+- [x] Reproduzir e corrigir a ausência de identificação estrutural para cabeçalhos compostos comuns, sem usar campo sensível e sem alterar os limiares de completude ou unicidade.
+- [x] Adicionar prova de regressão com uma aba de 175 linhas, seis colunas e dois atributos sensíveis isolados, usando somente características agregadas da execução real.
+- [x] Definir e testar o resumo sanitizado de resultados automáticos: grão, fatos, dimensões, relações, combinações, métricas conceituais e motivos de indisponibilidade por evidência.
+- [ ] Auditar e corrigir as inferências de backend que ainda deixam de emitir resultados automáticos quando os sinais agregados sustentarem uma hipótese draft.
+- [x] Priorizar no workspace as contagens e propostas automáticas emitidas pelo backend, mantendo achados e perguntas como apoio e nunca como substitutos dos resultados.
+- [x] Substituir o perfil draft que ainda declara modelagem não executada por sucessor governado que reflita as hipóteses estruturais emitidas, sem alegar produção ou DAX final.
+- [x] Impedir que a telemetria de desenvolvimento registre corpos de upload ou conteúdo de workbook e comprovar a correção com teste de segurança.
+- [x] Gerar relatório sanitizado do diagnóstico com resultados, riscos, isolamento lógico, hipóteses de modelo, relacionamentos e métricas conceituais.
+- [x] Gerar no relatório um roteiro priorizado de preparação para Power Query a partir dos achados emitidos, sem alterar ou excluir dados do arquivo.

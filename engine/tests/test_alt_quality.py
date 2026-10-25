@@ -33,6 +33,7 @@ class CriticalQualityRiskTests(unittest.TestCase):
         fragment = to_diagnosis_fragment([finding], sheet_id="model", column_id="model")
         projected = fragment["findings"][0]
         self.assertEqual(projected["rule_id"], "ALT-QUALITY-002")
+        self.assertEqual(projected["affected_entities"], [{"entity_type": "model", "entity_id": "model"}])
         self.assertEqual(projected["evidence"][0]["observed"], {"observed_value": 3})
         self.assertNotIn("header", str(projected["evidence"]).lower())
         self.assertNotIn("example", str(projected["evidence"]).lower())

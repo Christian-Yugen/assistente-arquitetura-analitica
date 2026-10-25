@@ -57,9 +57,12 @@ class ExplicitKeyGrainTests(unittest.TestCase):
             with self.subTest(profile=profile):
                 self.assertEqual(classify_explicit_key(profile), [])
 
+    def test_accepts_a_semantic_identifier_signal_with_a_compound_header(self) -> None:
+        self.assertEqual(len(classify_explicit_key(ExplicitKeySheetProfile(20, (candidate("Código do registro"),)))), 1)
+
     def test_rejects_open_header_and_excluded_semantics(self) -> None:
         cases = (
-            candidate("Código"),
+            candidate("Referência", identifier_signal=False),
             candidate(sensitive_header=True),
             candidate(description_header=True),
             candidate(recognized_date_count=20, physical_type="date"),
@@ -73,4 +76,3 @@ class ExplicitKeyGrainTests(unittest.TestCase):
         serialized = str(dataclasses.asdict(profile))
         self.assertNotIn("Chave", serialized)
         self.assertNotIn("valor-secreto", serialized)
-

@@ -1,6 +1,6 @@
 import { and, desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { analysisDiagnostics, analysisFiles, analysisProjects, InsertUser, users } from "../drizzle/schema";
+import { analysisAnswers, analysisDiagnostics, analysisFiles, analysisProjects, InsertUser, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { buildReferenceRemovalAudit } from "./analysisRetention";
 
@@ -154,4 +154,16 @@ export async function getAnalysisDiagnosticForOwner(diagnosticId: string, ownerI
   if (!db) throw new Error("Banco de dados indisponível.");
   const [diagnostic] = await db.select().from(analysisDiagnostics).where(and(eq(analysisDiagnostics.id, diagnosticId), eq(analysisDiagnostics.ownerId, ownerId))).limit(1);
   return diagnostic;
+}
+
+export async function listAnalysisAnswersForDiagnostic(sourceDiagnosticId: string, ownerId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Banco de dados indisponível.");
+  return db.select().from(analysisAnswers).where(and(eq(analysisAnswers.sourceDiagnosticId, sourceDiagnosticId), eq(analysisAnswers.ownerId, ownerId))).orderBy(desc(analysisAnswers.createdAt));
+}
+
+export async function upsertAnalysisAnswer(input: typeof analysisAnswers.$inferInsert) {
+  const db = await getDb();
+  if (!db) throw new Error("Banco de dados indisponível.");
+  await db.insert(analysisAnswers).values(input).onDuplicateKeyUpdate({ set: { answer: input.answer, createdAt: new Date() } });
 }

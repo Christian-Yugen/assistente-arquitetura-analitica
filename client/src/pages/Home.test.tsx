@@ -15,6 +15,7 @@ const state = vi.hoisted(() => ({
   mutation: { isPending: false, isSuccess: false, data: undefined as { diagnosticId: string; version: number } | undefined },
   projects: { data: [], isLoading: false, isError: false },
   diagnostic: { data: undefined as DiagnosticMock | undefined, isFetching: false, isError: false },
+  actionState: { data: { answers: [] as { questionId: string; decision: string }[] }, isFetching: false, isError: false },
 }));
 
 vi.mock("@/_core/hooks/useAuth", () => ({ useAuth: () => state.auth }));
@@ -25,10 +26,12 @@ vi.mock("@/components/DashboardLayout", async () => {
 });
 vi.mock("@/lib/trpc", () => ({
   trpc: {
-    useUtils: () => ({ analysis: { listProjects: { invalidate: vi.fn() } } }),
+    useUtils: () => ({ analysis: { listProjects: { invalidate: vi.fn() }, getActionState: { invalidate: vi.fn() } } }),
     analysis: {
       listProjects: { useQuery: () => state.projects },
       getDiagnostic: { useQuery: () => state.diagnostic },
+      getActionState: { useQuery: () => state.actionState },
+      answerQuestion: { useMutation: () => ({ isPending: false, mutate: vi.fn() }) },
       analyzeWorkbook: { useMutation: () => ({ ...state.mutation, mutate: vi.fn() }) },
     },
   },
@@ -51,6 +54,7 @@ describe("Home workspace flow", () => {
     state.mutation = { isPending: false, isSuccess: false, data: undefined };
     state.projects = { data: [], isLoading: false, isError: false };
     state.diagnostic = { data: undefined, isFetching: false, isError: false };
+    state.actionState = { data: { answers: [] }, isFetching: false, isError: false };
   });
 
   it("renders loading, sign-in and session-error workspace states", () => {
@@ -84,7 +88,7 @@ describe("Home workspace flow", () => {
     expect(pending).toContain("Nenhum percentual é estimado");
     expect(tagWith(pending, 'id="projectName"')).toContain('disabled=""');
     expect(tagWith(pending, 'id="objective"')).toContain('disabled=""');
-    expect(tagWith(pending, 'accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"')).toContain('disabled=""');
+    expect(tagWith(pending, 'accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"')).toContain('disabled=""');
   });
 
   it("renders the created version confirmation when the mutation succeeds", () => {
@@ -144,5 +148,78 @@ describe("Home workspace flow", () => {
     expect(diagnostic).toContain("Achado três");
     expect(diagnostic).toContain("Recomendação três");
     expect(diagnostic).toContain("Pergunta três");
+    expect(diagnostic).toContain("O que fazer agora");
+    expect(diagnostic).toContain("Corrigir arquivo");
+  });
+
+  it("explains the analytical limit when a short sample emits no modeling hypotheses", () => {
+    state.diagnostic = {
+      data: {
+        id: "11111111-1111-4111-8111-111111111111",
+        projectId: "22222222-2222-4222-8222-222222222222",
+        version: 4,
+        contractVersion: "1.0.0-reconstructed.1",
+        payload: {
+          summary: { counts: { sheets: 4, risks: 4 } },
+          sheets: [{ row_count: 6 }, { row_count: 3 }, { row_count: 3 }, { row_count: 3 }],
+          findings: [],
+          questions: [],
+          semantic_classifications: [],
+          relationships: [],
+          metrics: [],
+          proposed_model: { tables: [] },
+          file: { retention: { status: "reference_removed" } },
+        },
+      },
+      isFetching: false,
+      isError: false,
+    };
+
+    const diagnostic = renderHome();
+    expect(diagnostic).toContain("Poucos registros para concluir a modelagem");
+    expect(diagnostic).toContain("4 de 4 abas têm entre 3 e 6 registros");
+    expect(diagnostic).toContain("não quer dizer que há erro ou que você precisa inventar dados");
+    expect(diagnostic).toContain("pelo menos 10 registros não vazios em cada campo relevante");
+    expect(diagnostic).toContain("Resultado da leitura");
+    expect(diagnostic).toContain("Proposta de modelagem encontrada");
+    expect(diagnostic).toContain("Detalhamento dos resultados");
+    expect(diagnostic).toContain("Nenhuma dimensão foi sugerida com evidência suficiente nesta versão.");
+  });
+
+  it("shows safe structural guidance and conceptual DAX without rendering private payload fields", () => {
+    state.diagnostic = {
+      data: {
+        id: "11111111-1111-4111-8111-111111111111", projectId: "22222222-2222-4222-8222-222222222222", version: 5, contractVersion: "1.0.0-reconstructed.1",
+        payload: {
+          summary: { executive_summary: "A análise automática encontrou 1 fato, 1 dimensão, 1 grão, 1 relacionamento e 1 métrica conceitual.", counts: { sheets: 2, risks: 0, facts: 1, dimensions: 1, relationships: 1, metrics: 1 } },
+          sheets: [{ name: "Aba secreta", classification: { type: "dimension_standard_candidate", confidence: 0.8 }, grain: { type: "entity_per_row_candidate", confidence: 0.8 }, columns: [{ name: "Campo secreto" }] }, { classification: { type: "fact_transactional_candidate", confidence: 0.7 } }],
+          relationships: [{ relationship_type: "one_to_many_relationship_candidate", confidence: 0.7, source: { entity_id: "id-privado" } }],
+          metrics: [{ metric_type: "sum_conceptual_metric_candidate", confidence: 0.6, conceptual_formula: "SUM([CAMPO_SECRETO])" }],
+          semantic_classifications: [{ semantic_type: "date_generic", confidence: 0.7 }], findings: [], questions: [{ question_id: "q-5", impact: { affected_modules: ["fact_dimension"] } }], file: { retention: { status: "reference_removed" } },
+        },
+      }, isFetching: false, isError: false,
+    };
+
+    const diagnostic = renderHome();
+    expect(diagnostic).toContain("Dimensão candidata");
+    expect(diagnostic).toContain("Fato transacional candidato");
+    expect(diagnostic).toContain("Uma entidade por linha");
+    expect(diagnostic).toContain("Possível data");
+    expect(diagnostic).toContain("Relação um-para-muitos candidata");
+    expect(diagnostic).toContain("SUM(eligible_measure)");
+    expect(diagnostic).toContain("Proposta de modelagem encontrada");
+    expect(diagnostic).toContain("Dimensões");
+    expect(diagnostic).toContain("Medidas/DAX");
+    expect(diagnostic).toContain("As perguntas abaixo não editam sua planilha");
+    expect(diagnostic).toContain("Estruturas sugeridas para o Power BI");
+    expect(diagnostic).toContain("Validação desta seção:");
+    expect(diagnostic).toContain("0 de 1 decisões registradas");
+    expect(diagnostic).toContain("Resultados automáticos da análise");
+    expect(diagnostic).toContain("Estruturas a revisar");
+    expect(diagnostic.indexOf("Resultados automáticos da análise")).toBeLessThan(diagnostic.indexOf("Corrija antes de explorar o modelo"));
+    expect(diagnostic).not.toContain("Aba secreta");
+    expect(diagnostic).not.toContain("Campo secreto");
+    expect(diagnostic).not.toContain("CAMPO_SECRETO");
+    expect(diagnostic).not.toContain("id-privado");
   });
 });

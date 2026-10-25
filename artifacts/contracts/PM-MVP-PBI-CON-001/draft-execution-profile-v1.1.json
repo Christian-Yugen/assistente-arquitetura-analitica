@@ -1,0 +1,33 @@
+{
+  "profile_id": "PM-MVP-PBI-DRAFT-EXECUTION-001",
+  "profile_version": "1.1.0",
+  "status": "authorized_for_mvp_draft",
+  "applies_to_contract": "PM-MVP-PBI-CON-001@1.0.0-reconstructed.1",
+  "engine_version": "0.1.0",
+  "ruleset_version": "0.7.0-draft",
+  "confidence_methodology_version": "0.1.0",
+  "catalog_target_rule_count": 95,
+  "execution_status": "completed",
+  "module": {"name": "analysis_and_modeling", "status": "completed"},
+  "ai_usage": {"used": false, "providers": [], "fallback": "not_invoked"},
+  "partial_result_markers": {
+    "assumption": "Somente hipóteses sustentadas por regras explicitamente registradas no ruleset draft são emitidas.",
+    "limitation": "As propostas são hipóteses conceituais; não criam modelo, relacionamento, Power Query ou DAX final automaticamente.",
+    "proposed_model_status_with_hypotheses": "hypothesis",
+    "proposed_model_status_without_hypotheses": "insufficient",
+    "proposed_model_limitation_with_hypotheses": "As hipóteses exigem confirmação de negócio antes de implementar o modelo ou as medidas.",
+    "proposed_model_limitation_without_hypotheses": "Nenhuma hipótese estrutural alcançou os critérios das regras draft para este diagnóstico.",
+    "summary_template": "A análise automática avaliou {sheet_count} aba(s), {column_count} coluna(s), encontrou {fact_count} fato(s), {dimension_count} dimensão(ões), {grain_count} grão(ãos), {relationship_count} relacionamento(s), {metric_count} métrica(s) conceitual(is) e {finding_count} achado(s) de qualidade.",
+    "next_action_with_hypotheses": "Revisar e confirmar as hipóteses automáticas de modelagem antes da implementação no Power BI.",
+    "next_action_without_hypotheses": "Corrigir os problemas prioritários e reenviar o arquivo para uma nova leitura automática."
+  },
+  "governed_output_paths": [
+    "analysis.assumptions[0]", "analysis.limitations[0]", "summary.completeness_ratio", "summary.executive_summary", "summary.next_recommended_action", "proposed_model.status", "proposed_model.limitations[0]", "execution.status", "execution.engine_version", "execution.ruleset_version", "execution.confidence_methodology_version", "execution.modules[0].module", "execution.modules[0].status", "execution.ai_usage"
+  ],
+  "governance": {
+    "approved_by_gate": "CONTRACT-RESULTS-AUTOMATIC-001",
+    "allowed_scope": "MVP draft internal validation only; requested automatic modeling results are conceptual and evidence-bound.",
+    "production_ready": false,
+    "change_policy": "Any field change requires a new version of this profile and a governance review."
+  }
+}

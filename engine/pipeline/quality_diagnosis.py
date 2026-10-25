@@ -285,10 +285,12 @@ def execute_quality_diagnosis(
     metadata: DiagnosisMetadata,
     relationship_pair_signals: Iterable[RelationshipPairSignal] = (),
     composite_relationship_pair_signals: Iterable[CompositeRelationshipPairSignal] = (),
+    explicit_key_invalid_row_counts: Iterable[tuple[str, int]] = (),
 ) -> dict[str, object]:
     """Monta todos os blocos do contrato em estado partial sem fabricar recomendações de modelo."""
 
     profile = metadata.execution_profile
+    invalid_key_rows_by_sheet = dict(explicit_key_invalid_row_counts)
     relationship_pair_signals = tuple(relationship_pair_signals)
     composite_relationship_pair_signals = tuple(composite_relationship_pair_signals)
     started_at = _timestamp()
@@ -528,6 +530,27 @@ def execute_quality_diagnosis(
                     ),
                 ),
             )
+            if not explicit_key_candidates and sheet_id in invalid_key_rows_by_sheet:
+                from engine.granularity.explicit_key import classify_explicit_key_eligible_subset
+                explicit_key_candidates = classify_explicit_key_eligible_subset(
+                    ExplicitKeySheetProfile(
+                        observed_row_count=observed_row_count,
+                        columns=tuple(
+                            ExplicitKeyColumnProfile(
+                                header=column.explicit_key_header,
+                                identifier_signal=column.semantic_identifier.header_signal,
+                                sensitive_header=column.semantic_identifier.sensitive_header,
+                                description_header=column.semantic_description.header_eligible,
+                                recognized_date_count=column.semantic_date.recognized_date_count,
+                                physical_type=column.physical_type,
+                                non_missing_count=column.missingness.non_missing_cell_count,
+                                distinct_non_missing_count=column.semantic_identifier.distinct_non_missing_count,
+                                formula_count=column.formulas.formula_count,
+                            ) for column in sheet_columns
+                        ),
+                    ),
+                    excluded_invalid_key_rows=invalid_key_rows_by_sheet[sheet_id],
+                )
             if explicit_key_candidates:
                 grain_candidates[sheet_id] = explicit_key_candidates + grain_candidates.get(sheet_id, [])
         if get_rule_execution_record("GRN-EVENT-004").status == "executable_draft":
@@ -590,6 +613,7 @@ def execute_quality_diagnosis(
                 grain_candidates[sheet_id] = event_per_row_candidates + grain_candidates.get(sheet_id, [])
         if get_rule_execution_record("GRN-ENTITY-003").status == "executable_draft":
             observed_row_count = max(column.missingness.observed_cell_count for column in sheet_columns)
+            columns_by_id = {column.column_id: column for column in sheet_columns}
             explicit_key_candidate_count = sum(
                 1
                 for candidate in grain_candidates.get(sheet_id, [])
@@ -613,8 +637,9 @@ def execute_quality_diagnosis(
             )
             non_competence_date_candidate_count = sum(
                 1
-                for candidate_sheet_id, _, candidates in semantic_candidates
+                for candidate_sheet_id, column_id, candidates in semantic_candidates
                 if candidate_sheet_id == sheet_id
+                and columns_by_id[column_id].event_marker_header.header_eligible
                 for candidate in candidates
                 if candidate.get("semantic_type") == "date_generic"
             )
@@ -639,8 +664,12 @@ def execute_quality_diagnosis(
             )
             sensitive_candidate_count = sum(
                 1
-                for candidate_sheet_id, _, candidates in sensitivity_candidates
+                for candidate_sheet_id, column_id, candidates in sensitivity_candidates
                 if candidate_sheet_id == sheet_id
+                and (
+                    columns_by_id[column_id].explicit_key_header.header_eligible
+                    or columns_by_id[column_id].entity_marker_header.header_eligible
+                )
                 for candidate in candidates
                 if candidate.get("sensitivity") == "personal_data_candidate"
             )
@@ -785,6 +814,15 @@ def execute_quality_diagnosis(
                     ),
                 ),
             ))
+        # R3: resolver sobreposição temporal com evidência transacional mais específica.
+        # A regra periódica isolada permanece intacta; apenas a projeção conjunta
+        # evita apresentar duas classificações incompatíveis para a mesma tabela.
+        if any(candidate.get("classification_type") == "fact_transactional_candidate"
+               for candidate in table_candidates.get(sheet_id, [])):
+            table_candidates[sheet_id] = [
+                candidate for candidate in table_candidates[sheet_id]
+                if candidate.get("classification_type") != "fact_periodic_candidate"
+            ]
         if get_rule_execution_record("MDL-DIMSTD-004").status == "executable_draft":
             table_candidates.setdefault(sheet_id, []).extend(execute_registered_rule(
                 "MDL-DIMSTD-004",
@@ -997,15 +1035,6 @@ def execute_quality_diagnosis(
             )
             for sheet_id, candidates in table_candidates.items()
         }
-        sensitive_sheet_ids = {
-            sheet_id
-            for sheet_id, _, candidates in sensitivity_candidates
-            if any(candidate.get("sensitivity") == "personal_data_candidate" for candidate in candidates)
-        } | {
-            sheet_id
-            for sheet_id, sheet_columns in grouped_columns.items()
-            if any(column.semantic_identifier.sensitive_header for column in sheet_columns)
-        }
         source_key_counts = {
             sheet_id: len(
                 {
@@ -1179,7 +1208,7 @@ def execute_quality_diagnosis(
                 "source_or_target_undefined_candidate": "table_classification_undefined_candidate" in source_types | target_types,
                 "source_or_target_fact_without_grain_candidate": "fact_without_defined_grain_candidate" in source_types | target_types,
                 "source_or_target_classification_conflict": source_conflict_count > 0 or target_conflict_count > 0,
-                "source_or_target_sensitive": signal.source_or_target_sensitive or signal.source_sheet_id in sensitive_sheet_ids or signal.target_sheet_id in sensitive_sheet_ids,
+                "source_or_target_sensitive": signal.source_or_target_sensitive,
                 "source_or_target_has_formula": signal.source_or_target_has_formula,
                 "self_reference": signal.source_sheet_id == signal.target_sheet_id,
                 "dimension_key_complete": signal.source_complete,
@@ -1342,11 +1371,7 @@ def execute_quality_diagnosis(
                     source_or_target_undefined_candidate="table_classification_undefined_candidate" in source_types | target_types,
                     source_or_target_fact_without_grain_candidate="fact_without_defined_grain_candidate" in source_types | target_types,
                     source_or_target_classification_conflict=source_conflict_count > 0 or target_conflict_count > 0,
-                    source_or_target_sensitive=(
-                        signal.source_or_target_sensitive
-                        or signal.source_sheet_id in sensitive_sheet_ids
-                        or signal.target_sheet_id in sensitive_sheet_ids
-                    ),
+                    source_or_target_sensitive=signal.source_or_target_sensitive,
                     source_or_target_has_formula=signal.source_or_target_has_formula,
                     self_reference=signal.source_sheet_id == signal.target_sheet_id,
                     eligible_composite_key_pair_count=signal.eligible_composite_key_pair_count,
@@ -1369,18 +1394,29 @@ def execute_quality_diagnosis(
     metric_candidates: list[tuple[str, list[dict[str, object]]]] = []
     if "executable_draft" in metric_rule_statuses.values():
         for sheet_id, sheet_columns in grouped_columns.items():
-            status_candidate_count = sum(
-                1
-                for candidate_sheet_id, _, candidates in semantic_candidates
+            sensitive_column_ids = {
+                column_id
+                for candidate_sheet_id, column_id, candidates in sensitivity_candidates
                 if candidate_sheet_id == sheet_id
+                and any(candidate.get("sensitivity") == "personal_data_candidate" for candidate in candidates)
+            }
+            eligible_sheet_columns = [column for column in sheet_columns if column.column_id not in sensitive_column_ids]
+            eligible_semantic_candidates = [
+                candidate
+                for candidate_sheet_id, column_id, candidates in semantic_candidates
+                if candidate_sheet_id == sheet_id and column_id not in sensitive_column_ids
                 for candidate in candidates
-                if candidate.get("semantic_type") == "status_candidate"
-            )
+            ]
+            semantic_types = [candidate.get("semantic_type") for candidate in eligible_semantic_candidates]
+            status_candidate_count = semantic_types.count("status_candidate")
             grain_rule_ids = {
                 str(candidate["rule_id"])
                 for candidate in grain_candidates.get(sheet_id, [])
                 if candidate.get("rule_id") in {"GRN-COMP-001", "GRN-EVENT-004", "GRN-ENTITY-003", "GRN-EXPL-002"}
             }
+            primary_grain_rule_ids = grain_rule_ids & {"GRN-EVENT-004", "GRN-ENTITY-003"}
+            if primary_grain_rule_ids:
+                grain_rule_ids = primary_grain_rule_ids
             classification_types = {
                 str(candidate["classification_type"])
                 for candidate in table_candidates.get(sheet_id, [])
@@ -1395,25 +1431,14 @@ def execute_quality_diagnosis(
                 has_undefined_classification="table_classification_undefined_candidate" in classification_types,
                 has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types,
                 classification_conflict_count=max(0, len(classification_types) - 1),
-                has_sensitive_signal=any(
-                    candidate.get("sensitivity") == "personal_data_candidate"
-                    for candidate_sheet_id, _, candidates in sensitivity_candidates
-                    if candidate_sheet_id == sheet_id
-                    for candidate in candidates
-                ),
+                has_sensitive_signal=False,
                 has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns),
             )
             candidate = execute_registered_rule("MET-COMPL-001", metric_profile)
             if candidate:
                 metric_candidates.append((sheet_id, [candidate]))
             if metric_rule_statuses["MET-SUM-002"] == "executable_draft":
-                summable_candidate_count = sum(
-                    1
-                    for candidate_sheet_id, _, candidates in semantic_candidates
-                    if candidate_sheet_id == sheet_id
-                    for candidate in candidates
-                    if candidate.get("semantic_type") in {"quantity_candidate", "currency_candidate"}
-                )
+                summable_candidate_count = sum(semantic_types.count(metric_type) for metric_type in ("quantity_candidate", "currency_candidate"))
                 sum_profile = SumConceptProfile(
                     row_count=max(column.missingness.observed_cell_count for column in sheet_columns),
                     physical_column_count=len(sheet_columns),
@@ -1422,85 +1447,78 @@ def execute_quality_diagnosis(
                     has_undefined_classification="table_classification_undefined_candidate" in classification_types,
                     has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types,
                     classification_conflict_count=max(0, len(classification_types) - 1),
-                    has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates),
+                    has_sensitive_signal=False,
                     has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns),
                 )
                 candidate = execute_registered_rule("MET-SUM-002", sum_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
             if metric_rule_statuses["MET-COUNT-003"] == "executable_draft":
-                entity_candidate_count = sum(1 for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates if candidate.get("semantic_type") == "identifier_candidate")
-                count_profile = CountConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), entity_candidate_count=entity_candidate_count, has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                entity_candidate_count = semantic_types.count("identifier")
+                count_profile = CountConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), entity_candidate_count=entity_candidate_count, has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=False, has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
                 candidate = execute_registered_rule("MET-COUNT-003", count_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
             if metric_rule_statuses["MET-DCOUNT-004"] == "executable_draft":
-                entity_candidate_count = sum(1 for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates if candidate.get("semantic_type") == "identifier_candidate")
-                distinct_count_profile = DistinctCountConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), entity_candidate_count=entity_candidate_count, has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                entity_candidate_count = semantic_types.count("identifier")
+                distinct_count_profile = DistinctCountConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), entity_candidate_count=entity_candidate_count, has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=False, has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
                 candidate = execute_registered_rule("MET-DCOUNT-004", distinct_count_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
             if metric_rule_statuses["MET-AVG-005"] == "executable_draft":
-                summable_candidate_count = sum(1 for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates if candidate.get("semantic_type") in {"quantity_candidate", "currency_candidate"})
-                average_profile = AverageConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), summable_candidate_count=summable_candidate_count, has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                summable_candidate_count = sum(semantic_types.count(metric_type) for metric_type in ("quantity_candidate", "currency_candidate"))
+                average_profile = AverageConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), summable_candidate_count=summable_candidate_count, has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=False, has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
                 candidate = execute_registered_rule("MET-AVG-005", average_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
             if metric_rule_statuses["MET-MINMAX-006"] == "executable_draft":
-                summable_candidate_count = sum(1 for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates if candidate.get("semantic_type") in {"quantity_candidate", "currency_candidate"})
-                minmax_profile = MinMaxConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), summable_candidate_count=summable_candidate_count, has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                summable_candidate_count = sum(semantic_types.count(metric_type) for metric_type in ("quantity_candidate", "currency_candidate"))
+                minmax_profile = MinMaxConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), summable_candidate_count=summable_candidate_count, has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=False, has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
                 candidate = execute_registered_rule("MET-MINMAX-006", minmax_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
             if metric_rule_statuses["MET-RATE-007"] == "executable_draft":
-                semantic_types = [candidate.get("semantic_type") for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates]
-                rate_profile = RateConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), numerator_candidate_count=semantic_types.count("quantity_candidate"), denominator_candidate_count=semantic_types.count("target_or_forecast_candidate"), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                rate_profile = RateConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), numerator_candidate_count=semantic_types.count("quantity_candidate"), denominator_candidate_count=semantic_types.count("target_or_forecast_candidate"), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=False, has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
                 candidate = execute_registered_rule("MET-RATE-007", rate_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
             if metric_rule_statuses["MET-ABSDELTA-008"] == "executable_draft":
-                semantic_types = [candidate.get("semantic_type") for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates]
-                absolute_delta_profile = AbsoluteDeltaConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), actual_candidate_count=semantic_types.count("actual_candidate"), baseline_candidate_count=semantic_types.count("target_or_forecast_candidate"), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                absolute_delta_profile = AbsoluteDeltaConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), actual_candidate_count=semantic_types.count("actual_candidate"), baseline_candidate_count=semantic_types.count("target_or_forecast_candidate"), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=False, has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
                 candidate = execute_registered_rule("MET-ABSDELTA-008", absolute_delta_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
             if metric_rule_statuses["MET-PCTDELTA-009"] == "executable_draft":
-                semantic_types = [candidate.get("semantic_type") for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates]
-                percentage_delta_profile = PercentageDeltaConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), actual_candidate_count=semantic_types.count("actual_candidate"), baseline_candidate_count=semantic_types.count("target_or_forecast_candidate"), baseline_zero_value_count=sum(column.semantic_target.zero_value_count for column in sheet_columns if column.semantic_target.header_eligible), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                percentage_delta_profile = PercentageDeltaConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), actual_candidate_count=semantic_types.count("actual_candidate"), baseline_candidate_count=semantic_types.count("target_or_forecast_candidate"), baseline_zero_value_count=sum(column.semantic_target.zero_value_count for column in eligible_sheet_columns if column.semantic_target.header_eligible), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=False, has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
                 candidate = execute_registered_rule("MET-PCTDELTA-009", percentage_delta_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
             if metric_rule_statuses["MET-RUNNING-010"] == "executable_draft":
-                semantic_types = [candidate.get("semantic_type") for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates]
-                running_total_profile = RunningTotalConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), measure_candidate_count=semantic_types.count("quantity_candidate") + semantic_types.count("currency_candidate"), temporal_order_candidate_count=semantic_types.count("date_generic"), temporal_order_duplicate_count=sum(max(0, column.semantic_date.recognized_date_count - column.semantic_date.distinct_recognized_date_count) for column in sheet_columns if column.semantic_date.non_missing_count >= 10 and column.semantic_date.recognized_date_ratio == 1.0), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                running_total_profile = RunningTotalConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), measure_candidate_count=semantic_types.count("quantity_candidate") + semantic_types.count("currency_candidate"), temporal_order_candidate_count=semantic_types.count("date_generic"), temporal_order_duplicate_count=sum(max(0, column.semantic_date.recognized_date_count - column.semantic_date.distinct_recognized_date_count) for column in eligible_sheet_columns if column.semantic_date.non_missing_count >= 10 and column.semantic_date.recognized_date_ratio == 1.0), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=False, has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
                 candidate = execute_registered_rule("MET-RUNNING-010", running_total_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
             if metric_rule_statuses["MET-WAVG-011"] == "executable_draft":
-                semantic_types = [candidate.get("semantic_type") for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates]
-                weighted_average_profile = WeightedAverageConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), measure_candidate_count=semantic_types.count("currency_candidate"), weight_candidate_count=semantic_types.count("quantity_candidate"), nonpositive_weight_count=sum(column.semantic_quantity.nonpositive_value_count for column in sheet_columns if column.semantic_quantity.header_eligible), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                weighted_average_profile = WeightedAverageConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), measure_candidate_count=semantic_types.count("currency_candidate"), weight_candidate_count=semantic_types.count("quantity_candidate"), nonpositive_weight_count=sum(column.semantic_quantity.nonpositive_value_count for column in eligible_sheet_columns if column.semantic_quantity.header_eligible), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=False, has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
                 candidate = execute_registered_rule("MET-WAVG-011", weighted_average_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
             if metric_rule_statuses["MET-SEMIADD-012"] == "executable_draft":
-                semantic_types = [candidate.get("semantic_type") for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates]
-                semiadditive_profile = SemiadditiveConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), potential_balance_candidate_count=semantic_types.count("currency_candidate") + semantic_types.count("quantity_candidate"), temporal_order_candidate_count=semantic_types.count("date_generic"), temporal_order_duplicate_count=sum(max(0, column.semantic_date.recognized_date_count - column.semantic_date.distinct_recognized_date_count) for column in sheet_columns if column.semantic_date.non_missing_count >= 10 and column.semantic_date.recognized_date_ratio == 1.0), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                semiadditive_profile = SemiadditiveConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), potential_balance_candidate_count=semantic_types.count("currency_candidate") + semantic_types.count("quantity_candidate"), temporal_order_candidate_count=semantic_types.count("date_generic"), temporal_order_duplicate_count=sum(max(0, column.semantic_date.recognized_date_count - column.semantic_date.distinct_recognized_date_count) for column in eligible_sheet_columns if column.semantic_date.non_missing_count >= 10 and column.semantic_date.recognized_date_ratio == 1.0), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=False, has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
                 candidate = execute_registered_rule("MET-SEMIADD-012", semiadditive_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
             if metric_rule_statuses["MET-DOMAIN-013"] == "executable_draft":
-                domain_metric_profile = DomainMetricConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), domain_signal_candidate_count=0, has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                domain_metric_profile = DomainMetricConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), domain_signal_candidate_count=0, has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=False, has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
                 candidate = execute_registered_rule("MET-DOMAIN-013", domain_metric_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
             if metric_rule_statuses["MET-IMPOSS-014"] == "executable_draft":
-                semantic_types = [candidate.get("semantic_type") for candidate_sheet_id, _, candidates in semantic_candidates if candidate_sheet_id == sheet_id for candidate in candidates]
-                insufficient_metric_profile = InsufficientMetricConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), eligible_measure_candidate_count=sum(semantic_types.count(metric_type) for metric_type in ("quantity_candidate", "currency_candidate", "actual_candidate", "target_or_forecast_candidate")), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                insufficient_metric_profile = InsufficientMetricConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), eligible_measure_candidate_count=sum(semantic_types.count(metric_type) for metric_type in ("quantity_candidate", "currency_candidate", "actual_candidate", "target_or_forecast_candidate")), has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=False, has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
                 candidate = execute_registered_rule("MET-IMPOSS-014", insufficient_metric_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
             if metric_rule_statuses["MET-DAX-015"] == "executable_draft":
-                dax_template_profile = DaxTemplateConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), confirmed_conceptual_formula_count=0, human_confirmation_count=0, has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=any(candidate.get("sensitivity") == "personal_data_candidate" for candidate_sheet_id, _, candidates in sensitivity_candidates if candidate_sheet_id == sheet_id for candidate in candidates) or any(column.semantic_identifier.sensitive_header for column in sheet_columns), has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
+                dax_template_profile = DaxTemplateConceptProfile(row_count=max(column.missingness.observed_cell_count for column in sheet_columns), physical_column_count=len(sheet_columns), confirmed_conceptual_formula_count=0, human_confirmation_count=0, has_defined_grain=bool(grain_rule_ids), grain_ambiguity_count=max(0, len(grain_rule_ids) - 1), has_undefined_classification="table_classification_undefined_candidate" in classification_types, has_fact_without_grain="fact_without_defined_grain_candidate" in classification_types, classification_conflict_count=max(0, len(classification_types) - 1), has_sensitive_signal=False, has_formula_signal=any(column.formulas.formula_count > 0 for column in sheet_columns))
                 candidate = execute_registered_rule("MET-DAX-015", dax_template_profile)
                 if candidate:
                     metric_candidates.append((sheet_id, [candidate]))
@@ -1699,7 +1717,8 @@ def execute_quality_diagnosis(
         findings.extend(fragment["findings"])  # type: ignore[arg-type]
         fragment_questions = fragment["questions"]  # type: ignore[assignment]
         questions.extend(fragment_questions)  # type: ignore[arg-type]
-        question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in fragment_questions)  # type: ignore[index, union-attr]
+        if sheet_id in question_ids_by_sheet:
+            question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in fragment_questions)  # type: ignore[index, union-attr]
     for sheet_id, column_id, candidates in semantic_candidates:
         fragment = to_semantic_classification_fragment(candidates, sheet_id=sheet_id, column_id=column_id)
         semantic_classifications.extend(fragment["semantic_classifications"])  # type: ignore[arg-type]
@@ -1713,6 +1732,12 @@ def execute_quality_diagnosis(
         questions.extend(sensitivity_questions)  # type: ignore[arg-type]
         question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in sensitivity_questions)  # type: ignore[index,union-attr]
     for sheet_id, candidates in grain_candidates.items():
+        # R2: a chave explicitamente comprovada no subconjunto elegível tem
+        # precedência sobre uma hipótese genérica de entidade por linha.
+        # Não altera precedência quando não há evidência do segundo passe.
+        eligible_explicit = [candidate for candidate in candidates if candidate.get("rule_id") == "GRN-EXPL-002" and candidate.get("evidence", {}).get("basis") == "eligible_subset_null_key_exclusion_aggregate_v1"]
+        if eligible_explicit:
+            candidates = eligible_explicit + [candidate for candidate in candidates if candidate not in eligible_explicit]
         fragment = to_grain_fragment(candidates, sheet_id=sheet_id)
         grains_by_sheet[sheet_id] = fragment["grain"]  # type: ignore[assignment]
         grain_questions = fragment["questions"]  # type: ignore[assignment]
@@ -1743,10 +1768,116 @@ def execute_quality_diagnosis(
         questions.extend(metric_questions)  # type: ignore[arg-type]
         question_ids_by_sheet[sheet_id].extend(question["question_id"] for question in metric_questions)  # type: ignore[index,union-attr]
 
+    proposed_tables: list[dict[str, object]] = []
+    for sheet_id in grouped_columns:
+        classification = classifications_by_sheet[sheet_id]
+        if not classification:
+            continue
+        grain = grains_by_sheet[sheet_id]
+        proposed_tables.append(
+            {
+                "scope": {"entity_type": "sheet", "entity_id": sheet_id},
+                "table_type": classification["type"],
+                "table_rule_id": classification["rule_id"],
+                "status": classification["status"],
+                "confidence": classification["confidence"],
+                "grain_type": grain["type"] if grain else None,
+                "grain_rule_id": grain["rule_id"] if grain else None,
+            }
+        )
+    dimension_table_count = sum(
+        1 for table in proposed_tables if str(table["table_type"]).startswith("dimension_")
+    )
+    fact_table_count = sum(
+        1 for table in proposed_tables if str(table["table_type"]).startswith("fact_")
+    )
+    has_modeling_hypotheses = bool(
+        proposed_tables
+        or relationships
+        or metrics
+        or any(grain is not None for grain in grains_by_sheet.values())
+    )
+    proposed_model_status = (
+        profile.proposed_model_status_with_hypotheses
+        if has_modeling_hypotheses
+        else profile.proposed_model_status_without_hypotheses
+    )
+    proposed_model_limitation = (
+        profile.proposed_model_limitation_with_hypotheses
+        if has_modeling_hypotheses
+        else profile.proposed_model_limitation_without_hypotheses
+    )
+    executive_summary = profile.summary_template.format(
+        sheet_count=len(sheet_objects) if "sheet_objects" in locals() else len(grouped_columns),
+        column_count=sum(len(columns) for columns in grouped_columns.values()),
+        finding_count=len(findings),
+        fact_count=fact_table_count,
+        dimension_count=dimension_table_count,
+        grain_count=sum(1 for grain in grains_by_sheet.values() if grain is not None),
+        relationship_count=len(relationships),
+        metric_count=len(metrics),
+    )
+    finding_rule_ids = {str(finding["rule_id"]) for finding in findings}
+    power_query_steps: list[dict[str, object]] = []
+
+    def add_power_query_step(code: str, priority: str, title: str, action: str) -> None:
+        power_query_steps.append({"code": code, "priority": priority, "title": title, "action": action})
+
+    if sensitivity_classifications:
+        add_power_query_step(
+            "isolate_sensitive_fields",
+            "high",
+            "Isolar campos pessoais da modelagem",
+            "Mantenha os campos identificados como pessoais fora de chaves, relações, medidas e DAX até haver política de uso aprovada.",
+        )
+    if "QLT-DUP-002" in finding_rule_ids:
+        add_power_query_step(
+            "review_duplicate_rows",
+            "high",
+            "Revisar duplicidades",
+            "No Power Query, valide a chave de negócio antes de remover grupos repetidos; não deduplique automaticamente sem confirmar a regra.",
+        )
+    if "QLT-MIXTYPE-005" in finding_rule_ids or "QLT-NUMTEXT-007" in finding_rule_ids:
+        add_power_query_step(
+            "standardize_data_types",
+            "high",
+            "Padronizar tipos de dados",
+            "Separe ou converta tipos incompatíveis somente após confirmar a semântica e preserve valores que não se encaixem para revisão.",
+        )
+    if {"QLT-NULL-001", "QLT-EMPTYCOL-003", "QLT-EMPTYROW-004", "QLT-IDMISS-015"}.intersection(finding_rule_ids):
+        add_power_query_step(
+            "resolve_missing_data",
+            "high",
+            "Tratar ausências antes do modelo",
+            "Defina se ausências devem ser corrigidas na origem, mantidas como desconhecidas ou excluídas da análise antes de criar chaves e relações.",
+        )
+    if not proposed_tables:
+        add_power_query_step(
+            "confirm_table_purpose",
+            "medium",
+            "Confirmar a finalidade da estrutura",
+            "Não foi emitida uma tabela fato ou dimensão; confirme o que cada linha representa e reenvie a fonte após os ajustes prioritários.",
+        )
+    if len(grouped_columns) > 1 and not relationships:
+        add_power_query_step(
+            "confirm_relationship_keys",
+            "medium",
+            "Confirmar chaves de relacionamento",
+            "Não foi emitida uma relação entre as estruturas; valide chaves únicas e referências antes de conectar tabelas no modelo.",
+        )
+    if has_modeling_hypotheses:
+        add_power_query_step(
+            "implement_confirmed_hypotheses",
+            "medium",
+            "Aplicar as hipóteses confirmadas",
+            "Crie dimensões, fatos, relações e medidas somente depois de confirmar o grão e as regras de negócio indicadas no relatório.",
+        )
+
     finding_ids_by_sheet: dict[str, list[str]] = {sheet_id: [] for sheet_id in grouped_columns}
     for finding in findings:
         sheet_id = finding["affected_entities"][0]["entity_id"]  # type: ignore[index]
-        finding_ids_by_sheet[sheet_id].append(finding["finding_id"])  # type: ignore[index]
+        if sheet_id in finding_ids_by_sheet:
+            finding_ids_by_sheet[sheet_id].append(finding["finding_id"])  # type: ignore[index]
     analysis_status = "awaiting_user" if questions else "completed_with_warnings"
     execution_completed_at = _timestamp()
     analysis_completed_at = execution_completed_at if analysis_status.startswith("completed") else None
@@ -1832,13 +1963,13 @@ def execute_quality_diagnosis(
         "summary": {
             "quality_score": None,
             "completeness_ratio": round(executable_rule_count() / profile.catalog_target_rule_count, 8),
-            "counts": {"sheets": len(sheet_objects), "columns": sum(sheet["column_count"] for sheet in sheet_objects), "facts": 0, "dimensions": 0, "relationships": len(relationships), "metrics": len(metrics), "risks": len(findings)},
+            "counts": {"sheets": len(sheet_objects), "columns": sum(sheet["column_count"] for sheet in sheet_objects), "facts": fact_table_count, "dimensions": dimension_table_count, "relationships": len(relationships), "metrics": len(metrics), "risks": len(findings)},
             "top_risk_finding_ids": [finding["finding_id"] for finding in findings[:10]],
-            "executive_summary": profile.summary_template.format(sheet_count=len(sheet_objects), column_count=sum(sheet["column_count"] for sheet in sheet_objects), finding_count=len(findings)),
-            "next_recommended_action": profile.next_action_with_questions if questions else profile.next_action_without_questions,
+            "executive_summary": executive_summary,
+            "next_recommended_action": profile.next_action_with_hypotheses if has_modeling_hypotheses else profile.next_action_without_hypotheses,
         },
         "sheets": sheet_objects,
-        "proposed_model": {"status": profile.proposed_model_status, "tables": [], "implementation_steps": [], "assumptions": [], "limitations": [profile.proposed_model_limitation], "confidence": None},
+        "proposed_model": {"status": proposed_model_status, "tables": proposed_tables, "implementation_steps": power_query_steps, "assumptions": [], "limitations": [proposed_model_limitation], "confidence": None},
         "relationships": relationships,
         "metrics": metrics,
         "questions": questions,

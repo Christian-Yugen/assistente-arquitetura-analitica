@@ -35,7 +35,6 @@ def classify_explicit_key(profile: ExplicitKeySheetProfile) -> list[dict[str, ob
         for column in profile.columns
         if (
             column.header.header_eligible
-            and (column.identifier_signal or column.header.header_eligible)
             and not column.sensitive_header
             and not column.description_header
             and column.recognized_date_count == 0
@@ -49,12 +48,11 @@ def classify_explicit_key(profile: ExplicitKeySheetProfile) -> list[dict[str, ob
         if column.distinct_non_missing_count == profile.observed_row_count
     )
     formula_count = sum(column.formula_count for column in eligible)
-    ambiguity_count = max(0, len(eligible) - 1)
+    ambiguity_count = max(0, len(unique) - 1)
 
     if (
         profile.observed_row_count < 20
-        or len(eligible) != 1
-        or len(complete) != 1
+        or len(eligible) < 1
         or len(unique) != 1
         or formula_count != 0
         or ambiguity_count != 0
@@ -83,3 +81,45 @@ def classify_explicit_key(profile: ExplicitKeySheetProfile) -> list[dict[str, ob
             "options": [],
         },
     }]
+
+
+def classify_explicit_key_eligible_subset(
+    profile: ExplicitKeySheetProfile,
+    *,
+    excluded_invalid_key_rows: int,
+) -> list[dict[str, object]]:
+    """Avalia um subconjunto elegível com contagens agregadas, sem apagar linhas.
+
+    API opt-in: o pipeline não deve chamá-la antes de comprovar que as linhas
+    excluídas são precisamente as que possuem chave inválida e que os demais
+    agregados representam o mesmo subconjunto. Não substitui o passe completo.
+    """
+    if (
+        isinstance(excluded_invalid_key_rows, bool)
+        or not isinstance(excluded_invalid_key_rows, int)
+        or excluded_invalid_key_rows < 0
+        or excluded_invalid_key_rows >= profile.observed_row_count
+    ):
+        raise ValueError("invalid_eligible_subset_count")
+    eligible_count = profile.observed_row_count - excluded_invalid_key_rows
+    if excluded_invalid_key_rows == 0:
+        return classify_explicit_key(profile)
+    # Conservador: só aceita uma chave candidata e nulos exatamente iguais
+    # às linhas excluídas. Não converte duplicidades em unicidade.
+    candidates = [column for column in profile.columns if column.header.header_eligible and not column.sensitive_header and not column.description_header and column.recognized_date_count == 0 and column.physical_type in {"text", "numeric"}]
+    if len(candidates) != 1:
+        return []
+    column = candidates[0]
+    if column.non_missing_count != eligible_count or column.distinct_non_missing_count != eligible_count:
+        return []
+    reduced = ExplicitKeySheetProfile(
+        observed_row_count=eligible_count,
+        columns=(column,),
+        basis="eligible_subset_null_key_exclusion_aggregate_v1",
+    )
+    results = classify_explicit_key(reduced)
+    for result in results:
+        result["evidence"]["original_observed_row_count"] = profile.observed_row_count
+        result["evidence"]["excluded_invalid_key_row_count"] = excluded_invalid_key_rows
+        result["evidence"]["eligible_row_count"] = eligible_count
+    return results
